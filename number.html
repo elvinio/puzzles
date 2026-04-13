@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="void">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Number Puzzle</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Theme variables ─────────────────────────────────────────────────── */
+
+    :root, [data-theme="void"] {
+      --bg:       #13111c;
+      --surface:  #0d0b14;
+      --brd:      #2d1f50;
+      --p-dk:     #4c1d95;
+      --p:        #6d28d9;
+      --p-lt:     #7c3aed;
+      --p-xl:     #ede9fe;
+      --muted:    #7c6fa0;
+      --ctrl-bg:  #1c1730;
+      --overlay:  rgba(7, 5, 10, 0.93);
+    }
+    [data-theme="ember"] {
+      --bg:       #1a0e08;
+      --surface:  #0c0603;
+      --brd:      #3d1505;
+      --p-dk:     #9a3412;
+      --p:        #c2410c;
+      --p-lt:     #ea580c;
+      --p-xl:     #fff7ed;
+      --muted:    #92400e;
+      --ctrl-bg:  #200e06;
+      --overlay:  rgba(6, 3, 1, 0.93);
+    }
+    [data-theme="arctic"] {
+      --bg:       #080f1a;
+      --surface:  #040810;
+      --brd:      #0c2644;
+      --p-dk:     #164e63;
+      --p:        #0e7490;
+      --p-lt:     #0891b2;
+      --p-xl:     #cffafe;
+      --muted:    #1e5f72;
+      --ctrl-bg:  #06111e;
+      --overlay:  rgba(2, 4, 8, 0.93);
+    }
+    [data-theme="jungle"] {
+      --bg:       #081408;
+      --surface:  #040a04;
+      --brd:      #0d2e0d;
+      --p-dk:     #14532d;
+      --p:        #15803d;
+      --p-lt:     #16a34a;
+      --p-xl:     #dcfce7;
+      --muted:    #166534;
+      --ctrl-bg:  #091509;
+      --overlay:  rgba(2, 5, 2, 0.93);
+    }
+    [data-theme="dusk"] {
+      --bg:       #190810;
+      --surface:  #0e0408;
+      --brd:      #45102d;
+      --p-dk:     #9d174d;
+      --p:        #be185d;
+      --p-lt:     #db2777;
+      --p-xl:     #fce7f3;
+      --muted:    #831843;
+      --ctrl-bg:  #1f0a13;
+      --overlay:  rgba(7, 2, 4, 0.93);
+    }
+
+    /* ── Layout ──────────────────────────────────────────────────────────── */
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--p-xl);
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 16px;
+      gap: 14px;
+      transition: background 0.3s;
+    }
+
+    h1 {
+      font-size: clamp(1.3rem, 5vw, 1.9rem);
+      font-weight: 800;
+      color: var(--p-lt);
+      letter-spacing: 0.06em;
+      transition: color 0.3s;
+    }
+
+    /* ── Size controls ───────────────────────────────────────────────────── */
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .size-btn {
+      background: var(--ctrl-bg);
+      color: var(--p-lt);
+      border: 2px solid var(--p-dk);
+      border-radius: 8px;
+      padding: 7px 13px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, color 0.15s, border-color 0.2s;
+    }
+    .size-btn.active {
+      background: var(--p);
+      color: var(--p-xl);
+      border-color: var(--p-lt);
+    }
+    .size-btn:active { filter: brightness(1.2); }
+
+    .new-btn {
+      background: var(--ctrl-bg);
+      color: var(--p-xl);
+      border: 2px solid var(--p);
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, border-color 0.2s;
+    }
+    .new-btn:active { background: var(--p); }
+
+    /* ── Theme bar ───────────────────────────────────────────────────────── */
+
+    .theme-bar {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Each button carries its own fixed accent regardless of active theme */
+    .theme-btn {
+      background: var(--t-bg);
+      color: var(--t-accent);
+      border: 2px solid var(--t-accent);
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, color 0.15s;
+    }
+    .theme-btn.active {
+      background: var(--t-accent);
+      color: var(--t-fg);
+    }
+    .theme-btn:active { filter: brightness(1.15); }
+
+    .theme-btn[data-theme="void"]   { --t-accent: #7c3aed; --t-bg: #1c1730; --t-fg: #ede9fe; }
+    .theme-btn[data-theme="ember"]  { --t-accent: #ea580c; --t-bg: #200e06; --t-fg: #fff7ed; }
+    .theme-btn[data-theme="arctic"] { --t-accent: #0891b2; --t-bg: #06111e; --t-fg: #cffafe; }
+    .theme-btn[data-theme="jungle"] { --t-accent: #16a34a; --t-bg: #091509; --t-fg: #dcfce7; }
+    .theme-btn[data-theme="dusk"]   { --t-accent: #db2777; --t-bg: #1f0a13; --t-fg: #fce7f3; }
+
+    /* ── Stats ───────────────────────────────────────────────────────────── */
+
+    .stats {
+      display: flex;
+      gap: 28px;
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      color: var(--muted);
+      transition: color 0.3s;
+    }
+    .stats strong {
+      color: var(--p-xl);
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    /* ── Board ───────────────────────────────────────────────────────────── */
+
+    .board-wrapper {
+      position: relative;
+      width: min(90vw, 480px);
+      aspect-ratio: 1 / 1;
+    }
+
+    .board {
+      --n: 4;
+      --gap: 5px;
+      --pad: 6px;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    /* ── Tiles ───────────────────────────────────────────────────────────── */
+
+    .tile {
+      --tile-size: calc((100% - 2 * var(--pad) - (var(--n) - 1) * var(--gap)) / var(--n));
+      position: absolute;
+      width: var(--tile-size);
+      height: var(--tile-size);
+      left: calc(var(--pad) + var(--col, 0) * (var(--tile-size) + var(--gap)));
+      top:  calc(var(--pad) + var(--row, 0) * (var(--tile-size) + var(--gap)));
+      background: linear-gradient(145deg, var(--p), var(--p-dk));
+      border: 1.5px solid var(--p-lt);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--p-xl);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: left 0.12s ease, top 0.12s ease, background 0.3s, border-color 0.3s, color 0.3s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .tile:active {
+      background: linear-gradient(145deg, var(--p-lt), var(--p));
+    }
+
+    /* ── Win overlay ─────────────────────────────────────────────────────── */
+
+    .win-overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--overlay);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .win-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .win-title {
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      font-weight: 900;
+      color: #34d399;
+    }
+    .win-stats {
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      color: #6ee7b7;
+    }
+    .play-again-btn {
+      margin-top: 8px;
+      background: #059669;
+      color: #ecfdf5;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s;
+    }
+    .play-again-btn:active { background: #047857; }
+  </style>
+</head>
+<body>
+
+  <h1>Number Puzzle</h1>
+
+  <div class="controls">
+    <button class="size-btn" data-size="3">3×3</button>
+    <button class="size-btn active" data-size="4">4×4</button>
+    <button class="size-btn" data-size="5">5×5</button>
+    <button class="size-btn" data-size="6">6×6</button>
+    <button class="new-btn" id="newBtn">New Game</button>
+  </div>
+
+  <div class="theme-bar">
+    <button class="theme-btn active" data-theme="void">Void</button>
+    <button class="theme-btn" data-theme="ember">Ember</button>
+    <button class="theme-btn" data-theme="arctic">Arctic</button>
+    <button class="theme-btn" data-theme="jungle">Jungle</button>
+    <button class="theme-btn" data-theme="dusk">Dusk</button>
+  </div>
+
+  <div class="stats">
+    <div>Moves: <strong id="moveCount">0</strong></div>
+    <div>Time: <strong id="timer">0:00</strong></div>
+  </div>
+
+  <div class="board-wrapper">
+    <div class="board" id="board"></div>
+    <div class="win-overlay" id="winOverlay">
+      <div class="win-title">Puzzle Solved!</div>
+      <div class="win-stats" id="winStats"></div>
+      <button class="play-again-btn" id="playAgainBtn">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    // ── State ──────────────────────────────────────────────────────────────
+    const state = {
+      grid: [],          // flat array, length = N², value 0 = empty slot
+      size: 4,
+      moves: 0,
+      solved: false,
+      startTime: null,
+      timerInterval: null,
+    };
+
+    const tileEls = {};  // tile value (1..N²-1) → DOM element
+
+    // ── Shuffle & Solvability ──────────────────────────────────────────────
+
+    function fisherYates(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function countInversions(arr) {
+      const a = arr.filter(x => x !== 0);
+      let inv = 0;
+      for (let i = 0; i < a.length - 1; i++)
+        for (let j = i + 1; j < a.length; j++)
+          if (a[i] > a[j]) inv++;
+      return inv;
+    }
+
+    // odd N  → solvable iff inversions is even
+    // even N → solvable iff (inversions + blank row from bottom) is odd
+    function isSolvable(arr, n) {
+      const inv = countInversions(arr);
+      if (n % 2 === 1) return inv % 2 === 0;
+      const blankRow = Math.floor(arr.indexOf(0) / n);
+      const rowFromBottom = n - blankRow;
+      return (inv + rowFromBottom) % 2 === 1;
+    }
+
+    function isSolved(arr, n) {
+      for (let i = 0; i < n * n - 1; i++) if (arr[i] !== i + 1) return false;
+      return arr[n * n - 1] === 0;
+    }
+
+    function createGrid(n) {
+      const arr = Array.from({ length: n * n }, (_, i) => i);
+      do { fisherYates(arr); }
+      while (!isSolvable(arr, n) || isSolved(arr, n));
+      return arr;
+    }
+
+    // ── DOM Construction ───────────────────────────────────────────────────
+
+    function buildBoard(n) {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      board.style.setProperty('--n', n);
+      Object.keys(tileEls).forEach(k => delete tileEls[k]);
+
+      const boardPx = Math.min(window.innerWidth * 0.9, 480);
+      const tilePx  = (boardPx - 12 - (n - 1) * 5) / n;  // pad=6 each side, gap=5
+      const fontPx  = Math.round(tilePx * 0.36);
+
+      for (let v = 1; v < n * n; v++) {
+        const el = document.createElement('div');
+        el.className = 'tile';
+        el.textContent = v;
+        el.style.fontSize = fontPx + 'px';
+        el.addEventListener('click', () => doMove(state.grid.indexOf(v)));
+        board.appendChild(el);
+        tileEls[v] = el;
+      }
+    }
+
+    function render() {
+      const { grid, size } = state;
+      for (let v = 1; v < size * size; v++) {
+        const idx = grid.indexOf(v);
+        tileEls[v].style.setProperty('--row', Math.floor(idx / size));
+        tileEls[v].style.setProperty('--col', idx % size);
+      }
+    }
+
+    // ── Move Logic ─────────────────────────────────────────────────────────
+
+    function doMove(idx) {
+      if (state.solved) return;
+
+      const { grid, size } = state;
+      const blank = grid.indexOf(0);
+      if (idx === blank) return;
+
+      const blankRow = Math.floor(blank / size);
+      const blankCol = blank % size;
+      const tileRow  = Math.floor(idx / size);
+      const tileCol  = idx % size;
+
+      // Tile must share a row or column with the blank
+      if (tileRow !== blankRow && tileCol !== blankCol) return;
+
+      if (!state.startTime) {
+        state.startTime = Date.now();
+        state.timerInterval = setInterval(tickTimer, 500);
+      }
+
+      // Shift every tile between the blank and the tapped tile one step toward
+      // the blank, then place the blank where the tapped tile was.
+      if (tileRow === blankRow) {
+        const step = tileCol < blankCol ? 1 : -1;
+        let col = blankCol;
+        while (col !== tileCol) {
+          grid[blankRow * size + col] = grid[blankRow * size + (col - step)];
+          col -= step;
+        }
+      } else {
+        const step = tileRow < blankRow ? 1 : -1;
+        let row = blankRow;
+        while (row !== tileRow) {
+          grid[row * size + blankCol] = grid[(row - step) * size + blankCol];
+          row -= step;
+        }
+      }
+      grid[idx] = 0;
+
+      state.moves++;
+      document.getElementById('moveCount').textContent = state.moves;
+
+      render();
+
+      if (isSolved(state.grid, state.size)) {
+        state.solved = true;
+        clearInterval(state.timerInterval);
+        setTimeout(showWin, 280);
+      }
+    }
+
+    // ── Timer ──────────────────────────────────────────────────────────────
+
+    function tickTimer() {
+      if (!state.startTime) return;
+      const s = Math.floor((Date.now() - state.startTime) / 1000);
+      document.getElementById('timer').textContent =
+        `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+    }
+
+    // ── Win ────────────────────────────────────────────────────────────────
+
+    function showWin() {
+      const s = Math.floor((Date.now() - state.startTime) / 1000);
+      document.getElementById('winStats').textContent =
+        `${state.moves} moves · ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+      document.getElementById('winOverlay').classList.add('visible');
+    }
+
+    // ── Touch / Swipe ──────────────────────────────────────────────────────
+
+    let touchOrigin = null;
+    const SWIPE_MIN = 12;
+
+    const boardEl = document.getElementById('board');
+
+    boardEl.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      touchOrigin = { x: t.clientX, y: t.clientY };
+    }, { passive: true });
+
+    boardEl.addEventListener('touchmove', e => {
+      e.preventDefault();
+    }, { passive: false });
+
+    boardEl.addEventListener('touchend', e => {
+      if (!touchOrigin) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchOrigin.x;
+      const dy = t.clientY - touchOrigin.y;
+      touchOrigin = null;
+
+      if (Math.abs(dx) < SWIPE_MIN && Math.abs(dy) < SWIPE_MIN) return;
+
+      const { grid, size } = state;
+      const blank = grid.indexOf(0);
+      const br = Math.floor(blank / size);
+      const bc = blank % size;
+      let tr, tc;
+
+      if (Math.abs(dx) >= Math.abs(dy)) {
+        tr = br; tc = dx > 0 ? bc - 1 : bc + 1;
+      } else {
+        tc = bc; tr = dy > 0 ? br - 1 : br + 1;
+      }
+
+      if (tr >= 0 && tr < size && tc >= 0 && tc < size)
+        doMove(tr * size + tc);
+    }, { passive: true });
+
+    // ── Keyboard ───────────────────────────────────────────────────────────
+
+    document.addEventListener('keydown', e => {
+      const { grid, size } = state;
+      const blank = grid.indexOf(0);
+      const br = Math.floor(blank / size);
+      const bc = blank % size;
+      let tr, tc;
+      switch (e.key) {
+        case 'ArrowUp':    tr = br + 1; tc = bc; break;
+        case 'ArrowDown':  tr = br - 1; tc = bc; break;
+        case 'ArrowLeft':  tr = br; tc = bc + 1; break;
+        case 'ArrowRight': tr = br; tc = bc - 1; break;
+        default: return;
+      }
+      e.preventDefault();
+      if (tr >= 0 && tr < size && tc >= 0 && tc < size)
+        doMove(tr * size + tc);
+    });
+
+    // ── Theme ──────────────────────────────────────────────────────────────
+
+    function setTheme(name) {
+      document.documentElement.setAttribute('data-theme', name);
+      document.querySelectorAll('.theme-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.theme === name));
+    }
+
+    document.querySelectorAll('.theme-btn').forEach(btn =>
+      btn.addEventListener('click', () => setTheme(btn.dataset.theme)));
+
+    // ── Controls ───────────────────────────────────────────────────────────
+
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        initGame(+btn.dataset.size);
+      });
+    });
+
+    document.getElementById('newBtn').addEventListener('click', () => initGame(state.size));
+    document.getElementById('playAgainBtn').addEventListener('click', () => initGame(state.size));
+
+    // ── Init ───────────────────────────────────────────────────────────────
+
+    function initGame(size) {
+      clearInterval(state.timerInterval);
+      Object.assign(state, {
+        size,
+        grid: createGrid(size),
+        moves: 0,
+        solved: false,
+        startTime: null,
+        timerInterval: null,
+      });
+
+      document.getElementById('moveCount').textContent = '0';
+      document.getElementById('timer').textContent = '0:00';
+      document.getElementById('winOverlay').classList.remove('visible');
+
+      buildBoard(size);
+      render();
+    }
+
+    initGame(4);
+  </script>
+</body>
+</html>
