@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Number Puzzle</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #13111c;
+      color: #e2d9f3;
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 16px;
+      gap: 16px;
+    }
+
+    h1 {
+      font-size: clamp(1.3rem, 5vw, 1.9rem);
+      font-weight: 800;
+      color: #a78bfa;
+      letter-spacing: 0.06em;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .size-btn {
+      background: #1c1730;
+      color: #8b5cf6;
+      border: 2px solid #4c1d95;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .size-btn.active {
+      background: #5b21b6;
+      color: #ede9fe;
+      border-color: #7c3aed;
+    }
+
+    .size-btn:active {
+      background: #4c1d95;
+      color: #ddd6fe;
+    }
+
+    .new-btn {
+      background: #1e3a5f;
+      color: #93c5fd;
+      border: 2px solid #1d4ed8;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s;
+    }
+
+    .new-btn:active {
+      background: #1d4ed8;
+      color: #fff;
+    }
+
+    .stats {
+      display: flex;
+      gap: 28px;
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      color: #7c6fa0;
+    }
+
+    .stats strong {
+      color: #c4b5fd;
+      font-weight: 700;
+    }
+
+    /* Board */
+    .board-wrapper {
+      position: relative;
+      width: min(90vw, 480px);
+      aspect-ratio: 1 / 1;
+    }
+
+    .board {
+      --n: 4;
+      --gap: 5px;
+      --pad: 6px;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #0d0b14;
+      border: 2px solid #2d1f50;
+      border-radius: 14px;
+    }
+
+    /* Each numbered tile is absolutely positioned using CSS custom props */
+    .tile {
+      --tile-size: calc((100% - 2 * var(--pad) - (var(--n) - 1) * var(--gap)) / var(--n));
+      position: absolute;
+      width: var(--tile-size);
+      height: var(--tile-size);
+      left: calc(var(--pad) + var(--col, 0) * (var(--tile-size) + var(--gap)));
+      top:  calc(var(--pad) + var(--row, 0) * (var(--tile-size) + var(--gap)));
+      background: linear-gradient(145deg, #6d28d9, #4c1d95);
+      border: 1.5px solid #7c3aed;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #ede9fe;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: left 0.12s ease, top 0.12s ease, background 0.1s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .tile:active {
+      background: linear-gradient(145deg, #7c3aed, #5b21b6);
+    }
+
+    /* Win overlay */
+    .win-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 11, 20, 0.9);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .win-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .win-title {
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      font-weight: 900;
+      color: #34d399;
+    }
+
+    .win-stats {
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      color: #6ee7b7;
+    }
+
+    .play-again-btn {
+      margin-top: 8px;
+      background: #059669;
+      color: #ecfdf5;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s;
+    }
+
+    .play-again-btn:active {
+      background: #047857;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Number Puzzle</h1>
+
+  <div class="controls">
+    <button class="size-btn" data-size="3">3×3</button>
+    <button class="size-btn active" data-size="4">4×4</button>
+    <button class="size-btn" data-size="5">5×5</button>
+    <button class="size-btn" data-size="6">6×6</button>
+    <button class="new-btn" id="newBtn">New Game</button>
+  </div>
+
+  <div class="stats">
+    <div>Moves: <strong id="moveCount">0</strong></div>
+    <div>Time: <strong id="timer">0:00</strong></div>
+  </div>
+
+  <div class="board-wrapper">
+    <div class="board" id="board"></div>
+    <div class="win-overlay" id="winOverlay">
+      <div class="win-title">Puzzle Solved!</div>
+      <div class="win-stats" id="winStats"></div>
+      <button class="play-again-btn" id="playAgainBtn">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    // ── State ──────────────────────────────────────────────────────────────
+    const state = {
+      grid: [],          // flat array, length = N², value 0 = empty slot
+      size: 4,
+      moves: 0,
+      solved: false,
+      startTime: null,
+      timerInterval: null,
+    };
+
+    const tileEls = {};  // tile value (1..N²-1) → DOM element
+
+    // ── Shuffle & Solvability ──────────────────────────────────────────────
+
+    function fisherYates(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function countInversions(arr) {
+      const a = arr.filter(x => x !== 0);
+      let inv = 0;
+      for (let i = 0; i < a.length - 1; i++)
+        for (let j = i + 1; j < a.length; j++)
+          if (a[i] > a[j]) inv++;
+      return inv;
+    }
+
+    // For an N×N puzzle:
+    //   odd N  → solvable iff inversions is even
+    //   even N → solvable iff (inversions + blank row from bottom) is odd
+    function isSolvable(arr, n) {
+      const inv = countInversions(arr);
+      if (n % 2 === 1) return inv % 2 === 0;
+      const blankRow = Math.floor(arr.indexOf(0) / n);
+      const rowFromBottom = n - blankRow;  // 1-indexed from bottom
+      return (inv + rowFromBottom) % 2 === 1;
+    }
+
+    function isSolved(arr, n) {
+      for (let i = 0; i < n * n - 1; i++) if (arr[i] !== i + 1) return false;
+      return arr[n * n - 1] === 0;
+    }
+
+    function createGrid(n) {
+      const arr = Array.from({ length: n * n }, (_, i) => i);  // [0,1,2,...,N²-1]
+      do { fisherYates(arr); }
+      while (!isSolvable(arr, n) || isSolved(arr, n));
+      return arr;
+    }
+
+    // ── DOM Construction ───────────────────────────────────────────────────
+
+    function buildBoard(n) {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      board.style.setProperty('--n', n);
+      Object.keys(tileEls).forEach(k => delete tileEls[k]);
+
+      // Compute font size from actual pixel tile size
+      const boardPx = Math.min(window.innerWidth * 0.9, 480);
+      const pad = 6, gap = 5;
+      const tilePx = (boardPx - 2 * pad - (n - 1) * gap) / n;
+      const fontPx = Math.round(tilePx * 0.36);
+
+      for (let v = 1; v < n * n; v++) {
+        const el = document.createElement('div');
+        el.className = 'tile';
+        el.textContent = v;
+        el.style.fontSize = fontPx + 'px';
+        el.addEventListener('click', () => doMove(state.grid.indexOf(v)));
+        board.appendChild(el);
+        tileEls[v] = el;
+      }
+    }
+
+    // Position every tile according to current grid state.
+    // Setting CSS custom props --row/--col triggers the left/top transition.
+    function render() {
+      const { grid, size } = state;
+      for (let v = 1; v < size * size; v++) {
+        const idx = grid.indexOf(v);
+        tileEls[v].style.setProperty('--row', Math.floor(idx / size));
+        tileEls[v].style.setProperty('--col', idx % size);
+      }
+    }
+
+    // ── Move Logic ─────────────────────────────────────────────────────────
+
+    function doMove(idx) {
+      if (state.solved) return;
+
+      const { grid, size } = state;
+      const blank = grid.indexOf(0);
+      if (idx === blank) return;
+
+      const blankRow = Math.floor(blank / size);
+      const blankCol = blank % size;
+      const tileRow  = Math.floor(idx / size);
+      const tileCol  = idx % size;
+
+      // Tile must share a row or column with the blank
+      if (tileRow !== blankRow && tileCol !== blankCol) return;
+
+      if (!state.startTime) {
+        state.startTime = Date.now();
+        state.timerInterval = setInterval(tickTimer, 500);
+      }
+
+      // Shift every tile between the blank and the tapped tile one step toward
+      // the blank, then place the blank where the tapped tile was.
+      if (tileRow === blankRow) {
+        // Horizontal slide
+        const step = tileCol < blankCol ? 1 : -1;  // which way tiles travel
+        let col = blankCol;
+        while (col !== tileCol) {
+          grid[blankRow * size + col] = grid[blankRow * size + (col - step)];
+          col -= step;
+        }
+      } else {
+        // Vertical slide
+        const step = tileRow < blankRow ? 1 : -1;
+        let row = blankRow;
+        while (row !== tileRow) {
+          grid[row * size + blankCol] = grid[(row - step) * size + blankCol];
+          row -= step;
+        }
+      }
+      grid[idx] = 0;
+
+      state.moves++;
+      document.getElementById('moveCount').textContent = state.moves;
+
+      render();
+
+      if (isSolved(state.grid, state.size)) {
+        state.solved = true;
+        clearInterval(state.timerInterval);
+        setTimeout(showWin, 280);
+      }
+    }
+
+    // ── Timer ──────────────────────────────────────────────────────────────
+
+    function tickTimer() {
+      if (!state.startTime) return;
+      const s = Math.floor((Date.now() - state.startTime) / 1000);
+      document.getElementById('timer').textContent =
+        `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+    }
+
+    // ── Win ────────────────────────────────────────────────────────────────
+
+    function showWin() {
+      const s = Math.floor((Date.now() - state.startTime) / 1000);
+      document.getElementById('winStats').textContent =
+        `${state.moves} moves · ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+      document.getElementById('winOverlay').classList.add('visible');
+    }
+
+    // ── Touch / Swipe ──────────────────────────────────────────────────────
+
+    let touchOrigin = null;
+    const SWIPE_MIN = 12;  // px — below this is treated as a tap
+
+    const boardEl = document.getElementById('board');
+
+    boardEl.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      touchOrigin = { x: t.clientX, y: t.clientY };
+    }, { passive: true });
+
+    // Prevent page scroll while finger is on the board
+    boardEl.addEventListener('touchmove', e => {
+      e.preventDefault();
+    }, { passive: false });
+
+    boardEl.addEventListener('touchend', e => {
+      if (!touchOrigin) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchOrigin.x;
+      const dy = t.clientY - touchOrigin.y;
+      touchOrigin = null;
+
+      // If distance is tiny it's a tap; the click event on the tile handles it
+      if (Math.abs(dx) < SWIPE_MIN && Math.abs(dy) < SWIPE_MIN) return;
+
+      // Determine which tile should move based on swipe direction.
+      // Swiping in a direction slides the tile on the *opposite* side of the blank.
+      // e.g. swipe right → tile to the LEFT of the blank slides rightward.
+      const { grid, size } = state;
+      const blank = grid.indexOf(0);
+      const br = Math.floor(blank / size);
+      const bc = blank % size;
+      let tr, tc;
+
+      if (Math.abs(dx) >= Math.abs(dy)) {
+        tr = br;
+        tc = dx > 0 ? bc - 1 : bc + 1;
+      } else {
+        tc = bc;
+        tr = dy > 0 ? br - 1 : br + 1;
+      }
+
+      if (tr >= 0 && tr < size && tc >= 0 && tc < size)
+        doMove(tr * size + tc);
+    }, { passive: true });
+
+    // ── Keyboard (arrow keys) ──────────────────────────────────────────────
+
+    document.addEventListener('keydown', e => {
+      const { grid, size } = state;
+      const blank = grid.indexOf(0);
+      const br = Math.floor(blank / size);
+      const bc = blank % size;
+      let tr, tc;
+
+      // Arrow key moves the tile that would slide in that direction
+      switch (e.key) {
+        case 'ArrowUp':    tr = br + 1; tc = bc; break;
+        case 'ArrowDown':  tr = br - 1; tc = bc; break;
+        case 'ArrowLeft':  tr = br; tc = bc + 1; break;
+        case 'ArrowRight': tr = br; tc = bc - 1; break;
+        default: return;
+      }
+      e.preventDefault();
+      if (tr >= 0 && tr < size && tc >= 0 && tc < size)
+        doMove(tr * size + tc);
+    });
+
+    // ── Controls ───────────────────────────────────────────────────────────
+
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        initGame(+btn.dataset.size);
+      });
+    });
+
+    document.getElementById('newBtn').addEventListener('click', () => initGame(state.size));
+    document.getElementById('playAgainBtn').addEventListener('click', () => initGame(state.size));
+
+    // ── Init ───────────────────────────────────────────────────────────────
+
+    function initGame(size) {
+      clearInterval(state.timerInterval);
+      Object.assign(state, {
+        size,
+        grid: createGrid(size),
+        moves: 0,
+        solved: false,
+        startTime: null,
+        timerInterval: null,
+      });
+
+      document.getElementById('moveCount').textContent = '0';
+      document.getElementById('timer').textContent = '0:00';
+      document.getElementById('winOverlay').classList.remove('visible');
+
+      buildBoard(size);
+      render();
+    }
+
+    initGame(4);
+  </script>
+</body>
+</html>
