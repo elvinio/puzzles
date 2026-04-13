@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Goblet Gobblers</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #13111c;
+      color: #e2d9f3;
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 12px;
+      gap: 10px;
+    }
+
+    .back-link {
+      position: fixed;
+      top: 12px;
+      left: 14px;
+      font-size: 0.8rem;
+      color: #7c6fa0;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .back-link:active { color: #a78bfa; }
+
+    h1 {
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      font-weight: 800;
+      color: #a78bfa;
+      letter-spacing: 0.06em;
+    }
+
+    .status {
+      font-size: clamp(0.8rem, 2.8vw, 0.92rem);
+      font-weight: 600;
+      min-height: 1.4em;
+      text-align: center;
+    }
+    .status.gold { color: #fbbf24; }
+    .status.blue { color: #60a5fa; }
+
+    /* ── Mode bar ─────────────────────────────────────────────────────────── */
+    .mode-bar {
+      display: flex;
+      gap: 8px;
+    }
+    .mode-btn {
+      background: #1c1730;
+      color: #7c6fa0;
+      border: 2px solid #2d1f50;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.83rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .mode-btn.active {
+      background: #2d1f50;
+      color: #c4b5fd;
+      border-color: #7c3aed;
+    }
+    .mode-btn:active { filter: brightness(1.2); }
+
+    /* ── Hand panels ─────────────────────────────────────────────────────── */
+    .hand-panel {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #1c1730;
+      border: 2px solid #2d1f50;
+      width: min(90vw, 420px);
+      min-height: 62px;
+      transition: border-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+    }
+    .hand-panel.active-gold {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.3);
+    }
+    .hand-panel.active-blue {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59,130,246,0.3);
+    }
+    .hand-panel.inactive { opacity: 0.4; }
+
+    .hand-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      width: 34px;
+      flex-shrink: 0;
+    }
+    .hand-label-gold { color: #fbbf24; }
+    .hand-label-blue { color: #60a5fa; }
+
+    .hand-goblets {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Goblet colours ──────────────────────────────────────────────────── */
+    .goblet-gold {
+      background: radial-gradient(circle at 35% 30%, #fde68a, #d97706);
+      border: 2px solid #f59e0b;
+      box-shadow: 0 2px 6px rgba(245,158,11,0.35);
+    }
+    .goblet-blue {
+      background: radial-gradient(circle at 35% 30%, #bfdbfe, #1d4ed8);
+      border: 2px solid #3b82f6;
+      box-shadow: 0 2px 6px rgba(59,130,246,0.35);
+    }
+
+    /* Hand goblet sizes */
+    .hand-goblet {
+      border-radius: 50%;
+      flex-shrink: 0;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform 0.1s, outline-offset 0.1s;
+    }
+    .hand-goblet:active { transform: scale(0.88); }
+    .hand-goblet.selected { outline: 3px solid #fff; outline-offset: 2px; }
+    .hand-goblet-L { width: 44px; height: 44px; }
+    .hand-goblet-M { width: 30px; height: 30px; }
+    .hand-goblet-S { width: 19px; height: 19px; }
+
+    /* ── Board ───────────────────────────────────────────────────────────── */
+    .board-wrapper {
+      position: relative;
+      width: min(90vw, 420px);
+      aspect-ratio: 1;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;       /* visible gap = grid line */
+      width: 100%;
+      height: 100%;
+      background: #4c2d8a;   /* purple shows through as grid lines */
+      border: 7px solid #4c2d8a;
+      border-radius: 14px;
+    }
+
+    .cell {
+      background: #0a0812;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      touch-action: manipulation;
+      transition: background 0.12s, box-shadow 0.12s;
+    }
+    .cell.valid-target {
+      background: #071308;
+      box-shadow: inset 0 0 0 3px #22c55e;
+    }
+    .cell.cancel-cell {
+      box-shadow: inset 0 0 0 3px #ef4444;
+      background: #140707;
+    }
+
+    @keyframes win-pulse {
+      0%, 100% { box-shadow: 0 0 0 3px #fbbf24; }
+      50% { box-shadow: 0 0 0 5px #f59e0b, 0 0 16px rgba(251,191,36,0.5); }
+    }
+    .cell.win-cell { animation: win-pulse 0.85s ease-in-out infinite; }
+
+    /* Board goblets — sized as % of cell */
+    .board-goblet {
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .board-goblet-L { width: 82%; height: 82%; }
+    .board-goblet-M { width: 58%; height: 58%; }
+    .board-goblet-S { width: 36%; height: 36%; }
+
+    /* ── Win overlay ─────────────────────────────────────────────────────── */
+    .win-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(7, 5, 10, 0.93);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .win-overlay.visible { opacity: 1; pointer-events: all; }
+
+    .win-title {
+      font-size: clamp(1.5rem, 6vw, 2.2rem);
+      font-weight: 900;
+    }
+    .win-title.gold { color: #fbbf24; }
+    .win-title.blue { color: #60a5fa; }
+
+    .play-again-btn {
+      background: #5b21b6;
+      color: #ede9fe;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s;
+    }
+    .play-again-btn:active { background: #4c1d95; }
+
+    /* ── Bottom controls ─────────────────────────────────────────────────── */
+    .new-game-btn {
+      background: #1c1730;
+      color: #8b5cf6;
+      border: 2px solid #4c1d95;
+      border-radius: 8px;
+      padding: 7px 18px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s;
+    }
+    .new-game-btn:active { background: #4c1d95; color: #ede9fe; }
+
+    .hint {
+      font-size: 0.72rem;
+      color: #4a4060;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <a class="back-link" href="index.html"
+     onclick="window.location.href='index.html';return false;">← Games</a>
+
+  <h1>Goblet Gobblers</h1>
+  <div class="status" id="status"></div>
+
+  <div class="mode-bar">
+    <button class="mode-btn active" data-mode="2p">2 Players</button>
+    <button class="mode-btn" data-mode="computer">vs Computer</button>
+  </div>
+
+  <div class="hand-panel" id="panel-gold">
+    <div class="hand-label hand-label-gold">Gold</div>
+    <div class="hand-goblets" id="hand-gold"></div>
+  </div>
+
+  <div class="board-wrapper">
+    <div class="board" id="board"></div>
+    <div class="win-overlay" id="winOverlay">
+      <div class="win-title" id="winTitle"></div>
+      <button class="play-again-btn" id="playAgainBtn">Play Again</button>
+    </div>
+  </div>
+
+  <div class="hand-panel" id="panel-blue">
+    <div class="hand-label hand-label-blue">Blue</div>
+    <div class="hand-goblets" id="hand-blue"></div>
+  </div>
+
+  <button class="new-game-btn" id="newGameBtn">New Game</button>
+  <div class="hint">L gobbles M or S &nbsp;·&nbsp; M gobbles S &nbsp;·&nbsp; 3 in a row wins</div>
+
+  <script>
+    // ── Constants ──────────────────────────────────────────────────────────
+    const N = 3;
+    const SIZE = { S: 1, M: 2, L: 3 };
+
+    // All 8 lines of 3 on a 3×3 grid
+    const LINES = (() => {
+      const lines = [];
+      for (let r = 0; r < N; r++) {
+        for (let c = 0; c < N; c++) {
+          if (c + 2 < N) lines.push([[r,c],[r,c+1],[r,c+2]]);
+          if (r + 2 < N) lines.push([[r,c],[r+1,c],[r+2,c]]);
+          if (r + 2 < N && c + 2 < N) lines.push([[r,c],[r+1,c+1],[r+2,c+2]]);
+          if (r + 2 < N && c - 2 >= 0) lines.push([[r,c],[r+1,c-1],[r+2,c-2]]);
+        }
+      }
+      return lines;
+    })();
+
+    // ── State ──────────────────────────────────────────────────────────────
+    let state;
+    let mode = '2p';      // '2p' | 'computer'
+    let aiPending = false;
+    let gobletId = 0;
+
+    function makeGoblet(player, size) {
+      return { id: gobletId++, player, size };
+    }
+
+    function initGame() {
+      aiPending = false;
+      state = {
+        board: Array.from({ length: N }, () => Array.from({ length: N }, () => [])),
+        hands: {
+          gold: [
+            makeGoblet('gold','L'), makeGoblet('gold','L'),
+            makeGoblet('gold','M'), makeGoblet('gold','M'),
+            makeGoblet('gold','S'), makeGoblet('gold','S'),
+          ],
+          blue: [
+            makeGoblet('blue','L'), makeGoblet('blue','L'),
+            makeGoblet('blue','M'), makeGoblet('blue','M'),
+            makeGoblet('blue','S'), makeGoblet('blue','S'),
+          ],
+        },
+        current: 'gold',
+        phase: 'select',
+        selection: null,
+        winner: null,
+        winLine: [],
+      };
+      document.getElementById('winOverlay').classList.remove('visible');
+      render();
+    }
+
+    // ── Core logic ─────────────────────────────────────────────────────────
+
+    function checkWin(board) {
+      for (const line of LINES) {
+        const tops = line.map(([r,c]) => board[r][c].at(-1));
+        if (tops.every(t => t) && tops.every(t => t.player === tops[0].player))
+          return { winner: tops[0].player, winLine: line.map(([r,c]) => ({ row: r, col: c })) };
+      }
+      return null;
+    }
+
+    function canPlace(goblet, row, col) {
+      const from = state.selection?.from;
+      if (from && typeof from === 'object' && from.row === row && from.col === col) return false;
+      const stack = state.board[row][col];
+      return stack.length === 0 || SIZE[goblet.size] > SIZE[stack.at(-1).size];
+    }
+
+    function getValidTargets() {
+      if (!state.selection) return new Set();
+      const { goblet } = state.selection;
+      const set = new Set();
+      for (let r = 0; r < N; r++)
+        for (let c = 0; c < N; c++)
+          if (canPlace(goblet, r, c)) set.add(`${r},${c}`);
+      return set;
+    }
+
+    // ── Player interaction ─────────────────────────────────────────────────
+
+    function onCellClick(row, col) {
+      if (state.winner) return;
+      if (mode === 'computer' && state.current === 'blue') return;
+
+      if (state.phase === 'select') {
+        const stack = state.board[row][col];
+        if (stack.length > 0 && stack.at(-1).player === state.current)
+          doUngobble(row, col);
+
+      } else if (state.phase === 'place') {
+        if (!state.selection) return;
+        const from = state.selection.from;
+
+        // Tap source cell to cancel ungobble
+        if (typeof from === 'object' && from.row === row && from.col === col) {
+          state.board[row][col].push(state.selection.goblet);
+          state.selection = null;
+          state.phase = 'select';
+          render();
+          return;
+        }
+
+        if (!canPlace(state.selection.goblet, row, col)) return;
+        doPlace(row, col);
+      }
+    }
+
+    function onHandGobletClick(goblet) {
+      if (state.winner) return;
+      if (goblet.player !== state.current) return;
+      if (mode === 'computer' && state.current === 'blue') return;
+
+      // Deselect same goblet
+      if (state.phase === 'place' && state.selection?.from === 'hand'
+          && state.selection?.goblet === goblet) {
+        state.selection = null;
+        state.phase = 'select';
+        render();
+        return;
+      }
+      // Swap to different hand goblet
+      if (state.phase === 'place' && state.selection?.from === 'hand') {
+        state.selection = { goblet, from: 'hand' };
+        render();
+        return;
+      }
+      if (state.phase === 'select') {
+        state.selection = { goblet, from: 'hand' };
+        state.phase = 'place';
+        render();
+      }
+    }
+
+    function doUngobble(row, col) {
+      const stack = state.board[row][col];
+      const goblet = stack.at(-1);
+      stack.pop();
+      state.selection = { goblet, from: { row, col } };
+
+      const result = checkWin(state.board);
+      if (result) {
+        state.winner = result.winner;
+        state.winLine = result.winLine;
+        state.selection = null;
+        render();
+        setTimeout(showWin, 300);
+        return;
+      }
+
+      state.phase = 'place';
+      render();
+    }
+
+    function doPlace(row, col) {
+      const { goblet, from } = state.selection;
+
+      if (from === 'hand') {
+        const hand = state.hands[state.current];
+        hand.splice(hand.indexOf(goblet), 1);
+      }
+
+      state.board[row][col].push(goblet);
+      state.selection = null;
+      state.phase = 'select';
+
+      const result = checkWin(state.board);
+      if (result) {
+        state.winner = result.winner;
+        state.winLine = result.winLine;
+        render();
+        setTimeout(showWin, 300);
+        return;
+      }
+
+      state.current = state.current === 'gold' ? 'blue' : 'gold';
+      render();
+      scheduleAI();
+    }
+
+    function showWin() {
+      const title = document.getElementById('winTitle');
+      title.textContent = state.winner === 'gold' ? 'Gold Wins!' : 'Blue Wins!';
+      title.className = `win-title ${state.winner}`;
+      document.getElementById('winOverlay').classList.add('visible');
+    }
+
+    // ── AI ─────────────────────────────────────────────────────────────────
+
+    function scheduleAI() {
+      if (mode !== 'computer' || state.current !== 'blue' || state.winner) return;
+      aiPending = true;
+      document.getElementById('status').textContent = 'Computer thinking…';
+      document.getElementById('status').className = 'status blue';
+      setTimeout(doAIMove, 480);
+    }
+
+    function doAIMove() {
+      if (!aiPending || state.winner || state.current !== 'blue') return;
+      aiPending = false;
+      const move = getBestMove();
+      if (!move) return;
+      executeAIMove(move);
+    }
+
+    // Generate all distinct moves for a player
+    function getMoves(board, hands, player) {
+      const moves = [];
+
+      // Hand placements — deduplicated by size
+      const usedSizes = new Set();
+      for (const g of hands[player]) {
+        if (usedSizes.has(g.size)) continue;
+        usedSizes.add(g.size);
+        for (let r = 0; r < N; r++)
+          for (let c = 0; c < N; c++) {
+            const s = board[r][c];
+            if (s.length === 0 || SIZE[g.size] > SIZE[s.at(-1).size])
+              moves.push({ type: 'hand', size: g.size, row: r, col: c });
+          }
+      }
+
+      // Ungobble — own top piece, place elsewhere
+      const fromKeys = new Set();
+      for (let r = 0; r < N; r++)
+        for (let c = 0; c < N; c++) {
+          const s = board[r][c];
+          if (!s.length || s.at(-1).player !== player) continue;
+          const fk = `${s.at(-1).size},${r},${c}`;
+          if (fromKeys.has(fk)) continue;
+          fromKeys.add(fk);
+          const g = s.at(-1);
+          for (let tr = 0; tr < N; tr++)
+            for (let tc = 0; tc < N; tc++) {
+              if (tr === r && tc === c) continue;
+              const ts = board[tr][tc];
+              if (ts.length === 0 || SIZE[g.size] > SIZE[ts.at(-1).size])
+                moves.push({ type: 'ungobble', size: g.size, fromRow: r, fromCol: c, toRow: tr, toCol: tc });
+            }
+        }
+
+      return moves;
+    }
+
+    // Apply a move to cloned board/hands; returns { board, hands, winner }
+    function applyMove(board, hands, player, move) {
+      const nb = board.map(row => row.map(s => s.map(g => ({ ...g }))));
+      const nh = { gold: hands.gold.map(g => ({ ...g })), blue: hands.blue.map(g => ({ ...g })) };
+
+      if (move.type === 'hand') {
+        const idx = nh[player].findIndex(g => g.size === move.size);
+        const [goblet] = nh[player].splice(idx, 1);
+        nb[move.row][move.col].push(goblet);
+        return { board: nb, hands: nh, winner: null };
+      } else {
+        const goblet = nb[move.fromRow][move.fromCol].pop();
+        const reveal = checkWin(nb);
+        if (reveal) return { board: nb, hands: nh, winner: reveal.winner };
+        nb[move.toRow][move.toCol].push(goblet);
+        return { board: nb, hands: nh, winner: null };
+      }
+    }
+
+    // Static evaluation from Blue's (AI's) perspective
+    function evaluate(board) {
+      let score = 0;
+      for (const line of LINES) {
+        const tops = line.map(([r,c]) => board[r][c].at(-1));
+        const b = tops.filter(t => t?.player === 'blue').length;
+        const g = tops.filter(t => t?.player === 'gold').length;
+        if (g === 0) score += b === 2 ? 10 : b;
+        if (b === 0) score -= g === 2 ? 10 : g;
+      }
+      const center = board[1][1].at(-1);
+      if (center?.player === 'blue') score += 3;
+      else if (center?.player === 'gold') score -= 3;
+      return score;
+    }
+
+    function minimax(board, hands, player, depth, alpha, beta) {
+      if (depth === 0) return evaluate(board);
+
+      const moves = getMoves(board, hands, player);
+      if (!moves.length) return evaluate(board);
+
+      const isBlue = player === 'blue';
+
+      if (isBlue) {
+        let best = -Infinity;
+        for (const move of moves) {
+          const { board: nb, hands: nh, winner } = applyMove(board, hands, player, move);
+          let score;
+          if (winner) {
+            score = winner === 'blue' ? 90 + depth : -(90 + depth);
+          } else {
+            const w = checkWin(nb);
+            score = w ? (w.winner === 'blue' ? 90 + depth : -(90 + depth))
+                      : minimax(nb, nh, 'gold', depth - 1, alpha, beta);
+          }
+          if (score > best) best = score;
+          if (best > alpha) alpha = best;
+          if (beta <= alpha) break;
+        }
+        return best;
+      } else {
+        let best = Infinity;
+        for (const move of moves) {
+          const { board: nb, hands: nh, winner } = applyMove(board, hands, player, move);
+          let score;
+          if (winner) {
+            score = winner === 'blue' ? 90 + depth : -(90 + depth);
+          } else {
+            const w = checkWin(nb);
+            score = w ? (w.winner === 'blue' ? 90 + depth : -(90 + depth))
+                      : minimax(nb, nh, 'blue', depth - 1, alpha, beta);
+          }
+          if (score < best) best = score;
+          if (best < beta) beta = best;
+          if (beta <= alpha) break;
+        }
+        return best;
+      }
+    }
+
+    function getBestMove() {
+      const moves = getMoves(state.board, state.hands, 'blue');
+      if (!moves.length) return null;
+
+      // Shuffle to vary play when scores are equal
+      moves.sort(() => Math.random() - 0.5);
+
+      let bestScore = -Infinity;
+      let bestMove = moves[0];
+
+      for (const move of moves) {
+        const { board: nb, hands: nh, winner } = applyMove(state.board, state.hands, 'blue', move);
+        let score;
+        if (winner) {
+          score = winner === 'blue' ? 100 : -100;
+        } else {
+          const w = checkWin(nb);
+          score = w ? (w.winner === 'blue' ? 100 : -100)
+                    : minimax(nb, nh, 'gold', 4, -Infinity, Infinity);
+        }
+        if (score > bestScore) { bestScore = score; bestMove = move; }
+      }
+      return bestMove;
+    }
+
+    function executeAIMove(move) {
+      if (move.type === 'hand') {
+        const hand = state.hands.blue;
+        const goblet = hand.find(g => g.size === move.size);
+        state.selection = { goblet, from: 'hand' };
+        state.phase = 'place';
+        doPlace(move.row, move.col);
+      } else {
+        doUngobble(move.fromRow, move.fromCol);
+        if (state.winner) return;
+        doPlace(move.toRow, move.toCol);
+      }
+    }
+
+    // ── Rendering ──────────────────────────────────────────────────────────
+
+    function render() {
+      renderBoard();
+      renderHand('gold');
+      renderHand('blue');
+      renderStatus();
+    }
+
+    function renderBoard() {
+      const boardEl = document.getElementById('board');
+      boardEl.innerHTML = '';
+
+      const validTargets = (state.phase === 'place' && state.selection)
+        ? getValidTargets() : new Set();
+
+      const fromKey = (state.selection && typeof state.selection.from === 'object')
+        ? `${state.selection.from.row},${state.selection.from.col}` : null;
+
+      const winSet = new Set(state.winLine.map(({ row, col }) => `${row},${col}`));
+
+      for (let r = 0; r < N; r++) {
+        for (let c = 0; c < N; c++) {
+          const cell = document.createElement('div');
+          const key = `${r},${c}`;
+
+          cell.className = 'cell';
+          if (winSet.has(key))            cell.classList.add('win-cell');
+          else if (key === fromKey)       cell.classList.add('cancel-cell');
+          else if (validTargets.has(key)) cell.classList.add('valid-target');
+
+          const stack = state.board[r][c];
+          if (stack.length > 0) {
+            const top = stack.at(-1);
+            const g = document.createElement('div');
+            g.className = `board-goblet board-goblet-${top.size} goblet-${top.player}`;
+            cell.appendChild(g);
+            // No stack depth badge — hidden information
+          }
+
+          cell.addEventListener('click', () => onCellClick(r, c));
+          boardEl.appendChild(cell);
+        }
+      }
+    }
+
+    function renderHand(player) {
+      const panelEl = document.getElementById(`panel-${player}`);
+      const handEl  = document.getElementById(`hand-${player}`);
+      handEl.innerHTML = '';
+
+      const isHuman  = mode === '2p' || player === 'gold';
+      const isActive = !state.winner && state.current === player;
+      panelEl.className = `hand-panel${isActive ? ` active-${player}` : ' inactive'}`;
+
+      const hand = state.hands[player];
+      if (!hand.length) {
+        const msg = document.createElement('span');
+        msg.style.cssText = 'font-size:0.72rem;color:#4a4060;font-style:italic;';
+        msg.textContent = 'All placed';
+        handEl.appendChild(msg);
+        return;
+      }
+
+      hand.forEach(goblet => {
+        const el = document.createElement('div');
+        el.className = `hand-goblet hand-goblet-${goblet.size} goblet-${goblet.player}`;
+        if (state.selection?.from === 'hand' && state.selection?.goblet === goblet)
+          el.classList.add('selected');
+        if (isActive && isHuman)
+          el.addEventListener('click', () => onHandGobletClick(goblet));
+        handEl.appendChild(el);
+      });
+    }
+
+    function renderStatus() {
+      const el = document.getElementById('status');
+      if (state.winner) { el.textContent = ''; el.className = 'status'; return; }
+
+      const name = state.current === 'gold' ? 'Gold' : 'Blue';
+      let msg;
+      if (state.phase === 'select') {
+        msg = state.current === 'blue' && mode === 'computer'
+          ? 'Computer thinking…'
+          : `${name}'s turn — pick a goblet`;
+      } else {
+        msg = state.selection?.from === 'hand'
+          ? `${name} — tap a cell to place (or tap goblet to cancel)`
+          : `${name} — tap a cell to place (tap red to cancel)`;
+      }
+      el.textContent = msg;
+      el.className = `status ${state.current}`;
+    }
+
+    // ── Controls ───────────────────────────────────────────────────────────
+
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        mode = btn.dataset.mode;
+        initGame();
+      });
+    });
+
+    document.getElementById('newGameBtn').addEventListener('click', initGame);
+    document.getElementById('playAgainBtn').addEventListener('click', initGame);
+
+    initGame();
+  </script>
+</body>
+</html>
