@@ -463,8 +463,8 @@
         <div>
           <p class="rules-section-title">Controls</p>
           <ul class="rules-list">
-            <li><span class="icon">👆</span><span><strong>Tap / Click</strong> a cell to dig it up and reveal what's underneath.</span></li>
-            <li><span class="icon">👆👆</span><span><strong>Double-tap</strong> (mobile) or <strong>right-click</strong> (laptop) to plant a 🚩 flag on a cell you think hides a bomb. Tap/right-click again to remove the flag.</span></li>
+            <li><span class="icon">👆</span><span><strong>Tap / Click</strong> a cell to plant or remove a 🚩 flag marking a suspected bomb.</span></li>
+            <li><span class="icon">👆👆</span><span><strong>Double-tap</strong> (mobile) or <strong>double-click / right-click</strong> (laptop) to dig up a cell and reveal what's underneath.</span></li>
             <li><span class="icon">🙂</span><span>Press the <strong>smiley button</strong> at any time to start a fresh game.</span></li>
           </ul>
         </div>
@@ -543,11 +543,11 @@
 
         <div class="code-section">
           <p class="code-section-title">Double-Tap Detection</p>
-          <p>Touch screens don't have a right-click, so flagging works by detecting two taps on the same cell within <em>300 ms</em>. The code remembers the last tapped cell and the timestamp. A single tap waits 300 ms before revealing, so a quick double-tap can intercept it and flag instead.</p>
+          <p>Touch screens don't have a right-click, so digging works by detecting two taps on the same cell within <em>300 ms</em>. The code remembers the last tapped cell and the timestamp. A single tap waits 300 ms before flagging, so a quick double-tap can intercept it and dig instead.</p>
           <div class="code-block"><span class="kw">if</span> (idx === lastTapCell && timeSince &lt; <span class="str">300</span>) {
-  <span class="fn">toggleFlag</span>(idx);   <span class="cm">// double-tap → flag</span>
+  <span class="fn">reveal</span>(idx);        <span class="cm">// double-tap → dig</span>
 } <span class="kw">else</span> {
-  setTimeout(() => <span class="fn">reveal</span>(idx), <span class="str">300</span>); <span class="cm">// wait for possible 2nd tap</span>
+  setTimeout(() => <span class="fn">toggleFlag</span>(idx), <span class="str">300</span>); <span class="cm">// wait for possible 2nd tap</span>
 }</div>
         </div>
 
@@ -572,9 +572,173 @@ board.style.gridTemplateColumns =
     </div>
   </div>
 
-  <p class="hint">Tap to reveal &nbsp;·&nbsp; Double-tap to flag</p>
+  <p class="hint">Tap to flag &nbsp;·&nbsp; Double-tap to dig</p>
 
   <script>
+    // ── Web Audio sound effects ───────────────────────────────────────────────
+
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      return audioCtx;
+    }
+
+    function playFlagSound() {
+      try {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        const dur = 0.18;
+        const sr = ctx.sampleRate;
+
+        // Sandy thud: noise shaped like a stick poke into sand
+        const buf = ctx.createBuffer(1, sr * dur, sr);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) {
+          const t = i / d.length;
+          // Sharp attack, quick exponential decay
+          const env = t < 0.05 ? t / 0.05 : Math.pow(1 - (t - 0.05) / 0.95, 4);
+          d[i] = (Math.random() * 2 - 1) * env;
+        }
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+
+        // Low-pass for a muffled sandy texture
+        const lp = ctx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.setValueAtTime(900, now);
+        lp.frequency.exponentialRampToValueAtTime(250, now + dur);
+
+        // High-shelf boost at the attack for the "stick" click
+        const hs = ctx.createBiquadFilter();
+        hs.type = 'highshelf';
+        hs.frequency.value = 2000;
+        hs.gain.setValueAtTime(8, now);
+        hs.gain.linearRampToValueAtTime(0, now + 0.04);
+
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.7, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        src.connect(hs); hs.connect(lp); lp.connect(gain); gain.connect(ctx.destination);
+        src.start(now);
+      } catch (e) {}
+    }
+
+    function playDigSound() {
+      try {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        const dur = 0.32;
+        const sr = ctx.sampleRate;
+
+        // Shovel scrape: rising noise sweep then soft thud
+        const buf = ctx.createBuffer(1, sr * dur, sr);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) {
+          const t = i / d.length;
+          // Build up (scrape) then fall off (landing)
+          const env = t < 0.35 ? (t / 0.35) : Math.pow(1 - (t - 0.35) / 0.65, 2.5);
+          d[i] = (Math.random() * 2 - 1) * env;
+        }
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+
+        // Bandpass sweeping down — the "whoosh into sand" character
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.setValueAtTime(2200, now);
+        bp.frequency.exponentialRampToValueAtTime(350, now + 0.28);
+        bp.Q.value = 0.8;
+
+        // Low layer for the thud impact
+        const lp = ctx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 400;
+
+        const mixGain = ctx.createGain();
+        mixGain.gain.value = 0.55;
+
+        const lpGain = ctx.createGain();
+        lpGain.gain.setValueAtTime(0, now + 0.3);
+        lpGain.gain.linearRampToValueAtTime(0.4, now + 0.32);
+
+        const src2 = ctx.createBufferSource();
+        src2.buffer = buf;
+
+        src.connect(bp); bp.connect(mixGain); mixGain.connect(ctx.destination);
+        src2.connect(lp); lp.connect(lpGain); lpGain.connect(ctx.destination);
+        src.start(now);
+        src2.start(now);
+      } catch (e) {}
+    }
+
+    function playBombSound() {
+      try {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        const dur = 1.0;
+        const sr = ctx.sampleRate;
+
+        // Sharp crack layer
+        const crackLen = sr * 0.06;
+        const crackBuf = ctx.createBuffer(1, crackLen, sr);
+        const cd = crackBuf.getChannelData(0);
+        for (let i = 0; i < crackLen; i++) {
+          cd[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / crackLen, 2);
+        }
+        const crack = ctx.createBufferSource();
+        crack.buffer = crackBuf;
+        const crackGain = ctx.createGain();
+        crackGain.gain.setValueAtTime(1.2, now);
+        crack.connect(crackGain); crackGain.connect(ctx.destination);
+        crack.start(now);
+
+        // Deep rumble layer
+        const rumbleBuf = ctx.createBuffer(1, sr * dur, sr);
+        const rd = rumbleBuf.getChannelData(0);
+        for (let i = 0; i < rd.length; i++) {
+          const t = i / rd.length;
+          rd[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 1.4);
+        }
+        const rumble = ctx.createBufferSource();
+        rumble.buffer = rumbleBuf;
+
+        const lp = ctx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.setValueAtTime(180, now);
+        lp.frequency.exponentialRampToValueAtTime(60, now + 0.7);
+
+        const rumbleGain = ctx.createGain();
+        rumbleGain.gain.setValueAtTime(1.0, now);
+        rumbleGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        rumble.connect(lp); lp.connect(rumbleGain); rumbleGain.connect(ctx.destination);
+        rumble.start(now);
+
+        // Mid noise burst
+        const burstBuf = ctx.createBuffer(1, sr * 0.4, sr);
+        const bd = burstBuf.getChannelData(0);
+        for (let i = 0; i < bd.length; i++) {
+          const t = i / bd.length;
+          bd[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 2);
+        }
+        const burst = ctx.createBufferSource();
+        burst.buffer = burstBuf;
+
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = 500;
+        bp.Q.value = 0.5;
+
+        const burstGain = ctx.createGain();
+        burstGain.gain.setValueAtTime(0.7, now);
+        burstGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+
+        burst.connect(bp); bp.connect(burstGain); burstGain.connect(ctx.destination);
+        burst.start(now);
+      } catch (e) {}
+    }
+
     const PRESETS = {
       easy:   { cols: 9,  rows: 9,  mines: 10 },
       medium: { cols: 16, rows: 9,  mines: 25 },
@@ -698,6 +862,8 @@ board.style.gridTemplateColumns =
         return;
       }
 
+      playDigSound();
+
       // BFS flood fill
       const queue = [idx];
       const visited = new Set([idx]);
@@ -737,6 +903,7 @@ board.style.gridTemplateColumns =
 
       cell.flagged = !cell.flagged;
       state.flagCount += cell.flagged ? 1 : -1;
+      playFlagSound();
       updateMineDisplay();
       renderCell(idx);
     }
@@ -757,6 +924,7 @@ board.style.gridTemplateColumns =
       resetBtn.textContent = won ? '😎' : '😵';
 
       if (!won) {
+        playBombSound();
         // Reveal all mines
         state.cells.forEach((cell, i) => {
           if (cell.mine) cell.revealed = true;
@@ -866,10 +1034,10 @@ board.style.gridTemplateColumns =
 
       const now = Date.now();
       if (idx === lastTapCell && (now - lastTapTime) < DBL_TAP_MS) {
-        // Double tap → flag
+        // Double tap → dig
         lastTapCell = -1;
         lastTapTime = 0;
-        toggleFlag(idx);
+        reveal(idx);
       } else {
         lastTapCell = idx;
         lastTapTime = now;
@@ -877,23 +1045,46 @@ board.style.gridTemplateColumns =
         setTimeout(() => {
           if (lastTapCell === idx) {
             lastTapCell = -1;
-            reveal(idx);
+            toggleFlag(idx);
           }
         }, DBL_TAP_MS);
       }
     }
 
+    // Mouse double-click tracking
+    let lastClickCell = -1;
+    let lastClickTime = 0;
+    const DBL_CLICK_MS = 300;
+
     function onClick(e) {
       // Only handle non-touch clicks (mouse)
       if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
       const idx = cellIndexFromEvent(e);
-      if (idx >= 0) reveal(idx);
+      if (idx < 0) return;
+
+      const now = Date.now();
+      if (idx === lastClickCell && (now - lastClickTime) < DBL_CLICK_MS) {
+        // Double click → dig
+        lastClickCell = -1;
+        lastClickTime = 0;
+        reveal(idx);
+      } else {
+        lastClickCell = idx;
+        lastClickTime = now;
+        // Wait for possible double click before flagging
+        setTimeout(() => {
+          if (lastClickCell === idx) {
+            lastClickCell = -1;
+            toggleFlag(idx);
+          }
+        }, DBL_CLICK_MS);
+      }
     }
 
     function onContextMenu(e) {
       e.preventDefault();
       const idx = cellIndexFromEvent(e);
-      if (idx >= 0) toggleFlag(idx);
+      if (idx >= 0) reveal(idx);
     }
 
     // ── Controls ──────────────────────────────────────────────────────────────
