@@ -70,6 +70,89 @@
       border-color: #7c3aed;
     }
     .mode-btn:active { filter: brightness(1.2); }
+    .rules-btn {
+      background: #1c1730;
+      color: #7c6fa0;
+      border: 2px solid #2d1f50;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.83rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .rules-btn:hover { color: #c4b5fd; border-color: #5b21b6; }
+    .rules-btn:active { filter: brightness(1.2); }
+
+    /* ── Rules modal ────────────────────────────────────────────────────────── */
+    .rules-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 5, 10, 0.82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .rules-backdrop.visible { opacity: 1; pointer-events: all; }
+
+    .rules-box {
+      background: #1c1730;
+      border: 2px solid #5b21b6;
+      border-radius: 16px;
+      padding: 24px 22px 20px;
+      max-width: 380px;
+      width: 100%;
+      max-height: 82dvh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transform: translateY(12px);
+      transition: transform 0.25s ease;
+    }
+    .rules-backdrop.visible .rules-box { transform: translateY(0); }
+
+    .rules-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #a78bfa;
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+    .rules-section { display: flex; flex-direction: column; gap: 5px; }
+    .rules-section h3 {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #7c3aed;
+    }
+    .rules-section p {
+      font-size: 0.82rem;
+      color: #c4b5fd;
+      line-height: 1.55;
+    }
+    .rules-close {
+      align-self: center;
+      margin-top: 4px;
+      background: #5b21b6;
+      color: #ede9fe;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 28px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s;
+    }
+    .rules-close:active { background: #4c1d95; }
 
     /* ── Hand panels ─────────────────────────────────────────────────────── */
     .hand-panel {
@@ -112,16 +195,36 @@
       flex-wrap: wrap;
     }
 
-    /* ── Goblet colours ──────────────────────────────────────────────────── */
-    .goblet-gold {
-      background: radial-gradient(circle at 35% 30%, #fde68a, #d97706);
+    /* ── Goblet colours — L darkest, S lightest ─────────────────────────── */
+    .goblet-gold-L {
+      background: radial-gradient(circle at 35% 30%, #fbbf24, #b45309);
+      border: 2px solid #d97706;
+      box-shadow: 0 2px 6px rgba(217,119,6,0.45);
+    }
+    .goblet-gold-M {
+      background: radial-gradient(circle at 35% 30%, #fcd34d, #d97706);
       border: 2px solid #f59e0b;
       box-shadow: 0 2px 6px rgba(245,158,11,0.35);
     }
-    .goblet-blue {
-      background: radial-gradient(circle at 35% 30%, #bfdbfe, #1d4ed8);
+    .goblet-gold-S {
+      background: radial-gradient(circle at 35% 30%, #fef3c7, #fbbf24);
+      border: 2px solid #fde68a;
+      box-shadow: 0 2px 6px rgba(251,191,36,0.3);
+    }
+    .goblet-blue-L {
+      background: radial-gradient(circle at 35% 30%, #1d4ed8, #1e3a8a);
+      border: 2px solid #1e40af;
+      box-shadow: 0 2px 6px rgba(30,64,175,0.5);
+    }
+    .goblet-blue-M {
+      background: radial-gradient(circle at 35% 30%, #60a5fa, #1d4ed8);
       border: 2px solid #3b82f6;
       box-shadow: 0 2px 6px rgba(59,130,246,0.35);
+    }
+    .goblet-blue-S {
+      background: radial-gradient(circle at 35% 30%, #dbeafe, #93c5fd);
+      border: 2px solid #bfdbfe;
+      box-shadow: 0 2px 6px rgba(147,197,253,0.3);
     }
 
     /* Hand goblet sizes */
@@ -195,7 +298,7 @@
     .win-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(7, 5, 10, 0.93);
+      background: rgba(7, 5, 10, 0.72);
       border-radius: 8px;
       display: flex;
       flex-direction: column;
@@ -262,6 +365,40 @@
   <div class="mode-bar">
     <button class="mode-btn active" data-mode="2p">2 Players</button>
     <button class="mode-btn" data-mode="computer">vs Computer</button>
+    <button class="rules-btn" id="rulesBtn">Rules</button>
+  </div>
+
+  <div class="rules-backdrop" id="rulesBackdrop">
+    <div class="rules-box">
+      <div class="rules-title">📖 The Legend of the Goblets</div>
+
+      <div class="rules-section">
+        <h3>The World</h3>
+        <p>Two clans — the <strong style="color:#fbbf24">Gold</strong> and the <strong style="color:#60a5fa">Blue</strong> — battle for dominance on a 3×3 arena. Each clan fields six goblets: two Large, two Medium, two Small. Get three of your colour in a row to claim victory.</p>
+      </div>
+
+      <div class="rules-section">
+        <h3>The Gobbling Hierarchy</h3>
+        <p>Goblets are hungry creatures. A <strong>Large</strong> goblet can swallow a Medium or Small. A <strong>Medium</strong> can swallow a Small. A <strong>Small</strong> is humble — it can only settle on empty ground. You may gobble your own kin or your enemy's — no loyalty in this arena.</p>
+      </div>
+
+      <div class="rules-section">
+        <h3>The Opening Ritual</h3>
+        <p>The first two moves of the game are sacred. Each clan must send forth a <strong>Small</strong> goblet to begin. No Large, no Medium — only the meek shall open the battle.</p>
+      </div>
+
+      <div class="rules-section">
+        <h3>The Ungobble</h3>
+        <p>A goblet that sits atop a stack may be picked up and redeployed — but it cannot return to the very spot it left. Beware: lifting a goblet may reveal a hidden foe beneath, and if that reveal completes a row of three… your opponent wins <em>before you even place</em>.</p>
+      </div>
+
+      <div class="rules-section">
+        <h3>Victory</h3>
+        <p>Three goblets of the same colour — horizontal, vertical, or diagonal — end the battle. The winning cells will pulse with glory. Press <strong>Play Again</strong> to start a new war.</p>
+      </div>
+
+      <button class="rules-close" id="rulesClose">Got it!</button>
+    </div>
   </div>
 
   <div class="hand-panel" id="panel-gold">
@@ -335,6 +472,7 @@
         selection: null,
         winner: null,
         winLine: [],
+        moveCount: 0,   // first 2 moves must use S goblets
       };
       document.getElementById('winOverlay').classList.remove('visible');
       render();
@@ -376,7 +514,7 @@
 
       if (state.phase === 'select') {
         const stack = state.board[row][col];
-        if (stack.length > 0 && stack.at(-1).player === state.current)
+        if (stack.length > 0 && stack.at(-1).player === state.current && state.moveCount >= 2)
           doUngobble(row, col);
 
       } else if (state.phase === 'place') {
@@ -417,6 +555,7 @@
         return;
       }
       if (state.phase === 'select') {
+        if (state.moveCount < 2 && goblet.size !== 'S') return; // first 2 moves must be S
         state.selection = { goblet, from: 'hand' };
         state.phase = 'place';
         render();
@@ -464,6 +603,7 @@
         return;
       }
 
+      state.moveCount++;
       state.current = state.current === 'gold' ? 'blue' : 'gold';
       render();
       scheduleAI();
@@ -495,12 +635,14 @@
     }
 
     // Generate all distinct moves for a player
-    function getMoves(board, hands, player) {
+    function getMoves(board, hands, player, moveCount) {
       const moves = [];
+      const mustBeSmall = moveCount < 2;
 
       // Hand placements — deduplicated by size
       const usedSizes = new Set();
       for (const g of hands[player]) {
+        if (mustBeSmall && g.size !== 'S') continue;
         if (usedSizes.has(g.size)) continue;
         usedSizes.add(g.size);
         for (let r = 0; r < N; r++)
@@ -511,24 +653,26 @@
           }
       }
 
-      // Ungobble — own top piece, place elsewhere
-      const fromKeys = new Set();
-      for (let r = 0; r < N; r++)
-        for (let c = 0; c < N; c++) {
-          const s = board[r][c];
-          if (!s.length || s.at(-1).player !== player) continue;
-          const fk = `${s.at(-1).size},${r},${c}`;
-          if (fromKeys.has(fk)) continue;
-          fromKeys.add(fk);
-          const g = s.at(-1);
-          for (let tr = 0; tr < N; tr++)
-            for (let tc = 0; tc < N; tc++) {
-              if (tr === r && tc === c) continue;
-              const ts = board[tr][tc];
-              if (ts.length === 0 || SIZE[g.size] > SIZE[ts.at(-1).size])
-                moves.push({ type: 'ungobble', size: g.size, fromRow: r, fromCol: c, toRow: tr, toCol: tc });
-            }
-        }
+      // Ungobble — own top piece, place elsewhere (not allowed in first 2 moves)
+      if (!mustBeSmall) {
+        const fromKeys = new Set();
+        for (let r = 0; r < N; r++)
+          for (let c = 0; c < N; c++) {
+            const s = board[r][c];
+            if (!s.length || s.at(-1).player !== player) continue;
+            const fk = `${s.at(-1).size},${r},${c}`;
+            if (fromKeys.has(fk)) continue;
+            fromKeys.add(fk);
+            const g = s.at(-1);
+            for (let tr = 0; tr < N; tr++)
+              for (let tc = 0; tc < N; tc++) {
+                if (tr === r && tc === c) continue;
+                const ts = board[tr][tc];
+                if (ts.length === 0 || SIZE[g.size] > SIZE[ts.at(-1).size])
+                  moves.push({ type: 'ungobble', size: g.size, fromRow: r, fromCol: c, toRow: tr, toCol: tc });
+              }
+          }
+      }
 
       return moves;
     }
@@ -568,10 +712,10 @@
       return score;
     }
 
-    function minimax(board, hands, player, depth, alpha, beta) {
+    function minimax(board, hands, player, depth, alpha, beta, moveCount) {
       if (depth === 0) return evaluate(board);
 
-      const moves = getMoves(board, hands, player);
+      const moves = getMoves(board, hands, player, moveCount);
       if (!moves.length) return evaluate(board);
 
       const isBlue = player === 'blue';
@@ -586,7 +730,7 @@
           } else {
             const w = checkWin(nb);
             score = w ? (w.winner === 'blue' ? 90 + depth : -(90 + depth))
-                      : minimax(nb, nh, 'gold', depth - 1, alpha, beta);
+                      : minimax(nb, nh, 'gold', depth - 1, alpha, beta, moveCount + 1);
           }
           if (score > best) best = score;
           if (best > alpha) alpha = best;
@@ -603,7 +747,7 @@
           } else {
             const w = checkWin(nb);
             score = w ? (w.winner === 'blue' ? 90 + depth : -(90 + depth))
-                      : minimax(nb, nh, 'blue', depth - 1, alpha, beta);
+                      : minimax(nb, nh, 'blue', depth - 1, alpha, beta, moveCount + 1);
           }
           if (score < best) best = score;
           if (best < beta) beta = best;
@@ -614,7 +758,8 @@
     }
 
     function getBestMove() {
-      const moves = getMoves(state.board, state.hands, 'blue');
+      const mc = state.moveCount;
+      const moves = getMoves(state.board, state.hands, 'blue', mc);
       if (!moves.length) return null;
 
       // Shuffle to vary play when scores are equal
@@ -631,7 +776,7 @@
         } else {
           const w = checkWin(nb);
           score = w ? (w.winner === 'blue' ? 100 : -100)
-                    : minimax(nb, nh, 'gold', 4, -Infinity, Infinity);
+                    : minimax(nb, nh, 'gold', 4, -Infinity, Infinity, mc + 1);
         }
         if (score > bestScore) { bestScore = score; bestMove = move; }
       }
@@ -687,7 +832,7 @@
           if (stack.length > 0) {
             const top = stack.at(-1);
             const g = document.createElement('div');
-            g.className = `board-goblet board-goblet-${top.size} goblet-${top.player}`;
+            g.className = `board-goblet board-goblet-${top.size} goblet-${top.player}-${top.size}`;
             cell.appendChild(g);
             // No stack depth badge — hidden information
           }
@@ -718,7 +863,7 @@
 
       hand.forEach(goblet => {
         const el = document.createElement('div');
-        el.className = `hand-goblet hand-goblet-${goblet.size} goblet-${goblet.player}`;
+        el.className = `hand-goblet hand-goblet-${goblet.size} goblet-${goblet.player}-${goblet.size}`;
         if (state.selection?.from === 'hand' && state.selection?.goblet === goblet)
           el.classList.add('selected');
         if (isActive && isHuman)
@@ -736,7 +881,9 @@
       if (state.phase === 'select') {
         msg = state.current === 'blue' && mode === 'computer'
           ? 'Computer thinking…'
-          : `${name}'s turn — pick a goblet`;
+          : state.moveCount < 2
+            ? `${name}'s turn — must play a small goblet`
+            : `${name}'s turn — pick a goblet`;
       } else {
         msg = state.selection?.from === 'hand'
           ? `${name} — tap a cell to place (or tap goblet to cancel)`
@@ -759,6 +906,11 @@
 
     document.getElementById('newGameBtn').addEventListener('click', initGame);
     document.getElementById('playAgainBtn').addEventListener('click', initGame);
+
+    const rulesBackdrop = document.getElementById('rulesBackdrop');
+    document.getElementById('rulesBtn').addEventListener('click', () => rulesBackdrop.classList.add('visible'));
+    document.getElementById('rulesClose').addEventListener('click', () => rulesBackdrop.classList.remove('visible'));
+    rulesBackdrop.addEventListener('click', e => { if (e.target === rulesBackdrop) rulesBackdrop.classList.remove('visible'); });
 
     initGame();
   </script>
