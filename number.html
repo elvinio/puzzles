@@ -137,6 +137,132 @@
     }
     .new-btn:active { background: var(--p); }
 
+    .rules-btn {
+      background: var(--ctrl-bg);
+      color: var(--muted);
+      border: 2px solid var(--brd);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, color 0.15s, border-color 0.2s;
+    }
+    .rules-btn:hover { color: var(--p-lt); border-color: var(--p-dk); }
+    .rules-btn:active { filter: brightness(1.2); }
+
+    /* ── Rules modal ─────────────────────────────────────────────────────── */
+
+    .rules-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .rules-backdrop.visible { opacity: 1; pointer-events: all; }
+
+    .rules-box {
+      background: var(--surface);
+      border: 2px solid var(--p-dk);
+      border-radius: 16px;
+      padding: 24px 22px 20px;
+      max-width: 400px;
+      width: 100%;
+      max-height: 82dvh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transform: translateY(12px);
+      transition: transform 0.25s ease;
+    }
+    .rules-backdrop.visible .rules-box { transform: translateY(0); }
+
+    .rules-box h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--p-lt);
+      margin: 0;
+      letter-spacing: 0.04em;
+    }
+
+    .rules-section h3 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--p);
+      margin: 0 0 6px;
+    }
+    .rules-section p, .rules-section li {
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--p-xl);
+      margin: 0;
+    }
+    .rules-section ul {
+      margin: 4px 0 0;
+      padding-left: 1.2em;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .rules-divider {
+      border: none;
+      border-top: 1px solid var(--brd);
+      margin: 0;
+    }
+
+    .rules-audience {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .rules-audience-tab {
+      background: var(--ctrl-bg);
+      color: var(--muted);
+      border: 2px solid var(--brd);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .rules-audience-tab.active {
+      background: var(--p);
+      color: var(--p-xl);
+      border-color: var(--p-lt);
+    }
+    .rules-panel { display: none; }
+    .rules-panel.active { display: block; }
+
+    .rules-close {
+      align-self: center;
+      margin-top: 4px;
+      background: var(--p);
+      color: var(--p-xl);
+      border: none;
+      border-radius: 10px;
+      padding: 9px 32px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s;
+    }
+    .rules-close:active { filter: brightness(1.2); }
+
     /* ── Theme bar ───────────────────────────────────────────────────────── */
 
     .theme-bar {
@@ -292,6 +418,7 @@
     <button class="size-btn" data-size="5">5×5</button>
     <button class="size-btn" data-size="6">6×6</button>
     <button class="new-btn" id="newBtn">New Game</button>
+    <button class="rules-btn" id="rulesBtn">Rules</button>
   </div>
 
   <div class="theme-bar">
@@ -313,6 +440,60 @@
       <div class="win-title">Puzzle Solved!</div>
       <div class="win-stats" id="winStats"></div>
       <button class="play-again-btn" id="playAgainBtn">Play Again</button>
+    </div>
+  </div>
+
+  <div class="rules-backdrop" id="rulesBackdrop">
+    <div class="rules-box">
+
+      <h2>Number Puzzle</h2>
+
+      <!-- ── How to Play ──────────────────────────────────────────────── -->
+      <div class="rules-section">
+        <h3>How to Play</h3>
+        <ul>
+          <li>Slide tiles into order — <strong>1, 2, 3…</strong> left-to-right, top-to-bottom, with the empty space at the bottom-right.</li>
+          <li>Tap any tile that shares a <strong>row or column</strong> with the empty space to slide it.</li>
+          <li>All tiles between the tapped tile and the empty space shift over in one smooth move.</li>
+          <li>Use arrow keys on a keyboard, or swipe on touch screens.</li>
+          <li>Fewer moves and less time is better!</li>
+        </ul>
+      </div>
+
+      <hr class="rules-divider">
+
+      <!-- ── How it Works ─────────────────────────────────────────────── -->
+      <div class="rules-section">
+        <h3>How it Works</h3>
+        <div class="rules-audience">
+          <button class="rules-audience-tab active" data-panel="kids">For Kids</button>
+          <button class="rules-audience-tab" data-panel="adults">For Adults</button>
+        </div>
+
+        <div class="rules-panel active" id="panel-kids">
+          <p>The computer stores all the tiles in a <strong>list</strong> (like a row of numbered boxes). The empty space is just a box holding the number <strong>zero</strong>.</p>
+          <ul>
+            <li>When you tap a tile, the computer checks: is it in the same row or column as the zero box?</li>
+            <li>If yes, it swaps the numbers along that row or column — like sliding books along a shelf — until the zero reaches the tile you tapped.</li>
+            <li>Then it redraws the board by updating each tile's position using <strong>CSS</strong> — the styling language that controls how things look on a web page.</li>
+            <li>A tiny timer runs every half-second to count how long you've been playing!</li>
+          </ul>
+          <p style="margin-top:8px">Everything you see — the colours, the animations, the sounds — is written in just three languages: <strong>HTML</strong> (structure), <strong>CSS</strong> (appearance), and <strong>JavaScript</strong> (behaviour).</p>
+        </div>
+
+        <div class="rules-panel" id="panel-adults">
+          <p>The board is a flat <strong>array</strong> of N² integers (0 = blank). All game state lives in one object.</p>
+          <ul>
+            <li><strong>Move validation:</strong> a tap is legal only when the tile's row or column matches the blank's — checked in O(1).</li>
+            <li><strong>Shift logic:</strong> tiles between the tap and blank are shifted by one index in a linear scan — no swaps, no splice, just a while-loop.</li>
+            <li><strong>Rendering:</strong> tiles are absolutely-positioned via CSS custom properties (<code>--row</code>, <code>--col</code>). Updating those properties triggers a CSS transition automatically — no JS animation loop needed.</li>
+            <li><strong>Solvability:</strong> at startup the shuffle is validated: odd grids need an even inversion count; even grids need (inversions + blank's row from bottom) to be odd.</li>
+            <li><strong>Sound:</strong> a synthesised tock is built with the Web Audio API — white noise through a bandpass filter with a 2 ms attack / 55 ms exponential decay, scheduled to fire exactly when the CSS transition ends (120 ms).</li>
+          </ul>
+        </div>
+      </div>
+
+      <button class="rules-close" id="rulesClose">Got it!</button>
     </div>
   </div>
 
@@ -401,6 +582,52 @@
       }
     }
 
+    // ── Audio ──────────────────────────────────────────────────────────────
+
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      return audioCtx;
+    }
+
+    function playTock(delay = 0) {
+      const ctx = getAudioCtx();
+
+      const schedule = () => {
+        const sampleRate = ctx.sampleRate;
+        const bufLen = Math.ceil(0.06 * sampleRate);
+        const buf = ctx.createBuffer(1, bufLen, sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
+
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 1000;
+        filter.Q.value = 2;
+
+        const gain = ctx.createGain();
+        const t = ctx.currentTime + delay;
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.45, t + 0.002);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.057);
+
+        src.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        src.start(t);
+        src.stop(t + 0.06);
+      };
+
+      if (ctx.state === 'suspended') {
+        ctx.resume().then(schedule);
+      } else {
+        schedule();
+      }
+    }
+
     // ── Move Logic ─────────────────────────────────────────────────────────
 
     function doMove(idx) {
@@ -446,6 +673,7 @@
       document.getElementById('moveCount').textContent = state.moves;
 
       render();
+      playTock(0.12);
 
       if (isSolved(state.grid, state.size)) {
         state.solved = true;
@@ -556,6 +784,21 @@
 
     document.getElementById('newBtn').addEventListener('click', () => initGame(state.size));
     document.getElementById('playAgainBtn').addEventListener('click', () => initGame(state.size));
+
+    // ── Rules modal ────────────────────────────────────────────────────────
+    const rulesBackdrop = document.getElementById('rulesBackdrop');
+    document.getElementById('rulesBtn').addEventListener('click', () => rulesBackdrop.classList.add('visible'));
+    document.getElementById('rulesClose').addEventListener('click', () => rulesBackdrop.classList.remove('visible'));
+    rulesBackdrop.addEventListener('click', e => { if (e.target === rulesBackdrop) rulesBackdrop.classList.remove('visible'); });
+
+    rulesBackdrop.querySelectorAll('.rules-audience-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        rulesBackdrop.querySelectorAll('.rules-audience-tab').forEach(t => t.classList.remove('active'));
+        rulesBackdrop.querySelectorAll('.rules-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+      });
+    });
 
     // ── Init ───────────────────────────────────────────────────────────────
 
