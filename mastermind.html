@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Mastermind</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #13111c;
+      --surface: #1c1730;
+      --surface2: #0d0b14;
+      --brd:     #4c1d95;
+      --brd-lt:  #2d1f50;
+      --p:       #6d28d9;
+      --p-lt:    #7c3aed;
+      --p-xl:    #a78bfa;
+      --p-text:  #e2d9f3;
+      --muted:   #7c6fa0;
+      --overlay: rgba(7,5,14,0.94);
+    }
+
+    body {
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 0;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .game-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      padding: 0 12px 0;
+    }
+
+    /* ── Back link ── */
+    .back-link {
+      align-self: flex-start;
+      padding: 12px 4px 4px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      touch-action: manipulation;
+      flex-shrink: 0;
+    }
+    .back-link:active { color: var(--p-xl); }
+
+    /* ── Title ── */
+    h1 {
+      font-size: clamp(1.4rem, 6vw, 2rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.06em;
+      margin: 2px 0 8px;
+      flex-shrink: 0;
+    }
+
+    /* ── Controls bar ── */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+
+    .ctrl-btn {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 10px;
+      color: var(--p-xl);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 7px 14px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.12s, border-color 0.12s, transform 0.1s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .ctrl-btn:active {
+      background: #2a1f50;
+      border-color: var(--p-lt);
+      transform: scale(0.96);
+    }
+
+    .guess-counter {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .guess-counter strong { color: var(--p-xl); }
+
+    /* ── Secret row ── */
+    .secret-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface2);
+      border: 2px solid var(--brd-lt);
+      border-radius: 12px;
+      padding: 8px 14px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+    .secret-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+    .secret-peg {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--brd-lt);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .secret-peg.revealed {
+      border-color: transparent;
+    }
+
+    /* ── Board ── */
+    .board {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 4px 2px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .board::-webkit-scrollbar { width: 4px; }
+    .board::-webkit-scrollbar-track { background: transparent; }
+    .board::-webkit-scrollbar-thumb { background: var(--brd-lt); border-radius: 2px; }
+
+    .guess-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: 2px solid var(--brd-lt);
+      border-radius: 10px;
+      padding: 7px 10px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .guess-row.active {
+      border-color: var(--p-lt);
+      background: #150f26;
+    }
+    .guess-row.locked {
+      opacity: 0.85;
+    }
+
+    .row-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      min-width: 18px;
+      text-align: right;
+    }
+
+    /* ── Peg slots ── */
+    .peg-slots {
+      display: flex;
+      gap: 7px;
+      flex: 1;
+    }
+
+    .peg-slot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 2px dashed var(--brd);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: border-color 0.12s, box-shadow 0.12s, background 0.12s;
+      flex-shrink: 0;
+    }
+    .guess-row.active .peg-slot {
+      border-style: dashed;
+      border-color: var(--p);
+    }
+    .guess-row.active .peg-slot.filled {
+      border-style: solid;
+      border-color: transparent;
+    }
+    .guess-row.active .peg-slot.selected {
+      box-shadow: 0 0 0 3px #c4b5fd, 0 0 0 5px rgba(196,181,253,0.2);
+    }
+    .guess-row.locked .peg-slot {
+      cursor: default;
+      border-style: solid;
+      border-color: transparent;
+    }
+
+    /* ── Feedback grid ── */
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 4px;
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    .fb-peg {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1.5px solid var(--brd-lt);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .fb-peg.black { background: #f59e0b; border-color: #fbbf24; }
+    .fb-peg.white { background: #d1d5db; border-color: #e5e7eb; }
+
+    /* ── Bottom bar (confirm + palette) ── */
+    .bottom-bar {
+      flex-shrink: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0 14px;
+    }
+
+    /* ── Confirm button ── */
+    .confirm-btn {
+      width: 100%;
+      height: 48px;
+      background: var(--p);
+      border: 2px solid var(--p-lt);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.12s, border-color 0.12s, transform 0.1s, opacity 0.15s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .confirm-btn:not(:disabled):active {
+      background: var(--p-lt);
+      transform: scale(0.98);
+    }
+    .confirm-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* ── Color palette ── */
+    .palette {
+      display: flex;
+      gap: 10px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .palette-color {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform 0.1s, border-color 0.12s, box-shadow 0.12s;
+      background: var(--c);
+      flex-shrink: 0;
+    }
+    .palette-color:active {
+      transform: scale(0.9);
+    }
+    .palette-color.selected-color {
+      border-color: #fff;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+    }
+
+    /* ── Endgame overlay ── */
+    .endgame-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: var(--overlay);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 24px;
+    }
+    .endgame-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .end-title {
+      font-size: clamp(1.8rem, 7vw, 2.6rem);
+      font-weight: 900;
+      text-align: center;
+    }
+    .end-title.won  { color: #34d399; }
+    .end-title.lost { color: #f87171; }
+
+    .end-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .end-secret {
+      display: flex;
+      gap: 8px;
+      margin: 4px 0;
+    }
+    .end-secret-peg {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .play-again-btn {
+      background: var(--p);
+      border: 2px solid var(--p-lt);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      padding: 12px 32px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.12s, transform 0.1s;
+      margin-top: 8px;
+    }
+    .play-again-btn:active {
+      background: var(--p-lt);
+      transform: scale(0.97);
+    }
+
+    /* ── Rules modal ── */
+    .rules-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: var(--overlay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .rules-backdrop.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .rules-panel {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 16px;
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 360px;
+      max-height: 85dvh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .rules-panel::-webkit-scrollbar { width: 4px; }
+    .rules-panel::-webkit-scrollbar-track { background: transparent; }
+    .rules-panel::-webkit-scrollbar-thumb { background: var(--brd-lt); border-radius: 2px; }
+
+    .rules-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .rules-header h2 {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--p-xl);
+    }
+    .rules-close {
+      background: var(--surface2);
+      border: 2px solid var(--brd-lt);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 1rem;
+      width: 34px;
+      height: 34px;
+      cursor: pointer;
+      touch-action: manipulation;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.12s, color 0.12s;
+    }
+    .rules-close:active { border-color: var(--p-lt); color: var(--p-xl); }
+
+    .rules-section-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: var(--p-xl);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .rules-text {
+      font-size: 0.88rem;
+      color: var(--p-text);
+      line-height: 1.55;
+    }
+
+    .rules-text li {
+      margin-left: 1.2em;
+      margin-bottom: 5px;
+    }
+
+    .rules-divider {
+      border: none;
+      border-top: 1px solid var(--brd-lt);
+    }
+
+    .feedback-key {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .feedback-key-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .fk-peg {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .fk-peg.black { background: #f59e0b; border: 2px solid #fbbf24; }
+    .fk-peg.white { background: #d1d5db; border: 2px solid #e5e7eb; }
+    .fk-peg.miss  { background: var(--surface2); border: 2px solid var(--brd-lt); }
+    .fk-label {
+      font-size: 0.85rem;
+      color: var(--p-text);
+    }
+
+    .rules-got-it {
+      background: var(--p);
+      border: 2px solid var(--p-lt);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 800;
+      padding: 10px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.12s, transform 0.1s;
+      width: 100%;
+      margin-top: 4px;
+    }
+    .rules-got-it:active { background: var(--p-lt); transform: scale(0.98); }
+  </style>
+</head>
+<body>
+
+  <div class="game-wrapper">
+
+    <a class="back-link" href="index.html">← Puzzles</a>
+
+    <h1>Mastermind</h1>
+
+    <div class="controls">
+      <button class="ctrl-btn" id="newBtn">New Game</button>
+      <button class="ctrl-btn" id="rulesBtn">Rules</button>
+      <span class="guess-counter">Guess <strong id="guessNum">1</strong> / 10</span>
+    </div>
+
+    <div class="secret-row" id="secretRow">
+      <div class="secret-peg" id="sp0"></div>
+      <div class="secret-peg" id="sp1"></div>
+      <div class="secret-peg" id="sp2"></div>
+      <div class="secret-peg" id="sp3"></div>
+      <span class="secret-label">SECRET</span>
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <div class="bottom-bar">
+      <button class="confirm-btn" id="confirmBtn" disabled>Check Guess</button>
+      <div class="palette" id="palette">
+        <button class="palette-color" data-color="0" style="--c:#ef4444" aria-label="Red"></button>
+        <button class="palette-color" data-color="1" style="--c:#f97316" aria-label="Orange"></button>
+        <button class="palette-color" data-color="2" style="--c:#eab308" aria-label="Yellow"></button>
+        <button class="palette-color" data-color="3" style="--c:#22c55e" aria-label="Green"></button>
+        <button class="palette-color" data-color="4" style="--c:#3b82f6" aria-label="Blue"></button>
+        <button class="palette-color" data-color="5" style="--c:#a855f7" aria-label="Purple"></button>
+      </div>
+    </div>
+
+  </div><!-- /.game-wrapper -->
+
+  <!-- Endgame overlay -->
+  <div class="endgame-overlay" id="endgameOverlay">
+    <div class="end-title" id="endTitle"></div>
+    <div class="end-sub"   id="endSub"></div>
+    <div class="end-secret" id="endSecret"></div>
+    <button class="play-again-btn" id="playAgainBtn">Play Again</button>
+  </div>
+
+  <!-- Rules modal -->
+  <div class="rules-backdrop" id="rulesBackdrop">
+    <div class="rules-panel">
+      <div class="rules-header">
+        <h2>How to Play</h2>
+        <button class="rules-close" id="rulesClose">✕</button>
+      </div>
+
+      <div>
+        <div class="rules-section-title">Objective</div>
+        <div class="rules-text">Crack the secret 4-color code in 10 guesses.</div>
+      </div>
+
+      <hr class="rules-divider">
+
+      <div>
+        <div class="rules-section-title">Making a Guess</div>
+        <ul class="rules-text">
+          <li>Tap a peg slot in the active row to select it.</li>
+          <li>Tap a color in the palette to fill it. The selection auto-advances to the next empty slot.</li>
+          <li>Tap any filled slot to re-select it and change its color.</li>
+          <li>Once all 4 slots are filled, tap <strong>Check Guess</strong>.</li>
+        </ul>
+      </div>
+
+      <hr class="rules-divider">
+
+      <div>
+        <div class="rules-section-title">Feedback Pegs</div>
+        <div class="feedback-key">
+          <div class="feedback-key-row">
+            <div class="fk-peg black"></div>
+            <span class="fk-label"><strong>Gold</strong> — right color, right position</span>
+          </div>
+          <div class="feedback-key-row">
+            <div class="fk-peg white"></div>
+            <span class="fk-label"><strong>Silver</strong> — right color, wrong position</span>
+          </div>
+          <div class="feedback-key-row">
+            <div class="fk-peg miss"></div>
+            <span class="fk-label"><strong>Empty</strong> — color not in the code</span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="rules-divider">
+
+      <div class="rules-text">Colors can repeat. Feedback pegs don't indicate which slot they refer to.</div>
+
+      <button class="rules-got-it" id="rulesGotIt">Got it!</button>
+    </div>
+  </div>
+
+  <script>
+    const COLORS = ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#a855f7'];
+    const CODE_LEN   = 4;
+    const MAX_ROWS   = 10;
+
+    const state = {
+      secret:       [],
+      guesses:      [],
+      currentGuess: [null, null, null, null],
+      selectedSlot: 0,
+      gameOver:     false,
+      won:          false,
+    };
+
+    // ── DOM refs ──────────────────────────────────────────────
+    const boardEl      = document.getElementById('board');
+    const confirmBtn   = document.getElementById('confirmBtn');
+    const guessNumEl   = document.getElementById('guessNum');
+    const endOverlay   = document.getElementById('endgameOverlay');
+    const endTitle     = document.getElementById('endTitle');
+    const endSub       = document.getElementById('endSub');
+    const endSecretEl  = document.getElementById('endSecret');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    const rulesBackdrop = document.getElementById('rulesBackdrop');
+    const paletteEl    = document.getElementById('palette');
+
+    // ── Feedback algorithm ────────────────────────────────────
+    function scoreFeedback(secret, guess) {
+      let black = 0;
+      const secRem = [], gueRem = [];
+      for (let i = 0; i < CODE_LEN; i++) {
+        if (secret[i] === guess[i]) black++;
+        else { secRem.push(secret[i]); gueRem.push(guess[i]); }
+      }
+      let white = 0;
+      const freq = new Array(COLORS.length).fill(0);
+      for (const c of secRem) freq[c]++;
+      for (const c of gueRem) { if (freq[c] > 0) { white++; freq[c]--; } }
+      return { black, white };
+    }
+
+    // ── Build board ───────────────────────────────────────────
+    function buildBoard() {
+      boardEl.innerHTML = '';
+      for (let r = 0; r < MAX_ROWS; r++) {
+        const row = document.createElement('div');
+        row.className = 'guess-row';
+        row.dataset.row = r;
+
+        const num = document.createElement('div');
+        num.className = 'row-num';
+        num.textContent = MAX_ROWS - r;
+        row.appendChild(num);
+
+        const slots = document.createElement('div');
+        slots.className = 'peg-slots';
+        for (let s = 0; s < CODE_LEN; s++) {
+          const slot = document.createElement('div');
+          slot.className = 'peg-slot';
+          slot.dataset.slot = s;
+          slot.addEventListener('click', () => onSlotClick(r, s));
+          slots.appendChild(slot);
+        }
+        row.appendChild(slots);
+
+        const fbGrid = document.createElement('div');
+        fbGrid.className = 'feedback-grid';
+        for (let f = 0; f < CODE_LEN; f++) {
+          const peg = document.createElement('div');
+          peg.className = 'fb-peg';
+          fbGrid.appendChild(peg);
+        }
+        row.appendChild(fbGrid);
+
+        boardEl.appendChild(row);
+      }
+      activateRow(0);
+    }
+
+    // ── Row helpers ───────────────────────────────────────────
+    function getRow(r) {
+      return boardEl.querySelector(`.guess-row[data-row="${r}"]`);
+    }
+    function getSlots(r) {
+      return getRow(r).querySelectorAll('.peg-slot');
+    }
+    function getFbPegs(r) {
+      return getRow(r).querySelectorAll('.fb-peg');
+    }
+
+    function activateRow(r) {
+      const row = getRow(r);
+      row.classList.add('active');
+      state.selectedSlot = 0;
+      const slots = getSlots(r);
+      slots[0].classList.add('selected');
+      row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function lockRow(r, feedback) {
+      const row = getRow(r);
+      row.classList.remove('active');
+      row.classList.add('locked');
+
+      const fbPegs = getFbPegs(r);
+      let idx = 0;
+      for (let i = 0; i < feedback.black; i++) fbPegs[idx++].classList.add('black');
+      for (let i = 0; i < feedback.white; i++) fbPegs[idx++].classList.add('white');
+    }
+
+    // ── Slot click ────────────────────────────────────────────
+    function onSlotClick(r, s) {
+      if (state.gameOver) return;
+      const currentRow = state.guesses.length;
+      if (r !== currentRow) return;
+
+      state.selectedSlot = s;
+      const slots = getSlots(r);
+      slots.forEach((el, i) => el.classList.toggle('selected', i === s));
+    }
+
+    // ── Palette click ─────────────────────────────────────────
+    function onPaletteClick(colorIdx) {
+      if (state.gameOver) return;
+      const r = state.guesses.length;
+      if (r >= MAX_ROWS) return;
+
+      const s = state.selectedSlot;
+      state.currentGuess[s] = colorIdx;
+
+      const slots = getSlots(r);
+      slots[s].style.background = COLORS[colorIdx];
+      slots[s].classList.add('filled');
+
+      // Highlight selected palette color briefly
+      document.querySelectorAll('.palette-color').forEach((el, i) => {
+        el.classList.toggle('selected-color', i === colorIdx);
+      });
+      setTimeout(() => {
+        document.querySelectorAll('.palette-color').forEach(el => el.classList.remove('selected-color'));
+      }, 300);
+
+      // Auto-advance to next empty slot
+      let next = -1;
+      for (let i = s + 1; i < CODE_LEN; i++) {
+        if (state.currentGuess[i] === null) { next = i; break; }
+      }
+      if (next === -1) {
+        for (let i = 0; i < s; i++) {
+          if (state.currentGuess[i] === null) { next = i; break; }
+        }
+      }
+
+      if (next !== -1) {
+        state.selectedSlot = next;
+        slots.forEach((el, i) => el.classList.toggle('selected', i === next));
+      } else {
+        // All filled — keep current selection, enable confirm
+        slots.forEach((el, i) => el.classList.toggle('selected', i === s));
+      }
+
+      const allFilled = state.currentGuess.every(c => c !== null);
+      confirmBtn.disabled = !allFilled;
+    }
+
+    // ── Confirm guess ─────────────────────────────────────────
+    function confirmGuess() {
+      if (state.gameOver) return;
+      const r = state.guesses.length;
+      const guess = [...state.currentGuess];
+
+      confirmBtn.disabled = true;
+
+      const feedback = scoreFeedback(state.secret, guess);
+      lockRow(r, feedback);
+      state.guesses.push(guess);
+
+      guessNumEl.textContent = Math.min(state.guesses.length + 1, MAX_ROWS);
+
+      if (feedback.black === CODE_LEN) {
+        // Win
+        state.gameOver = true;
+        state.won = true;
+        setTimeout(() => showEndgame(true), 500);
+      } else if (state.guesses.length >= MAX_ROWS) {
+        // Lose
+        state.gameOver = true;
+        state.won = false;
+        setTimeout(() => showEndgame(false), 500);
+      } else {
+        // Next row
+        state.currentGuess = [null, null, null, null];
+        activateRow(r + 1);
+      }
+    }
+
+    // ── Endgame ───────────────────────────────────────────────
+    function showEndgame(won) {
+      // Reveal secret in header
+      for (let i = 0; i < CODE_LEN; i++) {
+        const sp = document.getElementById(`sp${i}`);
+        sp.style.background = COLORS[state.secret[i]];
+        sp.classList.add('revealed');
+      }
+
+      endTitle.textContent = won ? 'You cracked it!' : 'Better luck next time';
+      endTitle.className   = 'end-title ' + (won ? 'won' : 'lost');
+      endSub.textContent   = won
+        ? `Solved in ${state.guesses.length} guess${state.guesses.length === 1 ? '' : 'es'}!`
+        : 'The secret code was:';
+
+      // Secret pegs in overlay
+      endSecretEl.innerHTML = '';
+      state.secret.forEach(c => {
+        const p = document.createElement('div');
+        p.className = 'end-secret-peg';
+        p.style.background = COLORS[c];
+        endSecretEl.appendChild(p);
+      });
+
+      endOverlay.classList.add('visible');
+    }
+
+    // ── Init game ─────────────────────────────────────────────
+    function initGame() {
+      state.secret       = Array.from({ length: CODE_LEN }, () => Math.floor(Math.random() * COLORS.length));
+      state.guesses      = [];
+      state.currentGuess = [null, null, null, null];
+      state.selectedSlot = 0;
+      state.gameOver     = false;
+      state.won          = false;
+
+      // Reset secret display
+      for (let i = 0; i < CODE_LEN; i++) {
+        const sp = document.getElementById(`sp${i}`);
+        sp.style.background = '';
+        sp.classList.remove('revealed');
+      }
+
+      confirmBtn.disabled = true;
+      guessNumEl.textContent = '1';
+      endOverlay.classList.remove('visible');
+
+      buildBoard();
+    }
+
+    // ── Event listeners ───────────────────────────────────────
+    document.getElementById('newBtn').addEventListener('click', initGame);
+    document.getElementById('rulesBtn').addEventListener('click', () => rulesBackdrop.classList.add('visible'));
+    document.getElementById('rulesClose').addEventListener('click', () => rulesBackdrop.classList.remove('visible'));
+    document.getElementById('rulesGotIt').addEventListener('click', () => rulesBackdrop.classList.remove('visible'));
+    rulesBackdrop.addEventListener('click', e => { if (e.target === rulesBackdrop) rulesBackdrop.classList.remove('visible'); });
+
+    confirmBtn.addEventListener('click', confirmGuess);
+    playAgainBtn.addEventListener('click', initGame);
+
+    paletteEl.addEventListener('click', e => {
+      const btn = e.target.closest('.palette-color');
+      if (btn) onPaletteClick(parseInt(btn.dataset.color, 10));
+    });
+
+    // ── Start ─────────────────────────────────────────────────
+    initGame();
+  </script>
+</body>
+</html>
