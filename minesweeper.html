@@ -359,54 +359,67 @@
     .n7 { color: #e879f9; }
     .n8 { color: #94a3b8; }
 
-    /* Overlay */
-    .overlay {
-      position: absolute;
-      inset: 0;
+    /* Result banner */
+    .result-bar {
+      width: min(95vw, 500px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #0d0b14;
+      border: 2px solid #2d1f50;
+      border-radius: 12px;
+      padding: 10px 16px;
+      overflow: hidden;
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-width: 0;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease, border-width 0.3s ease;
+    }
+    .result-bar.visible {
+      max-height: 72px;
+      padding: 10px 16px;
+      border-width: 2px;
+      opacity: 1;
+    }
+    .result-bar.win  { border-color: #4c1d95; }
+    .result-bar.lose { border-color: #7f1d1d; }
+
+    .result-text {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: rgba(7, 5, 14, 0.88);
-      border-radius: 8px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-      z-index: 5;
+      gap: 1px;
     }
-    .overlay.visible {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .overlay-title {
-      font-size: clamp(1.4rem, 5vw, 2rem);
+    .result-title {
+      font-size: 1rem;
       font-weight: 900;
       letter-spacing: 0.04em;
     }
-    .overlay-title.win { color: #a78bfa; }
-    .overlay-title.lose { color: #f87171; }
+    .result-bar.win  .result-title { color: #a78bfa; }
+    .result-bar.lose .result-title { color: #f87171; }
 
-    .overlay-sub {
-      font-size: 0.9rem;
+    .result-sub {
+      font-size: 0.78rem;
       color: #7c6fa0;
     }
 
-    .overlay-btn {
+    .result-btn {
+      flex-shrink: 0;
       background: #6d28d9;
       border: 2px solid #7c3aed;
       border-radius: 8px;
       color: #ede9fe;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      padding: 8px 20px;
+      padding: 6px 14px;
       cursor: pointer;
       touch-action: manipulation;
-      margin-top: 4px;
       transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
     }
-    .overlay-btn:active {
+    .result-btn:active {
       background: #5b21b6;
       transform: scale(0.95);
     }
@@ -563,13 +576,16 @@ board.style.gridTemplateColumns =
     </div>
   </div>
 
+  <div class="result-bar" id="result-bar">
+    <div class="result-text">
+      <div class="result-title" id="result-title"></div>
+      <div class="result-sub" id="result-sub"></div>
+    </div>
+    <button class="result-btn" id="result-btn">Play Again</button>
+  </div>
+
   <div class="board-wrap">
     <div class="board" id="board"></div>
-    <div class="overlay" id="overlay">
-      <div class="overlay-title" id="overlay-title"></div>
-      <div class="overlay-sub" id="overlay-sub"></div>
-      <button class="overlay-btn" id="overlay-btn">Play Again</button>
-    </div>
   </div>
 
   <p class="hint">Tap to flag &nbsp;·&nbsp; Double-tap to dig</p>
@@ -745,11 +761,11 @@ board.style.gridTemplateColumns =
       hard:   { cols: 16, rows: 16, mines: 40 },
     };
 
-    const boardEl   = document.getElementById('board');
-    const overlayEl = document.getElementById('overlay');
-    const overlayTitle = document.getElementById('overlay-title');
-    const overlaySub   = document.getElementById('overlay-sub');
-    const overlayBtn   = document.getElementById('overlay-btn');
+    const boardEl    = document.getElementById('board');
+    const resultBar  = document.getElementById('result-bar');
+    const resultTitle = document.getElementById('result-title');
+    const resultSub   = document.getElementById('result-sub');
+    const resultBtn   = document.getElementById('result-btn');
     const mineDisplay  = document.getElementById('mine-display');
     const timerDisplay = document.getElementById('timer-display');
     const resetBtn     = document.getElementById('reset-btn');
@@ -785,7 +801,7 @@ board.style.gridTemplateColumns =
       updateMineDisplay();
       timerDisplay.textContent = '0';
       resetBtn.textContent = '🙂';
-      overlayEl.classList.remove('visible');
+      resultBar.className = 'result-bar';
 
       renderBoard();
     }
@@ -941,13 +957,9 @@ board.style.gridTemplateColumns =
 
       const elapsed = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
 
-      overlayTitle.textContent = won ? 'You Win!' : 'Boom!';
-      overlayTitle.className = 'overlay-title ' + (won ? 'win' : 'lose');
-      overlaySub.textContent = won
-        ? `Cleared in ${elapsed}s`
-        : 'Better luck next time';
-
-      setTimeout(() => overlayEl.classList.add('visible'), 400);
+      resultTitle.textContent = won ? '🎉 You Win!' : '💥 Boom!';
+      resultSub.textContent = won ? `Cleared in ${elapsed}s` : 'Better luck next time';
+      resultBar.className = 'result-bar ' + (won ? 'win' : 'lose') + ' visible';
     }
 
     function tickTimer() {
@@ -1102,8 +1114,7 @@ board.style.gridTemplateColumns =
       initGame(state.preset || 'easy');
     });
 
-    overlayBtn.addEventListener('click', () => {
-      overlayEl.classList.remove('visible');
+    resultBtn.addEventListener('click', () => {
       initGame(state.preset || 'easy');
     });
 
