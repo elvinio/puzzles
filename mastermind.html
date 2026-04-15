@@ -112,8 +112,13 @@
       border: 2px solid var(--brd-lt);
       border-radius: 12px;
       padding: 8px 14px;
-      margin-bottom: 10px;
+      margin-bottom: 4px;
       flex-shrink: 0;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    .secret-row.won {
+      border-color: #34d399;
+      box-shadow: 0 0 12px rgba(52, 211, 153, 0.25);
     }
     .secret-label {
       font-size: 0.68rem;
@@ -121,7 +126,25 @@
       letter-spacing: 0.12em;
       color: var(--muted);
       margin-left: 6px;
+      transition: color 0.3s;
     }
+    .secret-row.won .secret-label {
+      color: #34d399;
+    }
+
+    /* ── Solved message ── */
+    .solved-msg {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #34d399;
+      letter-spacing: 0.04em;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.4s ease 0.15s;
+      flex-shrink: 0;
+      margin-bottom: 6px;
+    }
+    .solved-msg.visible { opacity: 1; }
     .secret-peg {
       width: 28px;
       height: 28px;
@@ -511,8 +534,10 @@
       <div class="secret-peg" id="sp1"></div>
       <div class="secret-peg" id="sp2"></div>
       <div class="secret-peg" id="sp3"></div>
-      <span class="secret-label">SECRET</span>
+      <span class="secret-label" id="secretLabel">SECRET</span>
     </div>
+
+    <div class="solved-msg" id="solvedMsg"></div>
 
     <div class="board" id="board"></div>
 
@@ -789,29 +814,36 @@
 
     // ── Endgame ───────────────────────────────────────────────
     function showEndgame(won) {
-      // Reveal secret in header
+      // Always reveal secret colors
       for (let i = 0; i < CODE_LEN; i++) {
         const sp = document.getElementById(`sp${i}`);
         sp.style.background = COLORS[state.secret[i]];
         sp.classList.add('revealed');
       }
 
-      endTitle.textContent = won ? 'You cracked it!' : 'Better luck next time';
-      endTitle.className   = 'end-title ' + (won ? 'won' : 'lost');
-      endSub.textContent   = won
-        ? `Solved in ${state.guesses.length} guess${state.guesses.length === 1 ? '' : 'es'}!`
-        : 'The secret code was:';
-
-      // Secret pegs in overlay
-      endSecretEl.innerHTML = '';
-      state.secret.forEach(c => {
-        const p = document.createElement('div');
-        p.className = 'end-secret-peg';
-        p.style.background = COLORS[c];
-        endSecretEl.appendChild(p);
-      });
-
-      endOverlay.classList.add('visible');
+      if (won) {
+        // Inline win — no overlay, board stays visible
+        document.getElementById('secretRow').classList.add('won');
+        document.getElementById('secretLabel').textContent = 'SOLVED!';
+        const n = state.guesses.length;
+        const msg = document.getElementById('solvedMsg');
+        msg.textContent = `in ${n} guess${n === 1 ? '' : 'es'}`;
+        msg.classList.add('visible');
+        document.querySelector('.bottom-bar').style.display = 'none';
+      } else {
+        // Overlay for lose
+        endTitle.textContent = 'Better luck next time';
+        endTitle.className   = 'end-title lost';
+        endSub.textContent   = 'The secret code was:';
+        endSecretEl.innerHTML = '';
+        state.secret.forEach(c => {
+          const p = document.createElement('div');
+          p.className = 'end-secret-peg';
+          p.style.background = COLORS[c];
+          endSecretEl.appendChild(p);
+        });
+        endOverlay.classList.add('visible');
+      }
     }
 
     // ── Init game ─────────────────────────────────────────────
@@ -829,10 +861,16 @@
         sp.style.background = '';
         sp.classList.remove('revealed');
       }
+      document.getElementById('secretRow').classList.remove('won');
+      document.getElementById('secretLabel').textContent = 'SECRET';
+      const solvedMsg = document.getElementById('solvedMsg');
+      solvedMsg.textContent = '';
+      solvedMsg.classList.remove('visible');
 
       confirmBtn.disabled = true;
       guessNumEl.textContent = '1';
       endOverlay.classList.remove('visible');
+      document.querySelector('.bottom-bar').style.display = '';
 
       buildBoard();
     }
