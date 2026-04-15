@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Car Jam</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #13111c;
+      color: #e2d9f3;
+      font-family: system-ui, -apple-system, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow-x: hidden;
+    }
+
+    .back-link {
+      position: fixed;
+      top: 12px;
+      left: 14px;
+      font-size: 0.8rem;
+      color: #7c6fa0;
+      text-decoration: none;
+      z-index: 20;
+      touch-action: manipulation;
+    }
+    .back-link:active { color: #c4b5fd; }
+
+    /* ── HUD ── */
+    .hud {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 44px 16px 8px;
+      gap: 8px;
+    }
+    .hud-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .hud-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #7c6fa0;
+      text-transform: uppercase;
+    }
+    .hud-value {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #c4b5fd;
+      font-variant-numeric: tabular-nums;
+    }
+    .hud-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #a78bfa;
+      letter-spacing: 0.06em;
+    }
+    .rules-btn {
+      background: #1c1730;
+      border: 2px solid #2d1f50;
+      border-radius: 8px;
+      color: #7c6fa0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .rules-btn:active { border-color: #6d28d9; color: #c4b5fd; }
+
+    /* ── QUEUE ── */
+    .queue-section {
+      width: 100%;
+      max-width: 480px;
+      padding: 6px 10px 4px;
+    }
+    .queue-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #7c6fa0;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .queue-row {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+    }
+    .person-slot {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      min-width: 0;
+    }
+    .person-circle {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      border: 2px solid rgba(255,255,255,0.15);
+      position: relative;
+      cursor: default;
+      transition: transform 0.1s;
+    }
+    .person-circle.blocker {
+      cursor: pointer;
+    }
+    .person-circle.blocker:active { transform: scale(0.9); }
+    .person-circle.dismissing::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      border-top-color: transparent;
+      animation: spin 2s linear forwards;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(720deg); }
+    }
+    .patience-bar {
+      width: 100%;
+      height: 3px;
+      background: #1c1730;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .patience-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.1s linear, background 0.3s;
+    }
+    .queue-empty-slot {
+      flex: 1;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 2px dashed #2d1f50;
+      min-width: 0;
+    }
+
+    /* ── ROAD ── */
+    .road-section {
+      width: 100%;
+      max-width: 480px;
+      padding: 6px 10px;
+    }
+    .road-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #7c6fa0;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .road-lanes {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .lane {
+      background: #0d0b14;
+      border: 2px solid #2d1f50;
+      border-radius: 10px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .lane.jam-frozen {
+      border-color: #f97316;
+      animation: jam-pulse 0.4s ease-in-out infinite alternate;
+    }
+    @keyframes jam-pulse {
+      from { border-color: #f97316; }
+      to { border-color: #fbbf24; }
+    }
+    .lane-empty {
+      color: #2d1f50;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .lane-vehicle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 1.3rem;
+    }
+    .lane-vehicle-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #e2d9f3;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .lane-progress-track {
+      flex: 1;
+      height: 6px;
+      background: #1c1730;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .lane-progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.1s linear;
+    }
+    .lane-returning {
+      opacity: 0.6;
+    }
+    .lane-status {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #7c6fa0;
+      white-space: nowrap;
+    }
+
+    /* ── JAM METER ── */
+    .jam-section {
+      width: 100%;
+      max-width: 480px;
+      padding: 2px 10px 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .jam-label {
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #f97316;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .jam-track {
+      flex: 1;
+      height: 8px;
+      background: #1c1730;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid #2d1f50;
+    }
+    .jam-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.1s linear;
+      background: linear-gradient(90deg, #f97316, #ef4444);
+    }
+    .jam-freeze-text {
+      font-size: 0.7rem;
+      font-weight: 900;
+      color: #fbbf24;
+      white-space: nowrap;
+      animation: blink 0.3s step-end infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* ── GARAGE ── */
+    .garage-section {
+      width: 100%;
+      max-width: 480px;
+      padding: 4px 10px 16px;
+      flex: 1;
+    }
+    .garage-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #7c6fa0;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .garage-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .vehicle-card {
+      background: #1c1730;
+      border: 2px solid #2d1f50;
+      border-radius: 12px;
+      padding: 8px 10px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: border-color 0.15s, transform 0.1s, opacity 0.2s;
+      position: relative;
+      min-width: 68px;
+      flex: 1;
+      max-width: 90px;
+    }
+    .vehicle-card:active:not(.unavailable) { transform: scale(0.93); }
+    .vehicle-card.unavailable {
+      opacity: 0.4;
+      cursor: default;
+    }
+    .vehicle-card.on-road {
+      border-color: #4c1d95;
+      opacity: 0.55;
+    }
+    .vehicle-card.cooldown {
+      opacity: 0.5;
+    }
+    .vehicle-emoji { font-size: 1.5rem; line-height: 1; }
+    .vehicle-color-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .vehicle-caps {
+      display: flex;
+      gap: 2px;
+    }
+    .vehicle-cap-pip {
+      width: 5px;
+      height: 5px;
+      border-radius: 1px;
+      background: #3d2f70;
+    }
+    .vehicle-cap-pip.filled { background: #a78bfa; }
+    .cooldown-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      border-radius: 0 0 10px 10px;
+      background: #6d28d9;
+      transition: width 0.1s linear;
+    }
+    .vehicle-type-label {
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: #7c6fa0;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── SCORE POPUP ── */
+    .score-popup {
+      position: fixed;
+      font-size: 1rem;
+      font-weight: 900;
+      pointer-events: none;
+      z-index: 50;
+      animation: score-float 1.2s ease-out forwards;
+    }
+    @keyframes score-float {
+      0%   { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-60px); }
+    }
+
+    /* ── OVERLAYS ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(7,5,10,0.93);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      z-index: 100;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .overlay-icon { font-size: 3.5rem; line-height: 1; }
+    .overlay-title {
+      font-size: clamp(1.4rem, 6vw, 2rem);
+      font-weight: 900;
+      color: #a78bfa;
+      letter-spacing: 0.06em;
+      text-align: center;
+    }
+    .overlay-body {
+      font-size: 0.95rem;
+      color: #7c6fa0;
+      text-align: center;
+      line-height: 1.5;
+      max-width: 300px;
+    }
+    .overlay-score {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #c4b5fd;
+      font-variant-numeric: tabular-nums;
+    }
+    .btn {
+      background: #1c1730;
+      border: 2px solid #6d28d9;
+      border-radius: 12px;
+      color: #c4b5fd;
+      font-size: 1rem;
+      font-weight: 800;
+      padding: 12px 28px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      letter-spacing: 0.04em;
+    }
+    .btn:active { background: #2a1f50; border-color: #a78bfa; transform: scale(0.96); }
+    .btn.secondary {
+      border-color: #2d1f50;
+      color: #7c6fa0;
+      font-size: 0.85rem;
+      padding: 10px 20px;
+    }
+    .btn.secondary:active { border-color: #4c1d95; color: #c4b5fd; }
+
+    /* ── RULES MODAL ── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(7,5,10,0.88);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-backdrop.visible { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #0d0b14;
+      border: 2px solid #2d1f50;
+      border-bottom: none;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 500px;
+      max-height: 82dvh;
+      overflow-y: auto;
+      padding: 20px 20px 32px;
+      transform: translateY(20px);
+      transition: transform 0.2s;
+    }
+    .modal-backdrop.visible .modal { transform: translateY(0); }
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #a78bfa;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+    .modal h3 {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #c4b5fd;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: 14px 0 6px;
+    }
+    .modal p, .modal li {
+      font-size: 0.85rem;
+      color: #7c6fa0;
+      line-height: 1.55;
+    }
+    .modal ul { padding-left: 16px; }
+    .modal li { margin-bottom: 4px; }
+    .modal-close {
+      float: right;
+      background: none;
+      border: none;
+      color: #7c6fa0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 4px;
+      touch-action: manipulation;
+    }
+
+    /* ── NO LANE FLASH ── */
+    .flash-error {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #7f1d1d;
+      border: 2px solid #ef4444;
+      border-radius: 10px;
+      padding: 8px 20px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fca5a5;
+      z-index: 60;
+      pointer-events: none;
+      animation: flash-fade 1s ease-out forwards;
+    }
+    @keyframes flash-fade {
+      0%   { opacity: 1; }
+      70%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<a class="back-link" href="index.html">← Back</a>
+
+<!-- HUD -->
+<div class="hud">
+  <div class="hud-cell">
+    <div class="hud-label">Score</div>
+    <div class="hud-value" id="scoreVal">0</div>
+  </div>
+  <div class="hud-cell">
+    <div class="hud-title">🚦 Car Jam</div>
+    <button class="rules-btn" id="rulesBtn">Rules</button>
+  </div>
+  <div class="hud-cell">
+    <div class="hud-label">Level <span id="levelVal">1</span></div>
+    <div class="hud-value" id="quotaVal">0 / 20</div>
+  </div>
+</div>
+
+<!-- Queue -->
+<div class="queue-section">
+  <div class="queue-label">Queue</div>
+  <div class="queue-row" id="queueRow"></div>
+</div>
+
+<!-- Road -->
+<div class="road-section">
+  <div class="road-label">Road</div>
+  <div class="road-lanes" id="roadLanes"></div>
+</div>
+
+<!-- Jam Meter -->
+<div class="jam-section" id="jamSection" style="visibility:hidden">
+  <div class="jam-label">JAM</div>
+  <div class="jam-track">
+    <div class="jam-fill" id="jamFill" style="width:0%"></div>
+  </div>
+  <div id="jamFreezeText" class="jam-freeze-text" style="display:none">FROZEN!</div>
+</div>
+
+<!-- Garage -->
+<div class="garage-section">
+  <div class="garage-label">Garage — tap to dispatch</div>
+  <div class="garage-grid" id="garageGrid"></div>
+</div>
+
+<!-- Game Over Overlay -->
+<div class="overlay" id="overlayGameOver">
+  <div class="overlay-icon" id="goIcon">💀</div>
+  <div class="overlay-title">Game Over</div>
+  <div class="overlay-body" id="goReason">The queue overflowed.</div>
+  <div class="overlay-score" id="goScore">0 pts</div>
+  <button class="btn" id="retryBtn">Try Again</button>
+  <a href="index.html" class="btn secondary">Main Menu</a>
+</div>
+
+<!-- Level Complete Overlay -->
+<div class="overlay" id="overlayLevelComplete">
+  <div class="overlay-icon">⭐</div>
+  <div class="overlay-title" id="lcTitle">Level 1 Complete!</div>
+  <div class="overlay-body" id="lcBody">Great job! Ready for the next challenge?</div>
+  <div class="overlay-score" id="lcScore">0 pts</div>
+  <button class="btn" id="nextLevelBtn">Next Level</button>
+</div>
+
+<!-- Victory Overlay -->
+<div class="overlay" id="overlayVictory">
+  <div class="overlay-icon">🏆</div>
+  <div class="overlay-title">Victory!</div>
+  <div class="overlay-body">You cleared all 5 levels. Amazing driving!</div>
+  <div class="overlay-score" id="victoryScore">0 pts</div>
+  <button class="btn" id="playAgainBtn">Play Again</button>
+  <a href="index.html" class="btn secondary">Main Menu</a>
+</div>
+
+<!-- Rules Modal -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-title">🚦 Car Jam — How to Play</div>
+
+    <h3>Objective</h3>
+    <p>Deliver enough people each level before the queue overflows or someone's patience runs out.</p>
+
+    <h3>The Queue</h3>
+    <ul>
+      <li>People of different colors line up — max 10 slots.</li>
+      <li>If a new person arrives and all slots are full → Game Over.</li>
+      <li>Each person has a patience bar. If it hits zero → Game Over.</li>
+      <li>You can't reorder the queue — work with who's at the front.</li>
+    </ul>
+
+    <h3>Vehicles</h3>
+    <ul>
+      <li>🚗 Car — 2 seats, fast road trip &amp; fast cooldown.</li>
+      <li>🚐 Van — 4 seats, medium speed.</li>
+      <li>🚌 Bus — 6 seats, slow but high capacity.</li>
+      <li>Each vehicle only picks up people of its own color.</li>
+      <li>After returning, it needs to cool down before dispatching again.</li>
+    </ul>
+
+    <h3>Road &amp; Jam Meter</h3>
+    <ul>
+      <li>3 lanes available. All lanes full = can't dispatch until one returns.</li>
+      <li>When all 3 lanes are in use, the Jam Meter fills. If it maxes out, all vehicles freeze briefly while the queue keeps growing.</li>
+    </ul>
+
+    <h3>Special People</h3>
+    <ul>
+      <li>⭐ VIP — Must board first. If other same-color people board ahead of them, the entire load scores nothing.</li>
+      <li>🩶 Blocker — Grey, no vehicle matches. Tap them to dismiss (takes 2 sec).</li>
+    </ul>
+
+    <h3>Scoring</h3>
+    <ul>
+      <li>+10 per person delivered.</li>
+      <li>+50 full load bonus (filled to exact capacity).</li>
+      <li>+30 combo for 3 correct dispatches in a row.</li>
+      <li>−20 wasted run (no matching color in queue).</li>
+      <li>Patience multiplier: 🟢 &gt;66% = ×2 · 🟡 33–66% = ×1 · 🔴 &lt;33% = ×0.5</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ──────────────────────────────────────────────────────────────
+  const COLOR_MAP = {
+    red:    { hex: '#ef4444', label: 'Red'    },
+    blue:   { hex: '#3b82f6', label: 'Blue'   },
+    green:  { hex: '#22c55e', label: 'Green'  },
+    yellow: { hex: '#eab308', label: 'Yellow' },
+    purple: { hex: '#a855f7', label: 'Purple' },
+  };
+
+  const LEVELS = [
+    { colors: ['red','blue','green'],             spawnMs: 3200, patienceMs: 18000, quota: 20 },
+    { colors: ['red','blue','green'],             spawnMs: 2800, patienceMs: 15000, quota: 30 },
+    { colors: ['red','blue','green','yellow'],    spawnMs: 2300, patienceMs: 13000, quota: 40 },
+    { colors: ['red','blue','green','yellow'],    spawnMs: 1900, patienceMs: 11000, quota: 50 },
+    { colors: ['red','blue','green','yellow','purple'], spawnMs: 1500, patienceMs: 9000, quota: 60 },
+  ];
+
+  const VEHICLE_TYPES = {
+    car: { capacity: 2, roadTimeMs: 4000, cooldownMs: 3000, emoji: '🚗', label: 'CAR' },
+    van: { capacity: 4, roadTimeMs: 6500, cooldownMs: 5000, emoji: '🚐', label: 'VAN' },
+    bus: { capacity: 6, roadTimeMs: 9000, cooldownMs: 8000, emoji: '🚌', label: 'BUS' },
+  };
+
+  const TICK_MS = 100;
+  const MAX_QUEUE = 10;
+  const JAM_FILL_RATE = 1.2; // % per tick when all 3 lanes full
+  const JAM_DRAIN_RATE = 0.8;
+  const JAM_FREEZE_MS = 3000;
+  const VIP_BLOCKER_CHANCE = 0.12;
+
+  // ── STATE ────────────────────────────────────────────────────────────────
+  let uid = 0;
+  const nextId = () => ++uid;
+
+  let state = {};
+
+  function initState(levelIndex) {
+    clearTimers();
+    uid = 0;
+    state = {
+      levelIndex,
+      score: 0,
+      delivered: 0,
+      gameOver: false,
+      levelComplete: false,
+      queue: [],
+      road: [null, null, null],
+      vehicles: buildVehicles(levelIndex),
+      comboCount: 0,
+      lastDispatchColor: null,
+      jamMeter: 0,
+      jamFrozen: false,
+      jamFreezeRemaining: 0,
+      spawnTimerId: null,
+      tickTimerId: null,
+      dismissingIds: new Set(),
+    };
+  }
+
+  function buildVehicles(levelIndex) {
+    const colors = LEVELS[levelIndex].colors;
+    const types = ['car', 'van', 'bus'];
+    const list = [];
+    for (const color of colors) {
+      for (const type of types) {
+        list.push({
+          id: nextId(),
+          color,
+          type,
+          vstate: 'garage', // 'garage' | 'road' | 'cooldown'
+          cooldownRemaining: 0,
+          cooldownTotal: VEHICLE_TYPES[type].cooldownMs,
+          laneIndex: -1,
+        });
+      }
+    }
+    return list;
+  }
+
+  function clearTimers() {
+    if (state.tickTimerId)  clearInterval(state.tickTimerId);
+    if (state.spawnTimerId) clearInterval(state.spawnTimerId);
+  }
+
+  // ── GAME LOOP ────────────────────────────────────────────────────────────
+  function startGame(levelIndex) {
+    initState(levelIndex);
+    hideAllOverlays();
+    render();
+    // initial spawn after a short delay
+    setTimeout(() => {
+      if (!state.gameOver && !state.levelComplete) spawnPerson();
+    }, 600);
+    state.spawnTimerId = setInterval(spawnPerson, LEVELS[levelIndex].spawnMs);
+    state.tickTimerId  = setInterval(tick, TICK_MS);
+  }
+
+  function tick() {
+    if (state.gameOver || state.levelComplete) return;
+    const lvl = LEVELS[state.levelIndex];
+
+    // Jam freeze
+    if (state.jamFrozen) {
+      state.jamFreezeRemaining -= TICK_MS;
+      if (state.jamFreezeRemaining <= 0) {
+        state.jamFrozen = false;
+        state.jamMeter = 0;
+      }
+      // still update patience and cooldowns during freeze
+      updatePatience(lvl);
+      updateCooldowns();
+      render();
+      return;
+    }
+
+    // Patience
+    updatePatience(lvl);
+    if (state.gameOver) { render(); return; }
+
+    // Road vehicles
+    updateRoad();
+
+    // Cooldowns
+    updateCooldowns();
+
+    // Jam meter
+    const lanesOccupied = state.road.filter(Boolean).length;
+    if (lanesOccupied === 3) {
+      state.jamMeter = Math.min(100, state.jamMeter + JAM_FILL_RATE);
+      if (state.jamMeter >= 100) {
+        triggerJamFreeze();
+      }
+    } else {
+      state.jamMeter = Math.max(0, state.jamMeter - JAM_DRAIN_RATE);
+    }
+
+    render();
+  }
+
+  function updatePatience(lvl) {
+    for (const p of state.queue) {
+      if (p.type === 'blocker') continue;
+      p.patience -= TICK_MS;
+      if (p.patience <= 0) {
+        triggerGameOver('patience', p);
+        return;
+      }
+    }
+  }
+
+  function updateRoad() {
+    for (let i = 0; i < 3; i++) {
+      const slot = state.road[i];
+      if (!slot) continue;
+      const vtype = VEHICLE_TYPES[slot.type];
+      const totalMs = vtype.roadTimeMs;
+      slot.elapsed += TICK_MS;
+      if (!slot.returning) {
+        slot.progress = Math.min(1, slot.elapsed / totalMs);
+        if (slot.progress >= 1) {
+          // start return
+          slot.returning = true;
+          slot.elapsed = 0;
+        }
+      } else {
+        slot.returnProgress = Math.min(1, slot.elapsed / (totalMs * 0.6));
+        if (slot.returnProgress >= 1) {
+          // vehicle returned → cooldown
+          completeRoadSlot(i);
+        }
+      }
+    }
+  }
+
+  function completeRoadSlot(laneIndex) {
+    const slot = state.road[laneIndex];
+    if (!slot) return;
+    const v = state.vehicles.find(v => v.id === slot.vehicleId);
+    if (v) {
+      v.vstate = 'cooldown';
+      v.cooldownRemaining = v.cooldownTotal;
+      v.laneIndex = -1;
+    }
+    state.road[laneIndex] = null;
+  }
+
+  function updateCooldowns() {
+    for (const v of state.vehicles) {
+      if (v.vstate === 'cooldown') {
+        v.cooldownRemaining -= TICK_MS;
+        if (v.cooldownRemaining <= 0) {
+          v.vstate = 'garage';
+          v.cooldownRemaining = 0;
+        }
+      }
+    }
+  }
+
+  function triggerJamFreeze() {
+    state.jamFrozen = true;
+    state.jamFreezeRemaining = JAM_FREEZE_MS;
+    state.jamMeter = 0;
+  }
+
+  function triggerGameOver(reason, person) {
+    state.gameOver = true;
+    clearTimers();
+    const reasonText = reason === 'patience'
+      ? `${getPersonEmoji(person)} ran out of patience!`
+      : 'The queue overflowed — no room for a new arrival!';
+    document.getElementById('goReason').textContent = reasonText;
+    document.getElementById('goScore').textContent = state.score + ' pts';
+    document.getElementById('overlayGameOver').classList.add('visible');
+  }
+
+  function triggerLevelComplete() {
+    state.levelComplete = true;
+    clearTimers();
+    const lvl = LEVELS[state.levelIndex];
+    document.getElementById('lcTitle').textContent = `Level ${state.levelIndex + 1} Complete!`;
+    document.getElementById('lcScore').textContent = state.score + ' pts';
+    document.getElementById('lcBody').textContent =
+      state.levelIndex + 1 >= LEVELS.length
+        ? 'You finished all levels!'
+        : `Delivered ${state.delivered} people. Next level is faster!`;
+    if (state.levelIndex + 1 >= LEVELS.length) {
+      document.getElementById('victoryScore').textContent = state.score + ' pts';
+      document.getElementById('overlayVictory').classList.add('visible');
+    } else {
+      document.getElementById('overlayLevelComplete').classList.add('visible');
+    }
+  }
+
+  // ── SPAWN ────────────────────────────────────────────────────────────────
+  function spawnPerson() {
+    if (state.gameOver || state.levelComplete) return;
+    if (state.queue.length >= MAX_QUEUE) {
+      triggerGameOver('overflow', null);
+      render();
+      return;
+    }
+    const lvl = LEVELS[state.levelIndex];
+    const roll = Math.random();
+    let type = 'normal';
+    let color = lvl.colors[Math.floor(Math.random() * lvl.colors.length)];
+    if (roll < VIP_BLOCKER_CHANCE / 2) {
+      type = 'vip';
+    } else if (roll < VIP_BLOCKER_CHANCE) {
+      type = 'blocker';
+      color = 'blocker';
+    }
+    state.queue.push({
+      id: nextId(),
+      color,
+      type,
+      patience: lvl.patienceMs,
+      maxPatience: lvl.patienceMs,
+    });
+    render();
+  }
+
+  // ── DISPATCH ─────────────────────────────────────────────────────────────
+  function dispatch(vehicleId) {
+    if (state.gameOver || state.levelComplete) return;
+    const v = state.vehicles.find(v => v.id === vehicleId);
+    if (!v || v.vstate !== 'garage') return;
+
+    // Find free lane
+    const laneIndex = state.road.indexOf(null);
+    if (laneIndex === -1) {
+      showFlashError('No free lanes!');
+      return;
+    }
+
+    const vtype = VEHICLE_TYPES[v.type];
+    const capacity = vtype.capacity;
+
+    // Find matching people (front-most, same color)
+    const matching = state.queue
+      .map((p, i) => ({ p, i }))
+      .filter(({ p }) => p.color === v.color);
+
+    let scoreForLoad = 0;
+    let noBonus = false;
+
+    if (matching.length === 0) {
+      // Wasted run
+      scoreForLoad = -20;
+      state.score = Math.max(0, state.score + scoreForLoad);
+      state.comboCount = 0;
+      state.lastDispatchColor = null;
+      showScorePopup(scoreForLoad, '#ef4444');
+    } else {
+      // Pick up front-most up to capacity
+      const toPickup = matching.slice(0, capacity);
+
+      // VIP rule: check if VIP is in the picked list but not first
+      const vipInLoad = toPickup.find(({ p }) => p.type === 'vip');
+      if (vipInLoad && toPickup[0].p.type !== 'vip') {
+        noBonus = true;
+      }
+
+      // Remove from queue (descending index to preserve order)
+      const indices = toPickup.map(({ i }) => i).sort((a, b) => b - a);
+      const pickedPeople = toPickup.map(({ p }) => p);
+      for (const idx of indices) {
+        state.queue.splice(idx, 1);
+      }
+
+      if (!noBonus) {
+        // Score per person with patience multiplier
+        for (const p of pickedPeople) {
+          const pct = p.patience / p.maxPatience;
+          const mult = pct > 0.66 ? 2 : pct > 0.33 ? 1 : 0.5;
+          scoreForLoad += Math.round(10 * mult);
+        }
+        // Full load bonus
+        if (pickedPeople.length === capacity) scoreForLoad += 50;
+        // Combo
+        if (v.color === state.lastDispatchColor) {
+          state.comboCount++;
+          if (state.comboCount >= 3) {
+            scoreForLoad += 30;
+            state.comboCount = 0;
+            showFlashMessage('+30 COMBO!', '#a78bfa');
+          }
+        } else {
+          state.comboCount = 1;
+        }
+      } else {
+        // VIP boarded wrong — score only base pickup, no bonuses
+        for (const p of pickedPeople) {
+          const pct = p.patience / p.maxPatience;
+          const mult = pct > 0.66 ? 2 : pct > 0.33 ? 1 : 0.5;
+          scoreForLoad += Math.round(10 * mult);
+        }
+        showFlashMessage('VIP missed!', '#f97316');
+      }
+
+      state.score += scoreForLoad;
+      state.delivered += pickedPeople.length;
+      state.lastDispatchColor = v.color;
+      showScorePopup('+' + scoreForLoad, scoreForLoad > 0 ? '#a78bfa' : '#ef4444');
+
+      // Check quota
+      if (state.delivered >= LEVELS[state.levelIndex].quota) {
+        render();
+        triggerLevelComplete();
+        return;
+      }
+    }
+
+    // Put vehicle on road
+    v.vstate = 'road';
+    v.laneIndex = laneIndex;
+    state.road[laneIndex] = {
+      vehicleId: v.id,
+      color: v.color,
+      type: v.type,
+      progress: 0,
+      elapsed: 0,
+      returning: false,
+      returnProgress: 0,
+    };
+
+    render();
+  }
+
+  // ── BLOCKER DISMISS ──────────────────────────────────────────────────────
+  function startDismissBlocker(personId) {
+    if (state.dismissingIds.has(personId)) return;
+    state.dismissingIds.add(personId);
+    render();
+    setTimeout(() => {
+      state.queue = state.queue.filter(p => p.id !== personId);
+      state.dismissingIds.delete(personId);
+      render();
+    }, 2000);
+  }
+
+  // ── HELPERS ──────────────────────────────────────────────────────────────
+  function getPersonEmoji(p) {
+    if (!p) return '';
+    if (p.type === 'vip') return '⭐';
+    if (p.type === 'blocker') return '🩶';
+    return { red:'🔴', blue:'🔵', green:'🟢', yellow:'🟡', purple:'🟣' }[p.color] || '⚫';
+  }
+
+  function showScorePopup(text, color) {
+    const el = document.createElement('div');
+    el.className = 'score-popup';
+    el.textContent = text;
+    el.style.color = color;
+    el.style.left = (Math.random() * 60 + 20) + '%';
+    el.style.top = '35%';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1300);
+  }
+
+  function showFlashError(msg) {
+    const el = document.createElement('div');
+    el.className = 'flash-error';
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+
+  function showFlashMessage(msg, color) {
+    const el = document.createElement('div');
+    el.className = 'flash-error';
+    el.style.background = '#1c1730';
+    el.style.borderColor = color;
+    el.style.color = color;
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+
+  function hideAllOverlays() {
+    document.querySelectorAll('.overlay').forEach(o => o.classList.remove('visible'));
+  }
+
+  // ── RENDER ───────────────────────────────────────────────────────────────
+  function render() {
+    renderHUD();
+    renderQueue();
+    renderRoad();
+    renderJam();
+    renderGarage();
+  }
+
+  function renderHUD() {
+    const lvl = LEVELS[state.levelIndex];
+    document.getElementById('scoreVal').textContent = state.score;
+    document.getElementById('levelVal').textContent = state.levelIndex + 1;
+    document.getElementById('quotaVal').textContent = state.delivered + ' / ' + lvl.quota;
+  }
+
+  function renderQueue() {
+    const row = document.getElementById('queueRow');
+    row.innerHTML = '';
+    for (let i = 0; i < MAX_QUEUE; i++) {
+      const p = state.queue[i];
+      if (!p) {
+        const empty = document.createElement('div');
+        empty.className = 'queue-empty-slot';
+        row.appendChild(empty);
+        continue;
+      }
+      const slot = document.createElement('div');
+      slot.className = 'person-slot';
+
+      const circle = document.createElement('div');
+      circle.className = 'person-circle' + (p.type === 'blocker' ? ' blocker' : '');
+      if (state.dismissingIds.has(p.id)) circle.classList.add('dismissing');
+
+      const bgColor = p.type === 'blocker' ? '#6b7280' : COLOR_MAP[p.color]?.hex ?? '#888';
+      circle.style.background = bgColor + '33';
+      circle.style.borderColor = bgColor;
+
+      const emoji = document.createElement('span');
+      emoji.textContent = getPersonEmoji(p);
+      circle.appendChild(emoji);
+
+      if (p.type === 'blocker') {
+        circle.dataset.personId = p.id;
+      }
+
+      slot.appendChild(circle);
+
+      if (p.type !== 'blocker') {
+        const bar = document.createElement('div');
+        bar.className = 'patience-bar';
+        const fill = document.createElement('div');
+        fill.className = 'patience-fill';
+        const pct = p.patience / p.maxPatience;
+        fill.style.width = (pct * 100) + '%';
+        fill.style.background = pct > 0.66 ? '#22c55e' : pct > 0.33 ? '#eab308' : '#ef4444';
+        bar.appendChild(fill);
+        slot.appendChild(bar);
+      } else {
+        const spacer = document.createElement('div');
+        spacer.style.height = '3px';
+        slot.appendChild(spacer);
+      }
+
+      row.appendChild(slot);
+    }
+  }
+
+  function renderRoad() {
+    const lanesEl = document.getElementById('roadLanes');
+    lanesEl.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const lane = document.createElement('div');
+      lane.className = 'lane' + (state.jamFrozen ? ' jam-frozen' : '');
+
+      const slot = state.road[i];
+      if (!slot) {
+        lane.innerHTML = '<span class="lane-empty">— empty —</span>';
+      } else {
+        const vtype = VEHICLE_TYPES[slot.type];
+        const color = COLOR_MAP[slot.color]?.hex ?? '#888';
+        const progress = slot.returning ? slot.returnProgress : slot.progress;
+        const displayProgress = slot.returning ? (1 - slot.returnProgress) : slot.progress;
+
+        lane.classList.toggle('lane-returning', slot.returning);
+
+        const vEmoji = document.createElement('div');
+        vEmoji.className = 'lane-vehicle';
+        vEmoji.style.fontSize = '1.3rem';
+        vEmoji.textContent = vtype.emoji;
+
+        const colorDot = document.createElement('span');
+        colorDot.style.cssText = `width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0`;
+
+        const label = document.createElement('div');
+        label.className = 'lane-vehicle-label';
+        label.appendChild(colorDot);
+        label.appendChild(Object.assign(document.createElement('span'), { textContent: slot.returning ? '← returning' : '→ going' }));
+
+        const track = document.createElement('div');
+        track.className = 'lane-progress-track';
+        const fill = document.createElement('div');
+        fill.className = 'lane-progress-fill';
+        fill.style.width = (displayProgress * 100) + '%';
+        fill.style.background = color;
+        track.appendChild(fill);
+
+        lane.appendChild(vEmoji);
+        lane.appendChild(label);
+        lane.appendChild(track);
+      }
+      lanesEl.appendChild(lane);
+    }
+  }
+
+  function renderJam() {
+    const section = document.getElementById('jamSection');
+    const lanesOccupied = state.road.filter(Boolean).length;
+    section.style.visibility = lanesOccupied > 0 ? 'visible' : 'hidden';
+    document.getElementById('jamFill').style.width = state.jamMeter + '%';
+    document.getElementById('jamFreezeText').style.display = state.jamFrozen ? 'block' : 'none';
+  }
+
+  function renderGarage() {
+    const grid = document.getElementById('garageGrid');
+    grid.innerHTML = '';
+    for (const v of state.vehicles) {
+      const card = document.createElement('div');
+      card.className = 'vehicle-card';
+      const isUnavailable = v.vstate !== 'garage';
+      if (isUnavailable) card.classList.add('unavailable');
+      if (v.vstate === 'road') card.classList.add('on-road');
+      if (v.vstate === 'cooldown') card.classList.add('cooldown');
+
+      const vtype = VEHICLE_TYPES[v.type];
+      const color = COLOR_MAP[v.color]?.hex ?? '#888';
+
+      card.style.borderColor = isUnavailable ? '#2d1f50' : color + '88';
+
+      const emojiEl = document.createElement('div');
+      emojiEl.className = 'vehicle-emoji';
+      emojiEl.textContent = vtype.emoji;
+
+      const dot = document.createElement('div');
+      dot.className = 'vehicle-color-dot';
+      dot.style.background = color;
+
+      const caps = document.createElement('div');
+      caps.className = 'vehicle-caps';
+      for (let i = 0; i < vtype.capacity; i++) {
+        const pip = document.createElement('div');
+        pip.className = 'vehicle-cap-pip';
+        caps.appendChild(pip);
+      }
+
+      const typeLabel = document.createElement('div');
+      typeLabel.className = 'vehicle-type-label';
+      typeLabel.textContent = vtype.label;
+
+      card.appendChild(emojiEl);
+      card.appendChild(dot);
+      card.appendChild(caps);
+      card.appendChild(typeLabel);
+
+      // Cooldown bar
+      if (v.vstate === 'cooldown') {
+        const cdBar = document.createElement('div');
+        cdBar.className = 'cooldown-bar';
+        const pct = 1 - (v.cooldownRemaining / v.cooldownTotal);
+        cdBar.style.width = (pct * 100) + '%';
+        card.appendChild(cdBar);
+      }
+
+      if (!isUnavailable) {
+        card.dataset.vehicleId = v.id;
+        card.style.cursor = 'pointer';
+      }
+
+      grid.appendChild(card);
+    }
+  }
+
+  // ── EVENTS ───────────────────────────────────────────────────────────────
+
+  // Garage delegation — survives innerHTML resets every tick
+  function handleGarageTap(e) {
+    const card = e.target.closest('[data-vehicle-id]');
+    if (!card) return;
+    if (e.cancelable) e.preventDefault();
+    dispatch(Number(card.dataset.vehicleId));
+  }
+  document.getElementById('garageGrid').addEventListener('touchstart', handleGarageTap, { passive: false });
+  document.getElementById('garageGrid').addEventListener('click', handleGarageTap);
+
+  // Queue delegation — for blocker dismissal
+  function handleQueueTap(e) {
+    const circle = e.target.closest('[data-person-id]');
+    if (!circle) return;
+    if (e.cancelable) e.preventDefault();
+    startDismissBlocker(Number(circle.dataset.personId));
+  }
+  document.getElementById('queueRow').addEventListener('touchstart', handleQueueTap, { passive: false });
+  document.getElementById('queueRow').addEventListener('click', handleQueueTap);
+
+  document.getElementById('rulesBtn').addEventListener('click', () => {
+    document.getElementById('modalBackdrop').classList.add('visible');
+  });
+  document.getElementById('modalClose').addEventListener('click', () => {
+    document.getElementById('modalBackdrop').classList.remove('visible');
+  });
+  document.getElementById('modalBackdrop').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('modalBackdrop'))
+      document.getElementById('modalBackdrop').classList.remove('visible');
+  });
+
+  document.getElementById('retryBtn').addEventListener('click', () => {
+    startGame(state.levelIndex);
+  });
+  document.getElementById('nextLevelBtn').addEventListener('click', () => {
+    startGame(state.levelIndex + 1);
+  });
+  document.getElementById('playAgainBtn').addEventListener('click', () => {
+    startGame(0);
+  });
+
+  // ── BOOT ─────────────────────────────────────────────────────────────────
+  startGame(0);
+</script>
+</body>
+</html>
