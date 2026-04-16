@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Leaderboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #13111c;
+      --surface: #1c1730;
+      --brd: #4c1d95;
+      --p: #6d28d9;
+      --p-lt: #7c3aed;
+      --p-xl: #a78bfa;
+      --p-text: #e2d9f3;
+      --muted: #7c6fa0;
+      --gold: #f59e0b;
+    }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 12px 16px 40px;
+      gap: 12px;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 60px;
+    }
+    .back-link:hover { color: var(--p-xl); }
+    h1 {
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    /* ── Game picker ── */
+    .picker-section {
+      width: 100%;
+      max-width: 520px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .picker-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .pill-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .pill-row::-webkit-scrollbar { display: none; }
+    .pill {
+      flex-shrink: 0;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1.5px solid var(--brd);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .pill.active {
+      background: var(--p);
+      border-color: var(--p-lt);
+      color: #fff;
+    }
+    .pill:active { transform: scale(0.95); }
+
+    #variant-row-wrap { display: none; }
+    #variant-row-wrap.visible { display: block; }
+
+    /* ── Leaderboard table ── */
+    .lb-section {
+      width: 100%;
+      max-width: 520px;
+    }
+    .lb-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .lb-table thead tr {
+      background: rgba(109,40,217,0.25);
+    }
+    .lb-table th {
+      padding: 8px 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: left;
+    }
+    .lb-table th:last-child { text-align: right; }
+    .lb-table td {
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(76,29,149,0.35);
+      vertical-align: middle;
+    }
+    .lb-table td:last-child { text-align: right; font-weight: 800; }
+    .lb-table tr.is-active td {
+      border-left: 3px solid var(--p-lt);
+      padding-left: 9px;
+    }
+    .lb-table tr.unscored td {
+      opacity: 0.45;
+    }
+
+    .rank-cell {
+      font-weight: 800;
+      color: var(--muted);
+      width: 36px;
+      font-size: 0.85rem;
+    }
+    .rank-1 { color: var(--gold); }
+    .rank-2 { color: #94a3b8; }
+    .rank-3 { color: #c8924a; }
+
+    .avatar-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .avatar-cell svg { border-radius: 8px; display: block; overflow: hidden; flex-shrink: 0; }
+    .avatar-cell-name {
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+
+    .score-value { color: var(--p-xl); }
+    .score-unit { color: var(--muted); font-size: 0.72rem; font-weight: 600; margin-left: 2px; }
+
+    /* Empty state */
+    .lb-empty {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--muted);
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+    }
+    .lb-empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .lb-empty-text { font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a class="back-link" href="index.html">← Back</a>
+    <h1>Leaderboard</h1>
+    <div style="min-width:60px"></div>
+  </div>
+
+  <div class="picker-section">
+    <div class="picker-label">Game</div>
+    <div class="pill-row" id="game-pills"></div>
+
+    <div id="variant-row-wrap">
+      <div class="picker-label" style="margin-bottom:6px" id="variant-label">Difficulty</div>
+      <div class="pill-row" id="variant-pills"></div>
+    </div>
+  </div>
+
+  <div class="lb-section" id="lb-section"></div>
+
+<script src="avatar.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var loadAvatars = window.__avatarLoadAvatars;
+  var getActiveId = window.__avatarGetActiveId;
+  var renderSVG   = window.__avatarRender;
+
+  // ── Game definitions ──────────────────────────────────────────────────────
+  var GAMES = [
+    { id: 'mathblitz',   label: 'Math Blitz',    variants: ['easy','medium','hard','ultra'],
+      keyFn: function(v){ return 'mathblitz-' + v; }, lowerIsBetter: false, unit: 'pts',
+      variantLabels: ['Easy','Medium','Hard','Ultra'], variantLabel: 'Difficulty' },
+    { id: 'whackamole',  label: 'Whack-a-Mole',  variants: ['easy','medium','hard','ultra'],
+      keyFn: function(v){ return 'whackamole-' + v; }, lowerIsBetter: false, unit: 'pts',
+      variantLabels: ['Easy','Medium','Hard','Ultra'], variantLabel: 'Difficulty' },
+    { id: 'memory',      label: 'Memory Match',  variants: ['easy','medium','hard','ultra'],
+      keyFn: function(v){ return 'memory-' + v; }, lowerIsBetter: true, unit: 'moves',
+      variantLabels: ['Easy','Medium','Hard','Ultra'], variantLabel: 'Level' },
+    { id: 'wordle',      label: 'Wordle',        variants: [5,6,7,8],
+      keyFn: function(v){ return 'wordle-' + v; }, lowerIsBetter: true, unit: 'guesses',
+      variantLabels: ['5 Letters','6 Letters','7 Letters','8 Letters'], variantLabel: 'Word Length' },
+    { id: 'minesweeper', label: 'Minesweeper',   variants: ['easy','medium','hard'],
+      keyFn: function(v){ return 'minesweeper-' + v; }, lowerIsBetter: true, unit: 's',
+      variantLabels: ['Easy','Medium','Hard'], variantLabel: 'Difficulty' },
+    { id: 'mastermind',  label: 'Mastermind',    variants: null,
+      keyFn: function(){ return 'mastermind'; }, lowerIsBetter: true, unit: 'guesses' },
+    { id: 'number',      label: 'Number Puzzle', variants: [3,4,5,6],
+      keyFn: function(v){ return 'number-' + v; }, lowerIsBetter: true, unit: 'moves',
+      variantLabels: ['3×3','4×4','5×5','6×6'], variantLabel: 'Grid Size' },
+    { id: 'carjam',      label: 'Car Jam',       variants: null,
+      keyFn: function(){ return 'carjam'; }, lowerIsBetter: false, unit: 'pts' }
+  ];
+
+  // ── State ─────────────────────────────────────────────────────────────────
+  var selectedGameIdx = 0;
+  var selectedVariantIdx = 0;
+
+  // ── Build game pills ──────────────────────────────────────────────────────
+  var gamePillsEl = document.getElementById('game-pills');
+  GAMES.forEach(function(game, i) {
+    var pill = document.createElement('button');
+    pill.className = 'pill' + (i === 0 ? ' active' : '');
+    pill.textContent = game.label;
+    pill.addEventListener('click', function() {
+      selectedGameIdx = i;
+      selectedVariantIdx = 0;
+      gamePillsEl.querySelectorAll('.pill').forEach(function(p){ p.classList.remove('active'); });
+      pill.classList.add('active');
+      renderVariantPills();
+      renderTable();
+    });
+    gamePillsEl.appendChild(pill);
+  });
+
+  // ── Build variant pills ───────────────────────────────────────────────────
+  function renderVariantPills() {
+    var game = GAMES[selectedGameIdx];
+    var wrap = document.getElementById('variant-row-wrap');
+    var container = document.getElementById('variant-pills');
+    container.innerHTML = '';
+
+    if (!game.variants) {
+      wrap.classList.remove('visible');
+      return;
+    }
+
+    wrap.classList.add('visible');
+    document.getElementById('variant-label').textContent = game.variantLabel || 'Variant';
+
+    game.variantLabels.forEach(function(label, i) {
+      var pill = document.createElement('button');
+      pill.className = 'pill' + (i === selectedVariantIdx ? ' active' : '');
+      pill.textContent = label;
+      pill.addEventListener('click', function() {
+        selectedVariantIdx = i;
+        container.querySelectorAll('.pill').forEach(function(p){ p.classList.remove('active'); });
+        pill.classList.add('active');
+        renderTable();
+      });
+      container.appendChild(pill);
+    });
+  }
+
+  // ── Render leaderboard table ──────────────────────────────────────────────
+  function renderTable() {
+    var game = GAMES[selectedGameIdx];
+    var variant = game.variants ? game.variants[selectedVariantIdx] : null;
+    var scoreKey = game.keyFn(variant);
+    var avatars = loadAvatars();
+    var activeId = getActiveId();
+    var section = document.getElementById('lb-section');
+
+    if (avatars.length === 0) {
+      section.innerHTML =
+        '<div class="lb-empty">' +
+          '<div class="lb-empty-icon">🏆</div>' +
+          '<div class="lb-empty-text">No avatars yet. Create one to start tracking scores!</div>' +
+        '</div>';
+      return;
+    }
+
+    var scored   = avatars.filter(function(a){ return a.scores && a.scores[scoreKey] !== undefined; });
+    var unscored = avatars.filter(function(a){ return !a.scores || a.scores[scoreKey] === undefined; });
+
+    if (game.lowerIsBetter) {
+      scored.sort(function(a, b){ return a.scores[scoreKey] - b.scores[scoreKey]; });
+    } else {
+      scored.sort(function(a, b){ return b.scores[scoreKey] - a.scores[scoreKey]; });
+    }
+
+    if (scored.length === 0 && unscored.length > 0) {
+      section.innerHTML =
+        '<div class="lb-empty">' +
+          '<div class="lb-empty-icon">🎮</div>' +
+          '<div class="lb-empty-text">No scores yet for this game. Play to get on the board!</div>' +
+        '</div>';
+      return;
+    }
+
+    var rankEmojis = ['🏆', '🥈', '🥉'];
+
+    var html = '<table class="lb-table"><thead><tr>' +
+      '<th>#</th><th>Player</th><th>Score</th>' +
+      '</tr></thead><tbody>';
+
+    scored.forEach(function(avatar, i) {
+      var rank = i + 1;
+      var isActive = avatar.id === activeId;
+      var rankClass = rank <= 3 ? ' rank-' + rank : '';
+      var rowClass = isActive ? ' class="is-active"' : '';
+      var rankDisplay = rank <= 3 ? rankEmojis[i] : rank;
+      var scoreVal = avatar.scores[scoreKey];
+      var scoreFormatted = typeof scoreVal === 'number' ? scoreVal.toLocaleString() : scoreVal;
+
+      html += '<tr' + rowClass + '>' +
+        '<td class="rank-cell' + rankClass + '">' + rankDisplay + '</td>' +
+        '<td><div class="avatar-cell">' +
+          renderSVG(avatar, '36') +
+          '<span class="avatar-cell-name">' + escHtml(avatar.nickname) + '</span>' +
+        '</div></td>' +
+        '<td><span class="score-value">' + scoreFormatted + '</span>' +
+          '<span class="score-unit">' + game.unit + '</span></td>' +
+        '</tr>';
+    });
+
+    // Unscored avatars below
+    unscored.forEach(function(avatar) {
+      var isActive = avatar.id === activeId;
+      var rowClass = 'unscored' + (isActive ? ' is-active' : '');
+      html += '<tr class="' + rowClass + '">' +
+        '<td class="rank-cell">—</td>' +
+        '<td><div class="avatar-cell">' +
+          renderSVG(avatar, '36') +
+          '<span class="avatar-cell-name">' + escHtml(avatar.nickname) + '</span>' +
+        '</div></td>' +
+        '<td><span style="color:var(--muted)">No score</span></td>' +
+        '</tr>';
+    });
+
+    html += '</tbody></table>';
+    section.innerHTML = html;
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  renderVariantPills();
+  renderTable();
+
+})();
+</script>
+</body>
+</html>

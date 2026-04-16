@@ -507,9 +507,9 @@
 
     // ── Config ─────────────────────────────────────────────────────────────────
     const DIFF_CONFIG = {
-      easy:   { mulA: [1,3],  mulB: [1,9],  addMin: 1,   addMax: 10  },
-      medium: { mulA: [1,6],  mulB: [1,9],  addMin: 10,  addMax: 20  },
-      hard:   { mulA: [1,9],  mulB: [1,9],  addMin: 20,  addMax: 50  },
+      easy:   { mulA: [2,3],  mulB: [2,9],  addMin: 2,   addMax: 10  },
+      medium: { mulA: [2,6],  mulB: [2,9],  addMin: 10,  addMax: 20  },
+      hard:   { mulA: [2,9],  mulB: [2,9],  addMin: 20,  addMax: 50  },
       ultra:  { mulA: [3,9],  mulB: [10,15],addMin: 10,  addMax: 200 },
     };
 
@@ -770,6 +770,7 @@
       gameState = 'ended';
       answerBtns.forEach(b => b.disabled = true);
       answerLocked = true;
+      if (window.__avatarSave) window.__avatarSave('mathblitz-' + difficulty, score, false);
 
       sfxEnd();
       saveBest(score);
@@ -839,5 +840,6 @@
     // ── Init ───────────────────────────────────────────────────────────────────
     updateHUD();
   </script>
+  <script src="avatar.js"></script>
 </body>
 </html>

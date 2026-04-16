@@ -82,6 +82,16 @@
   <h1>Puzzles</h1>
 
   <div class="grid">
+    <a class="card" href="avatar.html" onclick="window.location.href='avatar.html';return false;" style="border-color:#7c3aed;background:linear-gradient(135deg,#1c1730 60%,#2a1045);">
+      <div class="card-icon"><span id="index-avatar-icon">🧑</span></div>
+      <div class="card-title" style="color:#a78bfa;">Avatars</div>
+      <div class="card-desc">Create &amp; switch player profiles with custom avatars</div>
+    </a>
+    <a class="card" href="leaderboard.html" onclick="window.location.href='leaderboard.html';return false;" style="border-color:#0e7490;background:linear-gradient(135deg,#1c1730 60%,#0c2a30);">
+      <div class="card-icon">🏆</div>
+      <div class="card-title" style="color:#67e8f9;">Leaderboard</div>
+      <div class="card-desc">Rankings across all avatars for every game</div>
+    </a>
     <a class="card" href="number.html" onclick="window.location.href='number.html';return false;">
       <div class="card-icon">🔢</div>
       <div class="card-title">Number Puzzle</div>
@@ -129,5 +139,21 @@
     </a>
   </div>
 
+  <script src="avatar.js"></script>
+  <script>
+    (function () {
+      try {
+        var list = JSON.parse(localStorage.getItem('puzzles-avatars') || '[]');
+        var activeId = localStorage.getItem('puzzles-avatar-active');
+        var d = list.find(function(a){ return a.id === activeId; }) || list[0];
+        if (!d) return;
+        var el = document.getElementById('index-avatar-icon');
+        if (el && window.__avatarRender) {
+          el.innerHTML = window.__avatarRender(d, '48');
+          el.style.fontSize = '0';
+        }
+      } catch (e) {}
+    })();
+  </script>
 </body>
 </html>

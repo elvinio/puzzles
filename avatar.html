@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Avatars</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #13111c;
+      --surface: #1c1730;
+      --brd: #4c1d95;
+      --p: #6d28d9;
+      --p-lt: #7c3aed;
+      --p-xl: #a78bfa;
+      --p-text: #e2d9f3;
+      --muted: #7c6fa0;
+      --danger: #dc2626;
+      --danger-lt: #ef4444;
+    }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 12px 16px 40px;
+      gap: 12px;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 60px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-family: inherit;
+    }
+    .back-link:hover { color: var(--p-xl); }
+    h1 {
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .new-btn {
+      background: var(--p);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s;
+      min-width: 60px;
+      text-align: right;
+      font-family: inherit;
+    }
+    .new-btn:active { background: var(--p-lt); }
+    .new-btn:disabled { opacity: 0.35; pointer-events: none; }
+
+    /* ══════════════════════════════════════════
+       LIST VIEW
+    ══════════════════════════════════════════ */
+    #view-list {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .avatar-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      padding: 10px 12px;
+      transition: border-color 0.15s;
+    }
+    .avatar-card.is-active { border-color: var(--p-lt); }
+    .avatar-card-svg { flex-shrink: 0; }
+    .avatar-card-svg svg { border-radius: 10px; display: block; overflow: hidden; }
+    .avatar-card-info { flex: 1; min-width: 0; }
+    .avatar-card-name {
+      font-weight: 800;
+      color: var(--p-xl);
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .active-pill {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--p-lt);
+      border: 1.5px solid var(--p-lt);
+      border-radius: 6px;
+      padding: 1px 5px;
+      margin-top: 3px;
+      letter-spacing: 0.06em;
+    }
+    .avatar-card-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+      align-items: center;
+    }
+    .btn-select {
+      background: var(--p);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+      transition: background 0.12s;
+    }
+    .btn-select:active { background: var(--p-lt); }
+    .btn-select.is-active { background: var(--p-lt); opacity: 0.5; pointer-events: none; }
+    .btn-edit {
+      background: var(--bg);
+      border: 1.5px solid var(--brd);
+      border-radius: 8px;
+      color: var(--p-xl);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+    }
+    .btn-edit:active { border-color: var(--p-lt); }
+    .btn-delete {
+      background: none;
+      border: 1.5px solid transparent;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 1rem;
+      padding: 5px 7px;
+      cursor: pointer;
+      touch-action: manipulation;
+      line-height: 1;
+    }
+    .btn-delete:active { color: var(--danger-lt); border-color: var(--danger-lt); }
+
+    /* Inline delete confirm */
+    .delete-confirm {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: rgba(220,38,38,0.12);
+      border: 1.5px solid var(--danger);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      color: var(--danger-lt);
+      font-weight: 700;
+      width: 100%;
+      max-width: 520px;
+    }
+    .delete-confirm.visible { display: flex; }
+    .delete-confirm-text { flex: 1; }
+    .btn-confirm-delete {
+      background: var(--danger);
+      border: none;
+      border-radius: 7px;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-cancel-delete {
+      background: none;
+      border: 1.5px solid var(--muted);
+      border-radius: 7px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+    .empty-state-icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty-state-text { font-size: 1rem; margin-bottom: 20px; }
+    .btn-create-first {
+      background: var(--p-lt);
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      padding: 12px 28px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ══════════════════════════════════════════
+       EDITOR VIEW
+    ══════════════════════════════════════════ */
+    #view-editor {
+      display: none;
+      width: 100%;
+      max-width: 520px;
+      flex-direction: column;
+      gap: 12px;
+    }
+    #view-editor.active { display: flex; }
+
+    /* Preview card */
+    .preview-card {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    #preview-svg svg {
+      width: clamp(120px, 35vw, 160px);
+      height: clamp(120px, 35vw, 160px);
+      border-radius: 20px;
+      display: block;
+      overflow: hidden;
+    }
+    #preview-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+      min-height: 1.4em;
+    }
+
+    /* Form sections */
+    .section {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .control-group { display: flex; flex-direction: column; gap: 7px; }
+    .control-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* Nickname */
+    .text-input {
+      width: 100%;
+      background: var(--bg);
+      border: 2px solid var(--brd);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--p-text);
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+      -webkit-user-select: text;
+      user-select: text;
+      touch-action: auto;
+    }
+    .text-input:focus { border-color: var(--p-lt); }
+    .text-input.shake { animation: input-shake 0.35s ease-out; }
+    @keyframes input-shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    /* Swatches */
+    .swatch-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .swatch {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform 0.1s, border-color 0.1s;
+      flex-shrink: 0;
+    }
+    .swatch:active { transform: scale(0.88); }
+    .swatch.active { border-color: var(--p-xl); outline: 2px solid white; outline-offset: -6px; }
+
+    /* Option buttons */
+    .option-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .option-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 2px solid var(--brd);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-family: inherit;
+    }
+    .option-btn svg { display: block; }
+    .option-btn:active { transform: scale(0.93); }
+    .option-btn.active { background: var(--p); border-color: var(--p-lt); color: #fff; }
+
+    /* Save / hair color */
+    .save-btn {
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      background: var(--p-lt);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, transform 0.1s;
+      font-family: inherit;
+    }
+    .save-btn:active { background: var(--p); transform: scale(0.97); }
+    #hair-color-group { transition: opacity 0.2s; }
+    #hair-color-group.hidden { opacity: 0.3; pointer-events: none; }
+  </style>
+</head>
+<body>
+
+  <!-- ── LIST VIEW ─────────────────────────────────── -->
+  <div class="topbar" id="topbar-list">
+    <a class="back-link" href="index.html">← Back</a>
+    <h1>Avatars</h1>
+    <button class="new-btn" id="btn-new">+ New</button>
+  </div>
+
+  <div id="view-list"></div>
+
+  <!-- ── EDITOR VIEW ───────────────────────────────── -->
+  <div class="topbar" id="topbar-editor" style="display:none">
+    <button class="back-link" id="btn-back-editor">← Back</button>
+    <h1 id="editor-title">New Avatar</h1>
+    <div style="min-width:60px"></div>
+  </div>
+
+  <div id="view-editor">
+    <div class="preview-card">
+      <div id="preview-svg"></div>
+      <div id="preview-name">Player</div>
+    </div>
+
+    <div class="section">
+      <div class="control-group">
+        <div class="control-label">Nickname</div>
+        <input type="text" id="nickname-input" class="text-input" maxlength="16" placeholder="Enter name…"
+               autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="control-group">
+        <div class="control-label">Background</div>
+        <div class="swatch-row" id="bg-swatches"></div>
+      </div>
+      <div class="control-group">
+        <div class="control-label">Face</div>
+        <div class="option-row" id="face-options"></div>
+      </div>
+      <div class="control-group">
+        <div class="control-label">Skin</div>
+        <div class="swatch-row" id="skin-swatches"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="control-group">
+        <div class="control-label">Eyes</div>
+        <div class="option-row" id="eye-options"></div>
+      </div>
+      <div class="control-group">
+        <div class="control-label">Nose</div>
+        <div class="option-row" id="nose-options"></div>
+      </div>
+      <div class="control-group">
+        <div class="control-label">Mouth</div>
+        <div class="option-row" id="mouth-options"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="control-group">
+        <div class="control-label">Hair</div>
+        <div class="option-row" id="hair-options"></div>
+      </div>
+      <div class="control-group" id="hair-color-group">
+        <div class="control-label">Hair Color</div>
+        <div class="swatch-row" id="hair-swatches"></div>
+      </div>
+    </div>
+
+    <button class="save-btn" id="save-btn">Create Avatar</button>
+  </div>
+
+<script src="avatar.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ── Helpers from avatar.js ────────────────────────────────────────────────
+  var loadAvatars   = window.__avatarLoadAvatars;
+  var saveAvatars   = window.__avatarSaveAvatars;
+  var getActiveId   = window.__avatarGetActiveId;
+  var renderSVG     = window.__avatarRender;
+
+  function escHtml(str) {
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  // ── View state ────────────────────────────────────────────────────────────
+  var editingId = null; // null = creating new
+
+  // ── Editor form state ─────────────────────────────────────────────────────
+  var editorState = {
+    nickname: '',
+    bgColor: '#6d28d9', faceShape: 'circle', skinColor: '#f5cba7',
+    eyeStyle: 'round', noseStyle: 'dot', mouthStyle: 'smile',
+    hairStyle: 'short', hairColor: '#2c1810'
+  };
+
+  // ── Palettes ──────────────────────────────────────────────────────────────
+  var BG_COLORS = [
+    '#6d28d9','#1e3a5f','#14532d','#7c2d12','#831843',
+    '#1c1730','#0f172a','#292524','#134e4a','#1e1b4b','#3b0764','#042f2e'
+  ];
+  var SKIN_COLORS = [
+    '#fde8c8','#f5cba7','#e8b48a','#d4956a','#c07847',
+    '#a0622a','#7d4519','#5c2e08','#3b1a06','#ffe0bd'
+  ];
+  var HAIR_COLORS = [
+    '#1a0a00','#2c1810','#5c3317','#8b5e3c','#c8924a','#d4a843',
+    '#f0d060','#e8a0a0','#c0392b','#e74c3c','#8e44ad','#3498db'
+  ];
+
+  // ── Option definitions & mini previews ───────────────────────────────────
+  var OPTION_PREVIEWS = {
+    faceShape: {
+      circle:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="15" rx="12" ry="11" fill="#d4956a"/></svg>'; },
+      oval:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="15" rx="9" ry="13" fill="#d4956a"/></svg>'; },
+      round:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><rect x="3" y="5" width="24" height="22" rx="12" fill="#d4956a"/></svg>'; },
+      square:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><rect x="3" y="5" width="24" height="22" rx="3" fill="#d4956a"/></svg>'; }
+    },
+    eyeStyle: {
+      round:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><circle cx="9" cy="15" r="4" fill="#1a1a2e"/><circle cx="10.2" cy="13.8" r="1.3" fill="white"/><circle cx="21" cy="15" r="4" fill="#1a1a2e"/><circle cx="22.2" cy="13.8" r="1.3" fill="white"/></svg>'; },
+      almond: function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="9" cy="15" rx="5" ry="3" fill="#1a1a2e" transform="rotate(-10,9,15)"/><ellipse cx="21" cy="15" rx="5" ry="3" fill="#1a1a2e" transform="rotate(10,21,15)"/></svg>'; },
+      wide:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="9" cy="15" rx="6" ry="3" fill="#1a1a2e"/><ellipse cx="21" cy="15" rx="6" ry="3" fill="#1a1a2e"/></svg>'; },
+      dot:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><circle cx="9" cy="15" r="2.5" fill="#1a1a2e"/><circle cx="21" cy="15" r="2.5" fill="#1a1a2e"/></svg>'; },
+      closed: function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><line x1="5" y1="15" x2="13" y2="15" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round"/><line x1="17" y1="15" x2="25" y2="15" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round"/></svg>'; },
+      starry: function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><text x="9" y="19" text-anchor="middle" font-size="12" fill="#f0c040">★</text><text x="21" y="19" text-anchor="middle" font-size="12" fill="#f0c040">★</text></svg>'; }
+    },
+    noseStyle: {
+      dot:      function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><circle cx="15" cy="15" r="2.5" fill="rgba(0,0,0,0.3)"/></svg>'; },
+      button:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><circle cx="12" cy="15" r="2.5" fill="rgba(0,0,0,0.3)"/><circle cx="18" cy="15" r="2.5" fill="rgba(0,0,0,0.3)"/></svg>'; },
+      line:     function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M11,18 Q15,12 19,18" stroke="rgba(0,0,0,0.4)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'; },
+      triangle: function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><polygon points="15,10 11,20 19,20" fill="rgba(0,0,0,0.2)"/></svg>'; },
+      none:     function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><line x1="10" y1="15" x2="20" y2="15" stroke="rgba(160,160,160,0.3)" stroke-width="1.5" stroke-dasharray="2,2"/></svg>'; }
+    },
+    mouthStyle: {
+      smile:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M8,14 Q15,22 22,14" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>'; },
+      grin:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M8,13 Q15,23 22,13 Q15,20 8,13 Z" fill="#1a1a2e"/><path d="M9,13 Q15,21 21,13" stroke="white" stroke-width="1.5" fill="none"/></svg>'; },
+      flat:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><line x1="9" y1="16" x2="21" y2="16" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="round"/></svg>'; },
+      frown:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M8,18 Q15,10 22,18" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>'; },
+      smirk:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M10,16 Q16,22 22,14" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>'; },
+      open:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="17" rx="6" ry="4" fill="#1a1a2e"/><ellipse cx="15" cy="18" rx="3.5" ry="2.5" fill="#c084fc"/></svg>'; }
+    },
+    hairStyle: {
+      none:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="17" rx="11" ry="10" fill="#d4956a"/></svg>'; },
+      short:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M4,14 Q4,4 15,3 Q26,4 26,14 Q20,10 15,10 Q10,10 4,14 Z" fill="#5c3317"/><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/></svg>'; },
+      long:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M4,14 Q3,22 4,28 Q10,30 15,10 Q20,30 26,28 Q27,22 26,14 Q20,8 15,3 Q10,8 4,14 Z" fill="#5c3317"/><ellipse cx="15" cy="17" rx="10" ry="9" fill="#d4956a"/></svg>'; },
+      curly:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M4,14 Q5,6 8,4 Q9,2 11,4 Q12,2 14,4 Q15,2 16,4 Q18,2 19,4 Q21,2 22,4 Q25,6 26,14 Q20,10 15,10 Q10,10 4,14 Z" fill="#5c3317"/><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/></svg>'; },
+      bun:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M4,14 Q4,6 15,5 Q26,6 26,14 Q20,10 15,10 Q10,10 4,14 Z" fill="#5c3317"/><circle cx="15" cy="4" r="4" fill="#5c3317"/><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/></svg>'; },
+      spiky:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M5,14 L6,6 L9,12 L11,5 L13,11 L15,3 L17,11 L19,5 L21,12 L24,6 L25,14 Q20,10 15,10 Q10,10 5,14 Z" fill="#5c3317"/><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/></svg>'; },
+      bangs:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M4,14 Q4,4 15,3 Q26,4 26,14 Q20,10 15,10 Q10,10 4,14 Z" fill="#5c3317"/><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/><path d="M5,16 Q9,9 15,8 Q21,9 25,16 Q20,12 15,12 Q10,12 5,16 Z" fill="#5c3317"/></svg>'; }
+    }
+  };
+
+  var OPTION_DEFS = {
+    faceShape: [{value:'circle',label:'Circle'},{value:'oval',label:'Oval'},{value:'round',label:'Round'},{value:'square',label:'Square'}],
+    eyeStyle:  [{value:'round',label:'Round'},{value:'almond',label:'Almond'},{value:'wide',label:'Wide'},{value:'dot',label:'Dot'},{value:'closed',label:'Closed'},{value:'starry',label:'Starry'}],
+    noseStyle: [{value:'dot',label:'Dot'},{value:'button',label:'Button'},{value:'line',label:'Line'},{value:'triangle',label:'Triangle'},{value:'none',label:'None'}],
+    mouthStyle:[{value:'smile',label:'Smile'},{value:'grin',label:'Grin'},{value:'flat',label:'Flat'},{value:'frown',label:'Frown'},{value:'smirk',label:'Smirk'},{value:'open',label:'Open'}],
+    hairStyle: [{value:'none',label:'None'},{value:'short',label:'Short'},{value:'long',label:'Long'},{value:'curly',label:'Curly'},{value:'bun',label:'Bun'},{value:'spiky',label:'Spiky'},{value:'bangs',label:'Bangs'}]
+  };
+
+  // ══════════════════════════════════════════
+  // LIST VIEW
+  // ══════════════════════════════════════════
+
+  function showListView() {
+    editingId = null;
+    document.getElementById('topbar-list').style.display = '';
+    document.getElementById('topbar-editor').style.display = 'none';
+    document.getElementById('view-list').style.display = '';
+    document.getElementById('view-editor').classList.remove('active');
+    renderListView();
+  }
+
+  function renderListView() {
+    var container = document.getElementById('view-list');
+    container.innerHTML = '';
+    var list = loadAvatars();
+    var activeId = getActiveId();
+
+    // Update + New button
+    var btnNew = document.getElementById('btn-new');
+    btnNew.disabled = list.length >= 10;
+
+    if (list.length === 0) {
+      container.innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-state-icon">🧑</div>' +
+          '<div class="empty-state-text">No avatars yet — create one!</div>' +
+          '<button class="btn-create-first" id="btn-create-first">Create Your First Avatar</button>' +
+        '</div>';
+      document.getElementById('btn-create-first').addEventListener('click', function() {
+        showEditorView(null);
+      });
+      return;
+    }
+
+    list.forEach(function(avatar) {
+      var isActive = avatar.id === activeId;
+
+      var card = document.createElement('div');
+      card.className = 'avatar-card' + (isActive ? ' is-active' : '');
+      card.innerHTML =
+        '<div class="avatar-card-svg">' + renderSVG(avatar, '52') + '</div>' +
+        '<div class="avatar-card-info">' +
+          '<div class="avatar-card-name">' + escHtml(avatar.nickname) + '</div>' +
+          (isActive ? '<div class="active-pill">ACTIVE</div>' : '') +
+        '</div>' +
+        '<div class="avatar-card-actions">' +
+          (!isActive ? '<button class="btn-select" data-id="' + avatar.id + '">Select</button>' :
+                       '<button class="btn-select is-active" disabled>Active</button>') +
+          '<button class="btn-edit" data-id="' + avatar.id + '">Edit</button>' +
+          (list.length > 1 ? '<button class="btn-delete" data-id="' + avatar.id + '" data-name="' + escHtml(avatar.nickname) + '" title="Delete">🗑</button>' : '') +
+        '</div>';
+
+      // Confirm row (hidden by default)
+      var confirmRow = document.createElement('div');
+      confirmRow.className = 'delete-confirm';
+      confirmRow.id = 'confirm-' + avatar.id;
+      confirmRow.innerHTML =
+        '<span class="delete-confirm-text">Delete "' + escHtml(avatar.nickname) + '"?</span>' +
+        '<button class="btn-cancel-delete" data-id="' + avatar.id + '">Cancel</button>' +
+        '<button class="btn-confirm-delete" data-id="' + avatar.id + '">Delete</button>';
+
+      container.appendChild(card);
+      container.appendChild(confirmRow);
+    });
+
+    // Wire events via delegation
+    container.addEventListener('click', function(e) {
+      var t = e.target;
+      var id = t.dataset.id;
+      if (!id) return;
+
+      if (t.classList.contains('btn-select')) {
+        try { localStorage.setItem('puzzles-avatar-active', id); } catch(err) {}
+        renderListView();
+      } else if (t.classList.contains('btn-edit')) {
+        showEditorView(id);
+      } else if (t.classList.contains('btn-delete')) {
+        // Hide any other open confirms first
+        container.querySelectorAll('.delete-confirm.visible').forEach(function(el){ el.classList.remove('visible'); });
+        document.getElementById('confirm-' + id).classList.add('visible');
+      } else if (t.classList.contains('btn-cancel-delete')) {
+        document.getElementById('confirm-' + id).classList.remove('visible');
+      } else if (t.classList.contains('btn-confirm-delete')) {
+        deleteAvatar(id);
+      }
+    });
+  }
+
+  function deleteAvatar(id) {
+    var list = loadAvatars().filter(function(a){ return a.id !== id; });
+    saveAvatars(list);
+    // If deleted avatar was active, switch to first remaining
+    if (getActiveId() === id) {
+      try { localStorage.setItem('puzzles-avatar-active', list.length ? list[0].id : ''); } catch(e) {}
+    }
+    renderListView();
+  }
+
+  // ══════════════════════════════════════════
+  // EDITOR VIEW
+  // ══════════════════════════════════════════
+
+  function showEditorView(avatarId) {
+    editingId = avatarId;
+
+    // Load avatar data into editorState
+    if (avatarId) {
+      var list = loadAvatars();
+      var av = list.find(function(a){ return a.id === avatarId; });
+      if (av) Object.assign(editorState, av);
+    } else {
+      // Reset to defaults for new avatar
+      Object.assign(editorState, {
+        nickname: '', bgColor: '#6d28d9', faceShape: 'circle',
+        skinColor: '#f5cba7', eyeStyle: 'round', noseStyle: 'dot',
+        mouthStyle: 'smile', hairStyle: 'short', hairColor: '#2c1810'
+      });
+    }
+
+    document.getElementById('topbar-list').style.display = 'none';
+    document.getElementById('topbar-editor').style.display = '';
+    document.getElementById('view-list').style.display = 'none';
+    document.getElementById('view-editor').classList.add('active');
+    document.getElementById('editor-title').textContent = avatarId ? 'Edit Avatar' : 'New Avatar';
+    document.getElementById('save-btn').textContent = avatarId ? 'Save Changes' : 'Create Avatar';
+
+    // Populate nickname
+    document.getElementById('nickname-input').value = editorState.nickname || '';
+
+    // Refresh active states on all controls
+    refreshSwatchActive('bg-swatches',   'bgColor');
+    refreshSwatchActive('skin-swatches', 'skinColor');
+    refreshSwatchActive('hair-swatches', 'hairColor');
+    refreshOptionActive('face-options',  'faceShape');
+    refreshOptionActive('eye-options',   'eyeStyle');
+    refreshOptionActive('nose-options',  'noseStyle');
+    refreshOptionActive('mouth-options', 'mouthStyle');
+    refreshOptionActive('hair-options',  'hairStyle');
+
+    updateHairColorVisibility();
+    updatePreview();
+  }
+
+  function refreshSwatchActive(containerId, key) {
+    document.getElementById(containerId).querySelectorAll('.swatch').forEach(function(btn) {
+      btn.classList.toggle('active', btn.getAttribute('aria-label') === editorState[key]);
+    });
+  }
+
+  function refreshOptionActive(containerId, key) {
+    document.getElementById(containerId).querySelectorAll('.option-btn').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.value === editorState[key]);
+    });
+  }
+
+  function updatePreview() {
+    document.getElementById('preview-svg').innerHTML = renderSVG(editorState, '140');
+    document.getElementById('preview-name').textContent = editorState.nickname.trim() || 'Player';
+  }
+
+  function updateHairColorVisibility() {
+    document.getElementById('hair-color-group').classList.toggle('hidden', editorState.hairStyle === 'none');
+  }
+
+  // Build swatch rows
+  function buildSwatches(containerId, colors, stateKey) {
+    var container = document.getElementById(containerId);
+    colors.forEach(function(color) {
+      var btn = document.createElement('button');
+      btn.className = 'swatch' + (editorState[stateKey] === color ? ' active' : '');
+      btn.style.background = color;
+      btn.setAttribute('aria-label', color);
+      btn.addEventListener('click', function() {
+        editorState[stateKey] = color;
+        container.querySelectorAll('.swatch').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        if (stateKey === 'hairColor') updateHairColorVisibility();
+        updatePreview();
+      });
+      container.appendChild(btn);
+    });
+  }
+
+  // Build option rows
+  function buildOptions(containerId, stateKey) {
+    var container = document.getElementById(containerId);
+    OPTION_DEFS[stateKey].forEach(function(def) {
+      var btn = document.createElement('button');
+      btn.className = 'option-btn' + (editorState[stateKey] === def.value ? ' active' : '');
+      btn.dataset.value = def.value;
+      var previewSVG = OPTION_PREVIEWS[stateKey][def.value] ? OPTION_PREVIEWS[stateKey][def.value]() : '';
+      btn.innerHTML = previewSVG + '<span>' + def.label + '</span>';
+      btn.addEventListener('click', function() {
+        editorState[stateKey] = def.value;
+        container.querySelectorAll('.option-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        if (stateKey === 'hairStyle') updateHairColorVisibility();
+        updatePreview();
+      });
+      container.appendChild(btn);
+    });
+  }
+
+  // Save
+  document.getElementById('save-btn').addEventListener('click', function() {
+    var nick = document.getElementById('nickname-input').value.trim();
+    if (!nick) {
+      var input = document.getElementById('nickname-input');
+      input.classList.remove('shake');
+      void input.offsetWidth;
+      input.classList.add('shake');
+      input.focus();
+      return;
+    }
+    editorState.nickname = nick;
+
+    var list = loadAvatars();
+    if (editingId) {
+      var idx = list.findIndex(function(a){ return a.id === editingId; });
+      if (idx >= 0) {
+        var preserved = list[idx].scores || {};
+        list[idx] = Object.assign({}, editorState, { id: editingId, scores: preserved });
+      }
+    } else {
+      var newAvatar = Object.assign({}, editorState, { id: 'av_' + Date.now(), scores: {} });
+      list.push(newAvatar);
+      // Set as active if first avatar
+      if (list.length === 1) {
+        try { localStorage.setItem('puzzles-avatar-active', newAvatar.id); } catch(e) {}
+      }
+    }
+    saveAvatars(list);
+    showListView();
+  });
+
+  // Nickname live update
+  document.getElementById('nickname-input').addEventListener('input', function() {
+    editorState.nickname = this.value;
+    updatePreview();
+  });
+
+  // Back from editor
+  document.getElementById('btn-back-editor').addEventListener('click', showListView);
+
+  // New avatar button
+  document.getElementById('btn-new').addEventListener('click', function() {
+    showEditorView(null);
+  });
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  buildSwatches('bg-swatches',   BG_COLORS,   'bgColor');
+  buildSwatches('skin-swatches', SKIN_COLORS, 'skinColor');
+  buildSwatches('hair-swatches', HAIR_COLORS, 'hairColor');
+  buildOptions('face-options',  'faceShape');
+  buildOptions('eye-options',   'eyeStyle');
+  buildOptions('nose-options',  'noseStyle');
+  buildOptions('mouth-options', 'mouthStyle');
+  buildOptions('hair-options',  'hairStyle');
+
+  showListView();
+
+})();
+</script>
+</body>
+</html>

@@ -1063,6 +1063,7 @@
       }
 
       if (won) {
+        if (window.__avatarSave) window.__avatarSave('mastermind', state.guesses.length, true);
         // Inline win — no overlay, board stays visible
         document.getElementById('secretRow').classList.add('won');
         document.getElementById('secretLabel').textContent = 'SOLVED!';
@@ -1142,5 +1143,6 @@
     // ── Start ─────────────────────────────────────────────────
     initGame();
   </script>
+  <script src="avatar.js"></script>
 </body>
 </html>

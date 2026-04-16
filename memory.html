@@ -412,6 +412,7 @@ function checkMatch() {
 }
 
 function onWin() {
+  if (window.__avatarSave) window.__avatarSave('memory-' + level, moves, true);
   stopTimer();
   const stats = document.getElementById('winStats');
   stats.innerHTML = `Level: <b>${level.charAt(0).toUpperCase()+level.slice(1)}</b><br>
@@ -435,5 +436,6 @@ document.getElementById('playAgain').addEventListener('click', newGame);
 
 newGame();
 </script>
+  <script src="avatar.js"></script>
 </body>
 </html>

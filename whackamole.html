@@ -799,6 +799,7 @@
     clearTimeout(spawnTimer);
     countdownTimer = null;
     spawnTimer = null;
+    if (window.__avatarSave) window.__avatarSave('whackamole-' + difficulty, score, false);
 
     hideAllHoles();
 
@@ -906,5 +907,6 @@
   initHoles();
   updateBest();
 </script>
+  <script src="avatar.js"></script>
 </body>
 </html>

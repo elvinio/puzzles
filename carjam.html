@@ -876,6 +876,7 @@
         ? 'You finished all levels!'
         : `Delivered ${state.delivered} people. Next level is faster!`;
     if (state.levelIndex + 1 >= LEVELS.length) {
+      if (window.__avatarSave) window.__avatarSave('carjam', state.score, false);
       document.getElementById('victoryScore').textContent = state.score + ' pts';
       document.getElementById('overlayVictory').classList.add('visible');
     } else {
@@ -1300,5 +1301,6 @@
   // ── BOOT ─────────────────────────────────────────────────────────────────
   startGame(0);
 </script>
+  <script src="avatar.js"></script>
 </body>
 </html>

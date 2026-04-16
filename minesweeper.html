@@ -956,6 +956,7 @@ board.style.gridTemplateColumns =
       }
 
       const elapsed = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
+      if (won && window.__avatarSave) window.__avatarSave('minesweeper-' + state.preset, elapsed, true);
 
       resultTitle.textContent = won ? '🎉 You Win!' : '💥 Boom!';
       resultSub.textContent = won ? `Cleared in ${elapsed}s` : 'Better luck next time';
@@ -1150,5 +1151,6 @@ board.style.gridTemplateColumns =
     // Boot
     initGame('easy');
   </script>
+  <script src="avatar.js"></script>
 </body>
 </html>

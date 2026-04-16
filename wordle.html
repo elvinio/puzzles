@@ -766,6 +766,7 @@ function showToast(msg, duration = 1600) {
 function showModal(won) {
   const guessCount = state.guesses.length;
   if (won) {
+    if (window.__avatarSave) window.__avatarSave('wordle-' + state.wordLen, guessCount, true);
     modalEmoji.textContent = guessCount === 1 ? '🏆' : guessCount <= 3 ? '🎉' : '😊';
     modalTitle.textContent = guessCount === 1 ? 'Genius!' : guessCount <= 3 ? 'Excellent!' : 'Nice job!';
     modalSub.textContent = `Solved in ${guessCount} ${guessCount === 1 ? 'guess' : 'guesses'}!`;
@@ -827,5 +828,6 @@ function newGame() {
 // ── Init ──────────────────────────────────────────────────────────────────────
 newGame();
 </script>
+  <script src="avatar.js"></script>
 </body>
 </html>
