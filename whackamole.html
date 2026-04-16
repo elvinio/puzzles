@@ -39,7 +39,7 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 420px;
+      max-width: 520px;
       padding: 0 12px 24px;
       min-height: 100dvh;
     }
@@ -160,7 +160,7 @@
     /* ── Hole grid ── */
     .hole-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(8, 1fr);
       gap: 8px;
       padding: 8px 0 16px;
       width: 100%;
@@ -379,7 +379,7 @@
     </div>
     <div class="hud-cell">
       <span class="hud-label">Time</span>
-      <span class="hud-value" id="timerEl">60</span>
+      <span class="hud-value" id="timerEl">30</span>
     </div>
   </div>
 
@@ -394,7 +394,7 @@
 
   <div class="start-hint" id="startHint">Tap any hole to start</div>
 
-  <!-- 4×5 hole grid -->
+  <!-- 8×6 hole grid -->
   <div class="hole-grid" id="hexGrid">
     <div class="hole" data-idx="0"><div class="mole">🐹</div><div class="bomb">💣</div></div>
     <div class="hole" data-idx="1"><div class="mole">🐹</div><div class="bomb">💣</div></div>
@@ -426,6 +426,24 @@
     <div class="hole" data-idx="27"><div class="mole">🐹</div><div class="bomb">💣</div></div>
     <div class="hole" data-idx="28"><div class="mole">🐹</div><div class="bomb">💣</div></div>
     <div class="hole" data-idx="29"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="30"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="31"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="32"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="33"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="34"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="35"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="36"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="37"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="38"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="39"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="40"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="41"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="42"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="43"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="44"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="45"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="46"><div class="mole">🐹</div><div class="bomb">💣</div></div>
+    <div class="hole" data-idx="47"><div class="mole">🐹</div><div class="bomb">💣</div></div>
   </div>
 
   <!-- Result banner (shown at game end) -->
@@ -561,15 +579,15 @@
     easy:   { activeBase: 1, activePeak: 3,  durStart: 2200, durMin: 1300, intStart: 1400, intMin: 750,  bombBase: 0.10, bombPeak: 0.20 },
     medium: { activeBase: 2, activePeak: 6,  durStart: 1600, durMin: 850,  intStart: 1100, intMin: 500,  bombBase: 0.15, bombPeak: 0.30 },
     hard:   { activeBase: 3, activePeak: 10, durStart: 1200, durMin: 550,  intStart: 900,  intMin: 350,  bombBase: 0.30, bombPeak: 0.50 },
-    ultra:  { activeBase: 6, activePeak: 15, durStart: 550,  durMin: 500,  intStart: 500,  intMin: 200,  bombBase: 0.30, bombPeak: 0.60 },
+    ultra:  { activeBase: 8, activePeak: 20, durStart: 450,  durMin: 380,  intStart: 400,  intMin: 150,  bombBase: 0.35, bombPeak: 0.70 },
   };
 
   let difficulty = 'easy';
 
   // ── Game state ────────────────────────────────────────────────────────────
 
-  const HOLE_COUNT = 30;
-  const GAME_DURATION = 60;
+  const HOLE_COUNT = 48;
+  const GAME_DURATION = 30;
 
   let score = 0;
   let timeLeft = GAME_DURATION;
