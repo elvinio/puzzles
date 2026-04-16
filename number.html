@@ -70,6 +70,18 @@
       --overlay:  rgba(7, 2, 4, 0.93);
     }
 
+    .back-link {
+      position: fixed;
+      top: 12px;
+      left: 14px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      z-index: 20;
+      touch-action: manipulation;
+    }
+    .back-link:active { color: var(--p-xl); }
+
     /* ── Layout ──────────────────────────────────────────────────────────── */
 
     body {
@@ -409,6 +421,8 @@
   </style>
 </head>
 <body>
+
+  <a class="back-link" href="index.html">← Back</a>
 
   <h1>Number Puzzle</h1>
 

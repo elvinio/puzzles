@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Math Blitz</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #13111c;
+      --surface: #1c1730;
+      --brd: #4c1d95;
+      --p: #6d28d9;
+      --p-lt: #7c3aed;
+      --p-xl: #a78bfa;
+      --p-text: #e2d9f3;
+      --muted: #7c6fa0;
+    }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 12px 16px 24px;
+      gap: 10px;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .back-link:hover { color: var(--p-xl); }
+    h1 {
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .streak-badge {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fbbf24;
+      min-width: 64px;
+      text-align: right;
+      transition: transform 0.15s;
+    }
+    .streak-badge.pulse {
+      animation: streak-pulse 0.35s ease-out;
+    }
+
+    /* ── Diff & Mode buttons ── */
+    .btn-row {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      max-width: 520px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .seg-btn {
+      flex: 1 1 0;
+      min-width: 60px;
+      padding: 7px 4px;
+      border-radius: 10px;
+      border: 2px solid var(--brd);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+      touch-action: manipulation;
+    }
+    .seg-btn:active { transform: scale(0.96); }
+    .seg-btn.active {
+      background: var(--p);
+      border-color: var(--p-lt);
+      color: #fff;
+    }
+
+    /* ── HUD ── */
+    .hud {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 520px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      padding: 10px 20px;
+    }
+    .hud-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .hud-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .hud-value { font-size: 1.4rem; font-weight: 900; color: var(--p-xl); line-height: 1; }
+    #score-val { position: relative; }
+
+    /* ── Score float ── */
+    .score-float {
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1rem;
+      font-weight: 900;
+      pointer-events: none;
+      animation: float-up 0.9s ease-out forwards;
+      white-space: nowrap;
+    }
+    .score-float.pos { color: #4ade80; }
+    .score-float.neg { color: #f87171; }
+
+    /* ── Question card ── */
+    .question-wrap {
+      width: 100%;
+      max-width: 520px;
+      position: relative;
+      border-radius: 23px;
+      padding: 3px;
+      background: transparent;
+      transition: background 0.3s;
+    }
+    .question-wrap.streak-active {
+      background: linear-gradient(90deg, #f87171, #fb923c, #facc15, #4ade80, #60a5fa, #c084fc, #f87171);
+      background-size: 300% 100%;
+      animation: rainbow-slide 2s linear infinite;
+    }
+    .question-card {
+      background: var(--surface);
+      border: 3px solid var(--brd);
+      border-radius: 20px;
+      padding: 28px 20px 22px;
+      text-align: center;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .question-wrap.streak-active .question-card {
+      border-color: transparent;
+    }
+    .question-card.shake {
+      animation: wrong-shake 0.4s ease-out;
+    }
+    .question-text {
+      font-size: clamp(2.2rem, 10vw, 3.2rem);
+      font-weight: 900;
+      color: var(--p-text);
+      letter-spacing: 0.02em;
+      animation: pop-in 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .question-text.new { animation: pop-in 0.22s cubic-bezier(0.34,1.56,0.64,1); }
+    .op-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    /* ── Answer buttons ── */
+    .answers {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 520px;
+    }
+    .answer-btn {
+      flex: 1;
+      padding: 18px 8px;
+      border-radius: 16px;
+      border: 2px solid var(--brd);
+      background: var(--surface);
+      color: var(--p-text);
+      font-size: clamp(1.2rem, 5vw, 1.7rem);
+      font-weight: 900;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, transform 0.1s;
+      touch-action: manipulation;
+      position: relative;
+      overflow: hidden;
+    }
+    .answer-btn:active { transform: scale(0.95); }
+    .answer-btn:hover:not(:disabled) {
+      background: #251e40;
+      border-color: var(--p-lt);
+    }
+    .answer-btn.correct {
+      background: #14532d;
+      border-color: #4ade80;
+      color: #4ade80;
+    }
+    .answer-btn.wrong {
+      background: #450a0a;
+      border-color: #f87171;
+      color: #f87171;
+    }
+    .answer-btn:disabled { cursor: default; }
+
+    /* ── Start / End screens ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,8,18,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .overlay.hidden { display: none; }
+    .modal {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 24px;
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .modal h2 {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--p-xl);
+    }
+    .modal .tagline {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .modal .big-score {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #facc15;
+      line-height: 1;
+    }
+    .modal .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .stat-box {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 10px 8px;
+    }
+    .stat-box .s-label { font-size: 0.7rem; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+    .stat-box .s-val { font-size: 1.3rem; font-weight: 900; color: var(--p-xl); }
+    .new-best {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #facc15;
+      animation: pop-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .primary-btn {
+      background: var(--p);
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: 14px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      touch-action: manipulation;
+    }
+    .primary-btn:active { transform: scale(0.97); background: var(--p-lt); }
+    .modal-section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: left;
+    }
+    .modal .btn-row { justify-content: stretch; }
+
+    /* ── Keyframes ── */
+    @keyframes pop-in {
+      0%   { transform: scale(0.7); opacity: 0.4; }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+    @keyframes wrong-shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-8px); }
+      40%     { transform: translateX(8px); }
+      60%     { transform: translateX(-6px); }
+      80%     { transform: translateX(6px); }
+    }
+    @keyframes float-up {
+      0%   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+      100% { transform: translateX(-50%) translateY(-48px); opacity: 0; }
+    }
+    @keyframes streak-pulse {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.5); }
+      100% { transform: scale(1); }
+    }
+    @keyframes rainbow-slide {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <a class="back-link" href="index.html">← Back</a>
+    <h1>Math Blitz</h1>
+    <div class="streak-badge" id="streak-badge"></div>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-item">
+      <div class="hud-label">Time</div>
+      <div class="hud-value" id="time-val">60</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Score</div>
+      <div class="hud-value" id="score-val">0</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Best</div>
+      <div class="hud-value" id="best-val">—</div>
+    </div>
+  </div>
+
+  <!-- Question -->
+  <div class="question-wrap">
+    <div class="question-card" id="question-card">
+      <div class="op-label" id="op-label">multiplication</div>
+      <div class="question-text" id="question-text">7 × 8 = ?</div>
+    </div>
+  </div>
+
+  <!-- Answers -->
+  <div class="answers">
+    <button class="answer-btn" id="btn-0" disabled>—</button>
+    <button class="answer-btn" id="btn-1" disabled>—</button>
+    <button class="answer-btn" id="btn-2" disabled>—</button>
+  </div>
+
+  <!-- Start overlay -->
+  <div class="overlay" id="start-overlay">
+    <div class="modal">
+      <h2>🧮 Math Blitz</h2>
+      <p class="tagline">60 seconds. Answer as fast as you can!<br>Speed bonuses: ≤1s = <strong style="color:#4ade80">+4</strong>, ≤2s = <strong style="color:#a3e635">+2</strong>, else <strong style="color:#60a5fa">+1</strong><br>Wrong answer = <strong style="color:#f87171">−2</strong>&nbsp;&nbsp;3 in a row → 🌈 streak!</p>
+      <div class="modal-section-label">Difficulty</div>
+      <div class="btn-row" id="diff-row">
+        <button class="seg-btn active" data-diff="easy">Easy</button>
+        <button class="seg-btn" data-diff="medium">Medium</button>
+        <button class="seg-btn" data-diff="hard">Hard</button>
+        <button class="seg-btn" data-diff="ultra">Ultra</button>
+      </div>
+      <div class="modal-section-label">Operation</div>
+      <div class="btn-row" id="op-row">
+        <button class="seg-btn active" data-op="multiply">× Times</button>
+        <button class="seg-btn" data-op="add">+ Add</button>
+        <button class="seg-btn" data-op="subtract">− Sub</button>
+        <button class="seg-btn" data-op="random">⚡ Mix</button>
+      </div>
+      <button class="primary-btn" id="start-btn">Start Game</button>
+    </div>
+  </div>
+
+  <!-- End overlay -->
+  <div class="overlay hidden" id="end-overlay">
+    <div class="modal">
+      <h2>⏱ Time's Up!</h2>
+      <div class="big-score" id="end-score">0</div>
+      <div id="new-best-label"></div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="s-label">Questions</div>
+          <div class="s-val" id="stat-questions">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-label">Accuracy</div>
+          <div class="s-val" id="stat-accuracy">0%</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-label">Best Streak</div>
+          <div class="s-val" id="stat-streak">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-label">Best Score</div>
+          <div class="s-val" id="stat-best">—</div>
+        </div>
+      </div>
+      <div class="modal-section-label">Difficulty</div>
+      <div class="btn-row" id="diff-row-end">
+        <button class="seg-btn active" data-diff="easy">Easy</button>
+        <button class="seg-btn" data-diff="medium">Medium</button>
+        <button class="seg-btn" data-diff="hard">Hard</button>
+        <button class="seg-btn" data-diff="ultra">Ultra</button>
+      </div>
+      <div class="modal-section-label">Operation</div>
+      <div class="btn-row" id="op-row-end">
+        <button class="seg-btn active" data-op="multiply">× Times</button>
+        <button class="seg-btn" data-op="add">+ Add</button>
+        <button class="seg-btn" data-op="subtract">− Sub</button>
+        <button class="seg-btn" data-op="random">⚡ Mix</button>
+      </div>
+      <button class="primary-btn" id="play-again-btn">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    // ── Audio ──────────────────────────────────────────────────────────────────
+    let audioCtx = null;
+    function getAC() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone(freq, type, startTime, duration, gain = 0.25, endFreq = null) {
+      const ac = getAC();
+      const osc = ac.createOscillator();
+      const g   = ac.createGain();
+      osc.connect(g); g.connect(ac.destination);
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, startTime);
+      if (endFreq) osc.frequency.exponentialRampToValueAtTime(endFreq, startTime + duration);
+      g.gain.setValueAtTime(gain, startTime);
+      g.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+      osc.start(startTime);
+      osc.stop(startTime + duration + 0.01);
+    }
+
+    function sfxCorrect(speed) {
+      // speed: 'fast4' | 'fast2' | 'normal'
+      try {
+        const ac = getAC();
+        const now = ac.currentTime;
+        if (speed === 'fast4') {
+          // triumphant arpeggio
+          [[523,0],[659,0.10],[784,0.20]].forEach(([f,t]) => playTone(f,'sine',now+t,0.18,0.3));
+        } else if (speed === 'fast2') {
+          playTone(659,'sine',now,0.15,0.25);
+          playTone(880,'sine',now+0.12,0.18,0.2);
+        } else {
+          playTone(523,'sine',now,0.18,0.22);
+        }
+      } catch(e) {}
+    }
+
+    function sfxWrong() {
+      try {
+        const ac = getAC();
+        const now = ac.currentTime;
+        playTone(220,'sawtooth',now,0.08,0.2,180);
+        playTone(160,'sawtooth',now+0.08,0.12,0.15,120);
+      } catch(e) {}
+    }
+
+    function sfxStreak() {
+      try {
+        const ac = getAC();
+        const now = ac.currentTime;
+        [0,0.07,0.14,0.21].forEach((t,i) => playTone(440 + i*110,'sine',now+t,0.12,0.18));
+      } catch(e) {}
+    }
+
+    function sfxStart() {
+      try {
+        const ac = getAC();
+        const now = ac.currentTime;
+        playTone(330,'sine',now,0.1,0.2);
+        playTone(440,'sine',now+0.1,0.1,0.2);
+        playTone(550,'sine',now+0.2,0.15,0.25);
+      } catch(e) {}
+    }
+
+    function sfxEnd() {
+      try {
+        const ac = getAC();
+        const now = ac.currentTime;
+        [[392,0],[494,0.13],[587,0.26],[784,0.39]].forEach(([f,t]) => playTone(f,'sine',now+t,0.22,0.28));
+      } catch(e) {}
+    }
+
+    // ── Config ─────────────────────────────────────────────────────────────────
+    const DIFF_CONFIG = {
+      easy:   { mulA: [1,3],  mulB: [1,9],  addMin: 1,   addMax: 10  },
+      medium: { mulA: [1,6],  mulB: [1,9],  addMin: 10,  addMax: 20  },
+      hard:   { mulA: [1,9],  mulB: [1,9],  addMin: 20,  addMax: 50  },
+      ultra:  { mulA: [3,9],  mulB: [10,15],addMin: 10,  addMax: 200 },
+    };
+
+    const OP_LABELS = {
+      multiply: 'multiplication',
+      add:      'addition',
+      subtract: 'subtraction',
+    };
+
+    // ── State ──────────────────────────────────────────────────────────────────
+    let gameState    = 'idle';
+    let score        = 0;
+    let streak       = 0;
+    let bestStreak   = 0;
+    let answered     = 0;
+    let correct      = 0;
+    let timeLeft     = 60;
+    let qStartTime   = 0;
+    let currentAns   = 0;
+    let timer        = null;
+    let difficulty   = 'easy';
+    let opMode       = 'multiply';
+    let answerLocked = false;
+
+    // ── Helpers ────────────────────────────────────────────────────────────────
+    function rand(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+    function randFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    const bestKey = () => `mathblitz-best-${difficulty}`;
+    function getBest() { return parseInt(localStorage.getItem(bestKey()) || '0', 10); }
+    function saveBest(s) { if (s > getBest()) localStorage.setItem(bestKey(), String(s)); }
+
+    // ── Question generation ────────────────────────────────────────────────────
+    function generateQuestion() {
+      const cfg = DIFF_CONFIG[difficulty];
+      let op = opMode === 'random' ? randFrom(['multiply','add','subtract']) : opMode;
+
+      let a, b, text, answer;
+
+      if (op === 'multiply') {
+        a = rand(cfg.mulA[0], cfg.mulA[1]);
+        b = rand(cfg.mulB[0], cfg.mulB[1]);
+        text   = `${a} × ${b} = ?`;
+        answer = a * b;
+      } else if (op === 'add') {
+        // Ultra: pick two operands, potentially mixing ranges
+        if (difficulty === 'ultra') {
+          const useLarge = Math.random() < 0.5;
+          a = useLarge ? rand(100, 200) : rand(10, 50);
+          b = useLarge ? rand(100, 200) : rand(10, 50);
+        } else {
+          a = rand(cfg.addMin, cfg.addMax);
+          b = rand(cfg.addMin, cfg.addMax);
+        }
+        text   = `${a} + ${b} = ?`;
+        answer = a + b;
+      } else { // subtract
+        if (difficulty === 'ultra') {
+          const useLarge = Math.random() < 0.5;
+          a = useLarge ? rand(100, 200) : rand(10, 50);
+          b = useLarge ? rand(100, 200) : rand(10, 50);
+        } else {
+          a = rand(cfg.addMin, cfg.addMax);
+          b = rand(cfg.addMin, cfg.addMax);
+        }
+        // ensure a >= b so answer is never negative
+        if (b > a) { [a, b] = [b, a]; }
+        text   = `${a} − ${b} = ?`;
+        answer = a - b;
+      }
+
+      return { text, answer, op };
+    }
+
+    // ── Answer choices ─────────────────────────────────────────────────────────
+    function buildChoices(answer) {
+      const choices = new Set([answer]);
+      let attempts = 0;
+      while (choices.size < 3 && attempts < 100) {
+        attempts++;
+        const offset = rand(1, 3) * (Math.random() < 0.5 ? 1 : -1);
+        const v = answer + offset;
+        if (v > 0 && v !== answer) choices.add(v);
+      }
+      // fallback if we're still short (e.g. answer=1)
+      if (choices.size < 3) { choices.add(answer + 1); choices.add(answer + 2); }
+      const arr = [...choices].slice(0, 3);
+      // shuffle
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // ── UI helpers ─────────────────────────────────────────────────────────────
+    const $  = id => document.getElementById(id);
+    const answerBtns = [0,1,2].map(i => $(`btn-${i}`));
+
+    function updateHUD() {
+      $('time-val').textContent  = timeLeft;
+      $('score-val').textContent = score;
+      const best = getBest();
+      $('best-val').textContent  = best > 0 ? best : '—';
+    }
+
+    function updateStreakBadge() {
+      const badge = $('streak-badge');
+      if (streak >= 3) {
+        badge.textContent = `🔥 ×${streak}`;
+        if (!badge.classList.contains('pulse')) {
+          badge.classList.add('pulse');
+          badge.addEventListener('animationend', () => badge.classList.remove('pulse'), { once: true });
+        }
+      } else if (streak > 0) {
+        badge.textContent = `×${streak}`;
+      } else {
+        badge.textContent = '';
+      }
+    }
+
+    function setStreakVisual(active) {
+      const wrap = document.querySelector('.question-wrap');
+      wrap.classList.toggle('streak-active', active);
+    }
+
+    function showScoreFloat(val) {
+      const el = document.createElement('span');
+      el.className = 'score-float ' + (val > 0 ? 'pos' : 'neg');
+      el.textContent = val > 0 ? `+${val}` : `${val}`;
+      const wrap = $('score-val');
+      wrap.style.position = 'relative';
+      wrap.appendChild(el);
+      el.addEventListener('animationend', () => el.remove(), { once: true });
+    }
+
+    function setOpLabel(op) {
+      $('op-label').textContent = OP_LABELS[op] || op;
+    }
+
+    // ── Show question ──────────────────────────────────────────────────────────
+    let currentQ = null;
+
+    function showQuestion() {
+      answerLocked = false;
+      currentQ = generateQuestion();
+      currentAns = currentQ.answer;
+      qStartTime = performance.now();
+
+      const qt = $('question-text');
+      qt.classList.remove('new');
+      void qt.offsetWidth;
+      qt.textContent = currentQ.text;
+      qt.classList.add('new');
+
+      setOpLabel(currentQ.op);
+
+      const choices = buildChoices(currentAns);
+      answerBtns.forEach((btn, i) => {
+        btn.textContent = choices[i];
+        btn.className = 'answer-btn';
+        btn.disabled = false;
+      });
+    }
+
+    // ── Answer handling ────────────────────────────────────────────────────────
+    function handleAnswer(btn, chosen) {
+      if (answerLocked || gameState !== 'playing') return;
+      answerLocked = true;
+      answered++;
+
+      const elapsed = (performance.now() - qStartTime) / 1000;
+      const isCorrect = chosen === currentAns;
+
+      // Disable all buttons
+      answerBtns.forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+        let pts;
+        if (elapsed <= 1) {
+          pts = 4; sfxCorrect('fast4');
+        } else if (elapsed <= 2) {
+          pts = 2; sfxCorrect('fast2');
+        } else {
+          pts = 1; sfxCorrect('normal');
+        }
+        score += pts;
+        correct++;
+        streak++;
+        if (streak > bestStreak) bestStreak = streak;
+        if (streak === 3) sfxStreak();
+        updateStreakBadge();
+        setStreakVisual(streak >= 3);
+        if (streak >= 3) {
+          const badge = $('streak-badge');
+          badge.classList.remove('pulse');
+          void badge.offsetWidth;
+          badge.classList.add('pulse');
+        }
+        showScoreFloat(pts);
+        updateHUD();
+        setTimeout(showQuestion, 320);
+      } else {
+        btn.classList.add('wrong');
+        // reveal correct
+        answerBtns.forEach(b => {
+          if (parseInt(b.textContent, 10) === currentAns) b.classList.add('correct');
+        });
+        sfxWrong();
+        score = Math.max(0, score - 2);
+        streak = 0;
+        updateStreakBadge();
+        setStreakVisual(false);
+        showScoreFloat(-2);
+        updateHUD();
+        const card = $('question-card');
+        card.classList.add('shake');
+        card.addEventListener('animationend', () => card.classList.remove('shake'), { once: true });
+        setTimeout(showQuestion, 700);
+      }
+    }
+
+    // ── Timer ──────────────────────────────────────────────────────────────────
+    function startTimer() {
+      timer = setInterval(() => {
+        timeLeft--;
+        updateHUD();
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          timer = null;
+          endGame();
+        }
+      }, 1000);
+    }
+
+    // ── Game lifecycle ─────────────────────────────────────────────────────────
+    function startGame() {
+      score      = 0;
+      streak     = 0;
+      bestStreak = 0;
+      answered   = 0;
+      correct    = 0;
+      timeLeft   = 60;
+      gameState  = 'playing';
+
+      $('start-overlay').classList.add('hidden');
+      $('end-overlay').classList.add('hidden');
+      updateHUD();
+      updateStreakBadge();
+      setStreakVisual(false);
+
+      sfxStart();
+      showQuestion();
+      startTimer();
+    }
+
+    function endGame() {
+      gameState = 'ended';
+      answerBtns.forEach(b => b.disabled = true);
+      answerLocked = true;
+
+      sfxEnd();
+      saveBest(score);
+
+      const best = getBest();
+      const acc  = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+      const isNewBest = score > 0 && score >= best;
+
+      $('end-score').textContent      = score;
+      $('stat-questions').textContent = answered;
+      $('stat-accuracy').textContent  = acc + '%';
+      $('stat-streak').textContent    = bestStreak;
+      $('stat-best').textContent      = best > 0 ? best : '—';
+
+      const newBestEl = $('new-best-label');
+      if (isNewBest && score > 0) {
+        newBestEl.innerHTML = '<div class="new-best">🏆 New Best!</div>';
+      } else {
+        newBestEl.innerHTML = '';
+      }
+
+      syncSelectors();
+      $('end-overlay').classList.remove('hidden');
+    }
+
+    // ── Selector buttons ───────────────────────────────────────────────────────
+    document.querySelectorAll('[data-diff]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (gameState === 'playing') return;
+        difficulty = btn.dataset.diff;
+        document.querySelectorAll('[data-diff]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateHUD();
+      });
+    });
+
+    document.querySelectorAll('[data-op]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (gameState === 'playing') return;
+        opMode = btn.dataset.op;
+        document.querySelectorAll('[data-op]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // ── Answer button events ───────────────────────────────────────────────────
+    answerBtns.forEach(btn => {
+      btn.addEventListener('click', () => handleAnswer(btn, parseInt(btn.textContent, 10)));
+    });
+
+    $('start-btn').addEventListener('click', startGame);
+    $('play-again-btn').addEventListener('click', () => {
+      gameState = 'idle';
+      $('end-overlay').classList.add('hidden');
+      startGame();
+    });
+
+    function syncSelectors() {
+      document.querySelectorAll('[data-diff]').forEach(b => {
+        b.classList.toggle('active', b.dataset.diff === difficulty);
+      });
+      document.querySelectorAll('[data-op]').forEach(b => {
+        b.classList.toggle('active', b.dataset.op === opMode);
+      });
+    }
+
+    // ── Init ───────────────────────────────────────────────────────────────────
+    updateHUD();
+  </script>
+</body>
+</html>
