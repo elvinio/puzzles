@@ -491,15 +491,15 @@
 
   // ── Palettes ──────────────────────────────────────────────────────────────
   var BG_COLORS = [
-    '#6d28d9','#1e3a5f','#14532d','#7c2d12','#831843',
-    '#1c1730','#0f172a','#292524','#134e4a','#1e1b4b','#3b0764','#042f2e'
+    '#7c3aed','#ec4899','#06b6d4','#10b981','#f59e0b',
+    '#ef4444','#8b5cf6','#166534','#14b8a6','#f97316','#a855f7','#6366f1'
   ];
   // Standard skin tones + fantasy blues and reds
   var SKIN_COLORS = [
     '#fde8c8','#f5cba7','#e8b48a','#d4956a','#c07847',
     '#a0622a','#7d4519','#5c2e08','#3b1a06','#ffe0bd',
     '#7eb8f7','#4a90d9','#2060b0',
-    '#e8605a','#c0392b'
+    '#e8605a','#c0392b','#a01a1a'
   ];
   var HAIR_COLORS = [
     '#1a0a00','#2c1810','#5c3317','#8b5e3c','#c8924a','#d4a843',
@@ -518,6 +518,7 @@
       circle:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="15" rx="12" ry="11" fill="#d4956a"/></svg>'; },
       oval:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="15" rx="9" ry="13" fill="#d4956a"/></svg>'; },
       rect:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><rect x="2" y="6" width="26" height="18" rx="5" fill="#d4956a"/></svg>'; },
+      tall:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><rect x="8" y="2" width="14" height="26" rx="6" fill="#d4956a"/></svg>'; },
       square:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><rect x="4" y="4" width="22" height="22" rx="2" fill="#d4956a"/></svg>'; }
     },
     eyeStyle: {
@@ -544,8 +545,9 @@
       open:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="17" rx="6" ry="4" fill="#1a1a2e"/><ellipse cx="15" cy="18" rx="3.5" ry="2.5" fill="#c084fc"/></svg>'; }
     },
     dimpleStyle: {
-      none:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><line x1="8" y1="15" x2="22" y2="15" stroke="rgba(160,160,160,0.3)" stroke-width="1.5" stroke-dasharray="2,2"/></svg>'; },
-      dimple: function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><circle cx="9" cy="18" r="4" fill="#ffb3c6" opacity="0.8"/><circle cx="21" cy="18" r="4" fill="#ffb3c6" opacity="0.8"/></svg>'; }
+      none:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><line x1="8" y1="15" x2="22" y2="15" stroke="rgba(160,160,160,0.3)" stroke-width="1.5" stroke-dasharray="2,2"/></svg>'; },
+      round: function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><circle cx="9" cy="19" r="4.5" fill="#ffb3c6" opacity="0.8"/><circle cx="21" cy="19" r="4.5" fill="#ffb3c6" opacity="0.8"/></svg>'; },
+      oval:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="9" cy="19" rx="5.5" ry="4" fill="#ffb3c6" opacity="0.8"/><ellipse cx="21" cy="19" rx="5.5" ry="4" fill="#ffb3c6" opacity="0.8"/></svg>'; }
     },
     hairStyle: {
       none:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="17" rx="11" ry="10" fill="#d4956a"/></svg>'; },
@@ -555,6 +557,7 @@
       bun:     function(){ return svgHairPreview('<path d="M4,16 Q4,4 15,3 Q26,4 26,16 Q20,12 15,12 Q10,12 4,16 Z" fill="#5c3317"/><circle cx="15" cy="2" r="4" fill="#5c3317"/>'); },
       spiky:   function(){ return svgHairPreview('<path d="M4,16 L5,8 L8,13 L11,5 L13,12 L15,3 L17,12 L19,5 L22,13 L25,8 L26,16 Q20,12 15,12 Q10,12 4,16 Z" fill="#5c3317"/>'); },
       bangs:   function(){ return svgHairPreview('<path d="M4,16 Q4,4 15,3 Q26,4 26,16 Q20,12 15,12 Q10,12 4,16 Z" fill="#5c3317"/><path d="M4,16 Q8,10 15,9 Q22,10 26,16 Q20,14 15,13 Q10,14 4,16 Z" fill="#5c3317"/>'); },
+      hands:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/><circle cx="3" cy="16" r="2.8" fill="#5c3317"/><circle cx="27" cy="16" r="2.8" fill="#5c3317"/><circle cx="8" cy="26" r="2.2" fill="#5c3317"/><circle cx="22" cy="26" r="2.2" fill="#5c3317"/></svg>'; },
       avocado: function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M15,1 C8,1 2,7 2,17 C2,24 7,29 15,29 C23,29 28,24 28,17 C28,7 22,1 15,1 Z" fill="#5c3317"/><ellipse cx="15" cy="19" rx="8" ry="7" fill="#d4956a"/></svg>'; }
     }
   };
@@ -568,12 +571,12 @@
   }
 
   var OPTION_DEFS = {
-    faceShape:  [{value:'circle',label:'Circle'},{value:'oval',label:'Oval'},{value:'rect',label:'Rect'},{value:'square',label:'Square'}],
+    faceShape:  [{value:'circle',label:'Circle'},{value:'oval',label:'Oval'},{value:'rect',label:'Rect'},{value:'tall',label:'Tall'},{value:'square',label:'Square'}],
     eyeStyle:   [{value:'round',label:'Round'},{value:'almond',label:'Almond'},{value:'wide',label:'Wide'},{value:'dot',label:'Dot'},{value:'closed',label:'Closed'},{value:'starry',label:'Starry'}],
     noseStyle:  [{value:'dot',label:'Dot'},{value:'button',label:'Button'},{value:'line',label:'Line'},{value:'triangle',label:'Triangle'},{value:'none',label:'None'}],
     mouthStyle: [{value:'smile',label:'Smile'},{value:'grin',label:'Grin'},{value:'flat',label:'Flat'},{value:'frown',label:'Frown'},{value:'smirk',label:'Smirk'},{value:'open',label:'Open'}],
-    dimpleStyle:[{value:'none',label:'None'},{value:'dimple',label:'Dimple'}],
-    hairStyle:  [{value:'none',label:'None'},{value:'short',label:'Short'},{value:'long',label:'Long'},{value:'curly',label:'Curly'},{value:'bun',label:'Bun'},{value:'spiky',label:'Spiky'},{value:'bangs',label:'Bangs'},{value:'avocado',label:'Avocado'}]
+    dimpleStyle:[{value:'none',label:'None'},{value:'round',label:'Round'},{value:'oval',label:'Oval'}],
+    hairStyle:  [{value:'none',label:'None'},{value:'short',label:'Short'},{value:'long',label:'Long'},{value:'curly',label:'Curly'},{value:'bun',label:'Bun'},{value:'spiky',label:'Spiky'},{value:'bangs',label:'Bangs'},{value:'hands',label:'Hands'},{value:'avocado',label:'Avocado'}]
   };
 
   // ══════════════════════════════════════════

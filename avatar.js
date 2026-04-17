@@ -128,6 +128,15 @@
           hairFront = '<path d="M18,52 Q26,36 50,34 Q74,36 82,52 Q66,45 50,44 Q34,45 18,52 Z" fill="' + hc + '"/>';
           break;
 
+        case 'hands':
+          // Two hands at sides + two legs at bottom (four circles only, no hair dome)
+          hairBack = '';
+          hairFront = '<circle cx="15" cy="50" r="8" fill="' + hc + '"/>' +    // left hand
+                      '<circle cx="85" cy="50" r="8" fill="' + hc + '"/>' +    // right hand
+                      '<circle cx="28" cy="90" r="7" fill="' + hc + '"/>' +    // left leg
+                      '<circle cx="72" cy="90" r="7" fill="' + hc + '"/>';     // right leg
+          break;
+
         case 'avocado':
           // Teardrop/avocado shape: pointed at the top, wide and round at the bottom.
           // The face drawn on top becomes the "pit" sitting in the lower-centre.
@@ -149,6 +158,9 @@
       case 'rect':
         // Wider rectangle with soft rounded corners — clearly wider than tall
         face = '<rect x="13" y="30" width="74" height="52" rx="14" fill="' + sc + '"/>'; break;
+      case 'tall':
+        // Tall rectangle with high corner radius — long vertical orientation
+        face = '<rect x="23" y="18" width="54" height="74" rx="18" fill="' + sc + '"/>'; break;
       case 'square':
         // Boxy / angular — small corner radius
         face = '<rect x="20" y="27" width="60" height="56" rx="6" fill="' + sc + '"/>'; break;
@@ -213,10 +225,17 @@
 
     // ── Dimples ───────────────────────────────────────────────────────────
     var dimples = '';
-    if (s.dimpleStyle === 'dimple') {
+    if (s.dimpleStyle !== 'none') {
       var dc = s.dimpleColor || '#ffb3c6';
-      dimples = '<circle cx="33" cy="65" r="5" fill="' + dc + '" opacity="0.72"/>' +
-                '<circle cx="67" cy="65" r="5" fill="' + dc + '" opacity="0.72"/>';
+      if (s.dimpleStyle === 'round') {
+        // Circular dimples
+        dimples = '<circle cx="33" cy="66" r="6" fill="' + dc + '" opacity="0.72"/>' +
+                  '<circle cx="67" cy="66" r="6" fill="' + dc + '" opacity="0.72"/>';
+      } else if (s.dimpleStyle === 'oval') {
+        // Oval dimples with long side horizontal
+        dimples = '<ellipse cx="33" cy="66" rx="7" ry="5" fill="' + dc + '" opacity="0.72"/>' +
+                  '<ellipse cx="67" cy="66" rx="7" ry="5" fill="' + dc + '" opacity="0.72"/>';
+      }
     }
 
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="' + sz + '" height="' + sz + '">' +
