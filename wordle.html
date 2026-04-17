@@ -799,16 +799,40 @@ document.addEventListener('keydown', e => {
   if (/^[A-Z]$/.test(ch)) handleKey(ch);
 });
 
+// ── Word Validation ──────────────────────────────────────────────────────────
+async function isValidWord(word) {
+  // Try remote validation first with timeout
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+
+    // Try multiple dictionary APIs
+    const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (response.ok) return true;
+  } catch (e) {
+    // Network error, timeout, or API failure - fall through to local check
+  }
+
+  // Fall back to local word list
+  const wordList = WORDS[state.wordLen];
+  return wordList.includes(word);
+}
+
 // ── Submit ────────────────────────────────────────────────────────────────────
-function submitGuess() {
+async function submitGuess() {
   const guess = state.currentInput;
   if (guess.length < state.wordLen) {
     shakeRow(state.currentRow);
     showToast('Not enough letters');
     return;
   }
-  const wordList = WORDS[state.wordLen];
-  if (!wordList.includes(guess)) {
+
+  const isValid = await isValidWord(guess);
+  if (!isValid) {
     shakeRow(state.currentRow);
     showToast('Not in word list');
     return;
