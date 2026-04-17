@@ -10,7 +10,9 @@
     noseStyle: 'dot',
     mouthStyle: 'smile',
     hairStyle: 'short',
-    hairColor: '#2c1810'
+    hairColor: '#2c1810',
+    dimpleStyle: 'none',
+    dimpleColor: '#ffb3c6'
   };
 
   // ── Storage helpers ───────────────────────────────────────────────────────
@@ -76,51 +78,86 @@
   };
 
   // ── SVG render ────────────────────────────────────────────────────────────
+  // viewBox="0 0 100 100"
+  // Face centre: (50, 55). Hair dome sides land at y≈52, inner fill y≈39.
+  // Layer order: bg → hairBack → face → hairFront → eyes → nose → mouth → dimples
 
   function renderAvatarSVG(state, size) {
     var s = Object.assign({}, DEFAULTS, state);
     var sz = size || '100';
 
+    // ── Background ────────────────────────────────────────────────────────
     var bg = '<rect width="100" height="100" fill="' + s.bgColor + '" rx="16"/>';
 
+    // ── Hair (back layer, drawn before face) ──────────────────────────────
+    // Inner arc baseline sits at y≈39; sides meet face at y≈52.
+    // These y-values ensure hair dome clearly overlaps the face top edge (y≈27).
     var hairBack = '', hairFront = '';
     if (s.hairStyle !== 'none') {
       var hc = s.hairColor;
       switch (s.hairStyle) {
         case 'short':
-          hairBack = '<path d="M19,40 Q20,14 50,12 Q80,14 81,40 Q65,33 50,32 Q35,33 19,40 Z" fill="' + hc + '"/>';
+          // Simple dome cap
+          hairBack = '<path d="M18,52 Q18,12 50,10 Q82,12 82,52 Q66,40 50,39 Q34,40 18,52 Z" fill="' + hc + '"/>';
           break;
+
         case 'long':
-          hairBack = '<path d="M19,40 Q16,68 20,84 Q35,90 50,32 Q65,90 80,84 Q84,68 81,40 Q65,33 50,12 Q35,33 19,40 Z" fill="' + hc + '"/>';
+          // Dome + side curtains extending below the face
+          hairBack = '<path d="M18,52 Q12,68 14,88 Q28,96 50,92 Q72,96 86,88 Q88,68 82,52 Q82,12 50,10 Q18,12 18,52 Z" fill="' + hc + '"/>';
           break;
+
         case 'curly':
-          hairBack = '<path d="M19,40 Q22,18 28,14 Q31,10 35,14 Q39,10 43,14 Q47,10 50,14 Q53,10 57,14 Q61,10 65,14 Q69,10 72,14 Q78,18 81,40 Q65,33 50,32 Q35,33 19,40 Z" fill="' + hc + '"/>';
+          // Bumpy/wavy dome
+          hairBack = '<path d="M18,52 Q20,22 26,16 Q29,12 33,16 Q37,12 41,16 Q45,12 50,10 Q55,12 59,16 Q63,12 67,16 Q71,12 74,16 Q80,22 82,52 Q66,40 50,39 Q34,40 18,52 Z" fill="' + hc + '"/>';
           break;
+
         case 'bun':
-          hairBack = '<path d="M19,40 Q20,14 50,12 Q80,14 81,40 Q65,33 50,32 Q35,33 19,40 Z" fill="' + hc + '"/>';
-          hairFront = '<circle cx="50" cy="13" r="10" fill="' + hc + '"/>';
+          // Short dome + top-knot circle drawn AFTER face (via hairFront)
+          hairBack = '<path d="M18,52 Q18,12 50,10 Q82,12 82,52 Q66,40 50,39 Q34,40 18,52 Z" fill="' + hc + '"/>';
+          hairFront = '<circle cx="50" cy="7" r="11" fill="' + hc + '"/>';
           break;
+
         case 'spiky':
-          hairBack = '<path d="M22,40 L24,20 L30,36 L35,18 L41,35 L47,16 L50,13 L53,16 L59,35 L65,18 L70,36 L76,20 L78,40 Q65,33 50,32 Q35,33 22,40 Z" fill="' + hc + '"/>';
+          // Triangle spikes along the top
+          hairBack = '<path d="M18,52 L19,30 L25,44 L31,22 L37,40 L43,18 L50,10 L57,18 L63,40 L69,22 L75,44 L81,30 L82,52 Q66,40 50,39 Q34,40 18,52 Z" fill="' + hc + '"/>';
           break;
+
         case 'bangs':
-          hairBack = '<path d="M19,40 Q20,14 50,12 Q80,14 81,40 Q65,33 50,32 Q35,33 19,40 Z" fill="' + hc + '"/>';
-          hairFront = '<path d="M22,44 Q28,31 50,29 Q72,31 78,44 Q65,37 50,36 Q35,37 22,44 Z" fill="' + hc + '"/>';
+          // Short dome (back) + forehead-covering fringe (front, drawn after face)
+          hairBack = '<path d="M18,52 Q18,12 50,10 Q82,12 82,52 Q66,40 50,39 Q34,40 18,52 Z" fill="' + hc + '"/>';
+          hairFront = '<path d="M18,52 Q26,36 50,34 Q74,36 82,52 Q66,45 50,44 Q34,45 18,52 Z" fill="' + hc + '"/>';
           break;
+
+        case 'avocado':
+          // Teardrop/avocado shape: pointed at the top, wide and round at the bottom.
+          // The face drawn on top becomes the "pit" sitting in the lower-centre.
+          hairBack = '<path d="M50,2 C27,2 5,22 5,57 C5,80 24,99 50,99 C76,99 95,80 95,57 C95,22 73,2 50,2 Z" fill="' + hc + '"/>';
+          break;
+
         default:
-          hairBack = '<path d="M19,40 Q20,14 50,12 Q80,14 81,40 Q65,33 50,32 Q35,33 19,40 Z" fill="' + hc + '"/>';
+          hairBack = '<path d="M18,52 Q18,12 50,10 Q82,12 82,52 Q66,40 50,39 Q34,40 18,52 Z" fill="' + hc + '"/>';
       }
     }
 
+    // ── Face shape ────────────────────────────────────────────────────────
     var face = '';
     var sc = s.skinColor;
     switch (s.faceShape) {
-      case 'oval':   face = '<ellipse cx="50" cy="55" rx="26" ry="33" fill="' + sc + '"/>'; break;
-      case 'round':  face = '<rect x="20" y="27" width="60" height="56" rx="30" fill="' + sc + '"/>'; break;
-      case 'square': face = '<rect x="20" y="27" width="60" height="56" rx="8" fill="' + sc + '"/>'; break;
-      default:       face = '<ellipse cx="50" cy="55" rx="30" ry="28" fill="' + sc + '"/>'; break;
+      case 'oval':
+        // Taller than wide
+        face = '<ellipse cx="50" cy="56" rx="26" ry="33" fill="' + sc + '"/>'; break;
+      case 'rect':
+        // Wider rectangle with soft rounded corners — clearly wider than tall
+        face = '<rect x="13" y="30" width="74" height="52" rx="14" fill="' + sc + '"/>'; break;
+      case 'square':
+        // Boxy / angular — small corner radius
+        face = '<rect x="20" y="27" width="60" height="56" rx="6" fill="' + sc + '"/>'; break;
+      default:
+        // circle — classic round ellipse
+        face = '<ellipse cx="50" cy="55" rx="30" ry="28" fill="' + sc + '"/>'; break;
     }
 
+    // ── Eyes ──────────────────────────────────────────────────────────────
     var eyes = '';
     switch (s.eyeStyle) {
       case 'almond':
@@ -137,11 +174,12 @@
       case 'starry':
         eyes = '<text x="37" y="52" text-anchor="middle" font-size="10" fill="#f0c040">★</text>' +
                '<text x="63" y="52" text-anchor="middle" font-size="10" fill="#f0c040">★</text>'; break;
-      default:
+      default: // round
         eyes = '<circle cx="37" cy="48" r="4.5" fill="#1a1a2e"/><circle cx="39" cy="46.5" r="1.5" fill="white"/>' +
                '<circle cx="63" cy="48" r="4.5" fill="#1a1a2e"/><circle cx="65" cy="46.5" r="1.5" fill="white"/>'; break;
     }
 
+    // ── Nose ──────────────────────────────────────────────────────────────
     var nose = '';
     switch (s.noseStyle) {
       case 'button':
@@ -151,9 +189,11 @@
       case 'triangle':
         nose = '<polygon points="50,52 46,60 54,60" fill="rgba(0,0,0,0.15)"/>'; break;
       case 'none': nose = ''; break;
-      default: nose = '<circle cx="50" cy="57" r="2" fill="rgba(0,0,0,0.2)"/>'; break;
+      default: // dot
+        nose = '<circle cx="50" cy="57" r="2" fill="rgba(0,0,0,0.2)"/>'; break;
     }
 
+    // ── Mouth ─────────────────────────────────────────────────────────────
     var mouth = '';
     switch (s.mouthStyle) {
       case 'grin':
@@ -167,12 +207,20 @@
         mouth = '<path d="M43,67 Q51,73 61,65" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>'; break;
       case 'open':
         mouth = '<ellipse cx="50" cy="68" rx="8" ry="5" fill="#1a1a2e"/><ellipse cx="50" cy="69" rx="5" ry="3" fill="#c084fc"/>'; break;
-      default:
+      default: // smile
         mouth = '<path d="M40,66 Q50,74 60,66" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>'; break;
     }
 
+    // ── Dimples ───────────────────────────────────────────────────────────
+    var dimples = '';
+    if (s.dimpleStyle === 'dimple') {
+      var dc = s.dimpleColor || '#ffb3c6';
+      dimples = '<circle cx="33" cy="65" r="5" fill="' + dc + '" opacity="0.72"/>' +
+                '<circle cx="67" cy="65" r="5" fill="' + dc + '" opacity="0.72"/>';
+    }
+
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="' + sz + '" height="' + sz + '">' +
-      bg + hairBack + face + hairFront + eyes + nose + mouth + '</svg>';
+      bg + hairBack + face + hairFront + eyes + nose + mouth + dimples + '</svg>';
   }
 
   window.__avatarRender = renderAvatarSVG;
@@ -183,16 +231,24 @@
     '#avatar-badge{',
       'position:fixed;bottom:14px;right:14px;',
       'display:flex;align-items:center;gap:7px;',
-      'background:rgba(28,23,48,0.9);',
+      'background:rgba(28,23,48,0.92);',
       'border:1.5px solid #4c1d95;',
       'border-radius:24px;',
       'padding:5px 10px 5px 5px;',
       'z-index:9999;',
-      'pointer-events:none;',
+      'cursor:pointer;',
+      'pointer-events:all;',
       'backdrop-filter:blur(6px);',
       '-webkit-backdrop-filter:blur(6px);',
       'max-width:160px;',
+      'text-decoration:none;',
+      'transition:border-color 0.18s, background 0.18s, transform 0.12s;',
       'animation:avatar-badge-in 0.4s cubic-bezier(0.34,1.56,0.64,1);',
+    '}',
+    '#avatar-badge:active{',
+      'transform:scale(0.92);',
+      'border-color:#7c3aed;',
+      'background:rgba(109,40,217,0.45);',
     '}',
     '#avatar-badge svg{width:36px;height:36px;border-radius:50%;display:block;flex-shrink:0;overflow:hidden;}',
     '#avatar-badge-name{',
@@ -227,11 +283,21 @@
         document.head.appendChild(style);
       }
 
+      // Don't show badge on the avatar management page itself
+      if (window.location.pathname.indexOf('avatar.html') !== -1) return;
+
       var badge = document.createElement('div');
       badge.id = 'avatar-badge';
+      badge.setAttribute('role', 'button');
+      badge.setAttribute('aria-label', 'Change avatar');
       badge.innerHTML =
         '<div id="avatar-badge-svg">' + renderAvatarSVG(avatar, '36') + '</div>' +
         '<span id="avatar-badge-name">' + escapeHtml(avatar.nickname) + '</span>';
+
+      badge.addEventListener('click', function () {
+        window.location.href = 'avatar.html';
+      });
+
       document.body.appendChild(badge);
     } catch (e) {}
   }

@@ -175,7 +175,6 @@
     }
     .btn-delete:active { color: var(--danger-lt); border-color: var(--danger-lt); }
 
-    /* Inline delete confirm */
     .delete-confirm {
       display: none;
       align-items: center;
@@ -215,7 +214,6 @@
       font-family: inherit;
     }
 
-    /* Empty state */
     .empty-state {
       text-align: center;
       padding: 40px 20px;
@@ -247,7 +245,6 @@
     }
     #view-editor.active { display: flex; }
 
-    /* Preview card */
     .preview-card {
       background: var(--surface);
       border: 2px solid var(--brd);
@@ -273,7 +270,6 @@
       min-height: 1.4em;
     }
 
-    /* Form sections */
     .section {
       background: var(--surface);
       border: 2px solid var(--brd);
@@ -281,7 +277,7 @@
       padding: 14px 16px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
     .control-group { display: flex; flex-direction: column; gap: 7px; }
     .control-label {
@@ -292,7 +288,6 @@
       letter-spacing: 0.08em;
     }
 
-    /* Nickname */
     .text-input {
       width: 100%;
       background: var(--bg);
@@ -318,7 +313,6 @@
       80% { transform: translateX(4px); }
     }
 
-    /* Swatches */
     .swatch-row { display: flex; flex-wrap: wrap; gap: 8px; }
     .swatch {
       width: 28px; height: 28px;
@@ -332,7 +326,6 @@
     .swatch:active { transform: scale(0.88); }
     .swatch.active { border-color: var(--p-xl); outline: 2px solid white; outline-offset: -6px; }
 
-    /* Option buttons */
     .option-row { display: flex; flex-wrap: wrap; gap: 7px; }
     .option-btn {
       display: flex;
@@ -357,7 +350,6 @@
     .option-btn:active { transform: scale(0.93); }
     .option-btn.active { background: var(--p); border-color: var(--p-lt); color: #fff; }
 
-    /* Save / hair color */
     .save-btn {
       padding: 14px;
       border-radius: 14px;
@@ -373,8 +365,10 @@
       font-family: inherit;
     }
     .save-btn:active { background: var(--p); transform: scale(0.97); }
-    #hair-color-group { transition: opacity 0.2s; }
-    #hair-color-group.hidden { opacity: 0.3; pointer-events: none; }
+
+    /* Sub-rows shown/hidden based on selection */
+    .sub-row { display: none; }
+    .sub-row.visible { display: flex; flex-direction: column; gap: 7px; }
   </style>
 </head>
 <body>
@@ -396,11 +390,14 @@
   </div>
 
   <div id="view-editor">
+
+    <!-- Preview -->
     <div class="preview-card">
       <div id="preview-svg"></div>
       <div id="preview-name">Player</div>
     </div>
 
+    <!-- Nickname -->
     <div class="section">
       <div class="control-group">
         <div class="control-label">Nickname</div>
@@ -409,21 +406,23 @@
       </div>
     </div>
 
+    <!-- Background + Face + Skin -->
     <div class="section">
       <div class="control-group">
         <div class="control-label">Background</div>
         <div class="swatch-row" id="bg-swatches"></div>
       </div>
       <div class="control-group">
-        <div class="control-label">Face</div>
+        <div class="control-label">Face Shape</div>
         <div class="option-row" id="face-options"></div>
       </div>
       <div class="control-group">
-        <div class="control-label">Skin</div>
+        <div class="control-label">Skin Color</div>
         <div class="swatch-row" id="skin-swatches"></div>
       </div>
     </div>
 
+    <!-- Eyes + Nose + Mouth + Dimples -->
     <div class="section">
       <div class="control-group">
         <div class="control-label">Eyes</div>
@@ -437,14 +436,23 @@
         <div class="control-label">Mouth</div>
         <div class="option-row" id="mouth-options"></div>
       </div>
+      <div class="control-group">
+        <div class="control-label">Dimples</div>
+        <div class="option-row" id="dimple-options"></div>
+        <div class="sub-row" id="dimple-color-row">
+          <div class="control-label">Dimple Color</div>
+          <div class="swatch-row" id="dimple-swatches"></div>
+        </div>
+      </div>
     </div>
 
+    <!-- Hair -->
     <div class="section">
       <div class="control-group">
-        <div class="control-label">Hair</div>
+        <div class="control-label">Hair Style</div>
         <div class="option-row" id="hair-options"></div>
       </div>
-      <div class="control-group" id="hair-color-group">
+      <div class="sub-row" id="hair-color-row">
         <div class="control-label">Hair Color</div>
         <div class="swatch-row" id="hair-swatches"></div>
       </div>
@@ -458,11 +466,10 @@
 (function () {
   'use strict';
 
-  // ── Helpers from avatar.js ────────────────────────────────────────────────
-  var loadAvatars   = window.__avatarLoadAvatars;
-  var saveAvatars   = window.__avatarSaveAvatars;
-  var getActiveId   = window.__avatarGetActiveId;
-  var renderSVG     = window.__avatarRender;
+  var loadAvatars = window.__avatarLoadAvatars;
+  var saveAvatars = window.__avatarSaveAvatars;
+  var getActiveId = window.__avatarGetActiveId;
+  var renderSVG   = window.__avatarRender;
 
   function escHtml(str) {
     return String(str).replace(/[&<>"']/g, function(c){
@@ -471,14 +478,15 @@
   }
 
   // ── View state ────────────────────────────────────────────────────────────
-  var editingId = null; // null = creating new
+  var editingId = null;
 
   // ── Editor form state ─────────────────────────────────────────────────────
   var editorState = {
     nickname: '',
     bgColor: '#6d28d9', faceShape: 'circle', skinColor: '#f5cba7',
     eyeStyle: 'round', noseStyle: 'dot', mouthStyle: 'smile',
-    hairStyle: 'short', hairColor: '#2c1810'
+    hairStyle: 'short', hairColor: '#2c1810',
+    dimpleStyle: 'none', dimpleColor: '#ffb3c6'
   };
 
   // ── Palettes ──────────────────────────────────────────────────────────────
@@ -486,22 +494,31 @@
     '#6d28d9','#1e3a5f','#14532d','#7c2d12','#831843',
     '#1c1730','#0f172a','#292524','#134e4a','#1e1b4b','#3b0764','#042f2e'
   ];
+  // Standard skin tones + fantasy blues and reds
   var SKIN_COLORS = [
     '#fde8c8','#f5cba7','#e8b48a','#d4956a','#c07847',
-    '#a0622a','#7d4519','#5c2e08','#3b1a06','#ffe0bd'
+    '#a0622a','#7d4519','#5c2e08','#3b1a06','#ffe0bd',
+    '#7eb8f7','#4a90d9','#2060b0',
+    '#e8605a','#c0392b'
   ];
   var HAIR_COLORS = [
     '#1a0a00','#2c1810','#5c3317','#8b5e3c','#c8924a','#d4a843',
     '#f0d060','#e8a0a0','#c0392b','#e74c3c','#8e44ad','#3498db'
   ];
+  var DIMPLE_COLORS = [
+    '#ffb3c6','#ff8fab','#ffa69e','#e8a0a0',
+    '#c8a0e8','#a0c8e8','#f4c98a','#ff6b6b'
+  ];
 
-  // ── Option definitions & mini previews ───────────────────────────────────
+  // ── Mini preview SVG builders ─────────────────────────────────────────────
+  // 30×30 viewBox, using consistent tones for demonstration
+
   var OPTION_PREVIEWS = {
     faceShape: {
       circle:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="15" rx="12" ry="11" fill="#d4956a"/></svg>'; },
       oval:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="15" rx="9" ry="13" fill="#d4956a"/></svg>'; },
-      round:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><rect x="3" y="5" width="24" height="22" rx="12" fill="#d4956a"/></svg>'; },
-      square:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><rect x="3" y="5" width="24" height="22" rx="3" fill="#d4956a"/></svg>'; }
+      rect:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><rect x="2" y="6" width="26" height="18" rx="5" fill="#d4956a"/></svg>'; },
+      square:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><rect x="4" y="4" width="22" height="22" rx="2" fill="#d4956a"/></svg>'; }
     },
     eyeStyle: {
       round:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><circle cx="9" cy="15" r="4" fill="#1a1a2e"/><circle cx="10.2" cy="13.8" r="1.3" fill="white"/><circle cx="21" cy="15" r="4" fill="#1a1a2e"/><circle cx="22.2" cy="13.8" r="1.3" fill="white"/></svg>'; },
@@ -526,23 +543,37 @@
       smirk:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M10,16 Q16,22 22,14" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>'; },
       open:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="17" rx="6" ry="4" fill="#1a1a2e"/><ellipse cx="15" cy="18" rx="3.5" ry="2.5" fill="#c084fc"/></svg>'; }
     },
+    dimpleStyle: {
+      none:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><line x1="8" y1="15" x2="22" y2="15" stroke="rgba(160,160,160,0.3)" stroke-width="1.5" stroke-dasharray="2,2"/></svg>'; },
+      dimple: function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><circle cx="9" cy="18" r="4" fill="#ffb3c6" opacity="0.8"/><circle cx="21" cy="18" r="4" fill="#ffb3c6" opacity="0.8"/></svg>'; }
+    },
     hairStyle: {
-      none:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="17" rx="11" ry="10" fill="#d4956a"/></svg>'; },
-      short:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M4,14 Q4,4 15,3 Q26,4 26,14 Q20,10 15,10 Q10,10 4,14 Z" fill="#5c3317"/><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/></svg>'; },
-      long:   function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M4,14 Q3,22 4,28 Q10,30 15,10 Q20,30 26,28 Q27,22 26,14 Q20,8 15,3 Q10,8 4,14 Z" fill="#5c3317"/><ellipse cx="15" cy="17" rx="10" ry="9" fill="#d4956a"/></svg>'; },
-      curly:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M4,14 Q5,6 8,4 Q9,2 11,4 Q12,2 14,4 Q15,2 16,4 Q18,2 19,4 Q21,2 22,4 Q25,6 26,14 Q20,10 15,10 Q10,10 4,14 Z" fill="#5c3317"/><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/></svg>'; },
-      bun:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M4,14 Q4,6 15,5 Q26,6 26,14 Q20,10 15,10 Q10,10 4,14 Z" fill="#5c3317"/><circle cx="15" cy="4" r="4" fill="#5c3317"/><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/></svg>'; },
-      spiky:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M5,14 L6,6 L9,12 L11,5 L13,11 L15,3 L17,11 L19,5 L21,12 L24,6 L25,14 Q20,10 15,10 Q10,10 5,14 Z" fill="#5c3317"/><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/></svg>'; },
-      bangs:  function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M4,14 Q4,4 15,3 Q26,4 26,14 Q20,10 15,10 Q10,10 4,14 Z" fill="#5c3317"/><ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/><path d="M5,16 Q9,9 15,8 Q21,9 25,16 Q20,12 15,12 Q10,12 5,16 Z" fill="#5c3317"/></svg>'; }
+      none:    function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><ellipse cx="15" cy="17" rx="11" ry="10" fill="#d4956a"/></svg>'; },
+      short:   function(){ return svgHairPreview('<path d="M4,16 Q4,4 15,3 Q26,4 26,16 Q20,12 15,12 Q10,12 4,16 Z" fill="#5c3317"/>'); },
+      long:    function(){ return svgHairPreview('<path d="M4,16 Q2,22 3,28 Q9,30 15,12 Q21,30 27,28 Q28,22 26,16 Q20,10 15,3 Q10,10 4,16 Z" fill="#5c3317"/>'); },
+      curly:   function(){ return svgHairPreview('<path d="M4,16 Q5,7 8,5 Q9,3 11,5 Q12,3 14,5 Q15,3 16,5 Q18,3 19,5 Q21,3 22,5 Q25,7 26,16 Q20,12 15,12 Q10,12 4,16 Z" fill="#5c3317"/>'); },
+      bun:     function(){ return svgHairPreview('<path d="M4,16 Q4,4 15,3 Q26,4 26,16 Q20,12 15,12 Q10,12 4,16 Z" fill="#5c3317"/><circle cx="15" cy="2" r="4" fill="#5c3317"/>'); },
+      spiky:   function(){ return svgHairPreview('<path d="M4,16 L5,8 L8,13 L11,5 L13,12 L15,3 L17,12 L19,5 L22,13 L25,8 L26,16 Q20,12 15,12 Q10,12 4,16 Z" fill="#5c3317"/>'); },
+      bangs:   function(){ return svgHairPreview('<path d="M4,16 Q4,4 15,3 Q26,4 26,16 Q20,12 15,12 Q10,12 4,16 Z" fill="#5c3317"/><path d="M4,16 Q8,10 15,9 Q22,10 26,16 Q20,14 15,13 Q10,14 4,16 Z" fill="#5c3317"/>'); },
+      avocado: function(){ return '<svg viewBox="0 0 30 30" width="30" height="30"><path d="M15,1 C8,1 2,7 2,17 C2,24 7,29 15,29 C23,29 28,24 28,17 C28,7 22,1 15,1 Z" fill="#5c3317"/><ellipse cx="15" cy="19" rx="8" ry="7" fill="#d4956a"/></svg>'; }
     }
   };
 
+  // Helper for hair style previews — draws hair on top of face ellipse
+  function svgHairPreview(hairPath) {
+    return '<svg viewBox="0 0 30 30" width="30" height="30">' +
+      hairPath +
+      '<ellipse cx="15" cy="18" rx="11" ry="10" fill="#d4956a"/>' +
+      '</svg>';
+  }
+
   var OPTION_DEFS = {
-    faceShape: [{value:'circle',label:'Circle'},{value:'oval',label:'Oval'},{value:'round',label:'Round'},{value:'square',label:'Square'}],
-    eyeStyle:  [{value:'round',label:'Round'},{value:'almond',label:'Almond'},{value:'wide',label:'Wide'},{value:'dot',label:'Dot'},{value:'closed',label:'Closed'},{value:'starry',label:'Starry'}],
-    noseStyle: [{value:'dot',label:'Dot'},{value:'button',label:'Button'},{value:'line',label:'Line'},{value:'triangle',label:'Triangle'},{value:'none',label:'None'}],
-    mouthStyle:[{value:'smile',label:'Smile'},{value:'grin',label:'Grin'},{value:'flat',label:'Flat'},{value:'frown',label:'Frown'},{value:'smirk',label:'Smirk'},{value:'open',label:'Open'}],
-    hairStyle: [{value:'none',label:'None'},{value:'short',label:'Short'},{value:'long',label:'Long'},{value:'curly',label:'Curly'},{value:'bun',label:'Bun'},{value:'spiky',label:'Spiky'},{value:'bangs',label:'Bangs'}]
+    faceShape:  [{value:'circle',label:'Circle'},{value:'oval',label:'Oval'},{value:'rect',label:'Rect'},{value:'square',label:'Square'}],
+    eyeStyle:   [{value:'round',label:'Round'},{value:'almond',label:'Almond'},{value:'wide',label:'Wide'},{value:'dot',label:'Dot'},{value:'closed',label:'Closed'},{value:'starry',label:'Starry'}],
+    noseStyle:  [{value:'dot',label:'Dot'},{value:'button',label:'Button'},{value:'line',label:'Line'},{value:'triangle',label:'Triangle'},{value:'none',label:'None'}],
+    mouthStyle: [{value:'smile',label:'Smile'},{value:'grin',label:'Grin'},{value:'flat',label:'Flat'},{value:'frown',label:'Frown'},{value:'smirk',label:'Smirk'},{value:'open',label:'Open'}],
+    dimpleStyle:[{value:'none',label:'None'},{value:'dimple',label:'Dimple'}],
+    hairStyle:  [{value:'none',label:'None'},{value:'short',label:'Short'},{value:'long',label:'Long'},{value:'curly',label:'Curly'},{value:'bun',label:'Bun'},{value:'spiky',label:'Spiky'},{value:'bangs',label:'Bangs'},{value:'avocado',label:'Avocado'}]
   };
 
   // ══════════════════════════════════════════
@@ -564,9 +595,7 @@
     var list = loadAvatars();
     var activeId = getActiveId();
 
-    // Update + New button
-    var btnNew = document.getElementById('btn-new');
-    btnNew.disabled = list.length >= 10;
+    document.getElementById('btn-new').disabled = list.length >= 10;
 
     if (list.length === 0) {
       container.innerHTML =
@@ -596,10 +625,9 @@
           (!isActive ? '<button class="btn-select" data-id="' + avatar.id + '">Select</button>' :
                        '<button class="btn-select is-active" disabled>Active</button>') +
           '<button class="btn-edit" data-id="' + avatar.id + '">Edit</button>' +
-          (list.length > 1 ? '<button class="btn-delete" data-id="' + avatar.id + '" data-name="' + escHtml(avatar.nickname) + '" title="Delete">🗑</button>' : '') +
+          (list.length > 1 ? '<button class="btn-delete" data-id="' + avatar.id + '" title="Delete">🗑</button>' : '') +
         '</div>';
 
-      // Confirm row (hidden by default)
       var confirmRow = document.createElement('div');
       confirmRow.className = 'delete-confirm';
       confirmRow.id = 'confirm-' + avatar.id;
@@ -612,7 +640,6 @@
       container.appendChild(confirmRow);
     });
 
-    // Wire events via delegation
     container.addEventListener('click', function(e) {
       var t = e.target;
       var id = t.dataset.id;
@@ -624,7 +651,6 @@
       } else if (t.classList.contains('btn-edit')) {
         showEditorView(id);
       } else if (t.classList.contains('btn-delete')) {
-        // Hide any other open confirms first
         container.querySelectorAll('.delete-confirm.visible').forEach(function(el){ el.classList.remove('visible'); });
         document.getElementById('confirm-' + id).classList.add('visible');
       } else if (t.classList.contains('btn-cancel-delete')) {
@@ -638,7 +664,6 @@
   function deleteAvatar(id) {
     var list = loadAvatars().filter(function(a){ return a.id !== id; });
     saveAvatars(list);
-    // If deleted avatar was active, switch to first remaining
     if (getActiveId() === id) {
       try { localStorage.setItem('puzzles-avatar-active', list.length ? list[0].id : ''); } catch(e) {}
     }
@@ -652,17 +677,16 @@
   function showEditorView(avatarId) {
     editingId = avatarId;
 
-    // Load avatar data into editorState
     if (avatarId) {
       var list = loadAvatars();
       var av = list.find(function(a){ return a.id === avatarId; });
       if (av) Object.assign(editorState, av);
     } else {
-      // Reset to defaults for new avatar
       Object.assign(editorState, {
         nickname: '', bgColor: '#6d28d9', faceShape: 'circle',
         skinColor: '#f5cba7', eyeStyle: 'round', noseStyle: 'dot',
-        mouthStyle: 'smile', hairStyle: 'short', hairColor: '#2c1810'
+        mouthStyle: 'smile', hairStyle: 'short', hairColor: '#2c1810',
+        dimpleStyle: 'none', dimpleColor: '#ffb3c6'
       });
     }
 
@@ -673,20 +697,21 @@
     document.getElementById('editor-title').textContent = avatarId ? 'Edit Avatar' : 'New Avatar';
     document.getElementById('save-btn').textContent = avatarId ? 'Save Changes' : 'Create Avatar';
 
-    // Populate nickname
     document.getElementById('nickname-input').value = editorState.nickname || '';
 
-    // Refresh active states on all controls
-    refreshSwatchActive('bg-swatches',   'bgColor');
-    refreshSwatchActive('skin-swatches', 'skinColor');
-    refreshSwatchActive('hair-swatches', 'hairColor');
-    refreshOptionActive('face-options',  'faceShape');
-    refreshOptionActive('eye-options',   'eyeStyle');
-    refreshOptionActive('nose-options',  'noseStyle');
-    refreshOptionActive('mouth-options', 'mouthStyle');
-    refreshOptionActive('hair-options',  'hairStyle');
+    // Refresh all controls to match editorState
+    refreshSwatchActive('bg-swatches',     'bgColor');
+    refreshSwatchActive('skin-swatches',   'skinColor');
+    refreshSwatchActive('hair-swatches',   'hairColor');
+    refreshSwatchActive('dimple-swatches', 'dimpleColor');
+    refreshOptionActive('face-options',    'faceShape');
+    refreshOptionActive('eye-options',     'eyeStyle');
+    refreshOptionActive('nose-options',    'noseStyle');
+    refreshOptionActive('mouth-options',   'mouthStyle');
+    refreshOptionActive('dimple-options',  'dimpleStyle');
+    refreshOptionActive('hair-options',    'hairStyle');
 
-    updateHairColorVisibility();
+    updateSubRowVisibility();
     updatePreview();
   }
 
@@ -707,11 +732,15 @@
     document.getElementById('preview-name').textContent = editorState.nickname.trim() || 'Player';
   }
 
-  function updateHairColorVisibility() {
-    document.getElementById('hair-color-group').classList.toggle('hidden', editorState.hairStyle === 'none');
+  function updateSubRowVisibility() {
+    // Hair color only shown when hair is not 'none'
+    document.getElementById('hair-color-row').classList.toggle('visible', editorState.hairStyle !== 'none');
+    // Dimple color only shown when dimple is not 'none'
+    document.getElementById('dimple-color-row').classList.toggle('visible', editorState.dimpleStyle === 'dimple');
   }
 
-  // Build swatch rows
+  // ── Build controls ────────────────────────────────────────────────────────
+
   function buildSwatches(containerId, colors, stateKey) {
     var container = document.getElementById(containerId);
     colors.forEach(function(color) {
@@ -723,34 +752,35 @@
         editorState[stateKey] = color;
         container.querySelectorAll('.swatch').forEach(function(b){ b.classList.remove('active'); });
         btn.classList.add('active');
-        if (stateKey === 'hairColor') updateHairColorVisibility();
+        updateSubRowVisibility();
         updatePreview();
       });
       container.appendChild(btn);
     });
   }
 
-  // Build option rows
   function buildOptions(containerId, stateKey) {
     var container = document.getElementById(containerId);
     OPTION_DEFS[stateKey].forEach(function(def) {
       var btn = document.createElement('button');
       btn.className = 'option-btn' + (editorState[stateKey] === def.value ? ' active' : '');
       btn.dataset.value = def.value;
-      var previewSVG = OPTION_PREVIEWS[stateKey][def.value] ? OPTION_PREVIEWS[stateKey][def.value]() : '';
+      var previewMap = OPTION_PREVIEWS[stateKey];
+      var previewSVG = (previewMap && previewMap[def.value]) ? previewMap[def.value]() : '';
       btn.innerHTML = previewSVG + '<span>' + def.label + '</span>';
       btn.addEventListener('click', function() {
         editorState[stateKey] = def.value;
         container.querySelectorAll('.option-btn').forEach(function(b){ b.classList.remove('active'); });
         btn.classList.add('active');
-        if (stateKey === 'hairStyle') updateHairColorVisibility();
+        updateSubRowVisibility();
         updatePreview();
       });
       container.appendChild(btn);
     });
   }
 
-  // Save
+  // ── Save ──────────────────────────────────────────────────────────────────
+
   document.getElementById('save-btn').addEventListener('click', function() {
     var nick = document.getElementById('nickname-input').value.trim();
     if (!nick) {
@@ -773,7 +803,6 @@
     } else {
       var newAvatar = Object.assign({}, editorState, { id: 'av_' + Date.now(), scores: {} });
       list.push(newAvatar);
-      // Set as active if first avatar
       if (list.length === 1) {
         try { localStorage.setItem('puzzles-avatar-active', newAvatar.id); } catch(e) {}
       }
@@ -782,29 +811,26 @@
     showListView();
   });
 
-  // Nickname live update
   document.getElementById('nickname-input').addEventListener('input', function() {
     editorState.nickname = this.value;
     updatePreview();
   });
 
-  // Back from editor
   document.getElementById('btn-back-editor').addEventListener('click', showListView);
-
-  // New avatar button
-  document.getElementById('btn-new').addEventListener('click', function() {
-    showEditorView(null);
-  });
+  document.getElementById('btn-new').addEventListener('click', function() { showEditorView(null); });
 
   // ── Init ──────────────────────────────────────────────────────────────────
-  buildSwatches('bg-swatches',   BG_COLORS,   'bgColor');
-  buildSwatches('skin-swatches', SKIN_COLORS, 'skinColor');
-  buildSwatches('hair-swatches', HAIR_COLORS, 'hairColor');
-  buildOptions('face-options',  'faceShape');
-  buildOptions('eye-options',   'eyeStyle');
-  buildOptions('nose-options',  'noseStyle');
-  buildOptions('mouth-options', 'mouthStyle');
-  buildOptions('hair-options',  'hairStyle');
+
+  buildSwatches('bg-swatches',     BG_COLORS,     'bgColor');
+  buildSwatches('skin-swatches',   SKIN_COLORS,   'skinColor');
+  buildSwatches('hair-swatches',   HAIR_COLORS,   'hairColor');
+  buildSwatches('dimple-swatches', DIMPLE_COLORS, 'dimpleColor');
+  buildOptions('face-options',    'faceShape');
+  buildOptions('eye-options',     'eyeStyle');
+  buildOptions('nose-options',    'noseStyle');
+  buildOptions('mouth-options',   'mouthStyle');
+  buildOptions('dimple-options',  'dimpleStyle');
+  buildOptions('hair-options',    'hairStyle');
 
   showListView();
 
