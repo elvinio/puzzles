@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Chinese Practice</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #13111c;
+      --surface: #1c1730;
+      --brd:     #4c1d95;
+      --p:       #6d28d9;
+      --p-lt:    #7c3aed;
+      --p-xl:    #a78bfa;
+      --p-text:  #e2d9f3;
+      --muted:   #7c6fa0;
+      --ok:      #16a34a;
+      --ok-lt:   #22c55e;
+      --err:     #dc2626;
+      --err-lt:  #ef4444;
+      --warn:    #f59e0b;
+    }
+
+    body {
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      overscroll-behavior: none;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100dvh;
+      padding: 12px 16px 40px;
+      gap: 12px;
+    }
+    .screen.active { display: flex; }
+
+    /* ── Topbar ── */
+    .topbar {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+    .back-link:hover { color: var(--p-xl); }
+    h1 {
+      font-size: clamp(1.1rem, 4vw, 1.6rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .topbar-right { min-width: 60px; display: flex; justify-content: flex-end; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+      align-self: flex-start;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    /* ── Avatar chip ── */
+    .avatar-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 40px;
+      padding: 6px 18px 6px 6px;
+      width: 100%;
+      max-width: 620px;
+    }
+    .avatar-chip-name { font-size: 0.95rem; font-weight: 700; }
+    .no-avatar-warn {
+      color: var(--err-lt);
+      font-size: 0.85rem;
+      text-align: center;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    /* ── Tab rows ── */
+    .tab-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 620px;
+    }
+    .tab {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--brd);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.15s;
+      touch-action: manipulation;
+    }
+    .tab:hover { border-color: var(--p-lt); color: var(--p-text); }
+    .tab.active { background: var(--p); border-color: var(--p-lt); color: #fff; }
+
+    /* ── Buttons ── */
+    .btn {
+      padding: 13px 28px;
+      border-radius: 12px;
+      border: none;
+      background: var(--p);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      touch-action: manipulation;
+    }
+    .btn:hover { background: var(--p-lt); }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--brd);
+      color: var(--muted);
+    }
+    .btn-outline:hover { border-color: var(--p-lt); color: var(--p-text); background: transparent; }
+    .btn-sm { padding: 8px 18px; font-size: 0.85rem; border-radius: 10px; }
+    .btn-danger { background: var(--err); }
+    .btn-danger:hover { background: var(--err-lt); }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 100%;
+      max-width: 620px;
+      height: 1px;
+      background: var(--brd);
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════════════
+       GAME SCREEN
+    ═══════════════════════════════════════ */
+    .hud {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      width: 100%;
+      max-width: 620px;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .hud-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .hud-label { font-size: 0.6rem; font-weight: 800; color: var(--muted); letter-spacing: 0.12em; }
+    .hud-val { font-size: 1.35rem; font-weight: 900; color: var(--p-xl); line-height: 1; }
+    .hud-val.warn { color: var(--warn); }
+    .hud-val.danger { color: var(--err-lt); }
+
+    .progress-bar-wrap {
+      width: 100%;
+      max-width: 620px;
+      height: 6px;
+      background: var(--surface);
+      border-radius: 3px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--p-lt);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .question-wrap {
+      width: 100%;
+      max-width: 620px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 120px;
+    }
+    .question-type-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .question-text {
+      font-size: clamp(3rem, 14vw, 5.5rem);
+      font-weight: 900;
+      color: var(--p-text);
+      line-height: 1.05;
+      text-align: center;
+    }
+    .question-text.is-pinyin {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+    }
+    .question-text.is-english {
+      font-size: clamp(1.2rem, 5vw, 2rem);
+      color: var(--p-xl);
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+      max-width: 620px;
+      flex-shrink: 0;
+    }
+    .opt-btn {
+      padding: 14px 8px;
+      border-radius: 14px;
+      border: 2px solid var(--brd);
+      background: var(--surface);
+      color: var(--p-text);
+      font-size: clamp(1.6rem, 7vw, 2.8rem);
+      font-weight: 900;
+      cursor: pointer;
+      transition: border-color 0.12s, background 0.12s, transform 0.1s;
+      touch-action: manipulation;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 80px;
+      line-height: 1;
+    }
+    .opt-btn.is-pinyin-opt {
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .opt-btn:hover { border-color: var(--p-lt); background: #241a45; }
+    .opt-btn:active { transform: scale(0.96); }
+    .opt-btn.flash-correct {
+      border-color: var(--ok-lt);
+      background: #0a2016;
+      color: var(--ok-lt);
+      pointer-events: none;
+    }
+    .opt-btn.flash-wrong {
+      border-color: var(--err-lt);
+      background: #1a0a0a;
+      color: var(--err-lt);
+      pointer-events: none;
+    }
+    .opt-btn.flash-reveal {
+      border-color: var(--ok-lt);
+      background: #0f2d1a;
+      color: var(--ok-lt);
+      pointer-events: none;
+    }
+    .opt-btn[disabled] { pointer-events: none; }
+
+    /* ═══════════════════════════════════════
+       SUMMARY SCREEN
+    ═══════════════════════════════════════ */
+    .summary-stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 620px;
+    }
+    .summary-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      padding: 12px 24px;
+      min-width: 80px;
+      gap: 4px;
+    }
+    .summary-val {
+      font-size: 2.2rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--p-xl);
+    }
+    .summary-val.ok { color: var(--ok-lt); }
+    .summary-val.err { color: var(--err-lt); }
+    .summary-lbl { font-size: 0.62rem; font-weight: 800; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .result-list {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+      max-height: 300px;
+      flex-shrink: 0;
+    }
+    .result-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 10px 14px;
+      border-left: 4px solid var(--brd);
+      flex-shrink: 0;
+    }
+    .result-item.ok { border-left-color: var(--ok-lt); }
+    .result-item.err { border-left-color: var(--err-lt); }
+    .result-char { font-size: 1.6rem; font-weight: 900; flex-shrink: 0; min-width: 32px; text-align: center; }
+    .result-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .result-pinyin { font-size: 0.82rem; color: var(--p-xl); }
+    .result-english { font-size: 0.75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .result-time { font-size: 0.8rem; color: var(--muted); flex-shrink: 0; text-align: right; }
+
+    /* ═══════════════════════════════════════
+       STATS SCREEN
+    ═══════════════════════════════════════ */
+    .av-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 720px;
+    }
+    .av-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 30px;
+      padding: 4px 14px 4px 4px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      touch-action: manipulation;
+    }
+    .av-chip.active { border-color: var(--p-lt); color: var(--p-text); }
+    .av-chip:hover { border-color: var(--p-lt); color: var(--p-text); }
+
+    .stats-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      width: 100%;
+      max-width: 720px;
+    }
+    .sort-select {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 10px;
+      color: var(--p-text);
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .stats-table-wrap {
+      width: 100%;
+      max-width: 720px;
+      overflow-x: auto;
+      flex: 1;
+    }
+    .stats-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+    }
+    .stats-table th {
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 9px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--brd);
+      white-space: nowrap;
+    }
+    .stats-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(76,29,149,0.25);
+      color: var(--p-text);
+    }
+    .stats-table td.td-char { font-size: 1.4rem; font-weight: 900; }
+    .stats-table td.td-pinyin { color: var(--p-xl); }
+    .stats-table td.td-lesson { color: var(--muted); font-size: 0.75rem; }
+    .stats-table td.ok { color: var(--ok-lt); font-weight: 700; }
+    .stats-table td.err { color: var(--err-lt); font-weight: 700; }
+    .stats-table td.warn { color: var(--warn); font-weight: 700; }
+    .stats-table tr:hover td { background: rgba(109,40,217,0.1); }
+    .stats-empty { text-align: center; color: var(--muted); padding: 48px 16px; font-size: 0.9rem; }
+    .stats-count { color: var(--muted); font-size: 0.78rem; align-self: flex-start; width: 100%; max-width: 720px; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #261c48;
+      border: 1.5px solid var(--p-lt);
+      color: var(--p-text);
+      border-radius: 20px;
+      padding: 9px 22px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 500;
+      white-space: nowrap;
+      max-width: 90vw;
+      text-align: center;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN: SETUP
+════════════════════════════════════════════════ -->
+<div id="screen-setup" class="screen active">
+  <div class="topbar">
+    <a class="back-link" href="index.html">← Games</a>
+    <h1>Chinese Practice</h1>
+    <div class="topbar-right">
+      <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
+    </div>
+  </div>
+
+  <!-- Avatar -->
+  <div class="avatar-chip" id="setup-avatar-chip" style="display:none">
+    <div id="setup-avatar-svg"></div>
+    <span class="avatar-chip-name" id="setup-avatar-name"></span>
+  </div>
+  <div class="no-avatar-warn" id="setup-no-avatar" style="display:none">
+    No avatar selected — <a href="avatar.html" style="color:var(--p-xl)">create one first</a>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Level -->
+  <div class="section-label">Level</div>
+  <div class="tab-row" id="setup-level-tabs">
+    <button class="tab active" data-level="p1">Primary 1</button>
+    <button class="tab" data-level="p2">Primary 2</button>
+  </div>
+
+  <!-- Lessons -->
+  <div class="section-label">Lessons (up to)</div>
+  <div class="tab-row" id="setup-lesson-tabs">
+    <button class="tab active" data-max="3">L1–3</button>
+    <button class="tab" data-max="6">L1–6</button>
+    <button class="tab" data-max="9">L1–9</button>
+    <button class="tab" data-max="12">L1–12</button>
+    <button class="tab" data-max="15">L1–15</button>
+    <button class="tab" data-max="19">L1–19</button>
+  </div>
+
+  <!-- Test mode -->
+  <div class="section-label">Test Mode</div>
+  <div class="tab-row" id="setup-mode-tabs">
+    <button class="tab active" data-mode="pinyin-chinese">Pinyin → 汉字</button>
+    <button class="tab" data-mode="chinese-pinyin">汉字 → Pinyin</button>
+    <button class="tab" data-mode="english-chinese">English → 汉字</button>
+    <button class="tab" data-mode="word-fill">词语</button>
+    <button class="tab" data-mode="mix">Mix All</button>
+  </div>
+
+  <div class="divider"></div>
+  <button class="btn" id="setup-start" style="width:100%;max-width:620px">▶ Start Practice</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN: GAME
+════════════════════════════════════════════════ -->
+<div id="screen-game" class="screen">
+  <div class="topbar">
+    <div style="width:60px"></div>
+    <h1>Chinese Practice</h1>
+    <div class="topbar-right">
+      <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
+    </div>
+  </div>
+
+  <div class="hud">
+    <div class="hud-cell">
+      <div class="hud-label">REMAINING</div>
+      <div class="hud-val" id="hud-timer">—</div>
+    </div>
+    <div class="hud-cell">
+      <div class="hud-label">CARD</div>
+      <div class="hud-val" id="hud-card">—</div>
+    </div>
+    <div class="hud-cell">
+      <div class="hud-label">CORRECT</div>
+      <div class="hud-val ok" id="hud-correct">0</div>
+    </div>
+    <div class="hud-cell">
+      <div class="hud-label">WRONG</div>
+      <div class="hud-val" style="color:var(--err-lt)" id="hud-wrong">0</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <div class="question-wrap">
+    <div class="question-type-label" id="question-type-label"></div>
+    <div class="question-text" id="question-text"></div>
+  </div>
+
+  <div class="options-grid" id="options-grid"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN: SUMMARY
+════════════════════════════════════════════════ -->
+<div id="screen-summary" class="screen">
+  <div class="topbar">
+    <div style="width:60px"></div>
+    <h1>Session Complete</h1>
+    <div style="width:60px"></div>
+  </div>
+
+  <div class="summary-stats">
+    <div class="summary-stat">
+      <div class="summary-val ok" id="summary-correct">0</div>
+      <div class="summary-lbl">Correct</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-val err" id="summary-wrong">0</div>
+      <div class="summary-lbl">Wrong</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-val" id="summary-time">0:00</div>
+      <div class="summary-lbl">Time</div>
+    </div>
+  </div>
+
+  <div class="result-list" id="summary-result-list"></div>
+
+  <div class="btn-row">
+    <button class="btn" id="summary-again-btn">Play Again</button>
+    <button class="btn btn-outline" id="summary-setup-btn">Change Settings</button>
+    <button class="btn btn-outline" id="summary-stats-btn">View Stats</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN: STATS
+════════════════════════════════════════════════ -->
+<div id="screen-stats" class="screen">
+  <div class="topbar">
+    <button class="back-link" id="stats-back-btn">← Back</button>
+    <h1>Stats</h1>
+    <div style="width:60px"></div>
+  </div>
+
+  <div class="section-label">Player</div>
+  <div class="av-chips" id="stats-av-chips"></div>
+
+  <div class="stats-controls">
+    <div class="tab-row" id="stats-level-tabs" style="flex:1">
+      <button class="tab active" data-level="p1">Primary 1</button>
+      <button class="tab" data-level="p2">Primary 2</button>
+    </div>
+    <select class="sort-select" id="stats-sort">
+      <option value="wrong">Most Wrong</option>
+      <option value="time">Slowest</option>
+      <option value="due">Next Due</option>
+      <option value="lesson">By Lesson</option>
+    </select>
+  </div>
+
+  <div class="stats-count" id="stats-count"></div>
+
+  <div class="stats-table-wrap">
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Char</th>
+          <th>Pinyin</th>
+          <th>English</th>
+          <th>Lesson</th>
+          <th>✓</th>
+          <th>✗</th>
+          <th>Avg Time</th>
+          <th>Next Review</th>
+        </tr>
+      </thead>
+      <tbody id="stats-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="avatar.js"></script>
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// EDITABLE CONFIG
+// ═══════════════════════════════════════════════════════════════
+const SESSION_CONFIG = {
+  p1: { cards: 10, minutes: 6 },
+  p2: { cards: 12, minutes: 8 },
+  // p3: { cards: 15, minutes: 10 },
+};
+const LESSON_GROUPS = [3, 6, 9, 12, 15, 19];
+
+// ═══════════════════════════════════════════════════════════════
+// PINYIN UTILITIES
+// ═══════════════════════════════════════════════════════════════
+const TONED_TO_BASE = {
+  'ā':'a','á':'a','ǎ':'a','à':'a',
+  'ē':'e','é':'e','ě':'e','è':'e',
+  'ī':'i','í':'i','ǐ':'i','ì':'i',
+  'ō':'o','ó':'o','ǒ':'o','ò':'o',
+  'ū':'u','ú':'u','ǔ':'u','ù':'u',
+  'ǖ':'ü','ǘ':'ü','ǚ':'ü','ǜ':'ü',
+};
+const BASE_TO_TONES = {
+  a: ['ā','á','ǎ','à'],
+  e: ['ē','é','ě','è'],
+  i: ['ī','í','ǐ','ì'],
+  o: ['ō','ó','ǒ','ò'],
+  u: ['ū','ú','ǔ','ù'],
+  ü: ['ǖ','ǘ','ǚ','ǜ'],
+};
+// Phonetically similar finals for distractor generation
+const SIMILAR_FINALS = {
+  an:['ang','en','uan'], ang:['an','eng','uang'],
+  en:['an','eng','in'],  eng:['en','ang','ing'],
+  in:['ing','en'],       ing:['in','eng'],
+  un:['ong','en'],       ong:['un','eng'],
+  ian:['iang','an'],     iang:['ian','ang'],
+  uan:['an','uang'],     uang:['uan','ang'],
+  ie:['e','ue'],         ue:['ie','e'],
+  ao:['ou','iao'],       ou:['ao','iou'],
+  iao:['ao','iou'],      iou:['iao','ou'],
+  ai:['ei','uai'],       ei:['ai'],
+  uai:['ai','ui'],       ui:['ei'],
+  i:['ü','u'],           u:['ü','i'],
+  ü:['u','i'],
+};
+const INITIALS = ['zh','ch','sh','b','p','m','f','d','t','n','l','g','k','h','j','q','x','r','z','c','s','y','w'];
+
+function stripTones(p) {
+  return [...(p||'')].map(c => TONED_TO_BASE[c] || c).join('');
+}
+
+function getToneVariants(pinyin) {
+  // Find first toned character and generate the other 3 tones
+  for (let i = 0; i < pinyin.length; i++) {
+    const base = TONED_TO_BASE[pinyin[i]];
+    if (base) {
+      return BASE_TO_TONES[base]
+        .map(tc => pinyin.slice(0, i) + tc + pinyin.slice(i + 1))
+        .filter(v => v !== pinyin);
+    }
+  }
+  // Neutral-tone word — add tones to first vowel found
+  for (const v of ['a','e','o','i','u','ü']) {
+    const idx = pinyin.indexOf(v);
+    if (idx >= 0 && BASE_TO_TONES[v]) {
+      return BASE_TO_TONES[v].map(tc => pinyin.slice(0, idx) + tc + pinyin.slice(idx + 1));
+    }
+  }
+  return [];
+}
+
+function extractFinal(pinyinBase) {
+  for (const init of INITIALS) {
+    if (pinyinBase.startsWith(init)) return pinyinBase.slice(init.length);
+  }
+  return pinyinBase;
+}
+
+function getSimilarFromPool(pinyin, pool, exclude) {
+  const base = stripTones(pinyin);
+  const final = extractFinal(base);
+  const similar = SIMILAR_FINALS[final] || [];
+  return pool
+    .map(w => w.pinyin)
+    .filter(p => {
+      if (exclude.has(p)) return false;
+      const pFinal = extractFinal(stripTones(p));
+      return similar.includes(pFinal);
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+const DATA = { p1: null, p2: null };
+
+const dataPromise = Promise.all([
+  fetch('chinese-p1.json').then(r => r.json()).catch(() => null),
+  fetch('chinese-p2.json').then(r => r.json()).catch(() => null),
+]).then(([p1, p2]) => { DATA.p1 = p1; DATA.p2 = p2; });
+
+function getWordPool(level, lessonMax) {
+  const data = DATA[level];
+  if (!data) return [];
+  const seen = new Set();
+  const words = [];
+  for (let i = 1; i <= lessonMax; i++) {
+    const lessonKey = `${level}-${i}`;
+    (data[lessonKey] || []).forEach(entry => {
+      const key = `${lessonKey}-${entry.character}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        words.push({ key, lessonKey, lessonNum: i, level, ...entry });
+      }
+    });
+  }
+  return words;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PROGRESS (Spaced Repetition Storage)
+// ═══════════════════════════════════════════════════════════════
+function progressKey(avatarId) { return `chinese-progress-${avatarId}`; }
+
+function loadProgress(avatarId) {
+  try { return JSON.parse(localStorage.getItem(progressKey(avatarId)) || '{}'); }
+  catch { return {}; }
+}
+
+function saveProgress(avatarId, progress) {
+  try { localStorage.setItem(progressKey(avatarId), JSON.stringify(progress)); }
+  catch {}
+}
+
+function freshRecord() {
+  return { correct: 0, wrong: 0, totalTimeMs: 0, attempts: 0, interval: 1, easeFactor: 2.5, dueDate: todayStr(), lastTested: null };
+}
+
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+
+function updateRecord(rec, correct, timeMs) {
+  rec = { ...rec };
+  rec.attempts++;
+  rec.lastTested = todayStr();
+  rec.totalTimeMs += timeMs;
+  if (correct) {
+    rec.correct++;
+    const s = timeMs / 1000;
+    if (s < 5)       { rec.interval = Math.round(rec.interval * rec.easeFactor); }
+    else if (s < 10) { rec.interval = Math.round(rec.interval * 2.0); rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.05); }
+    else             { rec.interval = Math.round(rec.interval * 1.3); rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.10); }
+    rec.interval = Math.max(1, rec.interval);
+  } else {
+    rec.wrong++;
+    rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.15);
+    rec.interval = 1;
+  }
+  const due = new Date();
+  due.setDate(due.getDate() + rec.interval);
+  rec.dueDate = due.toISOString().slice(0, 10);
+  return rec;
+}
+
+function buildQueue(pool, progress, targetCards) {
+  const today = todayStr();
+  const isDue  = k => { const r = progress[k]; return r && r.attempts > 0 && (!r.dueDate || r.dueDate <= today); };
+  const isNew  = k => !progress[k] || progress[k].attempts === 0;
+  const isWeak = k => { const r = progress[k]; return r && r.attempts > 0 && !isDue(k); };
+
+  const due  = pool.filter(w => isDue(w.key)).sort((a, b) => (progress[a.key].dueDate||'') < (progress[b.key].dueDate||'') ? -1 : 1);
+  const nw   = pool.filter(w => isNew(w.key));
+  const weak = pool.filter(w => isWeak(w.key)).sort((a, b) => (progress[b.key]?.wrong||0) - (progress[a.key]?.wrong||0));
+
+  const q = [...due];
+  for (const w of nw)   { if (q.length >= targetCards) break; q.push(w); }
+  for (const w of weak) { if (q.length >= targetCards) break; q.push(w); }
+  return q.slice(0, targetCards);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CARD GENERATORS
+// ═══════════════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickChars(pool, excludeChars, count) {
+  const seen = new Set(excludeChars);
+  const candidates = shuffle(pool.filter(w => !seen.has(w.character)));
+  const result = [];
+  for (const w of candidates) {
+    if (result.length >= count) break;
+    if (!seen.has(w.character)) { result.push(w.character); seen.add(w.character); }
+  }
+  return result;
+}
+
+function makePinyinChinese(word, pool) {
+  const targetBase = stripTones(word.pinyin);
+  // Wrong options: characters whose base pinyin differs from the target
+  const filtered = pool.filter(w => stripTones(w.pinyin) !== targetBase && w.character !== word.character);
+  let distractors = pickChars(filtered, [word.character], 3);
+  // Fallback: any different character
+  if (distractors.length < 3) {
+    const extra = pickChars(pool, [word.character, ...distractors], 3 - distractors.length);
+    distractors.push(...extra);
+  }
+  return { type: 'pinyin-chinese', prompt: word.pinyin, answer: word.character, options: shuffle([word.character, ...distractors.slice(0,3)]), word };
+}
+
+function makeChinesePinyin(word, pool) {
+  const correct = word.pinyin;
+  const exclude = new Set([correct]);
+  const distractors = [];
+
+  // Step 1: same-base different tones
+  for (const v of getToneVariants(correct)) {
+    if (distractors.length >= 3) break;
+    if (!exclude.has(v)) { distractors.push(v); exclude.add(v); }
+  }
+  // Step 2: similar-sounding from pool
+  if (distractors.length < 3) {
+    for (const v of shuffle(getSimilarFromPool(correct, pool, exclude))) {
+      if (distractors.length >= 3) break;
+      if (!exclude.has(v)) { distractors.push(v); exclude.add(v); }
+    }
+  }
+  // Step 3: random pinyin from pool
+  if (distractors.length < 3) {
+    for (const v of shuffle([...new Set(pool.map(w => w.pinyin))].filter(p => !exclude.has(p)))) {
+      if (distractors.length >= 3) break;
+      distractors.push(v); exclude.add(v);
+    }
+  }
+
+  return { type: 'chinese-pinyin', prompt: word.character, answer: correct, options: shuffle([correct, ...distractors.slice(0,3)]), word };
+}
+
+function makeEnglishChinese(word, pool) {
+  const distractors = pickChars(pool, [word.character], 3);
+  return { type: 'english-chinese', prompt: word.english, answer: word.character, options: shuffle([word.character, ...distractors.slice(0,3)]), word };
+}
+
+function makeWordFill(word, pool) {
+  if (!word.words || word.words.length === 0) return null;
+
+  // Pick a random phrase from words array (e.g., "衣服 (clothes)")
+  const phraseStr = word.words[Math.floor(Math.random() * word.words.length)];
+  // Extract just the Chinese characters before the space/paren
+  const phraseMatch = phraseStr.match(/^([^\s(]+)/);
+  const phrase = phraseMatch ? phraseMatch[1] : phraseStr;
+
+  if (phrase.length === 0 || !phrase.includes(word.character)) return null;
+
+  // Find the position of the main character to blank out
+  const blankPos = phrase.indexOf(word.character);
+  const prompt = phrase.slice(0, blankPos) + '_' + phrase.slice(blankPos + 1);
+
+  // Generate 3 distractors
+  const distractors = pickChars(pool, [word.character], 3);
+
+  return {
+    type: 'word-fill',
+    prompt,
+    answer: word.character,
+    options: shuffle([word.character, ...distractors.slice(0,3)]),
+    word,
+    phrase,
+    english: word.english
+  };
+}
+
+function makeCard(word, pool, mode) {
+  if (mode === 'mix') mode = ['pinyin-chinese','chinese-pinyin','english-chinese','word-fill'][Math.floor(Math.random()*4)];
+  if (mode === 'pinyin-chinese') return makePinyinChinese(word, pool);
+  if (mode === 'chinese-pinyin') return makeChinesePinyin(word, pool);
+  if (mode === 'word-fill') return makeWordFill(word, pool);
+  return makeEnglishChinese(word, pool);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// APP STATE
+// ═══════════════════════════════════════════════════════════════
+const S = {
+  level: 'p1',
+  lessonMax: 3,
+  mode: 'pinyin-chinese',
+  cards: [],
+  cardIndex: 0,
+  results: [],
+  sessionStart: 0,
+  cardStart: 0,
+  timerInterval: null,
+  timeLimitReached: false,
+  timeLimitMs: 0,
+  avatarId: null,
+  progress: {},
+  wordPool: [],
+  statsAvatarId: null,
+  statsLevel: 'p1',
+  statsPrev: 'setup',   // which screen to go back to
+};
+
+// ═══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg, ms = 2500) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), ms);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SETUP SCREEN
+// ═══════════════════════════════════════════════════════════════
+function initSetup() {
+  const avatar = window.__avatarGetActive ? window.__avatarGetActive() : null;
+  const chip = document.getElementById('setup-avatar-chip');
+  const warn = document.getElementById('setup-no-avatar');
+  const startBtn = document.getElementById('setup-start');
+
+  if (avatar) {
+    S.avatarId = avatar.id;
+    S.progress = loadProgress(avatar.id);
+    chip.style.display = 'flex';
+    warn.style.display = 'none';
+    document.getElementById('setup-avatar-svg').innerHTML = window.__avatarRender ? window.__avatarRender(avatar, '40') : '👤';
+    document.getElementById('setup-avatar-name').textContent = avatar.nickname;
+    startBtn.disabled = false;
+  } else {
+    chip.style.display = 'none';
+    warn.style.display = 'block';
+    startBtn.disabled = true;
+    S.avatarId = null;
+  }
+  showScreen('screen-setup');
+}
+
+// Tab helpers
+function bindTabs(containerId, onSelect) {
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      onSelect(tab);
+    });
+  });
+}
+
+bindTabs('setup-level-tabs',  tab => { S.level = tab.dataset.level; });
+bindTabs('setup-lesson-tabs', tab => { S.lessonMax = Number(tab.dataset.max); });
+bindTabs('setup-mode-tabs',   tab => { S.mode = tab.dataset.mode; });
+
+document.getElementById('setup-stats-btn').addEventListener('click', () => {
+  S.statsPrev = 'setup';
+  openStats();
+});
+
+document.getElementById('setup-start').addEventListener('click', startSession);
+
+// ═══════════════════════════════════════════════════════════════
+// START SESSION
+// ═══════════════════════════════════════════════════════════════
+async function startSession() {
+  await dataPromise;
+  if (!DATA[S.level]) { showToast('Failed to load word data'); return; }
+
+  S.wordPool = getWordPool(S.level, S.lessonMax);
+  if (S.wordPool.length === 0) { showToast('No words found'); return; }
+
+  const cfg = SESSION_CONFIG[S.level];
+  S.timeLimitMs = cfg.minutes * 60 * 1000;
+  const targetCards = cfg.cards;
+
+  S.progress = loadProgress(S.avatarId);
+  const queue = buildQueue(S.wordPool, S.progress, targetCards);
+  if (queue.length === 0) { showToast('No words to review'); return; }
+
+  S.cards = queue.map(w => makeCard(w, S.wordPool, S.mode)).filter(c => c !== null);
+  if (S.cards.length === 0) { showToast('No valid cards for this mode'); return; }
+  S.cardIndex = 0;
+  S.results = [];
+  S.timeLimitReached = false;
+  S.sessionStart = Date.now();
+
+  showScreen('screen-game');
+  startTimer();
+  renderCard();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SESSION TIMER
+// ═══════════════════════════════════════════════════════════════
+function startTimer() {
+  clearInterval(S.timerInterval);
+  S.timerInterval = setInterval(() => {
+    const elapsed = Date.now() - S.sessionStart;
+    const remaining = Math.max(0, S.timeLimitMs - elapsed);
+    const mins = Math.floor(remaining / 60000);
+    const el = document.getElementById('hud-timer');
+    if (remaining <= 0)  el.textContent = '0 min';
+    else if (mins < 1)   el.textContent = '< 1 min';
+    else                 el.textContent = `${mins} min`;
+    el.className = 'hud-val';
+    if (remaining / S.timeLimitMs < 0.15) el.classList.add('danger');
+    else if (remaining / S.timeLimitMs < 0.35) el.classList.add('warn');
+    if (remaining <= 0 && !S.timeLimitReached) {
+      S.timeLimitReached = true;
+      showToast("Time's up — finish this card", 3000);
+    }
+  }, 500);
+}
+
+function stopTimer() { clearInterval(S.timerInterval); }
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER CARD
+// ═══════════════════════════════════════════════════════════════
+function renderCard() {
+  const card = S.cards[S.cardIndex];
+  const total = S.cards.length;
+
+  document.getElementById('hud-card').textContent = `${S.cardIndex + 1}/${total}`;
+  document.getElementById('progress-fill').style.width = `${(S.cardIndex / total) * 100}%`;
+  document.getElementById('hud-correct').textContent = S.results.filter(r => r.correct).length;
+  document.getElementById('hud-wrong').textContent   = S.results.filter(r => !r.correct).length;
+
+  const typeLabel = document.getElementById('question-type-label');
+  const qText     = document.getElementById('question-text');
+
+  if (card.type === 'pinyin-chinese') {
+    typeLabel.textContent = 'Which character matches this sound?';
+    qText.textContent = card.prompt;
+    qText.className = 'question-text is-pinyin';
+  } else if (card.type === 'chinese-pinyin') {
+    typeLabel.textContent = 'Which pinyin is correct?';
+    qText.textContent = card.prompt;
+    qText.className = 'question-text';
+  } else if (card.type === 'word-fill') {
+    typeLabel.textContent = 'Fill in the blank';
+    qText.innerHTML = `<div>${card.prompt}</div><div style="font-size:0.5em;color:var(--muted);margin-top:8px;font-weight:500">${esc(card.english)}</div>`;
+    qText.className = 'question-text';
+  } else {
+    typeLabel.textContent = 'Which character means this?';
+    qText.textContent = card.prompt;
+    qText.className = 'question-text is-english';
+  }
+
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  const isPinyinOpt = card.type === 'chinese-pinyin';
+
+  card.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn' + (isPinyinOpt ? ' is-pinyin-opt' : '');
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleAnswer(opt, card));
+    grid.appendChild(btn);
+  });
+
+  S.cardStart = Date.now();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HANDLE ANSWER
+// ═══════════════════════════════════════════════════════════════
+function handleAnswer(chosen, card) {
+  const timeMs = Date.now() - S.cardStart;
+  const correct = chosen === card.answer;
+
+  // Flash feedback on buttons
+  document.querySelectorAll('#options-grid .opt-btn').forEach(btn => {
+    if (btn.textContent === card.answer) btn.classList.add(correct ? 'flash-correct' : 'flash-reveal');
+    else if (btn.textContent === chosen && !correct) btn.classList.add('flash-wrong');
+    btn.disabled = true;
+  });
+
+  // Update SR record
+  let rec = S.progress[card.word.key] || freshRecord();
+  rec = updateRecord(rec, correct, timeMs);
+  S.progress[card.word.key] = rec;
+  saveProgress(S.avatarId, S.progress);
+
+  S.results.push({ word: card.word, correct, timeMs, type: card.type });
+
+  setTimeout(() => {
+    S.cardIndex++;
+    const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
+    if (done) { stopTimer(); showSummary(); }
+    else renderCard();
+  }, 800);
+}
+
+// Game → end session manually
+document.getElementById('game-end-btn').addEventListener('click', () => {
+  stopTimer();
+  showSummary();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// SUMMARY SCREEN
+// ═══════════════════════════════════════════════════════════════
+function showSummary() {
+  const elapsed = Date.now() - S.sessionStart;
+  const correct = S.results.filter(r => r.correct).length;
+  const wrong   = S.results.length - correct;
+
+  document.getElementById('summary-correct').textContent = correct;
+  document.getElementById('summary-wrong').textContent   = wrong;
+  const m = Math.floor(elapsed / 60000), sec = Math.floor((elapsed % 60000) / 1000);
+  document.getElementById('summary-time').textContent = `${m}:${String(sec).padStart(2,'0')}`;
+
+  const list = document.getElementById('summary-result-list');
+  list.innerHTML = '';
+  S.results.forEach(r => {
+    const item = document.createElement('div');
+    item.className = `result-item ${r.correct ? 'ok' : 'err'}`;
+    item.innerHTML = `
+      <div class="result-char">${r.word.character}</div>
+      <div class="result-info">
+        <div class="result-pinyin">${r.word.pinyin}</div>
+        <div class="result-english">${esc(r.word.english)}</div>
+      </div>
+      <div class="result-time">${(r.timeMs/1000).toFixed(1)}s ${r.correct ? '✓' : '✗'}</div>`;
+    list.appendChild(item);
+  });
+
+  // Save best accuracy to avatar scores
+  if (S.results.length && window.__avatarSave) {
+    const pct = Math.round((correct / S.results.length) * 100);
+    window.__avatarSave(`chinese-${S.level}-accuracy`, pct, false);
+  }
+
+  showScreen('screen-summary');
+}
+
+document.getElementById('summary-again-btn').addEventListener('click', startSession);
+document.getElementById('summary-setup-btn').addEventListener('click', initSetup);
+document.getElementById('summary-stats-btn').addEventListener('click', () => { S.statsPrev = 'summary'; openStats(); });
+
+// ═══════════════════════════════════════════════════════════════
+// STATS SCREEN
+// ═══════════════════════════════════════════════════════════════
+function openStats() {
+  S.statsAvatarId = S.avatarId;
+  S.statsLevel    = S.level;
+  renderAvatarChips();
+  renderStatsTable();
+  showScreen('screen-stats');
+}
+
+function renderAvatarChips() {
+  const avatars = window.__avatarLoadAvatars ? window.__avatarLoadAvatars() : [];
+  const container = document.getElementById('stats-av-chips');
+  container.innerHTML = '';
+  if (avatars.length === 0) {
+    container.innerHTML = '<span style="color:var(--muted);font-size:0.85rem">No avatars yet</span>';
+    return;
+  }
+  avatars.forEach(av => {
+    const chip = document.createElement('div');
+    chip.className = `av-chip ${av.id === S.statsAvatarId ? 'active' : ''}`;
+    chip.innerHTML = `<div style="flex-shrink:0">${window.__avatarRender ? window.__avatarRender(av, '28') : '👤'}</div>${esc(av.nickname)}`;
+    chip.addEventListener('click', () => { S.statsAvatarId = av.id; renderAvatarChips(); renderStatsTable(); });
+    container.appendChild(chip);
+  });
+}
+
+function renderStatsTable() {
+  const progress = S.statsAvatarId ? loadProgress(S.statsAvatarId) : {};
+  const pool = getWordPool(S.statsLevel, 19);
+
+  let rows = pool
+    .map(w => ({ ...w, rec: progress[w.key] }))
+    .filter(w => w.rec && w.rec.attempts > 0);
+
+  const sort = document.getElementById('stats-sort').value;
+  if (sort === 'wrong')  rows.sort((a,b) => (b.rec.wrong||0) - (a.rec.wrong||0));
+  else if (sort === 'time')   rows.sort((a,b) => avgTime(b.rec) - avgTime(a.rec));
+  else if (sort === 'due')    rows.sort((a,b) => (a.rec.dueDate||'') < (b.rec.dueDate||'') ? -1 : 1);
+  else if (sort === 'lesson') rows.sort((a,b) => a.lessonNum - b.lessonNum);
+
+  document.getElementById('stats-count').textContent = rows.length
+    ? `${rows.length} word${rows.length !== 1 ? 's' : ''} practiced`
+    : '';
+
+  const tbody = document.getElementById('stats-tbody');
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" class="stats-empty">No practice data yet for this level.<br>Complete a session to see your progress here.</td></tr>`;
+    return;
+  }
+
+  const today = todayStr();
+  tbody.innerHTML = rows.map(w => {
+    const r = w.rec;
+    const avg = r.attempts ? (r.totalTimeMs / r.attempts / 1000).toFixed(1) + 's' : '—';
+    const wrongCls = r.wrong > 0 ? 'err' : 'ok';
+    const correctCls = r.correct > 0 ? 'ok' : '';
+    const dueCls = r.dueDate && r.dueDate <= today ? 'warn' : '';
+    return `<tr>
+      <td class="td-char">${w.character}</td>
+      <td class="td-pinyin">${w.pinyin}</td>
+      <td>${esc(w.english)}</td>
+      <td class="td-lesson">L${w.lessonNum}</td>
+      <td class="${correctCls}">${r.correct}</td>
+      <td class="${wrongCls}">${r.wrong}</td>
+      <td>${avg}</td>
+      <td class="${dueCls}">${r.dueDate || '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function avgTime(rec) { return rec.attempts ? rec.totalTimeMs / rec.attempts : 0; }
+
+// Stats level tabs
+bindTabs('stats-level-tabs', tab => { S.statsLevel = tab.dataset.level; renderStatsTable(); });
+
+document.getElementById('stats-sort').addEventListener('change', renderStatsTable);
+
+document.getElementById('stats-back-btn').addEventListener('click', () => {
+  if (S.statsPrev === 'summary') showScreen('screen-summary');
+  else initSetup();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════════
+function esc(s) {
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSetup);
+} else {
+  initSetup();
+}
+</script>
+</body>
+</html>
