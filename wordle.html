@@ -823,7 +823,9 @@ async function isValidWord(word) {
 }
 
 // ── Submit ────────────────────────────────────────────────────────────────────
+let submitting = false;
 async function submitGuess() {
+  if (submitting) return;
   const guess = state.currentInput;
   if (guess.length < state.wordLen) {
     shakeRow(state.currentRow);
@@ -831,8 +833,10 @@ async function submitGuess() {
     return;
   }
 
+  submitting = true;
   const isValid = await isValidWord(guess);
   if (!isValid) {
+    submitting = false;
     shakeRow(state.currentRow);
     showToast('Not in word list');
     return;
@@ -843,6 +847,7 @@ async function submitGuess() {
   state.feedbacks.push(fb);
 
   revealRow(state.currentRow, guess, fb, () => {
+    submitting = false;
     // Update key states
     for (let i = 0; i < guess.length; i++) {
       const ch = guess[i];
