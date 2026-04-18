@@ -1,0 +1,3317 @@
+{
+  "p1-1": [
+    {
+      "character": "衣",
+      "english": "clothing, garment",
+      "pinyin": "yī",
+      "same-sounding-character": ["一 (one)", "医 (doctor)", "仪 (ceremony)"],
+      "words": ["衣服 (clothes)", "衣柜 (wardrobe)", "衣架 (clothes rack)"],
+      "definition-english": "Clothing worn on the body; garment or dress",
+      "definition-chinese": "穿在身体上面的东西"
+    },
+    {
+      "character": "鱼",
+      "english": "fish",
+      "pinyin": "yú",
+      "same-sounding-character": ["余 (remaining)", "愉 (happy)", "俞 (surname)"],
+      "words": ["金鱼 (goldfish)", "鱼肉 (fish meat)", "钓鱼 (fishing)"],
+      "definition-english": "An aquatic vertebrate animal with gills, fins, and scales",
+      "definition-chinese": "生活在水里的脊椎动物，有鳍、鳃和鳞片"
+    },
+    {
+      "character": "雨",
+      "english": "rain",
+      "pinyin": "yǔ",
+      "same-sounding-character": ["语 (language)", "羽 (feather)", "玉 (jade)"],
+      "words": ["下雨 (raining)", "雨衣 (raincoat)", "雨伞 (umbrella)"],
+      "definition-english": "Water falling from clouds in drops",
+      "definition-chinese": "从云里降落下来的水"
+    },
+    {
+      "character": "一",
+      "english": "one",
+      "pinyin": "yī",
+      "same-sounding-character": ["衣 (clothing)", "医 (doctor)", "仪 (ceremony)"],
+      "words": ["一个 (one)", "第一 (first)", "一起 (together)"],
+      "definition-english": "The number 1; first",
+      "definition-chinese": "数字1；第一个"
+    },
+    {
+      "character": "二",
+      "english": "two",
+      "pinyin": "èr",
+      "same-sounding-character": ["儿 (child)", "耳 (ear)", "贰 (two/formal)"],
+      "words": ["第二 (second)", "二十 (twenty)", "二月 (February)"],
+      "definition-english": "The number 2; second",
+      "definition-chinese": "数字2；第二个"
+    },
+    {
+      "character": "五",
+      "english": "five",
+      "pinyin": "wǔ",
+      "same-sounding-character": ["午 (noon)", "武 (martial)", "舞 (dance)"],
+      "words": ["第五 (fifth)", "五十 (fifty)", "五月 (May)"],
+      "definition-english": "The number 5",
+      "definition-chinese": "数字5"
+    },
+    {
+      "character": "耳",
+      "english": "ear",
+      "pinyin": "ěr",
+      "same-sounding-character": ["儿 (child)", "二 (two)", "贰 (two/formal)"],
+      "words": ["耳朵 (ear)", "耳环 (earring)", "耳语 (whisper)"],
+      "definition-english": "The organ for hearing; ear",
+      "definition-chinese": "听觉器官"
+    },
+    {
+      "character": "牙",
+      "english": "tooth",
+      "pinyin": "yá",
+      "same-sounding-character": ["雅 (elegant)", "鸦 (crow)", "蛙 (frog)"],
+      "words": ["牙齿 (teeth)", "牙刷 (toothbrush)", "牙医 (dentist)"],
+      "definition-english": "One of the hard white structures in the mouth used for chewing",
+      "definition-chinese": "口腔内用来咀嚼食物的硬白色结构"
+    },
+    {
+      "character": "口",
+      "english": "mouth",
+      "pinyin": "kǒu",
+      "same-sounding-character": ["扣 (button)", "寇 (bandit)", "蔻 (bud)"],
+      "words": ["口语 (spoken language)", "人口 (population)", "口腔 (oral cavity)"],
+      "definition-english": "The opening in the face through which food enters and sounds come out",
+      "definition-chinese": "脸上进食和发声的开口"
+    },
+    {
+      "character": "人",
+      "english": "person, people",
+      "pinyin": "rén",
+      "same-sounding-character": ["仁 (benevolence)", "认 (recognize)", "任 (task)"],
+      "words": ["人类 (humanity)", "人口 (population)", "人物 (character)"],
+      "definition-english": "A human being; people",
+      "definition-chinese": "人类；人"
+    }
+  ],
+  "p1-2": [
+    {
+      "character": "木",
+      "english": "wood, tree",
+      "pinyin": "mù",
+      "same-sounding-character": ["目 (eye)", "牧 (graze)", "募 (recruit)"],
+      "words": ["木头 (timber)", "树木 (trees)", "木板 (wooden board)"],
+      "definition-english": "The hard fibrous substance of a tree; wood",
+      "definition-chinese": "树的坚硬部分；木材"
+    },
+    {
+      "character": "土",
+      "english": "soil, earth, ground",
+      "pinyin": "tǔ",
+      "same-sounding-character": ["兔 (rabbit)", "吐 (spit)", "图 (picture)"],
+      "words": ["土地 (land)", "土壤 (soil)", "泥土 (earth)"],
+      "definition-english": "The loose material that covers the ground; earth; soil",
+      "definition-chinese": "覆盖地面的松散物质"
+    },
+    {
+      "character": "马",
+      "english": "horse",
+      "pinyin": "mǎ",
+      "same-sounding-character": ["妈 (mother)", "麻 (hemp)", "码 (code)"],
+      "words": ["马匹 (horse)", "马车 (carriage)", "骑马 (ride a horse)"],
+      "definition-english": "A large domesticated animal with hooves and a tail, used for riding",
+      "definition-chinese": "有蹄子和尾巴的大型驯养动物"
+    },
+    {
+      "character": "八",
+      "english": "eight",
+      "pinyin": "bā",
+      "same-sounding-character": ["巴 (cling)", "跋 (trek)", "拔 (pull out)"],
+      "words": ["第八 (eighth)", "八十 (eighty)", "八月 (August)"],
+      "definition-english": "The number 8",
+      "definition-chinese": "数字8"
+    },
+    {
+      "character": "巴",
+      "english": "cling to, hope for",
+      "pinyin": "bā",
+      "same-sounding-character": ["八 (eight)", "跋 (trek)", "拔 (pull out)"],
+      "words": ["巴巴 (eagerly)", "巴西 (Brazil)", "巴掌 (palm)"],
+      "definition-english": "To cling to; to hope for; to yearn",
+      "definition-chinese": "粘着；期望；渴望"
+    },
+    {
+      "character": "你",
+      "english": "you",
+      "pinyin": "nǐ",
+      "same-sounding-character": ["拟 (imitate)", "逆 (reverse)", "溺 (drown)"],
+      "words": ["你好 (hello)", "你们 (you all)", "你的 (your)"],
+      "definition-english": "Second person singular pronoun; you",
+      "definition-chinese": "第二人称代词"
+    },
+    {
+      "character": "我",
+      "english": "I, me",
+      "pinyin": "wǒ",
+      "same-sounding-character": ["握 (grasp)", "我 (I)", "卧 (lie)"],
+      "words": ["我的 (my)", "我们 (we)", "我自己 (myself)"],
+      "definition-english": "First person singular pronoun; I; me",
+      "definition-chinese": "第一人称代词"
+    },
+    {
+      "character": "也",
+      "english": "also, too",
+      "pinyin": "yě",
+      "same-sounding-character": ["野 (wild)", "夜 (night)", "页 (page)"],
+      "words": ["也是 (also is)", "也许 (maybe)", "也没有 (also don't have)"],
+      "definition-english": "Also; too; as well",
+      "definition-chinese": "同样；也"
+    },
+    {
+      "character": "他",
+      "english": "he, him",
+      "pinyin": "tā",
+      "same-sounding-character": ["她 (she)", "它 (it)", "他 (he)"],
+      "words": ["他的 (his)", "他们 (they)", "他人 (other people)"],
+      "definition-english": "Third person masculine singular pronoun; he; him",
+      "definition-chinese": "第三人称男性代词"
+    },
+    {
+      "character": "弟",
+      "english": "younger brother",
+      "pinyin": "dì",
+      "same-sounding-character": ["第 (ordinal)", "递 (hand over)", "敌 (enemy)"],
+      "words": ["弟弟 (younger brother)", "弟妹 (younger siblings)", "堂弟 (cousin)"],
+      "definition-english": "A male younger than oneself; younger brother",
+      "definition-chinese": "年纪比自己小的男性；小弟弟"
+    },
+    {
+      "character": "不",
+      "english": "not, no",
+      "pinyin": "bù",
+      "same-sounding-character": ["布 (cloth)", "卜 (divination)", "怖 (fear)"],
+      "words": ["不是 (is not)", "不好 (not good)", "不能 (cannot)"],
+      "definition-english": "Negation; not; no",
+      "definition-chinese": "否定词；不"
+    },
+    {
+      "character": "爸",
+      "english": "father, dad",
+      "pinyin": "bà",
+      "same-sounding-character": ["把 (handle)", "巴 (cling)", "霸 (dominate)"],
+      "words": ["爸爸 (father)", "爸妈 (parents)", "我爸 (my father)"],
+      "definition-english": "Father; dad; papa",
+      "definition-chinese": "父亲；爸爸"
+    },
+    {
+      "character": "她",
+      "english": "she, her",
+      "pinyin": "tā",
+      "same-sounding-character": ["他 (he)", "它 (it)", "她 (she)"],
+      "words": ["她的 (her)", "她们 (they/females)", "她自己 (herself)"],
+      "definition-english": "Third person feminine singular pronoun; she; her",
+      "definition-chinese": "第三人称女性代词"
+    },
+    {
+      "character": "妈",
+      "english": "mother, mom",
+      "pinyin": "mā",
+      "same-sounding-character": ["马 (horse)", "麻 (hemp)", "妈 (mother)"],
+      "words": ["妈妈 (mother)", "妈的 (damn/expletive)", "我妈 (my mother)"],
+      "definition-english": "Mother; mom; mama",
+      "definition-chinese": "母亲；妈妈"
+    },
+    {
+      "character": "的",
+      "english": "possessive particle",
+      "pinyin": "de",
+      "same-sounding-character": ["得 (get)", "德 (virtue)", "地 (earth)"],
+      "words": ["我的 (my)", "你的 (your)", "他的 (his)"],
+      "definition-english": "Possessive particle indicating ownership or relationship",
+      "definition-chinese": "表示所有或关系的虚词"
+    },
+    {
+      "character": "父",
+      "english": "father",
+      "pinyin": "fù",
+      "same-sounding-character": ["符 (symbol)", "富 (rich)", "腐 (rotten)"],
+      "words": ["父亲 (father)", "父母 (parents)", "父子 (father and son)"],
+      "definition-english": "Father; male parent",
+      "definition-chinese": "男性父亲"
+    },
+    {
+      "character": "母",
+      "english": "mother",
+      "pinyin": "mǔ",
+      "same-sounding-character": ["木 (wood)", "募 (recruit)", "亩 (mu measure)"],
+      "words": ["母亲 (mother)", "父母 (parents)", "母子 (mother and child)"],
+      "definition-english": "Mother; female parent",
+      "definition-chinese": "女性父亲"
+    },
+    {
+      "character": "女",
+      "english": "woman, girl, female",
+      "pinyin": "nǚ",
+      "same-sounding-character": ["奴 (slave)", "努 (exert)", "怒 (anger)"],
+      "words": ["女儿 (daughter)", "女人 (woman)", "女孩 (girl)"],
+      "definition-english": "A female human; woman; girl",
+      "definition-chinese": "女性人类；女人；女孩"
+    },
+    {
+      "character": "儿",
+      "english": "son, child",
+      "pinyin": "ér",
+      "same-sounding-character": ["二 (two)", "耳 (ear)", "贰 (two/formal)"],
+      "words": ["儿子 (son)", "女儿 (daughter)", "儿童 (child)"],
+      "definition-english": "Son; child; boy",
+      "definition-chinese": "儿子；小孩；男孩"
+    }
+  ],
+  "p1-3": [
+    {
+      "character": "力",
+      "english": "power, strength, force",
+      "pinyin": "lì",
+      "same-sounding-character": ["历 (history)", "立 (stand)", "利 (benefit)"],
+      "words": ["力量 (strength)", "努力 (strive)", "有力 (forceful)"],
+      "definition-english": "Power; strength; force; ability",
+      "definition-chinese": "力量；强度；力"
+    },
+    {
+      "character": "河",
+      "english": "river",
+      "pinyin": "hé",
+      "same-sounding-character": ["何 (what)", "和 (and)", "荷 (lotus)"],
+      "words": ["河流 (river)", "河水 (river water)", "黄河 (Yellow River)"],
+      "definition-english": "A large natural stream of water; river",
+      "definition-chinese": "流动的自然水体；河"
+    },
+    {
+      "character": "禾",
+      "english": "grain, crop, rice plant",
+      "pinyin": "hé",
+      "same-sounding-character": ["何 (what)", "和 (and)", "荷 (lotus)"],
+      "words": ["禾苗 (rice seedling)", "禾谷 (grain)", "五谷杂粮 (five grains)"],
+      "definition-english": "Grain; crop; rice plant",
+      "definition-chinese": "谷物；庄稼；水稻"
+    },
+    {
+      "character": "立",
+      "english": "to stand, to set up",
+      "pinyin": "lì",
+      "same-sounding-character": ["力 (strength)", "利 (benefit)", "历 (history)"],
+      "words": ["站立 (stand)", "立刻 (immediately)", "建立 (establish)"],
+      "definition-english": "To stand; to set up; to erect",
+      "definition-chinese": "站起来；建立；竖立"
+    },
+    {
+      "character": "米",
+      "english": "rice, meter",
+      "pinyin": "mǐ",
+      "same-sounding-character": ["迷 (fan)", "蜜 (honey)", "密 (dense)"],
+      "words": ["米粒 (grain of rice)", "米饭 (cooked rice)", "大米 (rice)"],
+      "definition-english": "Rice; a unit of length (meter)",
+      "definition-chinese": "水稻；米；米（长度单位）"
+    },
+    {
+      "character": "合",
+      "english": "to fit, to combine, suitable",
+      "pinyin": "hé",
+      "same-sounding-character": ["和 (and)", "何 (what)", "核 (nucleus)"],
+      "words": ["合适 (suitable)", "结合 (combine)", "合作 (cooperate)"],
+      "definition-english": "To fit together; to combine; suitable",
+      "definition-chinese": "适合；结合；配合"
+    },
+    {
+      "character": "气",
+      "english": "air, breath, spirit",
+      "pinyin": "qì",
+      "same-sounding-character": ["弃 (abandon)", "启 (open)", "器 (tool)"],
+      "words": ["空气 (air)", "气候 (weather)", "生气 (angry)"],
+      "definition-english": "Air; breath; spirit; manner",
+      "definition-chinese": "空气；呼吸；精神"
+    },
+    {
+      "character": "和",
+      "english": "and, with, harmony",
+      "pinyin": "hé",
+      "same-sounding-character": ["何 (what)", "核 (nucleus)", "合 (fit)"],
+      "words": ["和平 (peace)", "和谐 (harmony)", "和气 (amiable)"],
+      "definition-english": "And; with; harmony; peace",
+      "definition-chinese": "和；与；和平"
+    },
+    {
+      "character": "哥",
+      "english": "older brother",
+      "pinyin": "gē",
+      "same-sounding-character": ["歌 (song)", "戈 (halberd)", "格 (grid)"],
+      "words": ["哥哥 (older brother)", "哥们 (brothers/pal)", "表哥 (cousin)"],
+      "definition-english": "Older brother",
+      "definition-chinese": "年纪比自己大的男性；哥哥"
+    },
+    {
+      "character": "几",
+      "english": "how many, several, a few",
+      "pinyin": "jǐ",
+      "same-sounding-character": ["机 (machine)", "急 (hurry)", "己 (self)"],
+      "words": ["几个 (how many)", "几岁 (how old)", "有几分 (somewhat)"],
+      "definition-english": "How many; several; a few",
+      "definition-chinese": "多少；若干；几个"
+    },
+    {
+      "character": "七",
+      "english": "seven",
+      "pinyin": "qī",
+      "same-sounding-character": ["期 (period)", "妻 (wife)", "欺 (deceive)"],
+      "words": ["第七 (seventh)", "七十 (seventy)", "七月 (July)"],
+      "definition-english": "The number 7",
+      "definition-chinese": "数字7"
+    },
+    {
+      "character": "了",
+      "english": "particle indicating completion",
+      "pinyin": "le",
+      "same-sounding-character": ["乐 (happy)", "烙 (brand)", "洛 (fall)"],
+      "words": ["做了 (did)", "完了 (finished)", "好了 (ok)"],
+      "definition-english": "Particle indicating completion of an action",
+      "definition-chinese": "表示动作完成的虚词"
+    },
+    {
+      "character": "个",
+      "english": "measure word for objects",
+      "pinyin": "gè",
+      "same-sounding-character": ["各 (each)", "格 (grid)", "隔 (separate)"],
+      "words": ["一个 (one)", "这个 (this)", "那个 (that)"],
+      "definition-english": "Measure word for individual objects",
+      "definition-chinese": "表示单个物品的量词"
+    },
+    {
+      "character": "句",
+      "english": "sentence, phrase",
+      "pinyin": "jù",
+      "same-sounding-character": ["据 (according)", "巨 (huge)", "具 (tool)"],
+      "words": ["句子 (sentence)", "成句 (form a sentence)", "造句 (make a sentence)"],
+      "definition-english": "A sentence; a phrase; a line",
+      "definition-chinese": "句子；短语；句"
+    },
+    {
+      "character": "可",
+      "english": "can, may, able to",
+      "pinyin": "kě",
+      "same-sounding-character": ["科 (subject)", "克 (overcome)", "客 (guest)"],
+      "words": ["可以 (can)", "可能 (possible)", "可是 (but)"],
+      "definition-english": "Can; may; able to; passable",
+      "definition-chinese": "能够；可能；行"
+    },
+    {
+      "character": "以",
+      "english": "to use, by means of, so as to",
+      "pinyin": "yǐ",
+      "same-sounding-character": ["已 (already)", "倚 (lean)", "易 (change)"],
+      "words": ["可以 (can)", "以为 (think)", "以后 (after)"],
+      "definition-english": "To use; by means of; so as to",
+      "definition-chinese": "用；以；利用"
+    },
+    {
+      "character": "吗",
+      "english": "question particle",
+      "pinyin": "ma",
+      "same-sounding-character": ["妈 (mother)", "马 (horse)", "麻 (hemp)"],
+      "words": ["好吗 (ok?)", "你好吗 (how are you?)", "是吗 (really?)"],
+      "definition-english": "Particle used to form yes-no questions",
+      "definition-chinese": "表示疑问的虚词"
+    },
+    {
+      "character": "去",
+      "english": "to go, to leave",
+      "pinyin": "qù",
+      "same-sounding-character": ["取 (take)", "驱 (drive)", "曲 (song)"],
+      "words": ["去年 (last year)", "去学校 (go to school)", "过去 (past)"],
+      "definition-english": "To go; to go to; to leave",
+      "definition-chinese": "去；前往；离开"
+    }
+  ],
+  "p1-4": [
+    {
+      "character": "日",
+      "english": "day, sun, date",
+      "pinyin": "rì",
+      "same-sounding-character": ["日 (sun)", "若 (if)", "入 (enter)"],
+      "words": ["日期 (date)", "日光 (sunlight)", "生日 (birthday)"],
+      "definition-english": "Day; sun; daily",
+      "definition-chinese": "白天；太阳；日子"
+    },
+    {
+      "character": "石",
+      "english": "stone, rock",
+      "pinyin": "shí",
+      "same-sounding-character": ["时 (time)", "食 (eat)", "识 (recognize)"],
+      "words": ["石头 (stone)", "石块 (rock)", "石墙 (stone wall)"],
+      "definition-english": "Stone; rock; mineral",
+      "definition-chinese": "石头；岩石；矿物"
+    },
+    {
+      "character": "子",
+      "english": "child, son, offspring",
+      "pinyin": "zǐ",
+      "same-sounding-character": ["紫 (purple)", "资 (capital)", "字 (character)"],
+      "words": ["孩子 (child)", "儿子 (son)", "女子 (woman)"],
+      "definition-english": "Child; son; offspring; young person",
+      "definition-chinese": "孩子；儿子；年轻人"
+    },
+    {
+      "character": "字",
+      "english": "character, word, letter",
+      "pinyin": "zì",
+      "same-sounding-character": ["子 (child)", "资 (capital)", "紫 (purple)"],
+      "words": ["字母 (letter)", "字典 (dictionary)", "笔字 (handwriting)"],
+      "definition-english": "A character; a word; a letter",
+      "definition-chinese": "文字；汉字；字"
+    },
+    {
+      "character": "车",
+      "english": "vehicle, car, wheel",
+      "pinyin": "chē",
+      "same-sounding-character": ["吃 (eat)", "赤 (red)", "尺 (ruler)"],
+      "words": ["汽车 (car)", "火车 (train)", "车轮 (wheel)"],
+      "definition-english": "Vehicle; car; wheel",
+      "definition-chinese": "车；汽车；车轮"
+    },
+    {
+      "character": "四",
+      "english": "four",
+      "pinyin": "sì",
+      "same-sounding-character": ["似 (seem)", "寺 (temple)", "饲 (feed)"],
+      "words": ["第四 (fourth)", "四十 (forty)", "四月 (April)"],
+      "definition-english": "The number 4",
+      "definition-chinese": "数字4"
+    },
+    {
+      "character": "十",
+      "english": "ten",
+      "pinyin": "shí",
+      "same-sounding-character": ["石 (stone)", "时 (time)", "食 (eat)"],
+      "words": ["十个 (ten)", "十岁 (ten years old)", "十月 (October)"],
+      "definition-english": "The number 10; ten",
+      "definition-chinese": "数字10"
+    },
+    {
+      "character": "士",
+      "english": "scholar, gentleman, soldier",
+      "pinyin": "shì",
+      "same-sounding-character": ["世 (world)", "试 (test)", "事 (matter)"],
+      "words": ["士兵 (soldier)", "博士 (doctor)", "士气 (morale)"],
+      "definition-english": "Scholar; gentleman; soldier",
+      "definition-chinese": "学者；绅士；士兵"
+    },
+    {
+      "character": "只",
+      "english": "only, merely, a measure word",
+      "pinyin": "zhǐ",
+      "same-sounding-character": ["支 (branch)", "知 (know)", "止 (stop)"],
+      "words": ["只有 (only)", "只是 (only)", "一只 (one)"],
+      "definition-english": "Only; merely; a measure word for animals",
+      "definition-chinese": "只有；仅仅；量词"
+    },
+    {
+      "character": "把",
+      "english": "to hold, handle, measure word",
+      "pinyin": "bǎ",
+      "same-sounding-character": ["爸 (father)", "巴 (cling)", "霸 (dominate)"],
+      "words": ["把手 (handle)", "一把 (one)", "把握 (grasp)"],
+      "definition-english": "To hold; handle; grasp; measure word",
+      "definition-chinese": "握；把手；量词"
+    },
+    {
+      "character": "尺",
+      "english": "ruler, foot (measure)",
+      "pinyin": "chǐ",
+      "same-sounding-character": ["赤 (red)", "吃 (eat)", "翅 (wing)"],
+      "words": ["直尺 (ruler)", "尺度 (scale)", "尺寸 (size)"],
+      "definition-english": "Ruler; foot (measurement); scale",
+      "definition-chinese": "尺子；脚（长度单位）；尺度"
+    },
+    {
+      "character": "是",
+      "english": "to be, is",
+      "pinyin": "shì",
+      "same-sounding-character": ["世 (world)", "试 (test)", "事 (matter)"],
+      "words": ["是的 (yes)", "不是 (is not)", "是否 (whether)"],
+      "definition-english": "To be; is; am; are",
+      "definition-chinese": "是；存在；等于"
+    },
+    {
+      "character": "书",
+      "english": "book",
+      "pinyin": "shū",
+      "same-sounding-character": ["书 (book)", "舒 (comfortable)", "竖 (vertical)"],
+      "words": ["书籍 (books)", "书包 (schoolbag)", "字书 (dictionary)"],
+      "definition-english": "A book; books; writings",
+      "definition-chinese": "书；书籍；文献"
+    },
+    {
+      "character": "出",
+      "english": "to come out, to go out, to exit",
+      "pinyin": "chū",
+      "same-sounding-character": ["初 (first)", "出 (go out)", "处 (place)"],
+      "words": ["出去 (go out)", "出来 (come out)", "出发 (depart)"],
+      "definition-english": "To come out; to go out; to exit",
+      "definition-chinese": "出来；出去；离开"
+    },
+    {
+      "character": "自",
+      "english": "self, from, since",
+      "pinyin": "zì",
+      "same-sounding-character": ["次 (second)", "资 (capital)", "字 (character)"],
+      "words": ["自己 (self)", "自来 (naturally)", "自动 (automatic)"],
+      "definition-english": "Self; from; since; oneself",
+      "definition-chinese": "自己；从；由于"
+    },
+    {
+      "character": "己",
+      "english": "self, oneself",
+      "pinyin": "jǐ",
+      "same-sounding-character": ["机 (machine)", "急 (hurry)", "几 (how many)"],
+      "words": ["自己 (self)", "己身 (oneself)", "各自 (each one's own)"],
+      "definition-english": "Self; oneself; one's own",
+      "definition-chinese": "自己；本身；个人"
+    },
+    {
+      "character": "它",
+      "english": "it",
+      "pinyin": "tā",
+      "same-sounding-character": ["他 (he)", "她 (she)", "它 (it)"],
+      "words": ["它是 (it is)", "它们 (they/things)", "除了它 (except it)"],
+      "definition-english": "It; that (for non-human objects)",
+      "definition-chinese": "它；那个（非人类物体）"
+    },
+    {
+      "character": "吃",
+      "english": "to eat",
+      "pinyin": "chī",
+      "same-sounding-character": ["赤 (red)", "尺 (ruler)", "吃 (eat)"],
+      "words": ["吃饭 (eat a meal)", "吃东西 (eat something)", "早吃 (eat early)"],
+      "definition-english": "To eat; to consume food",
+      "definition-chinese": "吃；进食"
+    }
+  ],
+  "p1-5": [
+    {
+      "character": "山",
+      "english": "mountain, hill",
+      "pinyin": "shān",
+      "same-sounding-character": ["闪 (flash)", "伤 (hurt)", "商 (merchant)"],
+      "words": ["山脉 (mountain range)", "爬山 (climb mountain)", "山区 (mountainous area)"],
+      "definition-english": "Mountain; hill; peak",
+      "definition-chinese": "山；大山；山岭"
+    },
+    {
+      "character": "羊",
+      "english": "sheep, goat",
+      "pinyin": "yáng",
+      "same-sounding-character": ["阳 (sun)", "洋 (ocean)", "杨 (yang/surname)"],
+      "words": ["羊羔 (lamb)", "绵羊 (sheep)", "山羊 (goat)"],
+      "definition-english": "Sheep; goat",
+      "definition-chinese": "羊；绵羊；山羊"
+    },
+    {
+      "character": "毛",
+      "english": "hair, feather, fur",
+      "pinyin": "máo",
+      "same-sounding-character": ["茅 (thatch)", "矛 (spear)", "貌 (appearance)"],
+      "words": ["头发 (hair)", "羽毛 (feather)", "毛皮 (fur)"],
+      "definition-english": "Hair; feather; fur; fine hair",
+      "definition-chinese": "毛发；羽毛；毛皮"
+    },
+    {
+      "character": "草",
+      "english": "grass, plant",
+      "pinyin": "cǎo",
+      "same-sounding-character": ["操 (operate)", "糙 (rough)", "曹 (surname)"],
+      "words": ["草地 (grassland)", "花草 (flowers and plants)", "草药 (herbal medicine)"],
+      "definition-english": "Grass; plant; herb",
+      "definition-chinese": "草；植物；野草"
+    },
+    {
+      "character": "太",
+      "english": "too much, very, too",
+      "pinyin": "tài",
+      "same-sounding-character": ["态 (attitude)", "泰 (peaceful)", "胎 (fetus)"],
+      "words": ["太好了 (too good)", "太多了 (too much)", "太阳 (sun)"],
+      "definition-english": "Too; too much; very",
+      "definition-chinese": "太；过分；非常"
+    },
+    {
+      "character": "阳",
+      "english": "sun, sunshine, male",
+      "pinyin": "yáng",
+      "same-sounding-character": ["羊 (sheep)", "洋 (ocean)", "杨 (yang/surname)"],
+      "words": ["太阳 (sun)", "阳光 (sunlight)", "阳气 (positive energy)"],
+      "definition-english": "Sun; sunshine; male",
+      "definition-chinese": "太阳；阳光；男性"
+    },
+    {
+      "character": "王",
+      "english": "king, royal",
+      "pinyin": "wáng",
+      "same-sounding-character": ["亡 (die)", "望 (hope)", "忘 (forget)"],
+      "words": ["国王 (king)", "王子 (prince)", "王国 (kingdom)"],
+      "definition-english": "King; royal; monarch",
+      "definition-chinese": "国王；王；王者"
+    },
+    {
+      "character": "三",
+      "english": "three",
+      "pinyin": "sān",
+      "same-sounding-character": ["伞 (umbrella)", "散 (scatter)", "三 (three)"],
+      "words": ["第三 (third)", "三十 (thirty)", "三月 (March)"],
+      "definition-english": "The number 3; three",
+      "definition-chinese": "数字3"
+    },
+    {
+      "character": "伞",
+      "english": "umbrella",
+      "pinyin": "sǎn",
+      "same-sounding-character": ["散 (scatter)", "三 (three)", "杀 (kill)"],
+      "words": ["雨伞 (umbrella)", "打伞 (hold umbrella)", "折伞 (fold umbrella)"],
+      "definition-english": "Umbrella; parasol",
+      "definition-chinese": "伞；遮阳伞；雨伞"
+    },
+    {
+      "character": "包",
+      "english": "package, wrap, bag",
+      "pinyin": "bāo",
+      "same-sounding-character": ["苞 (bud)", "饱 (full)", "保 (protect)"],
+      "words": ["书包 (schoolbag)", "背包 (backpack)", "包装 (packaging)"],
+      "definition-english": "Package; wrap; bag; parcel",
+      "definition-chinese": "包；包裹；包装"
+    },
+    {
+      "character": "老",
+      "english": "old, aged",
+      "pinyin": "lǎo",
+      "same-sounding-character": ["姥 (grandmother)", "醪 (brew)", "落 (fall)"],
+      "words": ["老师 (teacher)", "老人 (old person)", "老鼠 (mouse)"],
+      "definition-english": "Old; aged; experienced",
+      "definition-chinese": "老；年老；有经验"
+    },
+    {
+      "character": "师",
+      "english": "teacher, master",
+      "pinyin": "shī",
+      "same-sounding-character": ["狮 (lion)", "施 (apply)", "诗 (poem)"],
+      "words": ["老师 (teacher)", "师傅 (master)", "师父 (teacher)"],
+      "definition-english": "Teacher; master; expert",
+      "definition-chinese": "老师；师傅；教师"
+    },
+    {
+      "character": "早",
+      "english": "early, morning",
+      "pinyin": "zǎo",
+      "same-sounding-character": ["藻 (seaweed)", "皂 (soap)", "造 (make)"],
+      "words": ["早上 (morning)", "早安 (good morning)", "太早 (too early)"],
+      "definition-english": "Early; morning; dawn",
+      "definition-chinese": "早；早上；清晨"
+    },
+    {
+      "character": "安",
+      "english": "peaceful, safe, to install",
+      "pinyin": "ān",
+      "same-sounding-character": ["暗 (dark)", "岸 (shore)", "按 (press)"],
+      "words": ["安全 (safe)", "早安 (good morning)", "平安 (peaceful)"],
+      "definition-english": "Peaceful; safe; secure; to install",
+      "definition-chinese": "安全；和平；安装"
+    },
+    {
+      "character": "半",
+      "english": "half, middle",
+      "pinyin": "bàn",
+      "same-sounding-character": ["伴 (companion)", "板 (board)", "办 (handle)"],
+      "words": ["一半 (half)", "半年 (half year)", "半天 (half day)"],
+      "definition-english": "Half; middle; partly",
+      "definition-chinese": "半；一半；中间"
+    },
+    {
+      "character": "午",
+      "english": "noon, midday",
+      "pinyin": "wǔ",
+      "same-sounding-character": ["武 (martial)", "舞 (dance)", "五 (five)"],
+      "words": ["中午 (noon)", "上午 (morning)", "下午 (afternoon)"],
+      "definition-english": "Noon; midday; the 7th earthly branch",
+      "definition-chinese": "中午；正午；午时"
+    },
+    {
+      "character": "奶",
+      "english": "milk, grandmother",
+      "pinyin": "nǎi",
+      "same-sounding-character": ["耐 (endure)", "奶 (milk)", "乃 (is)"],
+      "words": ["牛奶 (cow milk)", "奶奶 (grandmother)", "奶茶 (milk tea)"],
+      "definition-english": "Milk; grandmother; breast",
+      "definition-chinese": "奶；乳汁；奶奶"
+    },
+    {
+      "character": "玩",
+      "english": "to play, to have fun",
+      "pinyin": "wán",
+      "same-sounding-character": ["丸 (ball)", "完 (finish)", "顽 (stubborn)"],
+      "words": ["玩耍 (play)", "玩具 (toy)", "游玩 (have fun)"],
+      "definition-english": "To play; to have fun; to toy with",
+      "definition-chinese": "玩；游戏；玩耍"
+    },
+    {
+      "character": "具",
+      "english": "tool, implement",
+      "pinyin": "jù",
+      "same-sounding-character": ["句 (sentence)", "居 (live)", "聚 (gather)"],
+      "words": ["玩具 (toy)", "工具 (tool)", "家具 (furniture)"],
+      "definition-english": "Tool; implement; utensil",
+      "definition-chinese": "工具；用具；家具"
+    }
+  ],
+  "p1-6": [
+    {
+      "character": "鸟",
+      "english": "bird",
+      "pinyin": "niǎo",
+      "same-sounding-character": ["尿 (urine)", "鸟 (bird)", "蛟 (flood)"],
+      "words": ["小鸟 (small bird)", "鸟类 (birds)", "飞鸟 (flying bird)"],
+      "definition-english": "Bird; avian creature",
+      "definition-chinese": "鸟；禽类"
+    },
+    {
+      "character": "竹",
+      "english": "bamboo",
+      "pinyin": "zhú",
+      "same-sounding-character": ["逐 (chase)", "足 (foot)", "属 (belong)"],
+      "words": ["竹子 (bamboo)", "竹林 (bamboo grove)", "竹笋 (bamboo shoot)"],
+      "definition-english": "Bamboo; bamboo plant",
+      "definition-chinese": "竹；竹子；竹林"
+    },
+    {
+      "character": "田",
+      "english": "field, farm",
+      "pinyin": "tián",
+      "same-sounding-character": ["甜 (sweet)", "填 (fill)", "舔 (lick)"],
+      "words": ["田地 (field)", "稻田 (rice field)", "农田 (farmland)"],
+      "definition-english": "Field; farm; paddy",
+      "definition-chinese": "田地；农田；田亩"
+    },
+    {
+      "character": "苗",
+      "english": "seedling, sprout",
+      "pinyin": "miáo",
+      "same-sounding-character": ["描 (describe)", "猫 (cat)", "秒 (second)"],
+      "words": ["秧苗 (seedling)", "禾苗 (rice seedling)", "苗子 (sprout)"],
+      "definition-english": "Seedling; sprout; young plant",
+      "definition-chinese": "秧苗；幼苗；小植物"
+    },
+    {
+      "character": "象",
+      "english": "elephant, image, appearance",
+      "pinyin": "xiàng",
+      "same-sounding-character": ["想 (think)", "像 (resemble)", "详 (detail)"],
+      "words": ["大象 (elephant)", "象征 (symbol)", "形象 (image)"],
+      "definition-english": "Elephant; image; appearance; to look like",
+      "definition-chinese": "象；大象；形象"
+    },
+    {
+      "character": "家",
+      "english": "home, family, house",
+      "pinyin": "jiā",
+      "same-sounding-character": ["甲 (first)", "加 (add)", "嘉 (good)"],
+      "words": ["家人 (family)", "回家 (go home)", "学家 (scholar)"],
+      "definition-english": "Home; family; household",
+      "definition-chinese": "家；家庭；住宅"
+    },
+    {
+      "character": "刀",
+      "english": "knife, blade",
+      "pinyin": "dāo",
+      "same-sounding-character": ["到 (arrive)", "岛 (island)", "倒 (fall)"],
+      "words": ["刀子 (knife)", "菜刀 (kitchen knife)", "刀片 (blade)"],
+      "definition-english": "Knife; blade; sword",
+      "definition-chinese": "刀；刀子；利刃"
+    },
+    {
+      "character": "网",
+      "english": "net, network",
+      "pinyin": "wǎng",
+      "same-sounding-character": ["往 (go)", "汪 (bark)", "妄 (reckless)"],
+      "words": ["网络 (network)", "渔网 (fishing net)", "网页 (web page)"],
+      "definition-english": "Net; network; web",
+      "definition-chinese": "网；网络；网页"
+    },
+    {
+      "character": "在",
+      "english": "at, in, to be in",
+      "pinyin": "zài",
+      "same-sounding-character": ["载 (carry)", "再 (again)", "灾 (disaster)"],
+      "words": ["在家 (at home)", "在上 (above)", "存在 (exist)"],
+      "definition-english": "At; in; to be at; to be in",
+      "definition-chinese": "在；位置；所在"
+    },
+    {
+      "character": "里",
+      "english": "inside, within, mile",
+      "pinyin": "lǐ",
+      "same-sounding-character": ["离 (leave)", "利 (benefit)", "理 (reason)"],
+      "words": ["里面 (inside)", "心里 (in one's heart)", "家里 (at home)"],
+      "definition-english": "Inside; within; interior; mile",
+      "definition-chinese": "里；内部；里面"
+    },
+    {
+      "character": "上",
+      "english": "up, above, on, upper",
+      "pinyin": "shàng",
+      "same-sounding-character": ["伤 (hurt)", "商 (merchant)", "尚 (still)"],
+      "words": ["上面 (above)", "上学 (go to school)", "楼上 (upstairs)"],
+      "definition-english": "Up; above; on; upper; previous",
+      "definition-chinese": "上；上面；向上"
+    },
+    {
+      "character": "下",
+      "english": "down, below, under, lower",
+      "pinyin": "xià",
+      "same-sounding-character": ["夏 (summer)", "侠 (knight)", "霞 (glow)"],
+      "words": ["下面 (below)", "下雨 (rain)", "楼下 (downstairs)"],
+      "definition-english": "Down; below; under; lower",
+      "definition-chinese": "下；下面；向下"
+    },
+    {
+      "character": "大",
+      "english": "big, large, great",
+      "pinyin": "dà",
+      "same-sounding-character": ["打 (hit)", "答 (answer)", "搭 (build)"],
+      "words": ["大的 (big)", "大人 (adult)", "太大 (too big)"],
+      "definition-english": "Big; large; great; main",
+      "definition-chinese": "大；巨大；庞大"
+    },
+    {
+      "character": "小",
+      "english": "small, little, minor",
+      "pinyin": "xiǎo",
+      "same-sounding-character": ["消 (disperse)", "宵 (night)", "晓 (dawn)"],
+      "words": ["小的 (small)", "小孩 (child)", "太小 (too small)"],
+      "definition-english": "Small; little; minor; young",
+      "definition-chinese": "小；微小；幼小"
+    },
+    {
+      "character": "来",
+      "english": "to come, to arrive",
+      "pinyin": "lái",
+      "same-sounding-character": ["莱 (vegetable)", "赖 (depend)", "濑 (rapids)"],
+      "words": ["来了 (came)", "来学校 (come to school)", "来往 (come and go)"],
+      "definition-english": "To come; to arrive; to come forth",
+      "definition-chinese": "来；前来；到来"
+    },
+    {
+      "character": "哭",
+      "english": "to cry, to weep",
+      "pinyin": "kū",
+      "same-sounding-character": ["苦 (bitter)", "库 (warehouse)", "酷 (cool)"],
+      "words": ["哭泣 (cry)", "哭了 (cried)", "哭笑不得 (cry-laugh situation)"],
+      "definition-english": "To cry; to weep; to shed tears",
+      "definition-chinese": "哭；流泪；哭泣"
+    },
+    {
+      "character": "笑",
+      "english": "to laugh, to smile",
+      "pinyin": "xiào",
+      "same-sounding-character": ["销 (sell)", "宵 (night)", "小 (small)"],
+      "words": ["笑了 (laughed)", "笑脸 (smiling face)", "笑话 (joke)"],
+      "definition-english": "To laugh; to smile; to grin",
+      "definition-chinese": "笑；笑脸；笑容"
+    },
+    {
+      "character": "男",
+      "english": "male, man, boy",
+      "pinyin": "nán",
+      "same-sounding-character": ["难 (difficult)", "南 (south)", "囊 (pouch)"],
+      "words": ["男孩 (boy)", "男人 (man)", "男生 (male student)"],
+      "definition-english": "Male; man; boy; masculine",
+      "definition-chinese": "男；男性；男子"
+    },
+    {
+      "character": "爷",
+      "english": "grandfather, sir",
+      "pinyin": "yé",
+      "same-sounding-character": ["爹 (father)", "爺 (grandfather)", "耶 (yea)"],
+      "words": ["爷爷 (grandfather)", "太爷 (great-grandfather)", "爷们 (guys)"],
+      "definition-english": "Grandfather; father; sir; master",
+      "definition-chinese": "爷爷；祖父；老爷"
+    },
+    {
+      "character": "姐",
+      "english": "older sister",
+      "pinyin": "jiě",
+      "same-sounding-character": ["街 (street)", "阶 (step)", "接 (receive)"],
+      "words": ["姐姐 (older sister)", "表姐 (cousin/female)", "大姐 (elder sister)"],
+      "definition-english": "Older sister",
+      "definition-chinese": "年纪比自己大的女性；姐姐"
+    }
+  ],
+  "p1-7": [
+    {
+      "character": "果",
+      "english": "fruit, result",
+      "pinyin": "guǒ",
+      "same-sounding-character": ["过 (pass)", "裹 (wrap)", "郭 (surname)"],
+      "words": ["水果 (fruit)", "果实 (fruit/produce)", "果树 (fruit tree)"],
+      "definition-english": "Fruit; result; outcome",
+      "definition-chinese": "果实；结果；水果"
+    },
+    {
+      "character": "开",
+      "english": "to open, to turn on",
+      "pinyin": "kāi",
+      "same-sounding-character": ["凯 (triumph)", "颉 (scraggly)", "楷 (model)"],
+      "words": ["打开 (open)", "开门 (open door)", "开始 (start)"],
+      "definition-english": "To open; to turn on; to start",
+      "definition-chinese": "打开；开启；开始"
+    },
+    {
+      "character": "瓜",
+      "english": "melon, gourd",
+      "pinyin": "guā",
+      "same-sounding-character": ["挂 (hang)", "寡 (widow)", "褂 (coat)"],
+      "words": ["西瓜 (watermelon)", "冬瓜 (winter melon)", "南瓜 (pumpkin)"],
+      "definition-english": "Melon; gourd; squash",
+      "definition-chinese": "瓜；西瓜；瓜果"
+    },
+    {
+      "character": "火",
+      "english": "fire, flame",
+      "pinyin": "huǒ",
+      "same-sounding-character": ["伙 (group)", "货 (goods)", "惑 (confuse)"],
+      "words": ["火焰 (flame)", "大火 (big fire)", "火车 (train)"],
+      "definition-english": "Fire; flame; blaze",
+      "definition-chinese": "火；火焰；火气"
+    },
+    {
+      "character": "花",
+      "english": "flower, bloom",
+      "pinyin": "huā",
+      "same-sounding-character": ["化 (change)", "画 (paint)", "华 (magnificent)"],
+      "words": ["鲜花 (fresh flower)", "花朵 (bloom)", "花园 (garden)"],
+      "definition-english": "Flower; bloom; blossom",
+      "definition-chinese": "花；鲜花；花卉"
+    },
+    {
+      "character": "叶",
+      "english": "leaf, page",
+      "pinyin": "yè",
+      "same-sounding-character": ["夜 (night)", "液 (liquid)", "谒 (visit)"],
+      "words": ["树叶 (tree leaf)", "叶子 (leaf)", "页码 (page number)"],
+      "definition-english": "Leaf; page; foliage",
+      "definition-chinese": "叶子；树叶；页"
+    },
+    {
+      "character": "面",
+      "english": "face, surface, noodle",
+      "pinyin": "miàn",
+      "same-sounding-character": ["棉 (cotton)", "免 (exempt)", "勉 (urge)"],
+      "words": ["脸面 (face)", "面条 (noodles)", "前面 (front)"],
+      "definition-english": "Face; surface; front; noodle",
+      "definition-chinese": "脸；表面；面条"
+    },
+    {
+      "character": "关",
+      "english": "to close, to shut, gate",
+      "pinyin": "guān",
+      "same-sounding-character": ["官 (official)", "观 (view)", "冠 (crown)"],
+      "words": ["关上 (close)", "关门 (close door)", "关系 (relationship)"],
+      "definition-english": "To close; to shut; gate; barrier",
+      "definition-chinese": "关闭；门关；关系"
+    },
+    {
+      "character": "朵",
+      "english": "flower cluster, measure word",
+      "pinyin": "duǒ",
+      "same-sounding-character": ["多 (many)", "堕 (fall)", "躲 (hide)"],
+      "words": ["花朵 (flower)", "一朵花 (one flower)", "朵朵 (clusters)"],
+      "definition-english": "Flower; cluster; measure word for flowers",
+      "definition-chinese": "花朵；花束；量词"
+    },
+    {
+      "character": "两",
+      "english": "two, both",
+      "pinyin": "liǎng",
+      "same-sounding-character": ["梁 (beam)", "粮 (grain)", "量 (quantity)"],
+      "words": ["两个 (two)", "两边 (both sides)", "两年 (two years)"],
+      "definition-english": "Two; both; a pair",
+      "definition-chinese": "两个；两；双"
+    },
+    {
+      "character": "片",
+      "english": "slice, piece, film",
+      "pinyin": "piàn",
+      "same-sounding-character": ["偏 (incline)", "篇 (chapter)", "骗 (cheat)"],
+      "words": ["一片 (a piece)", "片段 (segment)", "电影片 (movie)"],
+      "definition-english": "Slice; piece; film; thin object",
+      "definition-chinese": "片；一片；薄片"
+    },
+    {
+      "character": "画",
+      "english": "to draw, to paint, picture",
+      "pinyin": "huà",
+      "same-sounding-character": ["化 (change)", "花 (flower)", "华 (magnificent)"],
+      "words": ["画画 (draw)", "图画 (picture)", "油画 (oil painting)"],
+      "definition-english": "To draw; to paint; picture; painting",
+      "definition-chinese": "画；绘画；图画"
+    },
+    {
+      "character": "笔",
+      "english": "pen, brush, writing instrument",
+      "pinyin": "bǐ",
+      "same-sounding-character": ["比 (compare)", "鼻 (nose)", "蓖 (comb)"],
+      "words": ["铅笔 (pencil)", "毛笔 (brush)", "笔尖 (pen tip)"],
+      "definition-english": "Pen; brush; writing instrument",
+      "definition-chinese": "笔；笔尖；书写工具"
+    },
+    {
+      "character": "长",
+      "english": "long, length, to grow",
+      "pinyin": "cháng",
+      "same-sounding-character": ["常 (often)", "肠 (intestine)", "昌 (prosperous)"],
+      "words": ["长的 (long)", "长大 (grow up)", "长度 (length)"],
+      "definition-english": "Long; length; to grow; to increase",
+      "definition-chinese": "长；长度；增长"
+    },
+    {
+      "character": "广",
+      "english": "wide, broad, vast",
+      "pinyin": "guǎng",
+      "same-sounding-character": ["旷 (empty)", "逛 (stroll)", "纺 (spin)"],
+      "words": ["广大 (broad)", "广场 (square)", "广告 (advertisement)"],
+      "definition-english": "Wide; broad; vast; extensive",
+      "definition-chinese": "广；宽广；辽阔"
+    },
+    {
+      "character": "多",
+      "english": "many, much, more",
+      "pinyin": "duō",
+      "same-sounding-character": ["朵 (cluster)", "舵 (rudder)", "跺 (stamp)"],
+      "words": ["很多 (many)", "多少 (how much)", "多久 (how long)"],
+      "definition-english": "Many; much; more",
+      "definition-chinese": "多；许多；很多"
+    },
+    {
+      "character": "少",
+      "english": "few, little, less",
+      "pinyin": "shǎo",
+      "same-sounding-character": ["烧 (burn)", "稍 (slightly)", "哨 (whistle)"],
+      "words": ["很少 (very few)", "少年 (youth)", "多少 (how much)"],
+      "definition-english": "Few; little; less",
+      "definition-chinese": "少；很少；较少"
+    },
+    {
+      "character": "床",
+      "english": "bed",
+      "pinyin": "chuáng",
+      "same-sounding-character": ["创 (create)", "疮 (sore)", "幢 (building)"],
+      "words": ["睡床 (sleep bed)", "病床 (hospital bed)", "床上 (on bed)"],
+      "definition-english": "Bed; couch",
+      "definition-chinese": "床；卧床；睡床"
+    }
+  ],
+  "p1-8": [
+    {
+      "character": "目",
+      "english": "eye, look",
+      "pinyin": "mù",
+      "same-sounding-character": ["木 (wood)", "牧 (graze)", "募 (recruit)"],
+      "words": ["眼睛 (eye)", "目光 (gaze)", "目标 (target)"],
+      "definition-english": "Eye; look; gaze; item",
+      "definition-chinese": "眼睛；看；目"
+    },
+    {
+      "character": "舌",
+      "english": "tongue",
+      "pinyin": "shé",
+      "same-sounding-character": ["舍 (shed)", "设 (set up)", "射 (shoot)"],
+      "words": ["舌头 (tongue)", "舌尖 (tip of tongue)", "伸舌 (stick out tongue)"],
+      "definition-english": "Tongue; taste organ",
+      "definition-chinese": "舌头；舌体；舌部"
+    },
+    {
+      "character": "手",
+      "english": "hand",
+      "pinyin": "shǒu",
+      "same-sounding-character": ["首 (first)", "售 (sell)", "受 (receive)"],
+      "words": ["手指 (finger)", "握手 (shake hands)", "手心 (palm)"],
+      "definition-english": "Hand; palm; grip",
+      "definition-chinese": "手；手掌；手指"
+    },
+    {
+      "character": "足",
+      "english": "foot, leg, sufficient",
+      "pinyin": "zú",
+      "same-sounding-character": ["竹 (bamboo)", "逐 (chase)", "族 (family)"],
+      "words": ["脚足 (foot)", "充足 (sufficient)", "足够 (enough)"],
+      "definition-english": "Foot; leg; sufficient; enough",
+      "definition-chinese": "脚；足部；充足"
+    },
+    {
+      "character": "本",
+      "english": "root, origin, book, this",
+      "pinyin": "běn",
+      "same-sounding-character": ["奔 (run)", "本 (root)", "笨 (stupid)"],
+      "words": ["书本 (books)", "本来 (originally)", "本身 (itself)"],
+      "definition-english": "Root; origin; this; book",
+      "definition-chinese": "根本；原本；本；书本"
+    },
+    {
+      "character": "工",
+      "english": "work, labor, worker",
+      "pinyin": "gōng",
+      "same-sounding-character": ["公 (public)", "攻 (attack)", "功 (merit)"],
+      "words": ["工作 (work)", "工人 (worker)", "手工 (handicraft)"],
+      "definition-english": "Work; labor; worker; job",
+      "definition-chinese": "工作；劳动；工人"
+    },
+    {
+      "character": "厂",
+      "english": "factory, plant, mill",
+      "pinyin": "chǎng",
+      "same-sounding-character": ["场 (field)", "唱 (sing)", "长 (long)"],
+      "words": ["工厂 (factory)", "食品厂 (food factory)", "电厂 (power plant)"],
+      "definition-english": "Factory; plant; mill; works",
+      "definition-chinese": "工厂；造纸厂；厂房"
+    },
+    {
+      "character": "走",
+      "english": "to walk, to go, to run",
+      "pinyin": "zǒu",
+      "same-sounding-character": ["奏 (play)", "陷 (trap)", "族 (family)"],
+      "words": ["走路 (walk)", "走了 (left)", "走开 (go away)"],
+      "definition-english": "To walk; to go; to run; to move",
+      "definition-chinese": "走；行走；移动"
+    },
+    {
+      "character": "跑",
+      "english": "to run, to escape",
+      "pinyin": "pǎo",
+      "same-sounding-character": ["泡 (bubble)", "炮 (cannon)", "袍 (robe)"],
+      "words": ["跑步 (run)", "跑了 (ran away)", "跑出 (run out)"],
+      "definition-english": "To run; to race; to escape",
+      "definition-chinese": "跑；奔跑；逃跑"
+    },
+    {
+      "character": "飞",
+      "english": "to fly",
+      "pinyin": "fēi",
+      "same-sounding-character": ["费 (cost)", "飞 (fly)", "菲 (fragrance)"],
+      "words": ["飞行 (flight)", "飞起 (fly up)", "飞鸟 (flying bird)"],
+      "definition-english": "To fly; to soar; to move quickly",
+      "definition-chinese": "飞；飞行；飞翔"
+    },
+    {
+      "character": "妹",
+      "english": "younger sister",
+      "pinyin": "mèi",
+      "same-sounding-character": ["媚 (charm)", "昧 (dark)", "寐 (sleep)"],
+      "words": ["妹妹 (younger sister)", "表妹 (cousin/female)", "堂妹 (cousin/female)"],
+      "definition-english": "Younger sister",
+      "definition-chinese": "年纪比自己小的女性；妹妹"
+    },
+    {
+      "character": "门",
+      "english": "door, gate, entrance",
+      "pinyin": "mén",
+      "same-sounding-character": ["们 (plural)", "门 (door)", "闷 (stuffy)"],
+      "words": ["大门 (main gate)", "开门 (open door)", "门口 (doorway)"],
+      "definition-english": "Door; gate; entrance; family",
+      "definition-chinese": "门；大门；门口"
+    },
+    {
+      "character": "看",
+      "english": "to look, to see, to watch",
+      "pinyin": "kàn",
+      "same-sounding-character": ["刊 (publish)", "勘 (survey)", "坎 (pit)"],
+      "words": ["看看 (look)", "看到 (see)", "看书 (read)"],
+      "definition-english": "To look; to see; to watch; to regard",
+      "definition-chinese": "看；观看；查看"
+    },
+    {
+      "character": "见",
+      "english": "to see, to meet, view",
+      "pinyin": "jiàn",
+      "same-sounding-character": ["健 (healthy)", "件 (item)", "鉴 (mirror)"],
+      "words": ["见面 (meet)", "看见 (see)", "意见 (opinion)"],
+      "definition-english": "To see; to meet; to view",
+      "definition-chinese": "看见；相见；见面"
+    },
+    {
+      "character": "问",
+      "english": "to ask, to inquire",
+      "pinyin": "wèn",
+      "same-sounding-character": ["温 (warm)", "纹 (line)", "闻 (smell)"],
+      "words": ["问题 (question)", "问候 (greet)", "提问 (ask)"],
+      "definition-english": "To ask; to inquire; to question",
+      "definition-chinese": "问；提问；询问"
+    },
+    {
+      "character": "又",
+      "english": "again, also, moreover",
+      "pinyin": "yòu",
+      "same-sounding-character": ["右 (right)", "油 (oil)", "有 (have)"],
+      "words": ["又来 (came again)", "又好又便宜 (good and cheap)", "一又二分之一 (one and a half)"],
+      "definition-english": "Again; also; moreover; another",
+      "definition-chinese": "又；再；还"
+    },
+    {
+      "character": "头",
+      "english": "head, top",
+      "pinyin": "tóu",
+      "same-sounding-character": ["投 (throw)", "透 (penetrate)", "头 (head)"],
+      "words": ["脑袋 (head)", "头发 (hair)", "抬头 (raise head)"],
+      "definition-english": "Head; top; leader; end",
+      "definition-chinese": "头；头部；首领"
+    },
+    {
+      "character": "们",
+      "english": "plural marker",
+      "pinyin": "men",
+      "same-sounding-character": ["门 (door)", "们 (plural)", "闷 (stuffy)"],
+      "words": ["他们 (they)", "我们 (we)", "学生们 (students)"],
+      "definition-english": "Plural marker for persons",
+      "definition-chinese": "复数标记；们"
+    },
+    {
+      "character": "身",
+      "english": "body, self, person",
+      "pinyin": "shēn",
+      "same-sounding-character": ["伸 (stretch)", "申 (state)", "神 (spirit)"],
+      "words": ["身体 (body)", "上身 (upper body)", "身上 (on one's body)"],
+      "definition-english": "Body; self; person; physical",
+      "definition-chinese": "身体；本身；身躯"
+    },
+    {
+      "character": "体",
+      "english": "body, form, system",
+      "pinyin": "tǐ",
+      "same-sounding-character": ["替 (replace)", "剃 (shave)", "惕 (vigilant)"],
+      "words": ["身体 (body)", "体育 (physical education)", "整体 (whole)"],
+      "definition-english": "Body; form; system; substance",
+      "definition-chinese": "身体；体格；体系"
+    }
+  ],
+  "p1-9": [
+    {
+      "character": "牛",
+      "english": "ox, cattle, cow",
+      "pinyin": "niú",
+      "same-sounding-character": ["纽 (button)", "牛 (cattle)", "扭 (twist)"],
+      "words": ["牛奶 (milk)", "牛肉 (beef)", "牛群 (cattle herd)"],
+      "definition-english": "Ox; cattle; cow; bull",
+      "definition-chinese": "牛；牲畜；牛群"
+    },
+    {
+      "character": "井",
+      "english": "well, pit",
+      "pinyin": "jǐng",
+      "same-sounding-character": ["惊 (surprise)", "径 (path)", "颈 (neck)"],
+      "words": ["井水 (well water)", "深井 (deep well)", "井口 (well mouth)"],
+      "definition-english": "Well; pit; hole for water",
+      "definition-chinese": "井；水井；深井"
+    },
+    {
+      "character": "虫",
+      "english": "insect, bug, worm",
+      "pinyin": "chóng",
+      "same-sounding-character": ["冲 (rush)", "中 (middle)", "终 (end)"],
+      "words": ["昆虫 (insect)", "虫子 (bug)", "虫害 (insect damage)"],
+      "definition-english": "Insect; bug; worm; creature",
+      "definition-chinese": "虫；昆虫；虫子"
+    },
+    {
+      "character": "弓",
+      "english": "bow, arch",
+      "pinyin": "gōng",
+      "same-sounding-character": ["工 (work)", "公 (public)", "功 (merit)"],
+      "words": ["弓箭 (bow and arrow)", "弓背 (bow back)", "拉弓 (draw bow)"],
+      "definition-english": "Bow; arch; curved",
+      "definition-chinese": "弓；弓形；弓器"
+    },
+    {
+      "character": "贝",
+      "english": "shell, shellfish",
+      "pinyin": "bèi",
+      "same-sounding-character": ["被 (by)", "倍 (times)", "备 (prepare)"],
+      "words": ["贝类 (shellfish)", "贝壳 (shell)", "海贝 (seashell)"],
+      "definition-english": "Shell; shellfish; clam",
+      "definition-chinese": "贝；贝壳；贝类"
+    },
+    {
+      "character": "心",
+      "english": "heart, mind, center",
+      "pinyin": "xīn",
+      "same-sounding-character": ["新 (new)", "薪 (firewood)", "欣 (happy)"],
+      "words": ["心脏 (heart)", "心里 (in heart)", "中心 (center)"],
+      "definition-english": "Heart; mind; center; core",
+      "definition-chinese": "心；心脏；中心"
+    },
+    {
+      "character": "豆",
+      "english": "bean",
+      "pinyin": "dòu",
+      "same-sounding-character": ["斗 (fight)", "逗 (tease)", "兜 (bag)"],
+      "words": ["豆子 (bean)", "豆腐 (tofu)", "黄豆 (soybean)"],
+      "definition-english": "Bean; legume",
+      "definition-chinese": "豆；豆类；豆子"
+    },
+    {
+      "character": "六",
+      "english": "six",
+      "pinyin": "liù",
+      "same-sounding-character": ["陆 (land)", "录 (record)", "溜 (slip)"],
+      "words": ["第六 (sixth)", "六十 (sixty)", "六月 (June)"],
+      "definition-english": "The number 6; six",
+      "definition-chinese": "数字6"
+    },
+    {
+      "character": "支",
+      "english": "branch, measure word",
+      "pinyin": "zhī",
+      "same-sounding-character": ["只 (only)", "知 (know)", "枝 (branch)"],
+      "words": ["树枝 (tree branch)", "一支 (one)", "笔支 (pen)"],
+      "definition-english": "Branch; measure word for objects",
+      "definition-chinese": "支；枝条；量词"
+    },
+    {
+      "character": "条",
+      "english": "strip, item, measure word",
+      "pinyin": "tiáo",
+      "same-sounding-character": ["跳 (jump)", "挑 (pick)", "逃 (escape)"],
+      "words": ["一条 (one)", "条纹 (stripe)", "条形 (stripe shape)"],
+      "definition-english": "Strip; item; measure word for long objects",
+      "definition-chinese": "条；条形；量词"
+    },
+    {
+      "character": "九",
+      "english": "nine",
+      "pinyin": "jiǔ",
+      "same-sounding-character": ["久 (long time)", "旧 (old)", "救 (rescue)"],
+      "words": ["第九 (ninth)", "九十 (ninety)", "九月 (September)"],
+      "definition-english": "The number 9; nine",
+      "definition-chinese": "数字9"
+    },
+    {
+      "character": "粒",
+      "english": "grain, particle, measure word",
+      "pinyin": "lì",
+      "same-sounding-character": ["力 (strength)", "历 (history)", "立 (stand)"],
+      "words": ["一粒 (one grain)", "米粒 (grain of rice)", "粒子 (particle)"],
+      "definition-english": "Grain; particle; measure word for small objects",
+      "definition-chinese": "粒；颗粒；量词"
+    },
+    {
+      "character": "今",
+      "english": "today, now, present",
+      "pinyin": "jīn",
+      "same-sounding-character": ["金 (gold)", "禁 (forbid)", "津 (ford)"],
+      "words": ["今天 (today)", "如今 (nowadays)", "今年 (this year)"],
+      "definition-english": "Today; now; present; current",
+      "definition-chinese": "今天；现在；今年"
+    },
+    {
+      "character": "什",
+      "english": "what, which",
+      "pinyin": "shé",
+      "same-sounding-character": ["舍 (shed)", "设 (set up)", "蛇 (snake)"],
+      "words": ["什么 (what)", "干什么 (what to do)", "什么时候 (when)"],
+      "definition-english": "What; which; interrogative",
+      "definition-chinese": "什么；何；哪"
+    },
+    {
+      "character": "么",
+      "english": "what, particle",
+      "pinyin": "me",
+      "same-sounding-character": ["麻 (hemp)", "妈 (mother)", "么 (particle)"],
+      "words": ["什么 (what)", "怎么 (how)", "为什么 (why)"],
+      "definition-english": "What; particle used in words",
+      "definition-chinese": "什么；怎么；虚词"
+    },
+    {
+      "character": "华",
+      "english": "magnificent, China",
+      "pinyin": "huá",
+      "same-sounding-character": ["化 (change)", "花 (flower)", "画 (paint)"],
+      "words": ["中华 (Chinese)", "华丽 (splendid)", "华人 (Chinese person)"],
+      "definition-english": "Magnificent; splendid; China",
+      "definition-chinese": "华丽；中华；光彩"
+    },
+    {
+      "character": "文",
+      "english": "language, culture, writing",
+      "pinyin": "wén",
+      "same-sounding-character": ["闻 (smell)", "蚊 (mosquito)", "纹 (line)"],
+      "words": ["文化 (culture)", "文字 (writing)", "中文 (Chinese language)"],
+      "definition-english": "Language; culture; writing; character",
+      "definition-chinese": "文字；文化；语言"
+    },
+    {
+      "character": "点",
+      "english": "dot, point, o'clock",
+      "pinyin": "diǎn",
+      "same-sounding-character": ["电 (electricity)", "店 (shop)", "典 (classics)"],
+      "words": ["一点 (a bit)", "点头 (nod)", "时间点 (time point)"],
+      "definition-english": "Dot; point; o'clock; spot",
+      "definition-chinese": "点；时间；一点"
+    },
+    {
+      "character": "说",
+      "english": "to say, to speak, to tell",
+      "pinyin": "shuō",
+      "same-sounding-character": ["朔 (first)", "烁 (shine)", "硕 (large)"],
+      "words": ["说话 (speak)", "说好 (agree)", "告诉 (tell)"],
+      "definition-english": "To say; to speak; to tell",
+      "definition-chinese": "说；讲；述说"
+    },
+    {
+      "character": "语",
+      "english": "language, speech",
+      "pinyin": "yǔ",
+      "same-sounding-character": ["羽 (feather)", "玉 (jade)", "御 (imperial)"],
+      "words": ["语言 (language)", "汉语 (Chinese language)", "语气 (tone)"],
+      "definition-english": "Language; speech; word",
+      "definition-chinese": "语言；话语；语气"
+    }
+  ],
+  "p1-10": [
+    {
+      "character": "月",
+      "english": "moon, month",
+      "pinyin": "yuè",
+      "same-sounding-character": ["跃 (jump)", "约 (agree)", "越 (exceed)"],
+      "words": ["月亮 (moon)", "月份 (month)", "月光 (moonlight)"],
+      "definition-english": "Moon; month; lunar",
+      "definition-chinese": "月亮；月份；月"
+    },
+    {
+      "character": "天",
+      "english": "sky, heaven, day",
+      "pinyin": "tiān",
+      "same-sounding-character": ["添 (add)", "甜 (sweet)", "填 (fill)"],
+      "words": ["天空 (sky)", "白天 (daytime)", "天气 (weather)"],
+      "definition-english": "Sky; heaven; day; weather",
+      "definition-chinese": "天空；天气；天"
+    },
+    {
+      "character": "地",
+      "english": "earth, ground, land",
+      "pinyin": "dì",
+      "same-sounding-character": ["第 (ordinal)", "帝 (emperor)", "蒂 (stem)"],
+      "words": ["地面 (ground)", "土地 (land)", "地球 (earth)"],
+      "definition-english": "Earth; ground; land; place",
+      "definition-chinese": "地球；地面；土地"
+    },
+    {
+      "character": "风",
+      "english": "wind, breeze",
+      "pinyin": "fēng",
+      "same-sounding-character": ["封 (seal)", "蜂 (bee)", "冯 (surname)"],
+      "words": ["风吹 (wind blows)", "风景 (scenery)", "北风 (north wind)"],
+      "definition-english": "Wind; breeze; style",
+      "definition-chinese": "风；清风；微风"
+    },
+    {
+      "character": "雷",
+      "english": "thunder, thunderbolt",
+      "pinyin": "léi",
+      "same-sounding-character": ["垒 (pile)", "类 (type)", "累 (tired)"],
+      "words": ["打雷 (thunder)", "雷声 (thunderclap)", "闪电和雷 (lightning and thunder)"],
+      "definition-english": "Thunder; thunderbolt; sound of thunder",
+      "definition-chinese": "雷；雷声；雷电"
+    },
+    {
+      "character": "电",
+      "english": "electricity, lightning, electric",
+      "pinyin": "diàn",
+      "same-sounding-character": ["点 (dot)", "店 (shop)", "惦 (miss)"],
+      "words": ["闪电 (lightning)", "电气 (electricity)", "电灯 (electric light)"],
+      "definition-english": "Electricity; lightning; electric",
+      "definition-chinese": "电；电气；闪电"
+    },
+    {
+      "character": "水",
+      "english": "water",
+      "pinyin": "shuǐ",
+      "same-sounding-character": ["税 (tax)", "睡 (sleep)", "说 (speak)"],
+      "words": ["水源 (water source)", "清水 (clear water)", "河水 (river water)"],
+      "definition-english": "Water; liquid; fluid",
+      "definition-chinese": "水；水源；清水"
+    },
+    {
+      "character": "寸",
+      "english": "inch, measure",
+      "pinyin": "cùn",
+      "same-sounding-character": ["村 (village)", "存 (exist)", "寻 (seek)"],
+      "words": ["一寸 (one inch)", "寸步 (inch step)", "尺寸 (size)"],
+      "definition-english": "Inch; measure; unit of length",
+      "definition-chinese": "寸；寸尺；英寸"
+    },
+    {
+      "character": "方",
+      "english": "square, way, direction",
+      "pinyin": "fāng",
+      "same-sounding-character": ["妨 (hinder)", "防 (prevent)", "房 (house)"],
+      "words": ["方向 (direction)", "方法 (method)", "四方 (four directions)"],
+      "definition-english": "Square; way; direction; method",
+      "definition-chinese": "方法；方向；四方"
+    },
+    {
+      "character": "正",
+      "english": "correct, right, proper",
+      "pinyin": "zhèng",
+      "same-sounding-character": ["征 (levy)", "争 (fight)", "蒸 (steam)"],
+      "words": ["正确 (correct)", "正好 (just right)", "正在 (is...ing)"],
+      "definition-english": "Correct; right; proper; straight",
+      "definition-chinese": "正确；对的；正在"
+    },
+    {
+      "character": "反",
+      "english": "reverse, opposite, against",
+      "pinyin": "fǎn",
+      "same-sounding-character": ["返 (return)", "繁 (complex)", "翻 (flip)"],
+      "words": ["反对 (oppose)", "相反 (opposite)", "反复 (repeat)"],
+      "definition-english": "Reverse; opposite; against; contrary",
+      "definition-chinese": "反对；相反；反面"
+    },
+    {
+      "character": "白",
+      "english": "white, clear, plain",
+      "pinyin": "bái",
+      "same-sounding-character": ["百 (hundred)", "摆 (swing)", "败 (defeat)"],
+      "words": ["白色 (white color)", "白天 (daytime)", "明白 (understand)"],
+      "definition-english": "White; clear; plain; bright",
+      "definition-chinese": "白色；白的；清白"
+    },
+    {
+      "character": "好",
+      "english": "good, well, nice",
+      "pinyin": "hǎo",
+      "same-sounding-character": ["好 (good)", "号 (number)", "毫 (hair)"],
+      "words": ["好的 (ok)", "很好 (very good)", "好友 (good friend)"],
+      "definition-english": "Good; well; nice; fine",
+      "definition-chinese": "好；很好；美好"
+    },
+    {
+      "character": "坏",
+      "english": "bad, evil, broken",
+      "pinyin": "huài",
+      "same-sounding-character": ["怀 (bosom)", "淮 (river)", "踝 (ankle)"],
+      "words": ["坏的 (bad)", "坏人 (bad person)", "坏事 (bad thing)"],
+      "definition-english": "Bad; evil; broken; spoiled",
+      "definition-chinese": "坏；不好；坏事"
+    },
+    {
+      "character": "对",
+      "english": "correct, toward, to face",
+      "pinyin": "duì",
+      "same-sounding-character": ["队 (team)", "堆 (pile)", "兑 (exchange)"],
+      "words": ["对的 (correct)", "对不起 (sorry)", "面对 (face)"],
+      "definition-english": "Correct; toward; to face; pair",
+      "definition-chinese": "对；正确；面对"
+    },
+    {
+      "character": "古",
+      "english": "ancient, old, former",
+      "pinyin": "gǔ",
+      "same-sounding-character": ["谷 (valley)", "固 (firm)", "骨 (bone)"],
+      "words": ["古代 (ancient times)", "古老 (ancient)", "古人 (ancients)"],
+      "definition-english": "Ancient; old; former; primitive",
+      "definition-chinese": "古代；古老；古人"
+    },
+    {
+      "character": "旧",
+      "english": "old, former, used",
+      "pinyin": "jiù",
+      "same-sounding-character": ["久 (long time)", "九 (nine)", "救 (rescue)"],
+      "words": ["旧的 (old)", "旧衣服 (used clothes)", "旧时 (former times)"],
+      "definition-english": "Old; used; former; obsolete",
+      "definition-chinese": "旧的；老旧；旧时"
+    },
+    {
+      "character": "有",
+      "english": "to have, there is",
+      "pinyin": "yǒu",
+      "same-sounding-character": ["幽 (quiet)", "油 (oil)", "友 (friend)"],
+      "words": ["有了 (have)", "有人 (there is someone)", "有没有 (do you have)"],
+      "definition-english": "To have; there is; to exist",
+      "definition-chinese": "有；存在；拥有"
+    },
+    {
+      "character": "没",
+      "english": "not, haven't, to drown",
+      "pinyin": "méi",
+      "same-sounding-character": ["埋 (bury)", "枚 (measure word)", "眉 (eyebrow)"],
+      "words": ["没有 (don't have)", "没错 (no mistake)", "没关系 (doesn't matter)"],
+      "definition-english": "Not; haven't; to drown; to sink",
+      "definition-chinese": "没有；没关系；不"
+    },
+    {
+      "character": "云",
+      "english": "cloud, say",
+      "pinyin": "yún",
+      "same-sounding-character": ["晕 (dizzy)", "匀 (even)", "芸 (fragrant)"],
+      "words": ["白云 (white cloud)", "云朵 (cloud)", "多云 (cloudy)"],
+      "definition-english": "Cloud; cloudy; to say",
+      "definition-chinese": "云；云彩；乌云"
+    }
+  ],
+  "p1-11": [
+    {
+      "character": "甲",
+      "english": "first, armor, shell",
+      "pinyin": "jiǎ",
+      "same-sounding-character": ["假 (fake)", "嘉 (excellent)", "夹 (clip)"],
+      "words": ["甲骨 (oracle bone)", "甲虫 (beetle)", "甲板 (deck)"],
+      "definition-english": "First; armor; shell; carapace",
+      "definition-chinese": "第一的；盔甲；外壳"
+    },
+    {
+      "character": "丁",
+      "english": "fourth, robust, man",
+      "pinyin": "dīng",
+      "same-sounding-character": ["叮 (sting)", "钉 (nail)", "订 (order)"],
+      "words": ["丁香 (lilac)", "壮丁 (young man)", "人丁 (family members)"],
+      "definition-english": "Fourth; robust; man; person",
+      "definition-chinese": "第四个；丁壮；人丁"
+    },
+    {
+      "character": "前",
+      "english": "front, before, ahead",
+      "pinyin": "qián",
+      "same-sounding-character": ["钱 (money)", "乾 (dry)", "牵 (pull)"],
+      "words": ["前面 (front)", "前进 (advance)", "之前 (before)"],
+      "definition-english": "Front; before; ahead; prior",
+      "definition-chinese": "前面；前方；以前"
+    },
+    {
+      "character": "后",
+      "english": "back, behind, after",
+      "pinyin": "hòu",
+      "same-sounding-character": ["喉 (throat)", "厚 (thick)", "侯 (marquis)"],
+      "words": ["后面 (back)", "后来 (later)", "之后 (after)"],
+      "definition-english": "Back; behind; after; rear",
+      "definition-chinese": "后面；后方；以后"
+    },
+    {
+      "character": "左",
+      "english": "left, wrong",
+      "pinyin": "zuǒ",
+      "same-sounding-character": ["佐 (assist)", "坐 (sit)", "做 (make)"],
+      "words": ["左边 (left side)", "左手 (left hand)", "左转 (turn left)"],
+      "definition-english": "Left; left side; wrong",
+      "definition-chinese": "左边；左方；左面"
+    },
+    {
+      "character": "右",
+      "english": "right, conservative",
+      "pinyin": "yòu",
+      "same-sounding-character": ["有 (have)", "油 (oil)", "友 (friend)"],
+      "words": ["右边 (right side)", "右手 (right hand)", "右转 (turn right)"],
+      "definition-english": "Right; right side; conservative",
+      "definition-chinese": "右边；右方；右面"
+    },
+    {
+      "character": "中",
+      "english": "middle, center, China",
+      "pinyin": "zhōng",
+      "same-sounding-character": ["终 (end)", "钟 (bell)", "仲 (middle)"],
+      "words": ["中间 (middle)", "中国 (China)", "中心 (center)"],
+      "definition-english": "Middle; center; China; hit",
+      "definition-chinese": "中间；中心；中国"
+    },
+    {
+      "character": "间",
+      "english": "space, gap, room",
+      "pinyin": "jiān",
+      "same-sounding-character": ["闲 (idle)", "咸 (salty)", "监 (monitor)"],
+      "words": ["房间 (room)", "时间 (time)", "中间 (middle)"],
+      "definition-english": "Space; gap; room; interval",
+      "definition-chinese": "间隔；房间；时间"
+    },
+    {
+      "character": "边",
+      "english": "side, edge, border",
+      "pinyin": "biān",
+      "same-sounding-character": ["便 (convenient)", "鞭 (whip)", "编 (weave)"],
+      "words": ["左边 (left side)", "右边 (right side)", "旁边 (beside)"],
+      "definition-english": "Side; edge; border; margin",
+      "definition-chinese": "边；边缘；旁边"
+    },
+    {
+      "character": "同",
+      "english": "same, together, with",
+      "pinyin": "tóng",
+      "same-sounding-character": ["铜 (copper)", "童 (child)", "通 (connect)"],
+      "words": ["同学 (classmate)", "同意 (agree)", "同样 (same)"],
+      "definition-english": "Same; together; with; equal",
+      "definition-chinese": "相同；一起；共同"
+    },
+    {
+      "character": "学",
+      "english": "to learn, to study, school",
+      "pinyin": "xué",
+      "same-sounding-character": ["雪 (snow)", "血 (blood)", "穴 (cave)"],
+      "words": ["学生 (student)", "学校 (school)", "学习 (study)"],
+      "definition-english": "To learn; to study; school",
+      "definition-chinese": "学习；学生；学校"
+    },
+    {
+      "character": "朋",
+      "english": "friend, companion",
+      "pinyin": "péng",
+      "same-sounding-character": ["棚 (shed)", "蓬 (luxuriant)", "鹏 (roc)"],
+      "words": ["朋友 (friend)", "好朋友 (good friend)", "朋党 (clique)"],
+      "definition-english": "Friend; companion; peer",
+      "definition-chinese": "朋友；伙伴；友人"
+    },
+    {
+      "character": "友",
+      "english": "friend, friendship",
+      "pinyin": "yǒu",
+      "same-sounding-character": ["有 (have)", "又 (again)", "油 (oil)"],
+      "words": ["朋友 (friend)", "友谊 (friendship)", "友好 (friendly)"],
+      "definition-english": "Friend; friendship; amity",
+      "definition-chinese": "朋友；友谊；友好"
+    },
+    {
+      "character": "坐",
+      "english": "to sit, to be seated",
+      "pinyin": "zuò",
+      "same-sounding-character": ["做 (make)", "左 (left)", "佐 (assist)"],
+      "words": ["坐下 (sit down)", "坐着 (sitting)", "坐车 (ride in car)"],
+      "definition-english": "To sit; to be seated; to rest",
+      "definition-chinese": "坐；坐下；坐着"
+    },
+    {
+      "character": "高",
+      "english": "high, tall, lofty",
+      "pinyin": "gāo",
+      "same-sounding-character": ["膏 (cream)", "糕 (cake)", "羔 (lamb)"],
+      "words": ["高个子 (tall person)", "高兴 (happy)", "高等 (high class)"],
+      "definition-english": "High; tall; lofty; superior",
+      "definition-chinese": "高；高大；高兴"
+    },
+    {
+      "character": "发",
+      "english": "to send, to emit, hair",
+      "pinyin": "fā",
+      "same-sounding-character": ["法 (law)", "乏 (lack)", "罚 (punish)"],
+      "words": ["头发 (hair)", "发送 (send)", "发起 (initiate)"],
+      "definition-english": "To send; to emit; hair; to develop",
+      "definition-chinese": "发送；头发；发起"
+    },
+    {
+      "character": "直",
+      "english": "straight, direct, upright",
+      "pinyin": "zhí",
+      "same-sounding-character": ["值 (value)", "植 (plant)", "执 (hold)"],
+      "words": ["直接 (direct)", "一直 (always)", "直线 (straight line)"],
+      "definition-english": "Straight; direct; upright; frank",
+      "definition-chinese": "直；笔直；直接"
+    },
+    {
+      "character": "起",
+      "english": "to rise, to get up, to start",
+      "pinyin": "qǐ",
+      "same-sounding-character": ["气 (air)", "弃 (abandon)", "启 (open)"],
+      "words": ["起来 (rise)", "起床 (get up)", "起点 (start point)"],
+      "definition-english": "To rise; to get up; to start",
+      "definition-chinese": "起来；起床；开始"
+    },
+    {
+      "character": "回",
+      "english": "to return, to go back, turn",
+      "pinyin": "huí",
+      "same-sounding-character": ["悔 (regret)", "灰 (ash)", "徊 (wander)"],
+      "words": ["回家 (go home)", "回来 (come back)", "回答 (answer)"],
+      "definition-english": "To return; to go back; turn",
+      "definition-chinese": "回来；回家；返回"
+    },
+    {
+      "character": "周",
+      "english": "week, circumference, Zhou",
+      "pinyin": "zhōu",
+      "same-sounding-character": ["洲 (continent)", "舟 (boat)", "粥 (porridge)"],
+      "words": ["周围 (around)", "周末 (weekend)", "一周 (one week)"],
+      "definition-english": "Week; circumference; Zhou dynasty",
+      "definition-chinese": "周；一周；周围"
+    },
+    {
+      "character": "末",
+      "english": "end, tip, powder",
+      "pinyin": "mò",
+      "same-sounding-character": ["没 (not have)", "墨 (ink)", "摸 (touch)"],
+      "words": ["周末 (weekend)", "年末 (year end)", "树末 (tree tip)"],
+      "definition-english": "End; tip; powder; final",
+      "definition-chinese": "末；末端；周末"
+    }
+  ],
+  "p1-12": [
+    {
+      "character": "鸡",
+      "english": "chicken",
+      "pinyin": "jī",
+      "same-sounding-character": ["机 (machine)", "急 (hurry)", "集 (gather)"],
+      "words": ["小鸡 (chick)", "鸡蛋 (egg)", "鸡肉 (chicken meat)"],
+      "definition-english": "Chicken; hen; fowl",
+      "definition-chinese": "鸡；母鸡；小鸡"
+    },
+    {
+      "character": "饭",
+      "english": "rice, meal, cooked rice",
+      "pinyin": "fàn",
+      "same-sounding-character": ["翻 (flip)", "番 (turn)", "蕃 (wild)"],
+      "words": ["米饭 (cooked rice)", "吃饭 (eat meal)", "午饭 (lunch)"],
+      "definition-english": "Rice; meal; cooked rice",
+      "definition-chinese": "米饭；饭菜；饭食"
+    },
+    {
+      "character": "鸭",
+      "english": "duck",
+      "pinyin": "yā",
+      "same-sounding-character": ["压 (press)", "呀 (oh)", "雅 (elegant)"],
+      "words": ["小鸭 (duckling)", "鸭肉 (duck meat)", "鸭蛋 (duck egg)"],
+      "definition-english": "Duck; waterfowl",
+      "definition-chinese": "鸭；鸭子；野鸭"
+    },
+    {
+      "character": "元",
+      "english": "yuan, dollar, element",
+      "pinyin": "yuán",
+      "same-sounding-character": ["圆 (round)", "原 (original)", "源 (source)"],
+      "words": ["一元 (one yuan)", "元宵 (sweet rice ball)", "元旦 (New Year's Day)"],
+      "definition-english": "Yuan (currency); dollar; element",
+      "definition-chinese": "元；元钱；一元"
+    },
+    {
+      "character": "饿",
+      "english": "hungry, starving",
+      "pinyin": "è",
+      "same-sounding-character": ["恶 (evil)", "鹅 (goose)", "额 (forehead)"],
+      "words": ["饿了 (hungry)", "很饿 (very hungry)", "挨饿 (starve)"],
+      "definition-english": "Hungry; starving; to hunger",
+      "definition-chinese": "饿；饥饿；肚子饿"
+    },
+    {
+      "character": "饱",
+      "english": "full, satisfied, satiated",
+      "pinyin": "bǎo",
+      "same-sounding-character": ["保 (protect)", "报 (report)", "暴 (violent)"],
+      "words": ["饱了 (full)", "吃饱 (eat one's fill)", "饱满 (abundant)"],
+      "definition-english": "Full; satisfied; satiated",
+      "definition-chinese": "饱；吃饱；饱满"
+    },
+    {
+      "character": "饼",
+      "english": "cake, flatbread, pancake",
+      "pinyin": "bǐng",
+      "same-sounding-character": ["病 (illness)", "丙 (third)", "柄 (handle)"],
+      "words": ["饼干 (biscuit)", "煎饼 (pancake)", "月饼 (mooncake)"],
+      "definition-english": "Cake; flatbread; pancake",
+      "definition-chinese": "饼；饼干；月饼"
+    },
+    {
+      "character": "干",
+      "english": "dry, trunk, main",
+      "pinyin": "gān",
+      "same-sounding-character": ["肝 (liver)", "杆 (pole)", "甘 (sweet)"],
+      "words": ["饼干 (biscuit)", "干脆 (straightforward)", "干燥 (dry)"],
+      "definition-english": "Dry; trunk; main; stem",
+      "definition-chinese": "干；干燥；树干"
+    },
+    {
+      "character": "狗",
+      "english": "dog",
+      "pinyin": "gǒu",
+      "same-sounding-character": ["够 (enough)", "沟 (ditch)", "垢 (dirt)"],
+      "words": ["小狗 (puppy)", "狗狗 (doggy)", "看家狗 (watchdog)"],
+      "definition-english": "Dog; canine; hound",
+      "definition-chinese": "狗；小狗；狗狗"
+    },
+    {
+      "character": "喜",
+      "english": "happy, joy, to like",
+      "pinyin": "xǐ",
+      "same-sounding-character": ["西 (west)", "吸 (absorb)", "洗 (wash)"],
+      "words": ["喜欢 (like)", "高兴 (happy)", "喜事 (happy event)"],
+      "definition-english": "Happy; joy; to like; to love",
+      "definition-chinese": "喜欢；高兴；快乐"
+    },
+    {
+      "character": "欢",
+      "english": "happy, joyful, to rejoice",
+      "pinyin": "huān",
+      "same-sounding-character": ["环 (ring)", "还 (return)", "缓 (slow)"],
+      "words": ["喜欢 (like)", "欢乐 (happy)", "欢迎 (welcome)"],
+      "definition-english": "Happy; joyful; to rejoice; merry",
+      "definition-chinese": "欢乐；高兴；欢迎"
+    },
+    {
+      "character": "肉",
+      "english": "meat, flesh",
+      "pinyin": "ròu",
+      "same-sounding-character": ["柔 (soft)", "糅 (blend)", "鞣 (tan)"],
+      "words": ["鸡肉 (chicken meat)", "猪肉 (pork)", "牛肉 (beef)"],
+      "definition-english": "Meat; flesh; pulp",
+      "definition-chinese": "肉；肉类；肉食"
+    },
+    {
+      "character": "猫",
+      "english": "cat",
+      "pinyin": "māo",
+      "same-sounding-character": ["毛 (hair)", "矛 (spear)", "茅 (thatch)"],
+      "words": ["小猫 (kitten)", "猫咪 (kitty)", "花猫 (tabby)"],
+      "definition-english": "Cat; feline",
+      "definition-chinese": "猫；小猫；猫咪"
+    },
+    {
+      "character": "采",
+      "english": "to pick, to gather, color",
+      "pinyin": "cǎi",
+      "same-sounding-character": ["彩 (color)", "财 (wealth)", "才 (talent)"],
+      "words": ["采集 (gather)", "采花 (pick flowers)", "采矿 (mining)"],
+      "definition-english": "To pick; to gather; color; collect",
+      "definition-chinese": "采摘；采集；采色"
+    },
+    {
+      "character": "歌",
+      "english": "song",
+      "pinyin": "gē",
+      "same-sounding-character": ["哥 (older brother)", "戈 (halberd)", "格 (grid)"],
+      "words": ["唱歌 (sing)", "歌曲 (song)", "儿歌 (children song)"],
+      "definition-english": "Song; ballad; to sing",
+      "definition-chinese": "歌；歌曲；唱歌"
+    },
+    {
+      "character": "唱",
+      "english": "to sing",
+      "pinyin": "chàng",
+      "same-sounding-character": ["敞 (open)", "倡 (lead)", "唱 (sing)"],
+      "words": ["唱歌 (sing)", "唱歌比赛 (singing competition)", "唱生日歌 (sing Happy Birthday)"],
+      "definition-english": "To sing; to perform; to chant",
+      "definition-chinese": "唱；唱歌；唱念"
+    },
+    {
+      "character": "青",
+      "english": "blue, green, young",
+      "pinyin": "qīng",
+      "same-sounding-character": ["清 (clear)", "请 (request)", "轻 (light)"],
+      "words": ["青菜 (greens)", "青色 (blue-green)", "青年 (youth)"],
+      "definition-english": "Blue; green; young; black",
+      "definition-chinese": "青色；青菜；青年"
+    },
+    {
+      "character": "菜",
+      "english": "vegetable, dish, cuisine",
+      "pinyin": "cài",
+      "same-sounding-character": ["才 (talent)", "猜 (guess)", "彩 (color)"],
+      "words": ["青菜 (greens)", "菜肴 (dish)", "菜市场 (vegetable market)"],
+      "definition-english": "Vegetable; dish; cuisine; food",
+      "definition-chinese": "蔬菜；菜肴；饭菜"
+    },
+    {
+      "character": "汤",
+      "english": "soup, broth, hot water",
+      "pinyin": "tāng",
+      "same-sounding-character": ["堂 (hall)", "塘 (pond)", "烫 (hot)"],
+      "words": ["鸡汤 (chicken soup)", "菜汤 (vegetable soup)", "喝汤 (drink soup)"],
+      "definition-english": "Soup; broth; hot water",
+      "definition-chinese": "汤；汤水；喝汤"
+    },
+    {
+      "character": "蛋",
+      "english": "egg",
+      "pinyin": "dàn",
+      "same-sounding-character": ["当 (when)", "淡 (mild)", "弹 (bounce)"],
+      "words": ["鸡蛋 (egg)", "蛋糕 (cake)", "煮蛋 (boiled egg)"],
+      "definition-english": "Egg; ovum",
+      "definition-chinese": "蛋；鸡蛋；蛋类"
+    },
+    {
+      "character": "香",
+      "english": "fragrant, aromatic, savory",
+      "pinyin": "xiāng",
+      "same-sounding-character": ["乡 (village)", "祥 (auspicious)", "详 (detailed)"],
+      "words": ["香味 (fragrance)", "香蕉 (banana)", "很香 (very fragrant)"],
+      "definition-english": "Fragrant; aromatic; savory; pleasant-smelling",
+      "definition-chinese": "香；香味；芳香"
+    }
+  ],
+  "p1-13": [
+    {
+      "character": "用",
+      "english": "to use, usefulness",
+      "pinyin": "yòng",
+      "same-sounding-character": ["拥 (embrace)", "佣 (servant)", "踊 (jump)"],
+      "words": ["使用 (use)", "有用 (useful)", "用处 (usefulness)"],
+      "definition-english": "To use; usefulness; purpose",
+      "definition-chinese": "使用；用处；有用"
+    },
+    {
+      "character": "刷",
+      "english": "to brush, to scrub, brush",
+      "pinyin": "shuā",
+      "same-sounding-character": ["耍 (play)", "甩 (swing)", "率 (rate)"],
+      "words": ["牙刷 (toothbrush)", "刷牙 (brush teeth)", "刷洗 (scrub)"],
+      "definition-english": "To brush; to scrub; brush",
+      "definition-chinese": "刷；刷洗；牙刷"
+    },
+    {
+      "character": "巾",
+      "english": "towel, cloth, scarf",
+      "pinyin": "jīn",
+      "same-sounding-character": ["衿 (collar)", "矜 (boast)", "谨 (careful)"],
+      "words": ["毛巾 (towel)", "手巾 (handkerchief)", "布巾 (cloth)"],
+      "definition-english": "Towel; cloth; scarf; kerchief",
+      "definition-chinese": "毛巾；手巾；布巾"
+    },
+    {
+      "character": "抹",
+      "english": "to wipe, to smear, to erase",
+      "pinyin": "mǒ",
+      "same-sounding-character": ["末 (end)", "沫 (foam)", "枚 (measure word)"],
+      "words": ["抹布 (rag)", "抹去 (wipe away)", "抹黑 (smear)"],
+      "definition-english": "To wipe; to smear; to erase",
+      "definition-chinese": "擦拭；涂抹；抹去"
+    },
+    {
+      "character": "洗",
+      "english": "to wash, to bathe",
+      "pinyin": "xǐ",
+      "same-sounding-character": ["西 (west)", "吸 (absorb)", "喜 (happy)"],
+      "words": ["洗手 (wash hands)", "洗脸 (wash face)", "洗澡 (bathe)"],
+      "definition-english": "To wash; to bathe; to rinse",
+      "definition-chinese": "洗；洗涤；清洗"
+    },
+    {
+      "character": "要",
+      "english": "to want, to need, must",
+      "pinyin": "yào",
+      "same-sounding-character": ["药 (medicine)", "遥 (distant)", "钥 (key)"],
+      "words": ["要是 (if)", "需要 (need)", "重要 (important)"],
+      "definition-english": "To want; to need; must; should",
+      "definition-chinese": "要；需要；必须"
+    },
+    {
+      "character": "脸",
+      "english": "face, cheek",
+      "pinyin": "liǎn",
+      "same-sounding-character": ["廉 (honest)", "恋 (love)", "炼 (refine)"],
+      "words": ["洗脸 (wash face)", "脸上 (on face)", "脸色 (facial expression)"],
+      "definition-english": "Face; cheek; countenance",
+      "definition-chinese": "脸；面部；脸色"
+    },
+    {
+      "character": "放",
+      "english": "to put, to release, to let",
+      "pinyin": "fàng",
+      "same-sounding-character": ["防 (prevent)", "房 (house)", "仿 (imitate)"],
+      "words": ["放下 (put down)", "放学 (school dismissal)", "放假 (on holiday)"],
+      "definition-english": "To put; to release; to let; to place",
+      "definition-chinese": "放置；释放；放下"
+    },
+    {
+      "character": "冲",
+      "english": "to rush, to dash, to flush",
+      "pinyin": "chōng",
+      "same-sounding-character": ["充 (fill)", "崇 (revere)", "宠 (pamper)"],
+      "words": ["冲洗 (rinse)", "冲进 (rush in)", "冲凉 (take shower)"],
+      "definition-english": "To rush; to dash; to flush; impact",
+      "definition-chinese": "冲向；冲洗；冲刺"
+    },
+    {
+      "character": "凉",
+      "english": "cool, cold, chill",
+      "pinyin": "liáng",
+      "same-sounding-character": ["梁 (beam)", "粮 (grain)", "量 (quantity)"],
+      "words": ["冲凉 (take shower)", "凉快 (cool)", "凉水 (cold water)"],
+      "definition-english": "Cool; cold; chill; refreshing",
+      "definition-chinese": "凉；凉爽；凉水"
+    },
+    {
+      "character": "东",
+      "english": "east",
+      "pinyin": "dōng",
+      "same-sounding-character": ["冬 (winter)", "动 (move)", "董 (supervise)"],
+      "words": ["东西 (thing)", "东方 (east)", "东京 (Tokyo)"],
+      "definition-english": "East; eastern; east direction",
+      "definition-chinese": "东方；东边；东部"
+    },
+    {
+      "character": "西",
+      "english": "west, western",
+      "pinyin": "xī",
+      "same-sounding-character": ["喜 (happy)", "吸 (absorb)", "洗 (wash)"],
+      "words": ["东西 (thing)", "西方 (west)", "西瓜 (watermelon)"],
+      "definition-english": "West; western; west direction",
+      "definition-chinese": "西方；西边；西部"
+    },
+    {
+      "character": "到",
+      "english": "to arrive, to reach, until",
+      "pinyin": "dào",
+      "same-sounding-character": ["倒 (fall)", "岛 (island)", "刀 (knife)"],
+      "words": ["到达 (arrive)", "到了 (arrived)", "见到 (see)"],
+      "definition-english": "To arrive; to reach; until; to",
+      "definition-chinese": "到达；直到；来到"
+    },
+    {
+      "character": "先",
+      "english": "first, earlier, before",
+      "pinyin": "xiān",
+      "same-sounding-character": ["鲜 (fresh)", "纤 (thin)", "仙 (fairy)"],
+      "words": ["先生 (mister)", "先前 (before)", "先进 (advanced)"],
+      "definition-english": "First; earlier; before; prior",
+      "definition-chinese": "先；首先；先前"
+    },
+    {
+      "character": "请",
+      "english": "to request, please",
+      "pinyin": "qǐng",
+      "same-sounding-character": ["清 (clear)", "轻 (light)", "青 (blue)"],
+      "words": ["请坐 (please sit)", "邀请 (invite)", "请问 (excuse me)"],
+      "definition-english": "To request; please; to invite",
+      "definition-chinese": "请；邀请；请求"
+    },
+    {
+      "character": "很",
+      "english": "very, quite",
+      "pinyin": "hěn",
+      "same-sounding-character": ["恨 (hate)", "狠 (fierce)", "痕 (mark)"],
+      "words": ["很好 (very good)", "很多 (very many)", "很高 (quite tall)"],
+      "definition-english": "Very; quite; fairly; rather",
+      "definition-chinese": "很；非常；十分"
+    },
+    {
+      "character": "泡",
+      "english": "bubble, foam, to soak",
+      "pinyin": "pào",
+      "same-sounding-character": ["跑 (run)", "炮 (cannon)", "抛 (throw)"],
+      "words": ["泡泡 (bubble)", "泡茶 (steep tea)", "泡水 (soak)"],
+      "definition-english": "Bubble; foam; to soak; to steep",
+      "definition-chinese": "泡；泡沫；浸泡"
+    },
+    {
+      "character": "变",
+      "english": "to change, to transform",
+      "pinyin": "biàn",
+      "same-sounding-character": ["辩 (debate)", "便 (convenient)", "鞭 (whip)"],
+      "words": ["变了 (changed)", "变色 (change color)", "变成 (become)"],
+      "definition-english": "To change; to transform; to alter",
+      "definition-chinese": "变；改变；变成"
+    },
+    {
+      "character": "谢",
+      "english": "to thank, thank you",
+      "pinyin": "xiè",
+      "same-sounding-character": ["解 (solve)", "歇 (rest)", "械 (machine)"],
+      "words": ["谢谢 (thank you)", "道谢 (thank)", "感谢 (appreciate)"],
+      "definition-english": "To thank; thank you; gratitude",
+      "definition-chinese": "感谢；谢谢；道谢"
+    }
+  ],
+  "p1-14": [
+    {
+      "character": "这",
+      "english": "this, these",
+      "pinyin": "zhè",
+      "same-sounding-character": ["徹 (thorough)", "折 (fold)", "谍 (spy)"],
+      "words": ["这个 (this)", "这些 (these)", "这样 (this way)"],
+      "definition-english": "This; these; such",
+      "definition-chinese": "这；这个；这些"
+    },
+    {
+      "character": "双",
+      "english": "pair, double, both",
+      "pinyin": "shuāng",
+      "same-sounding-character": ["霜 (frost)", "爽 (refreshing)", "商 (merchant)"],
+      "words": ["一双 (a pair)", "双手 (both hands)", "双脚 (both feet)"],
+      "definition-english": "Pair; double; both; twin",
+      "definition-chinese": "一双；双双；两个"
+    },
+    {
+      "character": "袜",
+      "english": "sock",
+      "pinyin": "wà",
+      "same-sounding-character": ["瓦 (tile)", "挖 (dig)", "蛙 (frog)"],
+      "words": ["袜子 (sock)", "一双袜 (a pair of socks)", "穿袜 (wear socks)"],
+      "definition-english": "Sock; stocking; hosiery",
+      "definition-chinese": "袜子；长袜；短袜"
+    },
+    {
+      "character": "那",
+      "english": "that, those, then",
+      "pinyin": "nà",
+      "same-sounding-character": ["拿 (take)", "娜 (graceful)", "纳 (accept)"],
+      "words": ["那个 (that)", "那些 (those)", "那样 (that way)"],
+      "definition-english": "That; those; then",
+      "definition-chinese": "那；那个；那些"
+    },
+    {
+      "character": "皮",
+      "english": "skin, leather, peel",
+      "pinyin": "pí",
+      "same-sounding-character": ["疲 (tired)", "脾 (spleen)", "陴 (palisade)"],
+      "words": ["皮鞋 (leather shoes)", "皮肤 (skin)", "橙皮 (orange peel)"],
+      "definition-english": "Skin; leather; peel; hide",
+      "definition-chinese": "皮肤；皮革；皮"
+    },
+    {
+      "character": "鞋",
+      "english": "shoe",
+      "pinyin": "xié",
+      "same-sounding-character": ["谐 (harmonious)", "写 (write)", "偕 (together)"],
+      "words": ["皮鞋 (leather shoes)", "鞋子 (shoes)", "穿鞋 (wear shoes)"],
+      "definition-english": "Shoe; footwear",
+      "definition-chinese": "鞋；鞋子；鞋类"
+    },
+    {
+      "character": "件",
+      "english": "piece, item, matter",
+      "pinyin": "jiàn",
+      "same-sounding-character": ["健 (healthy)", "间 (space)", "鉴 (mirror)"],
+      "words": ["一件 (one)", "衣服件 (clothing item)", "事件 (matter)"],
+      "definition-english": "Piece; item; matter; measure word",
+      "definition-chinese": "件；一件；物件"
+    },
+    {
+      "character": "服",
+      "english": "clothes, to wear, service",
+      "pinyin": "fú",
+      "same-sounding-character": ["伏 (hide)", "浮 (float)", "符 (symbol)"],
+      "words": ["衣服 (clothes)", "服装 (clothing)", "服务 (service)"],
+      "definition-english": "Clothes; to wear; service; suit",
+      "definition-chinese": "衣服；服装；服用"
+    },
+    {
+      "character": "被",
+      "english": "quilt, bedding, by (passive)",
+      "pinyin": "bèi",
+      "same-sounding-character": ["贝 (shell)", "倍 (times)", "备 (prepare)"],
+      "words": ["被子 (quilt)", "被窝 (blanket)", "被动 (passive)"],
+      "definition-english": "Quilt; bedding; by (passive voice)",
+      "definition-chinese": "被子；被褥；被"
+    },
+    {
+      "character": "还",
+      "english": "also, still, yet, to return",
+      "pinyin": "háishi",
+      "same-sounding-character": ["环 (ring)", "缓 (slow)", "欢 (happy)"],
+      "words": ["还要 (still need)", "还是 (or/still)", "还好 (okay)"],
+      "definition-english": "Also; still; yet; to return",
+      "definition-chinese": "还；还要；还是"
+    },
+    {
+      "character": "色",
+      "english": "color, appearance",
+      "pinyin": "sè",
+      "same-sounding-character": ["瑟 (drear)", "涩 (rough)", "塞 (stuff)"],
+      "words": ["颜色 (color)", "红色 (red color)", "色彩 (color)"],
+      "definition-english": "Color; appearance; shade",
+      "definition-chinese": "颜色；色彩；色调"
+    },
+    {
+      "character": "红",
+      "english": "red, popular",
+      "pinyin": "hóng",
+      "same-sounding-character": ["洪 (flood)", "鸿 (wild goose)", "虹 (rainbow)"],
+      "words": ["红色 (red)", "红花 (red flower)", "绛红 (crimson)"],
+      "definition-english": "Red; popular; prosperous",
+      "definition-chinese": "红色；红的；走红"
+    },
+    {
+      "character": "都",
+      "english": "all, both, capital",
+      "pinyin": "dōu",
+      "same-sounding-character": ["兜 (bag)", "蚪 (tadpole)", "督 (supervise)"],
+      "words": ["都是 (all are)", "都有 (all have)", "首都 (capital)"],
+      "definition-english": "All; both; capital; metropolis",
+      "definition-chinese": "都；全部；首都"
+    },
+    {
+      "character": "动",
+      "english": "to move, active, movement",
+      "pinyin": "dòng",
+      "same-sounding-character": ["冬 (winter)", "东 (east)", "懂 (understand)"],
+      "words": ["动了 (moved)", "活动 (activity)", "动物 (animal)"],
+      "definition-english": "To move; active; movement; dynamic",
+      "definition-chinese": "动；运动；活动"
+    },
+    {
+      "character": "作",
+      "english": "to make, to do, work",
+      "pinyin": "zuò",
+      "same-sounding-character": ["坐 (sit)", "做 (make)", "佐 (assist)"],
+      "words": ["作业 (homework)", "工作 (work)", "作品 (work/composition)"],
+      "definition-english": "To make; to do; work; composition",
+      "definition-chinese": "作；做；工作"
+    },
+    {
+      "character": "快",
+      "english": "fast, quick, happy",
+      "pinyin": "kuài",
+      "same-sounding-character": ["块 (block)", "筷 (chopstick)", "侩 (middleman)"],
+      "words": ["快速 (fast)", "快乐 (happy)", "快点 (hurry up)"],
+      "definition-english": "Fast; quick; happy; cheerful",
+      "definition-chinese": "快；快速；快乐"
+    },
+    {
+      "character": "收",
+      "english": "to collect, to receive, to gather",
+      "pinyin": "shōu",
+      "same-sounding-character": ["手 (hand)", "首 (first)", "授 (teach)"],
+      "words": ["收收拾 (tidy up)", "收起 (put away)", "收到 (receive)"],
+      "definition-english": "To collect; to receive; to gather",
+      "definition-chinese": "收；收集；收到"
+    },
+    {
+      "character": "拾",
+      "english": "to pick up, ten (formal)",
+      "pinyin": "shí",
+      "same-sounding-character": ["十 (ten)", "湿 (wet)", "食 (eat)"],
+      "words": ["收拾 (tidy up)", "拾起 (pick up)", "拾穗 (glean)"],
+      "definition-english": "To pick up; ten (formal); to collect",
+      "definition-chinese": "拾起；收拾；十"
+    },
+    {
+      "character": "穿",
+      "english": "to wear, to put on, to pierce",
+      "pinyin": "chuān",
+      "same-sounding-character": ["川 (river)", "传 (pass)", "串 (string)"],
+      "words": ["穿衣 (wear clothes)", "穿上 (put on)", "穿着 (dressed in)"],
+      "definition-english": "To wear; to put on; to pierce",
+      "definition-chinese": "穿；穿衣；穿着"
+    },
+    {
+      "character": "事",
+      "english": "matter, thing, event",
+      "pinyin": "shì",
+      "same-sounding-character": ["世 (world)", "试 (test)", "侍 (serve)"],
+      "words": ["事情 (matter)", "故事 (story)", "做事 (do things)"],
+      "definition-english": "Matter; thing; event; affair",
+      "definition-chinese": "事；事情；事件"
+    },
+    {
+      "character": "做",
+      "english": "to make, to do, to be",
+      "pinyin": "zuò",
+      "same-sounding-character": ["坐 (sit)", "作 (make)", "佐 (assist)"],
+      "words": ["做了 (made)", "做事 (do things)", "做作业 (do homework)"],
+      "definition-english": "To make; to do; to be; to act",
+      "definition-chinese": "做；制作；进行"
+    }
+  ],
+  "p1-15": [
+    {
+      "character": "甜",
+      "english": "sweet",
+      "pinyin": "tián",
+      "same-sounding-character": ["田 (field)", "填 (fill)", "舔 (lick)"],
+      "words": ["甜的 (sweet)", "甜蜜 (sweet)", "很甜 (very sweet)"],
+      "definition-english": "Sweet; sugary; pleasant",
+      "definition-chinese": "甜；甜蜜；口感甜"
+    },
+    {
+      "character": "苦",
+      "english": "bitter, hard, suffering",
+      "pinyin": "kǔ",
+      "same-sounding-character": ["库 (warehouse)", "酷 (cool)", "哭 (cry)"],
+      "words": ["苦的 (bitter)", "很苦 (very bitter)", "辛苦 (hard work)"],
+      "definition-english": "Bitter; hard; suffering; difficult",
+      "definition-chinese": "苦；苦味；艰苦"
+    },
+    {
+      "character": "臭",
+      "english": "stinky, smelly, foul",
+      "pinyin": "chòu",
+      "same-sounding-character": ["嗅 (smell)", "嘬 (suck)", "怔 (daze)"],
+      "words": ["臭的 (smelly)", "臭味 (bad smell)", "很臭 (very stinky)"],
+      "definition-english": "Stinky; smelly; foul-smelling",
+      "definition-chinese": "臭；恶臭；臭味"
+    },
+    {
+      "character": "生",
+      "english": "to live, raw, birth",
+      "pinyin": "shēng",
+      "same-sounding-character": ["声 (sound)", "升 (rise)", "甥 (nephew)"],
+      "words": ["生活 (life)", "生日 (birthday)", "生吃 (eat raw)"],
+      "definition-english": "To live; raw; birth; life; student",
+      "definition-chinese": "生；生活；生命"
+    },
+    {
+      "character": "重",
+      "english": "heavy, weight, important",
+      "pinyin": "zhòng",
+      "same-sounding-character": ["众 (many)", "种 (kind)", "肿 (swollen)"],
+      "words": ["很重 (very heavy)", "重要 (important)", "重新 (again)"],
+      "definition-english": "Heavy; weight; important; grave",
+      "definition-chinese": "重；沉重；重要"
+    },
+    {
+      "character": "喝",
+      "english": "to drink",
+      "pinyin": "hē",
+      "same-sounding-character": ["和 (and)", "贺 (congratulate)", "赫 (prominent)"],
+      "words": ["喝水 (drink water)", "喝茶 (drink tea)", "喝牛奶 (drink milk)"],
+      "definition-english": "To drink; to beverage",
+      "definition-chinese": "喝；饮用；喝饮料"
+    },
+    {
+      "character": "甘",
+      "english": "sweet, willing",
+      "pinyin": "gān",
+      "same-sounding-character": ["干 (dry)", "杆 (pole)", "肝 (liver)"],
+      "words": ["甘甜 (sweet)", "甘愿 (willing)", "甘蔗 (sugarcane)"],
+      "definition-english": "Sweet; willing; pleased",
+      "definition-chinese": "甘甜；甘愿；甜蜜"
+    },
+    {
+      "character": "汁",
+      "english": "juice, liquid",
+      "pinyin": "zhī",
+      "same-sounding-character": ["支 (branch)", "知 (know)", "织 (weave)"],
+      "words": ["果汁 (fruit juice)", "菠萝汁 (pineapple juice)", "番茄汁 (tomato juice)"],
+      "definition-english": "Juice; liquid; essence",
+      "definition-chinese": "汁液；果汁；汤汁"
+    },
+    {
+      "character": "买",
+      "english": "to buy, to purchase",
+      "pinyin": "mǎi",
+      "same-sounding-character": ["迈 (stride)", "埋 (bury)", "麦 (wheat)"],
+      "words": ["买了 (bought)", "去买 (go buy)", "买东西 (go shopping)"],
+      "definition-english": "To buy; to purchase; to acquire",
+      "definition-chinese": "买；购买；采购"
+    },
+    {
+      "character": "斤",
+      "english": "jin (weight unit), pound",
+      "pinyin": "jīn",
+      "same-sounding-character": ["金 (gold)", "禁 (forbid)", "筋 (muscle)"],
+      "words": ["一斤 (one jin)", "两斤 (two jin)", "克斤 (gram and jin)"],
+      "definition-english": "Jin (weight unit, ~500g); pound",
+      "definition-chinese": "斤；重量单位；磅"
+    },
+    {
+      "character": "串",
+      "english": "string, bunch, to string",
+      "pinyin": "chuàn",
+      "same-sounding-character": ["传 (pass)", "穿 (wear)", "川 (river)"],
+      "words": ["一串 (one string/bunch)", "串起 (string together)", "串珠 (beads)"],
+      "definition-english": "String; bunch; to string together",
+      "definition-chinese": "串；一串；串珠"
+    },
+    {
+      "character": "弯",
+      "english": "curved, to bend, curve",
+      "pinyin": "wān",
+      "same-sounding-character": ["湾 (bay)", "蛙 (frog)", "豌 (pod)"],
+      "words": ["弯的 (curved)", "弯腰 (bend waist)", "弯曲 (bend)"],
+      "definition-english": "Curved; to bend; curve",
+      "definition-chinese": "弯；弯曲；弯腰"
+    },
+    {
+      "character": "选",
+      "english": "to select, to choose, election",
+      "pinyin": "xuǎn",
+      "same-sounding-character": ["宣 (announce)", "旋 (spin)", "絢 (gorgeous)"],
+      "words": ["选择 (choose)", "选了 (chose)", "精选 (hand-picked)"],
+      "definition-english": "To select; to choose; choice",
+      "definition-chinese": "选择；选中；精选"
+    },
+    {
+      "character": "最",
+      "english": "most, utmost, extremity",
+      "pinyin": "zuì",
+      "same-sounding-character": ["醉 (drunk)", "罪 (crime)", "嘴 (mouth)"],
+      "words": ["最好 (best)", "最喜欢 (like most)", "最后 (last)"],
+      "definition-english": "Most; utmost; extremity; the best",
+      "definition-chinese": "最；最好；最多"
+    },
+    {
+      "character": "抱",
+      "english": "to hold, to embrace, to hug",
+      "pinyin": "bào",
+      "same-sounding-character": ["保 (protect)", "饱 (full)", "暴 (violent)"],
+      "words": ["抱住 (hold)", "抱抱 (hug)", "拥抱 (embrace)"],
+      "definition-english": "To hold; to embrace; to hug",
+      "definition-chinese": "抱；拥抱；怀抱"
+    },
+    {
+      "character": "拿",
+      "english": "to take, to hold, to catch",
+      "pinyin": "ná",
+      "same-sounding-character": ["那 (that)", "纳 (accept)", "娜 (graceful)"],
+      "words": ["拿了 (took)", "拿起 (pick up)", "拿走 (take away)"],
+      "definition-english": "To take; to hold; to catch",
+      "definition-chinese": "拿；拿起；拿走"
+    },
+    {
+      "character": "办",
+      "english": "to handle, to manage, to do",
+      "pinyin": "bàn",
+      "same-sounding-character": ["半 (half)", "板 (board)", "伴 (companion)"],
+      "words": ["办了 (handled)", "办事 (handle business)", "办法 (way/method)"],
+      "definition-english": "To handle; to manage; to do; to organize",
+      "definition-chinese": "办理；处理；办法"
+    },
+    {
+      "character": "法",
+      "english": "law, method, way",
+      "pinyin": "fǎ",
+      "same-sounding-character": ["乏 (lack)", "罚 (punish)", "筏 (raft)"],
+      "words": ["办法 (way/method)", "方法 (method)", "法律 (law)"],
+      "definition-english": "Law; method; way; rule",
+      "definition-chinese": "法律；办法；方法"
+    },
+    {
+      "character": "圆",
+      "english": "round, circle, yuan",
+      "pinyin": "yuán",
+      "same-sounding-character": ["元 (yuan)", "原 (original)", "源 (source)"],
+      "words": ["圆的 (round)", "圆形 (circle)", "圆满 (satisfactory)"],
+      "definition-english": "Round; circle; complete",
+      "definition-chinese": "圆；圆形；圆满"
+    },
+    {
+      "character": "切",
+      "english": "to cut, to slice, closely",
+      "pinyin": "qiē",
+      "same-sounding-character": ["且 (furthermore)", "窃 (secretly)", "楔 (wedge)"],
+      "words": ["切了 (cut)", "切菜 (cut vegetables)", "切割 (cut)"],
+      "definition-english": "To cut; to slice; closely; urgent",
+      "definition-chinese": "切；切割；切片"
+    },
+    {
+      "character": "怎",
+      "english": "how, what, why",
+      "pinyin": "zěn",
+      "same-sounding-character": ["曾 (ever)", "增 (increase)", "尊 (respect)"],
+      "words": ["怎样 (how)", "怎么 (how)", "怎办 (what to do)"],
+      "definition-english": "How; what; why; interrogative",
+      "definition-chinese": "怎样；怎么；如何"
+    }
+  ],
+  "p1-16": [
+    {
+      "character": "扫",
+      "english": "to sweep, to brush",
+      "pinyin": "sǎo",
+      "same-sounding-character": ["搔 (scratch)", "骚 (disturb)", "嫂 (sister-in-law)"],
+      "words": ["扫地 (sweep floor)", "扫过 (swept past)", "扫帚 (broom)"],
+      "definition-english": "To sweep; to brush; to scan",
+      "definition-chinese": "扫；扫地；清扫"
+    },
+    {
+      "character": "户",
+      "english": "door, household, family",
+      "pinyin": "hù",
+      "same-sounding-character": ["互 (mutual)", "护 (protect)", "虎 (tiger)"],
+      "words": ["门户 (door)", "人户 (household)", "户口 (household registration)"],
+      "definition-english": "Door; household; family; account",
+      "definition-chinese": "户；家户；门户"
+    },
+    {
+      "character": "桌",
+      "english": "table, desk",
+      "pinyin": "zhuō",
+      "same-sounding-character": ["卓 (outstanding)", "拙 (clumsy)", "濁 (turbid)"],
+      "words": ["桌子 (table)", "课桌 (desk)", "饭桌 (dining table)"],
+      "definition-english": "Table; desk; surface",
+      "definition-chinese": "桌子；桌面；餐桌"
+    },
+    {
+      "character": "椅",
+      "english": "chair",
+      "pinyin": "yǐ",
+      "same-sounding-character": ["移 (move)", "蛇 (snake)", "仪 (ceremony)"],
+      "words": ["椅子 (chair)", "靠椅 (armchair)", "轮椅 (wheelchair)"],
+      "definition-english": "Chair; seat; stool",
+      "definition-chinese": "椅子；座椅；坐椅"
+    },
+    {
+      "character": "兄",
+      "english": "older brother",
+      "pinyin": "xiōng",
+      "same-sounding-character": ["胸 (chest)", "凶 (fierce)", "雍 (harmony)"],
+      "words": ["哥哥 (older brother)", "兄弟 (brothers)", "堂兄 (cousin)"],
+      "definition-english": "Older brother; elder brother",
+      "definition-chinese": "哥哥；兄长；堂兄"
+    },
+    {
+      "character": "房",
+      "english": "room, house, building",
+      "pinyin": "fáng",
+      "same-sounding-character": ["防 (prevent)", "房 (house)", "仿 (imitate)"],
+      "words": ["房间 (room)", "房子 (house)", "卧室 (bedroom)"],
+      "definition-english": "Room; house; building; chamber",
+      "definition-chinese": "房间；房子；屋子"
+    },
+    {
+      "character": "阿",
+      "english": "prefix, elder sister",
+      "pinyin": "ā",
+      "same-sounding-character": ["啊 (ah)", "鸦 (crow)", "雅 (elegant)"],
+      "words": ["阿姐 (elder sister)", "阿叔 (uncle)", "阿婆 (granny)"],
+      "definition-english": "Prefix; elder sister; prefix for names",
+      "definition-chinese": "阿；阿姨；阿叔"
+    },
+    {
+      "character": "叔",
+      "english": "uncle, younger uncle",
+      "pinyin": "shū",
+      "same-sounding-character": ["倏 (suddenly)", "菽 (beans)", "蜀 (Sichuan)"],
+      "words": ["叔叔 (uncle)", "伯叔 (uncles)", "堂叔 (uncle)"],
+      "definition-english": "Uncle; younger uncle; father's brother",
+      "definition-chinese": "叔叔；伯叔；小叔"
+    },
+    {
+      "character": "会",
+      "english": "to meet, to be able, meeting",
+      "pinyin": "huì",
+      "same-sounding-character": ["回 (return)", "灰 (ash)", "挥 (swing)"],
+      "words": ["会了 (can do it)", "会议 (meeting)", "开会 (have meeting)"],
+      "definition-english": "To meet; to be able; to can; meeting",
+      "definition-chinese": "会；开会；聚会"
+    },
+    {
+      "character": "写",
+      "english": "to write, to compose",
+      "pinyin": "xiě",
+      "same-sounding-character": ["歇 (rest)", "械 (machine)", "谢 (thank)"],
+      "words": ["写了 (wrote)", "写字 (write character)", "写作 (writing)"],
+      "definition-english": "To write; to compose; to draw",
+      "definition-chinese": "写；书写；作文"
+    },
+    {
+      "character": "啊",
+      "english": "ah, oh, expression",
+      "pinyin": "ā",
+      "same-sounding-character": ["阿 (prefix)", "呀 (oh)", "鸦 (crow)"],
+      "words": ["啊呀 (oh dear)", "啊了 (ah)", "是啊 (yes)"],
+      "definition-english": "Ah; oh; interjection; exclamation",
+      "definition-chinese": "啊；哦；感叹词"
+    },
+    {
+      "character": "完",
+      "english": "to finish, complete, whole",
+      "pinyin": "wán",
+      "same-sounding-character": ["玩 (play)", "丸 (ball)", "烷 (alkane)"],
+      "words": ["完了 (finished)", "完成 (complete)", "完全 (completely)"],
+      "definition-english": "To finish; complete; whole",
+      "definition-chinese": "完成；完全；结束"
+    },
+    {
+      "character": "业",
+      "english": "business, occupation, work",
+      "pinyin": "yè",
+      "same-sounding-character": ["夜 (night)", "叶 (leaf)", "液 (liquid)"],
+      "words": ["作业 (homework)", "事业 (career)", "学业 (studies)"],
+      "definition-english": "Business; occupation; work; trade",
+      "definition-chinese": "事业；工作；事业"
+    },
+    {
+      "character": "躲",
+      "english": "to hide, to evade",
+      "pinyin": "duǒ",
+      "same-sounding-character": ["多 (many)", "朵 (flower)", "堕 (fall)"],
+      "words": ["躲了 (hid)", "躲起来 (hide away)", "躲避 (evade)"],
+      "definition-english": "To hide; to evade; to dodge",
+      "definition-chinese": "躲藏；躲避；隐藏"
+    },
+    {
+      "character": "进",
+      "english": "to enter, to advance, to come",
+      "pinyin": "jìn",
+      "same-sounding-character": ["晋 (advance)", "烬 (ember)", "浸 (soak)"],
+      "words": ["进来 (come in)", "进去 (go in)", "进步 (progress)"],
+      "definition-english": "To enter; to advance; to go in",
+      "definition-chinese": "进来；进去；进步"
+    },
+    {
+      "character": "净",
+      "english": "clean, pure, net",
+      "pinyin": "jìng",
+      "same-sounding-character": ["景 (scenery)", "井 (well)", "竟 (actually)"],
+      "words": ["干净 (clean)", "清净 (quiet and clean)", "净化 (purify)"],
+      "definition-english": "Clean; pure; net; tidy",
+      "definition-chinese": "干净；清洁；纯净"
+    },
+    {
+      "character": "谁",
+      "english": "who, whoever",
+      "pinyin": "shéi",
+      "same-sounding-character": ["睡 (sleep)", "谁 (who)", "穗 (spike)"],
+      "words": ["谁了 (who)", "谁的 (whose)", "谁都 (anyone)"],
+      "definition-english": "Who; whoever; interrogative",
+      "definition-chinese": "谁；什么人；谁的"
+    },
+    {
+      "character": "打",
+      "english": "to hit, to beat, to strike",
+      "pinyin": "dǎ",
+      "same-sounding-character": ["大 (big)", "达 (reach)", "搭 (build)"],
+      "words": ["打了 (hit)", "打球 (play ball)", "打扫 (clean)"],
+      "definition-english": "To hit; to beat; to strike; to play",
+      "definition-chinese": "打；敲击；打球"
+    },
+    {
+      "character": "听",
+      "english": "to listen, to hear",
+      "pinyin": "tīng",
+      "same-sounding-character": ["庭 (court)", "停 (stop)", "亭 (pavilion)"],
+      "words": ["听了 (listened)", "听音乐 (listen to music)", "听课 (attend class)"],
+      "definition-english": "To listen; to hear; to obey",
+      "definition-chinese": "听；听到；倾听"
+    },
+    {
+      "character": "声",
+      "english": "sound, voice, tone",
+      "pinyin": "shēng",
+      "same-sounding-character": ["升 (rise)", "生 (life)", "圣 (holy)"],
+      "words": ["声音 (sound/voice)", "大声 (loud)", "说声 (say)"],
+      "definition-english": "Sound; voice; tone; noise",
+      "definition-chinese": "声音；声音；嗓音"
+    }
+  ],
+  "p1-17": [
+    {
+      "character": "昨",
+      "english": "yesterday",
+      "pinyin": "zuó",
+      "same-sounding-character": ["作 (make)", "坐 (sit)", "佐 (assist)"],
+      "words": ["昨天 (yesterday)", "昨日 (yesterday)", "昨晚 (last night)"],
+      "definition-english": "Yesterday; past day",
+      "definition-chinese": "昨天；前天；昨日"
+    },
+    {
+      "character": "晚",
+      "english": "evening, late, night",
+      "pinyin": "wǎn",
+      "same-sounding-character": ["万 (ten thousand)", "碗 (bowl)", "婉 (graceful)"],
+      "words": ["晚上 (evening)", "昨晚 (last night)", "很晚 (very late)"],
+      "definition-english": "Evening; late; night; tardy",
+      "definition-chinese": "晚上；夜晚；傍晚"
+    },
+    {
+      "character": "星",
+      "english": "star, heavenly body",
+      "pinyin": "xīng",
+      "same-sounding-character": ["行 (go)", "醒 (wake)", "兴 (interest)"],
+      "words": ["星星 (star)", "星期 (week)", "明星 (celebrity)"],
+      "definition-english": "Star; heavenly body; planet",
+      "definition-chinese": "星星；星期；明星"
+    },
+    {
+      "character": "明",
+      "english": "bright, clear, tomorrow",
+      "pinyin": "míng",
+      "same-sounding-character": ["鸣 (cry)", "冥 (dark)", "铭 (engrave)"],
+      "words": ["明天 (tomorrow)", "明亮 (bright)", "明白 (understand)"],
+      "definition-english": "Bright; clear; tomorrow; obvious",
+      "definition-chinese": "明亮；明天；清楚"
+    },
+    {
+      "character": "庆",
+      "english": "to celebrate, to congratulate",
+      "pinyin": "qìng",
+      "same-sounding-character": ["请 (request)", "轻 (light)", "青 (blue)"],
+      "words": ["庆祝 (celebrate)", "庆贺 (congratulate)", "庆典 (ceremony)"],
+      "definition-english": "To celebrate; to congratulate",
+      "definition-chinese": "庆祝；庆贺；庆典"
+    },
+    {
+      "character": "祝",
+      "english": "to wish, to bless",
+      "pinyin": "zhù",
+      "same-sounding-character": ["注 (pour)", "足 (foot)", "株 (plant)"],
+      "words": ["祝贺 (congratulate)", "祝愿 (wish)", "庆祝 (celebrate)"],
+      "definition-english": "To wish; to bless; to congratulate",
+      "definition-chinese": "祝福；祝愿；祝贺"
+    },
+    {
+      "character": "节",
+      "english": "festival, joint, season",
+      "pinyin": "jié",
+      "same-sounding-character": ["结 (tie)", "截 (cut)", "洁 (clean)"],
+      "words": ["节日 (festival)", "春节 (Spring Festival)", "节点 (node)"],
+      "definition-english": "Festival; joint; season; section",
+      "definition-chinese": "节日；节气；节点"
+    },
+    {
+      "character": "爱",
+      "english": "to love, to like, love",
+      "pinyin": "ài",
+      "same-sounding-character": ["艾 (artemisia)", "蔼 (amiable)", "隘 (narrow)"],
+      "words": ["爱了 (love)", "爱心 (love)", "爱好 (hobby)"],
+      "definition-english": "To love; to like; love; affection",
+      "definition-chinese": "爱；爱心；喜爱"
+    },
+    {
+      "character": "给",
+      "english": "to give, to, for",
+      "pinyin": "gěi",
+      "same-sounding-character": ["跟 (with)", "更 (more)", "根 (root)"],
+      "words": ["给了 (gave)", "给我 (give me)", "给予 (give)"],
+      "definition-english": "To give; to; for; to provide",
+      "definition-chinese": "给；赠予；给予"
+    },
+    {
+      "character": "国",
+      "english": "country, nation, state",
+      "pinyin": "guó",
+      "same-sounding-character": ["郭 (surname)", "括 (include)", "果 (fruit)"],
+      "words": ["中国 (China)", "国家 (country)", "国庆 (National Day)"],
+      "definition-english": "Country; nation; state; kingdom",
+      "definition-chinese": "国家；国土；国家"
+    },
+    {
+      "character": "乐",
+      "english": "happy, joy, music, to love",
+      "pinyin": "lè",
+      "same-sounding-character": ["勒 (force)", "欲 (want)", "肋 (rib)"],
+      "words": ["快乐 (happy)", "欢乐 (joyful)", "音乐 (music)"],
+      "definition-english": "Happy; joy; music; to love; pleasant",
+      "definition-chinese": "快乐；音乐；欢乐"
+    },
+    {
+      "character": "课",
+      "english": "lesson, class, course",
+      "pinyin": "kè",
+      "same-sounding-character": ["科 (subject)", "克 (overcome)", "刻 (engrave)"],
+      "words": ["上课 (attend class)", "课堂 (classroom)", "功课 (homework)"],
+      "definition-english": "Lesson; class; course; period",
+      "definition-chinese": "课；课程；教课"
+    },
+    {
+      "character": "台",
+      "english": "stage, platform, Taiwan",
+      "pinyin": "tái",
+      "same-sounding-character": ["抬 (raise)", "泰 (peaceful)", "胎 (fetus)"],
+      "words": ["舞台 (stage)", "台湾 (Taiwan)", "平台 (platform)"],
+      "definition-english": "Stage; platform; Taiwan; terrace",
+      "definition-chinese": "舞台；台湾；讲台"
+    },
+    {
+      "character": "讲",
+      "english": "to speak, to talk, to explain",
+      "pinyin": "jiǎng",
+      "same-sounding-character": ["姜 (ginger)", "降 (lower)", "奖 (award)"],
+      "words": ["讲了 (spoke)", "讲故事 (tell story)", "讲课 (teach)"],
+      "definition-english": "To speak; to talk; to explain; to teach",
+      "definition-chinese": "讲述；讲话；讲解"
+    },
+    {
+      "character": "故",
+      "english": "reason, cause, old, former",
+      "pinyin": "gù",
+      "same-sounding-character": ["古 (ancient)", "谷 (valley)", "固 (firm)"],
+      "words": ["故事 (story)", "故意 (deliberately)", "故乡 (hometown)"],
+      "definition-english": "Reason; cause; old; former; story",
+      "definition-chinese": "故事；缘故；故乡"
+    },
+    {
+      "character": "每",
+      "english": "every, each",
+      "pinyin": "měi",
+      "same-sounding-character": ["美 (beautiful)", "媒 (media)", "梅 (plum)"],
+      "words": ["每天 (every day)", "每次 (each time)", "每个 (each)"],
+      "definition-english": "Every; each; all",
+      "definition-chinese": "每；每个；每天"
+    },
+    {
+      "character": "童",
+      "english": "child, boy, youth",
+      "pinyin": "tóng",
+      "same-sounding-character": ["通 (connect)", "铜 (copper)", "同 (same)"],
+      "words": ["儿童 (children)", "童年 (childhood)", "童话 (fairy tale)"],
+      "definition-english": "Child; boy; youth; youngster",
+      "definition-chinese": "儿童；小孩；童年"
+    },
+    {
+      "character": "因",
+      "english": "because, reason, cause",
+      "pinyin": "yīn",
+      "same-sounding-character": ["音 (sound)", "殷 (rich)", "因 (because)"],
+      "words": ["因为 (because)", "因此 (therefore)", "原因 (reason)"],
+      "definition-english": "Because; reason; cause; due to",
+      "definition-chinese": "因为；原因；因此"
+    },
+    {
+      "character": "为",
+      "english": "for, to do, to be",
+      "pinyin": "wéi",
+      "same-sounding-character": ["围 (enclose)", "微 (tiny)", "伪 (fake)"],
+      "words": ["为了 (in order to)", "因为 (because)", "作为 (as)"],
+      "definition-english": "For; to do; to be; to become",
+      "definition-chinese": "为了；作为；为他"
+    }
+  ],
+  "p1-18": [
+    {
+      "character": "兔",
+      "english": "rabbit, hare",
+      "pinyin": "tù",
+      "same-sounding-character": ["吐 (spit)", "突 (protrude)", "秃 (bald)"],
+      "words": ["小兔 (little rabbit)", "兔子 (rabbit)", "兔狲 (Pallas's cat)"],
+      "definition-english": "Rabbit; hare; bunny",
+      "definition-chinese": "兔子；小兔；兔类"
+    },
+    {
+      "character": "尾",
+      "english": "tail, end",
+      "pinyin": "wěi",
+      "same-sounding-character": ["唯 (only)", "萎 (wither)", "违 (violate)"],
+      "words": ["尾巴 (tail)", "虎尾 (tiger tail)", "尾部 (tail end)"],
+      "definition-english": "Tail; end; terminal",
+      "definition-chinese": "尾巴；尾部；末尾"
+    },
+    {
+      "character": "短",
+      "english": "short, brief",
+      "pinyin": "duǎn",
+      "same-sounding-character": ["端 (end)", "断 (break)", "缎 (satin)"],
+      "words": ["很短 (very short)", "短裤 (shorts)", "短发 (short hair)"],
+      "definition-english": "Short; brief; insufficient",
+      "definition-chinese": "短；矮；短暂"
+    },
+    {
+      "character": "眼",
+      "english": "eye, look, eye-ring",
+      "pinyin": "yǎn",
+      "same-sounding-character": ["烟 (smoke)", "宴 (feast)", "研 (grind)"],
+      "words": ["眼睛 (eye)", "眼前 (before one's eyes)", "眼神 (eye expression)"],
+      "definition-english": "Eye; look; opening",
+      "definition-chinese": "眼睛；眼睛；目光"
+    },
+    {
+      "character": "睛",
+      "english": "eye pupil, bright",
+      "pinyin": "jīng",
+      "same-sounding-character": ["精 (refined)", "晶 (crystal)", "京 (capital)"],
+      "words": ["眼睛 (eye)", "大眼睛 (big eyes)", "眼睛亮 (bright eyes)"],
+      "definition-english": "Eye; pupil; eyeball",
+      "definition-chinese": "眼睛；眼珠；瞳孔"
+    },
+    {
+      "character": "爪",
+      "english": "claw, paw, talon",
+      "pinyin": "zhǎo",
+      "same-sounding-character": ["着 (particle)", "沼 (marsh)", "兆 (omen)"],
+      "words": ["爪子 (claw/paw)", "老虎爪 (tiger claw)", "尖爪 (sharp claw)"],
+      "definition-english": "Claw; paw; talon; nail",
+      "definition-chinese": "爪子；爪；爪牙"
+    },
+    {
+      "character": "尖",
+      "english": "sharp, pointed, keen",
+      "pinyin": "jiān",
+      "same-sounding-character": ["坚 (firm)", "奸 (cheat)", "间 (space)"],
+      "words": ["尖的 (sharp)", "尖端 (sharp point)", "尖叫 (scream)"],
+      "definition-english": "Sharp; pointed; keen; tip",
+      "definition-chinese": "尖锐；锋利；尖端"
+    },
+    {
+      "character": "物",
+      "english": "thing, matter, object",
+      "pinyin": "wù",
+      "same-sounding-character": ["勿 (don't)", "沃 (fertile)", "武 (martial)"],
+      "words": ["动物 (animal)", "东西 (thing)", "物品 (goods)"],
+      "definition-english": "Thing; matter; object; substance",
+      "definition-chinese": "东西；物品；物质"
+    },
+    {
+      "character": "虎",
+      "english": "tiger",
+      "pinyin": "hǔ",
+      "same-sounding-character": ["户 (door)", "互 (mutual)", "护 (protect)"],
+      "words": ["老虎 (tiger)", "虎纹 (tiger stripe)", "虎尾 (tiger tail)"],
+      "definition-english": "Tiger; feline predator",
+      "definition-chinese": "老虎；虎；大虫"
+    },
+    {
+      "character": "狮",
+      "english": "lion",
+      "pinyin": "shī",
+      "same-sounding-character": ["师 (teacher)", "诗 (poem)", "施 (apply)"],
+      "words": ["狮子 (lion)", "母狮 (lioness)", "公狮 (male lion)"],
+      "definition-english": "Lion; beast",
+      "definition-chinese": "狮子；狮；猛兽"
+    },
+    {
+      "character": "园",
+      "english": "garden, park, orchard",
+      "pinyin": "yuán",
+      "same-sounding-character": ["员 (member)", "原 (original)", "圆 (round)"],
+      "words": ["公园 (park)", "花园 (garden)", "动物园 (zoo)"],
+      "definition-english": "Garden; park; orchard; plot",
+      "definition-chinese": "公园；园地；花园"
+    },
+    {
+      "character": "期",
+      "english": "period, time, week",
+      "pinyin": "qī",
+      "same-sounding-character": ["欺 (cheat)", "妻 (wife)", "旗 (flag)"],
+      "words": ["星期 (week)", "时期 (period)", "一期 (one issue)"],
+      "definition-english": "Period; time; week; term",
+      "definition-chinese": "时期；星期；时段"
+    },
+    {
+      "character": "带",
+      "english": "to bring, to lead, belt, zone",
+      "pinyin": "dài",
+      "same-sounding-character": ["戴 (wear)", "袋 (bag)", "贷 (loan)"],
+      "words": ["带了 (brought)", "带来 (bring)", "带领 (lead)"],
+      "definition-english": "To bring; to lead; belt; zone",
+      "definition-chinese": "带来；带领；腰带"
+    },
+    {
+      "character": "黑",
+      "english": "black, dark",
+      "pinyin": "hēi",
+      "same-sounding-character": ["嘿 (hey)", "黒 (variant)", "嗨 (hi)"],
+      "words": ["黑的 (black)", "很黑 (very black)", "黑色 (black color)"],
+      "definition-english": "Black; dark; murky",
+      "definition-chinese": "黑色；黑的；深色"
+    },
+    {
+      "character": "站",
+      "english": "to stand, station, stop",
+      "pinyin": "zhàn",
+      "same-sounding-character": ["颤 (tremble)", "崭 (new)", "斩 (chop)"],
+      "words": ["站了 (stood)", "站起来 (stand up)", "火车站 (train station)"],
+      "definition-english": "To stand; station; stop; post",
+      "definition-chinese": "站立；车站；站点"
+    },
+    {
+      "character": "叫",
+      "english": "to call, to shout, to cry",
+      "pinyin": "jiào",
+      "same-sounding-character": ["脚 (foot)", "绞 (twist)", "校 (school)"],
+      "words": ["叫了 (called)", "叫声 (cry)", "名叫 (named)"],
+      "definition-english": "To call; to shout; to cry; to yell",
+      "definition-chinese": "叫；喊；大叫"
+    },
+    {
+      "character": "认",
+      "english": "to recognize, to know",
+      "pinyin": "rèn",
+      "same-sounding-character": ["仁 (benevolence)", "纫 (thread)", "韧 (tough)"],
+      "words": ["认了 (recognized)", "认识 (know)", "认出 (recognize)"],
+      "definition-english": "To recognize; to know; to admit",
+      "definition-chinese": "认识；认出；承认"
+    },
+    {
+      "character": "话",
+      "english": "word, speech, talk",
+      "pinyin": "huà",
+      "same-sounding-character": ["画 (paint)", "化 (change)", "华 (magnificent)"],
+      "words": ["说话 (talk)", "话语 (words)", "电话 (telephone)"],
+      "definition-english": "Word; speech; talk; conversation",
+      "definition-chinese": "话；言语；说话"
+    },
+    {
+      "character": "再",
+      "english": "again, once more",
+      "pinyin": "zài",
+      "same-sounding-character": ["在 (at)", "才 (talent)", "灾 (disaster)"],
+      "words": ["再来 (come again)", "再见 (goodbye)", "再也 (never again)"],
+      "definition-english": "Again; once more; then",
+      "definition-chinese": "再；再次；又"
+    },
+    {
+      "character": "孩",
+      "english": "child, kid, boy",
+      "pinyin": "háizi",
+      "same-sounding-character": ["咳 (cough)", "骸 (skeleton)", "鞋 (shoe)"],
+      "words": ["孩子 (child)", "小孩 (kid)", "女孩 (girl)"],
+      "definition-english": "Child; kid; boy; youngster",
+      "definition-chinese": "孩子；小孩；儿童"
+    }
+  ],
+  "p1-19": [
+    {
+      "character": "组",
+      "english": "group, to organize, team",
+      "pinyin": "zǔ",
+      "same-sounding-character": ["租 (rent)", "诅 (curse)", "足 (foot)"],
+      "words": ["小组 (group)", "组织 (organize)", "组员 (group member)"],
+      "definition-english": "Group; team; to organize",
+      "definition-chinese": "组织；小组；队组"
+    },
+    {
+      "character": "屋",
+      "english": "house, room, dwelling",
+      "pinyin": "wū",
+      "same-sounding-character": ["乌 (black)", "无 (no)", "污 (dirty)"],
+      "words": ["房屋 (house)", "屋子 (room)", "卧屋 (bedroom)"],
+      "definition-english": "House; room; dwelling; shelter",
+      "definition-chinese": "房屋；房间；屋子"
+    },
+    {
+      "character": "公",
+      "english": "public, fair, male, duke",
+      "pinyin": "gōng",
+      "same-sounding-character": ["宫 (palace)", "工 (work)", "功 (merit)"],
+      "words": ["公开 (public)", "公园 (park)", "公共 (public)"],
+      "definition-english": "Public; fair; male; duke; prince",
+      "definition-chinese": "公开；公共；公园"
+    },
+    {
+      "character": "校",
+      "english": "school, to check, to compare",
+      "pinyin": "xiào",
+      "same-sounding-character": ["较 (compare)", "焦 (worried)", "骄 (arrogant)"],
+      "words": ["学校 (school)", "校长 (principal)", "校园 (campus)"],
+      "definition-english": "School; to check; to compare",
+      "definition-chinese": "学校；校园；学府"
+    },
+    {
+      "character": "场",
+      "english": "field, place, scene",
+      "pinyin": "chǎng",
+      "same-sounding-character": ["肠 (intestine)", "昌 (prosperous)", "疮 (sore)"],
+      "words": ["操场 (playground)", "市场 (market)", "场地 (field)"],
+      "definition-english": "Field; place; scene; ground",
+      "definition-chinese": "场地；市场；操场"
+    },
+    {
+      "character": "商",
+      "english": "merchant, to discuss, business",
+      "pinyin": "shāng",
+      "same-sounding-character": ["伤 (hurt)", "尚 (still)", "裳 (garment)"],
+      "words": ["商人 (merchant)", "商店 (shop)", "商业 (commerce)"],
+      "definition-english": "Merchant; business; to discuss",
+      "definition-chinese": "商人；商店；商业"
+    },
+    {
+      "character": "店",
+      "english": "shop, store, inn",
+      "pinyin": "diàn",
+      "same-sounding-character": ["点 (dot)", "惦 (miss)", "淀 (deposit)"],
+      "words": ["商店 (shop)", "书店 (bookstore)", "开店 (open shop)"],
+      "definition-english": "Shop; store; inn; establishment",
+      "definition-chinese": "店铺；商店；店面"
+    },
+    {
+      "character": "梯",
+      "english": "ladder, stairs, step",
+      "pinyin": "tī",
+      "same-sounding-character": ["体 (body)", "替 (replace)", "剃 (shave)"],
+      "words": ["楼梯 (stairs)", "梯子 (ladder)", "梯形 (trapezoid)"],
+      "definition-english": "Ladder; stairs; step; staircase",
+      "definition-chinese": "梯子；楼梯；阶梯"
+    },
+    {
+      "character": "扶",
+      "english": "to support, to help, railing",
+      "pinyin": "fú",
+      "same-sounding-character": ["符 (symbol)", "浮 (float)", "服 (clothes)"],
+      "words": ["扶起 (help up)", "扶手 (handrail)", "扶养 (support)"],
+      "definition-english": "To support; to help; railing; assist",
+      "definition-chinese": "扶持；扶养；扶手"
+    },
+    {
+      "character": "常",
+      "english": "often, usual, always",
+      "pinyin": "cháng",
+      "same-sounding-character": ["偿 (repay)", "肠 (intestine)", "尝 (taste)"],
+      "words": ["常常 (often)", "平常 (usual)", "常见 (common)"],
+      "definition-english": "Often; usual; always; regular",
+      "definition-chinese": "经常；常常；通常"
+    },
+    {
+      "character": "球",
+      "english": "ball, sphere, globe",
+      "pinyin": "qiú",
+      "same-sounding-character": ["秋 (autumn)", "酋 (chief)", "求 (ask)"],
+      "words": ["足球 (football)", "篮球 (basketball)", "打球 (play ball)"],
+      "definition-english": "Ball; sphere; globe; orb",
+      "definition-chinese": "球；球体；运动球"
+    },
+    {
+      "character": "步",
+      "english": "step, pace, to walk",
+      "pinyin": "bù",
+      "same-sounding-character": ["布 (cloth)", "部 (part)", "埠 (port)"],
+      "words": ["一步 (one step)", "步走 (step/walk)", "散步 (stroll)"],
+      "definition-english": "Step; pace; to walk; stride",
+      "definition-chinese": "步；步步；散步"
+    },
+    {
+      "character": "图",
+      "english": "picture, map, to attempt",
+      "pinyin": "tú",
+      "same-sounding-character": ["涂 (smear)", "途 (route)", "苦 (bitter)"],
+      "words": ["图书 (book)", "图画 (picture)", "地图 (map)"],
+      "definition-english": "Picture; map; chart; to attempt",
+      "definition-chinese": "图画；图片；地图"
+    },
+    {
+      "character": "习",
+      "english": "to practice, habit, custom",
+      "pinyin": "xí",
+      "same-sounding-character": ["席 (seat)", "西 (west)", "熹 (sunlight)"],
+      "words": ["练习 (practice)", "习惯 (habit)", "作习 (routine)"],
+      "definition-english": "To practice; habit; custom",
+      "definition-chinese": "练习；习惯；习题"
+    },
+    {
+      "character": "伙",
+      "english": "companion, friend, partner",
+      "pinyin": "huǒ",
+      "same-sounding-character": ["火 (fire)", "货 (goods)", "伙 (partnership)"],
+      "words": ["伙伴 (companion)", "伙食 (food)", "一伙 (a group)"],
+      "definition-english": "Companion; friend; partner; group",
+      "definition-chinese": "伙伴；朋友；伙食"
+    },
+    {
+      "character": "伴",
+      "english": "companion, friend, mate",
+      "pinyin": "bàn",
+      "same-sounding-character": ["半 (half)", "板 (board)", "办 (handle)"],
+      "words": ["伙伴 (companion)", "同伴 (playmate)", "旅伴 (travel partner)"],
+      "definition-english": "Companion; friend; mate; partner",
+      "definition-chinese": "伙伴；同伴；陪伴"
+    },
+    {
+      "character": "游",
+      "english": "to travel, to tour, to swim",
+      "pinyin": "yóu",
+      "same-sounding-character": ["油 (oil)", "友 (friend)", "幽 (quiet)"],
+      "words": ["旅游 (travel)", "游泳 (swim)", "游玩 (have fun)"],
+      "definition-english": "To travel; to tour; to swim",
+      "definition-chinese": "旅游；游泳；游历"
+    },
+    {
+      "character": "拍",
+      "english": "to clap, to pat, to photograph",
+      "pinyin": "pāi",
+      "same-sounding-character": ["排 (arrange)", "牌 (card)", "派 (send)"],
+      "words": ["拍了 (clapped)", "拍手 (clap hands)", "拍照 (take photo)"],
+      "definition-english": "To clap; to pat; to photograph",
+      "definition-chinese": "拍手；拍照；拍摄"
+    },
+    {
+      "character": "兴",
+      "english": "happy, interest, to prosper",
+      "pinyin": "xìng",
+      "same-sounding-character": ["行 (go)", "星 (star)", "腥 (fishy)"],
+      "words": ["高兴 (happy)", "兴趣 (interest)", "兴奋 (excited)"],
+      "definition-english": "Happy; interest; to prosper; joy",
+      "definition-chinese": "高兴；兴趣；兴奋"
+    },
+    {
+      "character": "戏",
+      "english": "play, drama, game",
+      "pinyin": "xì",
+      "same-sounding-character": ["细 (thin)", "嬉 (frolic)", "玺 (seal)"],
+      "words": ["游戏 (game)", "戏剧 (drama)", "看戏 (watch play)"],
+      "definition-english": "Play; drama; game; show",
+      "definition-chinese": "游戏；戏剧；戏份"
+    }
+  ]
+}
+
