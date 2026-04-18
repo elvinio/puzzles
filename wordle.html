@@ -884,7 +884,7 @@ function revealRow(row, guess, fb, onDone) {
       setTimeout(() => {
         tile.textContent = guess[c];
         tile.className = 'tile ' + classes[fb[c]];
-      }, 150 + delay);
+      }, 150);
     }, delay);
   }
   setTimeout(onDone, state.wordLen * 300 + 200);
