@@ -187,7 +187,7 @@
       "english": "lucky, auspicious, good",
       "pinyin": "jí",
       "same-sounding-character": ["极 (extreme)", "级 (grade)", "集 (gather)"],
-      "words": ["吉祥 (auspicious)", "吉利 (lucky)", "幸吉 (fortunate)"],
+      "words": ["吉祥 (auspicious)", "吉利 (lucky)", "幸运 (lucky)"],
       "definition-english": "Lucky; auspicious; good; favorable",
       "definition-chinese": "吉祥；幸运；吉利"
     },
@@ -196,7 +196,7 @@
       "english": "profit, benefit, sharp",
       "pinyin": "lì",
       "same-sounding-character": ["厉 (severe)", "力 (strength)", "离 (leave)"],
-      "words": ["吉利 (lucky)", "利益 (benefit)", "利润 (profit)"],
+      "words": ["吉利 (lucky)", "利益 (benefit)", "利用 (make use of)"],
       "definition-english": "Profit; benefit; sharp; effective",
       "definition-chinese": "利益；利润；有利"
     },
@@ -223,7 +223,7 @@
       "english": "remaining, extra, remainder",
       "pinyin": "yú",
       "same-sounding-character": ["鱼 (fish)", "愉 (happy)", "俞 (surname)"],
-      "words": ["剩余 (remaining)", "余额 (balance)", "多余 (extra)"],
+      "words": ["剩余 (remaining)", "业余 (spare time)", "多余 (extra)"],
       "definition-english": "Remaining; extra; remainder; residue",
       "definition-chinese": "剩余；多余；余数"
     },
@@ -322,7 +322,7 @@
       "english": "to pay respect, to visit, to bow",
       "pinyin": "bài",
       "same-sounding-character": ["摆 (swing)", "败 (defeat)", "白 (white)"],
-      "words": ["拜年 (pay New Year greetings)", "拜访 (visit)", "再见 (goodbye)"],
+      "words": ["拜年 (pay New Year greetings)", "拜访 (visit)", "拜托 (please/request)"],
       "definition-english": "To pay respect; to visit; to bow",
       "definition-chinese": "拜访；拜年；参拜"
     },
@@ -331,7 +331,7 @@
       "english": "particle, to wear, to grasp",
       "pinyin": "zhe",
       "same-sounding-character": ["着 (wear)", "沼 (marsh)", "兆 (omen)"],
-      "words": ["穿着 (dressed in)", "拿着 (holding)", "在着 (particle)"],
+      "words": ["穿着 (dressed in)", "拿着 (holding)", "看着 (watching)"],
       "definition-english": "Particle; to wear; to grasp",
       "definition-chinese": "穿着；拿着；着装"
     },
@@ -940,7 +940,7 @@
       "english": "to experience, classic, through",
       "pinyin": "jīng",
       "same-sounding-character": ["京 (capital)", "晶 (crystal)", "精 (refined)"],
-      "words": ["经历 (experience)", "经过 (pass by)", "经济 (economy)"],
+      "words": ["经历 (experience)", "经过 (pass by)", "经常 (often)"],
       "definition-english": "To experience; classic; through",
       "definition-chinese": "经历；经过；经济"
     }
@@ -1113,7 +1113,7 @@
       "english": "beautiful, pretty",
       "pinyin": "lì",
       "same-sounding-character": ["利 (benefit)", "励 (encourage)", "厉 (severe)"],
-      "words": ["美丽 (beautiful)", "华丽 (splendid)", "辽阔 (vast)"],
+      "words": ["美丽 (beautiful)", "华丽 (splendid)", "秀丽 (gorgeous)"],
       "definition-english": "Beautiful; pretty; splendid",
       "definition-chinese": "美丽；华丽；漂亮"
     },
@@ -1151,7 +1151,7 @@
       "english": "to stir-fry, to fry, to sauté",
       "pinyin": "chǎo",
       "same-sounding-character": ["超 (exceed)", "潮 (tide)", "吵 (noisy)"],
-      "words": ["炒菜 (stir-fry)", "炒饭 (fried rice)", "炒股 (speculate)"],
+      "words": ["炒菜 (stir-fry)", "炒饭 (fried rice)", "炒蛋 (scrambled eggs)"],
       "definition-english": "To stir-fry; to fry; to sauté",
       "definition-chinese": "炒菜；炒饭；烹饪"
     },
@@ -1360,7 +1360,7 @@
       "english": "to sell, merchant, dealer",
       "pinyin": "fàn",
       "same-sounding-character": ["翻 (flip)", "番 (turn)", "烦 (annoyed)"],
-      "words": ["贩卖 (sell)", "小贩 (peddler)", "贩运 (traffick)"],
+      "words": ["贩卖 (sell)", "小贩 (peddler)", "叫卖 (to peddle)"],
       "definition-english": "To sell; merchant; dealer",
       "definition-chinese": "贩卖；小贩；商贩"
     },
@@ -1441,7 +1441,7 @@
       "english": "to protect, to keep, to preserve",
       "pinyin": "bǎo",
       "same-sounding-character": ["抱 (hold)", "饱 (full)", "暴 (violent)"],
-      "words": ["保护 (protect)", "保留 (keep)", "保险 (insurance)"],
+      "words": ["保护 (protect)", "保留 (keep)", "保持 (maintain)"],
       "definition-english": "To protect; to keep; to preserve",
       "definition-chinese": "保护；保留；保管"
     },
@@ -2014,7 +2014,7 @@
       "english": "bar, particle",
       "pinyin": "ba",
       "same-sounding-character": ["八 (eight)", "跋 (trek)", "拔 (pull)"],
-      "words": ["酒吧 (bar)", "一吧 (one bar)", "吧台 (bar counter)"],
+      "words": ["好吧 (okay then)", "是吧 (right?)", "吧台 (counter)"],
       "definition-english": "Bar; particle",
       "definition-chinese": "酒吧；咧；呢"
     },
@@ -2405,7 +2405,7 @@
       "english": "to cheat, to deceive, to bully",
       "pinyin": "qī",
       "same-sounding-character": ["期 (period)", "妻 (wife)", "杞 (tree)"],
-      "words": ["欺骗 (deceive)", "欺负 (bully)", "欺压 (oppress)"],
+      "words": ["欺骗 (deceive)", "欺负 (bully)", "自欺 (self-deception)"],
       "definition-english": "To cheat; to deceive; to bully",
       "definition-chinese": "欺骗；欺负；欺压"
     },
@@ -2488,7 +2488,7 @@
       "english": "easy, simple, to change",
       "pinyin": "yì",
       "same-sounding-character": ["一 (one)", "已 (already)", "义 (righteousness)"],
-      "words": ["很易 (very easy)", "容易 (easy)", "交易 (trade)"],
+      "words": ["很易 (very easy)", "容易 (easy)", "随意 (as you wish)"],
       "definition-english": "Easy; simple; to change",
       "definition-chinese": "容易；简易；易变"
     },
@@ -2632,7 +2632,7 @@
       "english": "crystal, bright, brilliant",
       "pinyin": "jīng",
       "same-sounding-character": ["精 (refined)", "京 (capital)", "睛 (eye)"],
-      "words": ["晶莹 (bright)", "结晶 (crystallize)", "晶体 (crystal)"],
+      "words": ["晶莹 (bright)", "结晶 (crystallize)", "水晶 (quartz crystal)"],
       "definition-english": "Crystal; bright; brilliant",
       "definition-chinese": "晶体；结晶；晶莹"
     },
@@ -2650,7 +2650,7 @@
       "english": "rainbow",
       "pinyin": "hóng",
       "same-sounding-character": ["红 (red)", "洪 (flood)", "鸿 (wild goose)"],
-      "words": ["彩虹 (rainbow)", "虹霓 (rainbow)", "虹吸 (siphon)"],
+      "words": ["彩虹 (rainbow)", "虹桥 (rainbow bridge)", "彩色 (colorful)"],
       "definition-english": "Rainbow",
       "definition-chinese": "彩虹；虹霓；虹色"
     }
@@ -2742,7 +2742,7 @@
       "english": "to divine, divination, radish",
       "pinyin": "bu",
       "same-sounding-character": ["博 (broad)", "不 (not)", "补 (repair)"],
-      "words": ["萝卜 (radish)", "占卜 (divination)", "卜居 (choose residence)"],
+      "words": ["萝卜 (radish)", "占卜 (fortune telling)", "卜算 (predict)"],
       "definition-english": "To divine; divination; radish",
       "definition-chinese": "占卜；萝卜；预测"
     },
@@ -2760,7 +2760,7 @@
       "english": "mouse, rat",
       "pinyin": "shǔ",
       "same-sounding-character": ["数 (number)", "束 (bunch)", "树 (tree)"],
-      "words": ["老鼠 (mouse)", "鼠标 (mouse)", "鼠辈 (vermin)"],
+      "words": ["老鼠 (mouse)", "鼠标 (mouse cursor)", "田鼠 (field mouse)"],
       "definition-english": "Mouse; rat; rodent",
       "definition-chinese": "老鼠；鼠标；鼠类"
     },
@@ -2951,7 +2951,7 @@
       "english": "case, plan, file",
       "pinyin": "àn",
       "same-sounding-character": ["暗 (dark)", "按 (press)", "岸 (shore)"],
-      "words": ["案件 (case)", "案子 (file)", "方案 (plan)"],
+      "words": ["答案 (answer)", "方案 (plan)", "图案 (pattern)"],
       "definition-english": "Case; plan; file",
       "definition-chinese": "案件；案子；方案"
     },
@@ -3106,7 +3106,7 @@
       "english": "to shoot, to emit, to radiate",
       "pinyin": "shè",
       "same-sounding-character": ["舍 (shed)", "设 (set up)", "涉 (wade)"],
-      "words": ["射了 (shot)", "发射 (launch)", "射击 (shoot)"],
+      "words": ["射了 (shot)", "发射 (launch)", "射门 (score a goal)"],
       "definition-english": "To shoot; to emit; to radiate",
       "definition-chinese": "发射；射出；射击"
     },
@@ -3187,7 +3187,7 @@
       "english": "formation, line, burst",
       "pinyin": "zhèn",
       "same-sounding-character": ["振 (vibrate)", "贞 (chaste)", "诊 (diagnose)"],
-      "words": ["阵地 (position)", "一阵 (a burst)", "阵营 (camp)"],
+      "words": ["一阵风 (gust of wind)", "一阵 (a burst)", "阵雨 (shower)"],
       "definition-english": "Formation; line; burst",
       "definition-chinese": "阵地；一阵；阵营"
     },
@@ -3452,7 +3452,7 @@
       "english": "to tell, to inform, to appeal",
       "pinyin": "sù",
       "same-sounding-character": ["速 (speed)", "肃 (solemn)", "塑 (plastic)"],
-      "words": ["告诉 (tell)", "诉说 (tell)", "诉讼 (lawsuit)"],
+      "words": ["告诉 (tell)", "诉说 (tell)", "倾诉 (pour out feelings)"],
       "definition-english": "To tell; to inform; to appeal",
       "definition-chinese": "告诉；诉说；诉讼"
     },
