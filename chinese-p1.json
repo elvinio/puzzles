@@ -178,7 +178,7 @@
       "english": "younger brother",
       "pinyin": "dì",
       "same-sounding-character": ["第 (ordinal)", "递 (hand over)", "敌 (enemy)"],
-      "words": ["弟弟 (younger brother)", "弟妹 (younger siblings)", "堂弟 (cousin)"],
+      "words": ["弟弟 (younger brother)", "兄弟 (brothers)", "堂弟 (cousin)"],
       "definition-english": "A male younger than oneself; younger brother",
       "definition-chinese": "年纪比自己小的男性；小弟弟"
     },
@@ -214,7 +214,7 @@
       "english": "mother, mom",
       "pinyin": "mā",
       "same-sounding-character": ["马 (horse)", "麻 (hemp)", "妈 (mother)"],
-      "words": ["妈妈 (mother)", "妈的 (damn/expletive)", "我妈 (my mother)"],
+      "words": ["妈妈 (mother)", "妈咪 (mommy)", "我妈 (my mother)"],
       "definition-english": "Mother; mom; mama",
       "definition-chinese": "母亲；妈妈"
     },
@@ -1672,7 +1672,7 @@
       "english": "fourth, robust, man",
       "pinyin": "dīng",
       "same-sounding-character": ["叮 (sting)", "钉 (nail)", "订 (order)"],
-      "words": ["丁香 (lilac)", "壮丁 (young man)", "人丁 (family members)"],
+      "words": ["丁香 (lilac)", "壮丁 (young man)", "园丁 (gardener)"],
       "definition-english": "Fourth; robust; man; person",
       "definition-chinese": "第四个；丁壮；人丁"
     },
@@ -1881,7 +1881,7 @@
       "english": "yuan, dollar, element",
       "pinyin": "yuán",
       "same-sounding-character": ["圆 (round)", "原 (original)", "源 (source)"],
-      "words": ["一元 (one yuan)", "元宵 (sweet rice ball)", "元旦 (New Year's Day)"],
+      "words": ["一元 (one yuan)", "元气 (vitality)", "元旦 (New Year's Day)"],
       "definition-english": "Yuan (currency); dollar; element",
       "definition-chinese": "元；元钱；一元"
     },
@@ -2955,7 +2955,7 @@
       "english": "rabbit, hare",
       "pinyin": "tù",
       "same-sounding-character": ["吐 (spit)", "突 (protrude)", "秃 (bald)"],
-      "words": ["小兔 (little rabbit)", "兔子 (rabbit)", "兔狲 (Pallas's cat)"],
+      "words": ["小兔 (little rabbit)", "兔子 (rabbit)", "白兔 (white rabbit)"],
       "definition-english": "Rabbit; hare; bunny",
       "definition-chinese": "兔子；小兔；兔类"
     },

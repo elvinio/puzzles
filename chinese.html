@@ -219,6 +219,16 @@
       justify-content: center;
       gap: 8px;
       min-height: 120px;
+      position: relative;
+    }
+    .source-key {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 0.55rem;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0.05em;
     }
     .question-type-label {
       font-size: 0.68rem;
@@ -559,7 +569,7 @@
     <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
   </div>
 
-  <div class="question-wrap">
+  <div class="question-wrap" id="question-wrap">
     <div class="question-type-label" id="question-type-label"></div>
     <div class="question-text" id="question-text"></div>
   </div>
@@ -911,6 +921,10 @@ function makeWordFill(word, pool) {
   const phraseMatch = phraseStr.match(/^([^\s(]+)/);
   const phrase = phraseMatch ? phraseMatch[1] : phraseStr;
 
+  // Extract English from parentheses (e.g., "clothes" from "衣服 (clothes)")
+  const englishMatch = phraseStr.match(/\(([^)]+)\)/);
+  const englishFromPhrase = englishMatch ? englishMatch[1] : word.english;
+
   if (phrase.length === 0 || !phrase.includes(word.character)) return null;
 
   // Find the position of the main character to blank out
@@ -927,7 +941,7 @@ function makeWordFill(word, pool) {
     options: shuffle([word.character, ...distractors.slice(0,3)]),
     word,
     phrase,
-    english: word.english
+    english: englishFromPhrase
   };
 }
 
@@ -1100,6 +1114,12 @@ function renderCard() {
 
   const typeLabel = document.getElementById('question-type-label');
   const qText     = document.getElementById('question-text');
+  const qWrap     = document.getElementById('question-wrap');
+  const sourceKey = card.word.lessonKey;
+
+  // Remove old source key if exists
+  const oldKey = qWrap.querySelector('.source-key');
+  if (oldKey) oldKey.remove();
 
   if (card.type === 'pinyin-chinese') {
     typeLabel.textContent = 'Which character matches this sound?';
@@ -1111,13 +1131,19 @@ function renderCard() {
     qText.className = 'question-text';
   } else if (card.type === 'word-fill') {
     typeLabel.textContent = 'Fill in the blank';
-    qText.innerHTML = `<div>${card.prompt}</div><div style="font-size:0.5em;color:var(--muted);margin-top:8px;font-weight:500">${esc(card.english)}</div>`;
+    qText.innerHTML = `<div>${card.prompt}</div><div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500">${esc(card.english)}</div>`;
     qText.className = 'question-text';
   } else {
     typeLabel.textContent = 'Which character means this?';
     qText.textContent = card.prompt;
     qText.className = 'question-text is-english';
   }
+
+  // Add source key in bottom right
+  const keyEl = document.createElement('div');
+  keyEl.className = 'source-key';
+  keyEl.textContent = sourceKey;
+  qWrap.appendChild(keyEl);
 
   const grid = document.getElementById('options-grid');
   grid.innerHTML = '';
