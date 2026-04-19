@@ -367,7 +367,7 @@
     }
     .result-item.ok { border-left-color: var(--ok-lt); }
     .result-item.err { border-left-color: var(--err-lt); }
-    .result-char { font-size: 1.6rem; font-weight: 900; flex-shrink: 0; min-width: 32px; text-align: center; }
+    .result-char { font-size: 1.6rem; font-weight: 900; flex-shrink: 0; min-width: 32px; text-align: center; font-family: STKaiti, 'Kaiti SC', KaiTi, serif; cursor: pointer; }
     .result-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
     .result-pinyin { font-size: 0.82rem; color: var(--p-xl); }
     .result-english { font-size: 0.75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -448,7 +448,7 @@
       border-bottom: 1px solid rgba(76,29,149,0.25);
       color: var(--p-text);
     }
-    .stats-table td.td-char { font-size: 1.4rem; font-weight: 900; }
+    .stats-table td.td-char { font-size: 1.4rem; font-weight: 900; font-family: STKaiti, 'Kaiti SC', KaiTi, serif; cursor: pointer; }
     .stats-table td.td-pinyin { color: var(--p-xl); }
     .stats-table td.td-lesson { color: var(--muted); font-size: 0.75rem; }
     .stats-table td.ok { color: var(--ok-lt); font-weight: 700; }
@@ -457,6 +457,80 @@
     .stats-table tr:hover td { background: rgba(109,40,217,0.1); }
     .stats-empty { text-align: center; color: var(--muted); padding: 48px 16px; font-size: 0.9rem; }
     .stats-count { color: var(--muted); font-size: 0.78rem; align-self: flex-start; width: 100%; max-width: 720px; }
+
+    /* ── Character Card Modal ── */
+    .char-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 900;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .char-modal-overlay.open { display: flex; }
+    .char-modal {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 22px;
+      padding: 28px 22px 22px;
+      width: 100%;
+      max-width: 380px;
+      max-height: 88dvh;
+      overflow-y: auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .char-modal-close {
+      position: absolute;
+      top: 12px; right: 14px;
+      background: none; border: none;
+      color: var(--muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-family: inherit;
+      line-height: 1;
+    }
+    .char-modal-close:hover { color: var(--p-text); background: rgba(255,255,255,0.06); }
+    .char-modal-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(76,29,149,0.4);
+    }
+    .char-modal-big {
+      font-family: STKaiti, 'Kaiti SC', KaiTi, serif;
+      font-size: 5.5rem;
+      line-height: 1;
+      color: var(--p-text);
+    }
+    .char-modal-pinyin-lg { font-size: 1.4rem; color: var(--p-xl); font-weight: 700; }
+    .char-modal-eng { font-size: 0.9rem; color: var(--muted); font-style: italic; }
+    .char-modal-section { display: flex; flex-direction: column; gap: 8px; }
+    .char-modal-sec-label {
+      font-size: 0.6rem; font-weight: 800;
+      letter-spacing: 0.14em; color: var(--muted);
+      text-transform: uppercase;
+    }
+    .char-modal-text { font-size: 0.9rem; color: var(--p-text); line-height: 1.6; }
+    .char-modal-text.zh { font-family: STKaiti, 'Kaiti SC', KaiTi, serif; font-size: 1rem; }
+    .char-modal-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .char-modal-chip {
+      background: rgba(109,40,217,0.15);
+      border: 1.5px solid var(--brd);
+      border-radius: 10px;
+      padding: 5px 12px;
+      font-size: 0.85rem;
+      color: var(--p-text);
+    }
+    .char-modal-chip.zh { font-family: STKaiti, 'Kaiti SC', KaiTi, serif; font-size: 1rem; }
 
     /* ── Toast ── */
     #toast {
@@ -491,7 +565,8 @@
   <div class="topbar">
     <a class="back-link" href="index.html">← Games</a>
     <h1>Chinese Practice</h1>
-    <div class="topbar-right">
+    <div class="topbar-right" style="display:flex;gap:6px">
+      <a class="btn btn-outline btn-sm" href="chinese-cards.html">Cards</a>
       <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
     </div>
   </div>
@@ -660,6 +735,31 @@
       </thead>
       <tbody id="stats-tbody"></tbody>
     </table>
+  </div>
+</div>
+
+<!-- Character Card Modal -->
+<div id="char-modal" class="char-modal-overlay">
+  <div class="char-modal">
+    <button class="char-modal-close" id="cm-close">✕</button>
+    <div class="char-modal-header">
+      <div class="char-modal-big" id="cm-char"></div>
+      <div class="char-modal-pinyin-lg" id="cm-pinyin"></div>
+      <div class="char-modal-eng" id="cm-eng"></div>
+    </div>
+    <div class="char-modal-section">
+      <div class="char-modal-sec-label">Definition</div>
+      <div class="char-modal-text" id="cm-def-en"></div>
+      <div class="char-modal-text zh" id="cm-def-zh"></div>
+    </div>
+    <div class="char-modal-section">
+      <div class="char-modal-sec-label">Words</div>
+      <div class="char-modal-chips" id="cm-words"></div>
+    </div>
+    <div class="char-modal-section">
+      <div class="char-modal-sec-label">Same Sound</div>
+      <div class="char-modal-chips" id="cm-same"></div>
+    </div>
   </div>
 </div>
 
@@ -1126,6 +1226,8 @@ function renderCard() {
   const oldKey = qWrap.querySelector('.source-key');
   if (oldKey) oldKey.remove();
 
+  qText.onclick = null;
+  qText.style.cursor = '';
   if (card.type === 'pinyin-chinese') {
     typeLabel.textContent = 'Which character matches this sound?';
     qText.textContent = card.prompt;
@@ -1134,10 +1236,14 @@ function renderCard() {
     typeLabel.textContent = 'Which pinyin is correct?';
     qText.textContent = card.prompt;
     qText.className = 'question-text';
+    qText.style.cursor = 'pointer';
+    qText.onclick = () => showCharModal(card.word);
   } else if (card.type === 'word-fill') {
     typeLabel.textContent = 'Fill in the blank';
     qText.innerHTML = `<div>${card.prompt}</div><div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500">${esc(card.english)}</div>`;
     qText.className = 'question-text';
+    qText.style.cursor = 'pointer';
+    qText.onclick = () => showCharModal(card.word);
   } else {
     typeLabel.textContent = 'Which character means this?';
     qText.textContent = card.prompt;
@@ -1219,13 +1325,19 @@ function showSummary() {
   S.results.forEach(r => {
     const item = document.createElement('div');
     item.className = `result-item ${r.correct ? 'ok' : 'err'}`;
-    item.innerHTML = `
-      <div class="result-char">${r.word.character}</div>
+
+    const charEl = document.createElement('div');
+    charEl.className = 'result-char';
+    charEl.textContent = r.word.character;
+    charEl.addEventListener('click', () => showCharModal(r.word));
+
+    item.appendChild(charEl);
+    item.insertAdjacentHTML('beforeend', `
       <div class="result-info">
         <div class="result-pinyin">${r.word.pinyin}</div>
         <div class="result-english">${esc(r.word.english)}</div>
       </div>
-      <div class="result-time">${(r.timeMs/1000).toFixed(1)}s ${r.correct ? '✓' : '✗'}</div>`;
+      <div class="result-time">${(r.timeMs/1000).toFixed(1)}s ${r.correct ? '✓' : '✗'}</div>`);
     list.appendChild(item);
   });
 
@@ -1301,7 +1413,7 @@ function renderStatsTable() {
     const wrongCls = r.wrong > 0 ? 'err' : 'ok';
     const correctCls = r.correct > 0 ? 'ok' : '';
     const dueCls = r.dueDate && r.dueDate <= today ? 'warn' : '';
-    return `<tr>
+    return `<tr data-word-key="${w.key}">
       <td class="td-char">${w.character}</td>
       <td class="td-pinyin">${w.pinyin}</td>
       <td>${esc(w.english)}</td>
@@ -1324,6 +1436,55 @@ document.getElementById('stats-sort').addEventListener('change', renderStatsTabl
 document.getElementById('stats-back-btn').addEventListener('click', () => {
   if (S.statsPrev === 'summary') showScreen('screen-summary');
   else initSetup();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// CHARACTER CARD MODAL
+// ═══════════════════════════════════════════════════════════════
+function showCharModal(word) {
+  document.getElementById('cm-char').textContent   = word.character;
+  document.getElementById('cm-pinyin').textContent = word.pinyin;
+  document.getElementById('cm-eng').textContent    = word.english;
+  document.getElementById('cm-def-en').textContent = word['definition-english'] || '';
+  document.getElementById('cm-def-zh').textContent = word['definition-chinese'] || '';
+
+  const wordsEl = document.getElementById('cm-words');
+  wordsEl.innerHTML = '';
+  (word.words || []).forEach(w => {
+    const chip = document.createElement('span');
+    chip.className = 'char-modal-chip zh';
+    chip.textContent = w;
+    wordsEl.appendChild(chip);
+  });
+
+  const sameEl = document.getElementById('cm-same');
+  sameEl.innerHTML = '';
+  (word['same-sounding-character'] || []).forEach(s => {
+    const chip = document.createElement('span');
+    chip.className = 'char-modal-chip';
+    chip.textContent = s;
+    sameEl.appendChild(chip);
+  });
+
+  document.getElementById('char-modal').classList.add('open');
+}
+
+document.getElementById('char-modal').addEventListener('click', e => {
+  if (e.target.id === 'char-modal') document.getElementById('char-modal').classList.remove('open');
+});
+document.getElementById('cm-close').addEventListener('click', () => {
+  document.getElementById('char-modal').classList.remove('open');
+});
+
+// Stats table: click td-char to open character modal
+document.getElementById('stats-tbody').addEventListener('click', e => {
+  const td = e.target.closest('td.td-char');
+  if (!td) return;
+  const key = td.closest('tr').dataset.wordKey;
+  if (!key) return;
+  const pool = getWordPool(S.statsLevel, 19);
+  const word = pool.find(w => w.key === key);
+  if (word) showCharModal(word);
 });
 
 // ═══════════════════════════════════════════════════════════════

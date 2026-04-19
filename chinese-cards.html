@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Character Cards</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #13111c;
+      --surface: #1c1730;
+      --brd:     #4c1d95;
+      --p:       #6d28d9;
+      --p-lt:    #7c3aed;
+      --p-xl:    #a78bfa;
+      --p-text:  #e2d9f3;
+      --muted:   #7c6fa0;
+      --ok:      #16a34a;
+      --ok-lt:   #22c55e;
+      --err:     #dc2626;
+      --err-lt:  #ef4444;
+    }
+
+    body {
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      overscroll-behavior: none;
+    }
+
+    /* ── Layout ── */
+    .page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+      padding: 12px 16px 40px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .topbar {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .back-link:hover { color: var(--p-xl); }
+    h1 {
+      font-size: clamp(1.1rem, 4vw, 1.6rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    .section-label {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+      align-self: flex-start;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ── Tabs ── */
+    .tab-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 720px;
+    }
+    .tab-row.scrollable {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .tab-row.scrollable::-webkit-scrollbar { display: none; }
+    .tab {
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 2px solid var(--brd);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+      touch-action: manipulation;
+    }
+    .tab:hover { border-color: var(--p-lt); color: var(--p-text); }
+    .tab.active { background: var(--p); border-color: var(--p-lt); color: #fff; }
+
+    .divider {
+      width: 100%;
+      max-width: 720px;
+      height: 1px;
+      background: var(--brd);
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+
+    /* ── Word count ── */
+    .word-count {
+      color: var(--muted);
+      font-size: 0.78rem;
+      align-self: flex-start;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ── Character grid ── */
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .char-card {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 16px;
+      padding: 14px 10px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      touch-action: manipulation;
+    }
+    .char-card:hover { border-color: var(--p-lt); background: #241a45; }
+    .char-card:active { transform: scale(0.97); }
+
+    .char-card-big {
+      font-family: STKaiti, 'Kaiti SC', KaiTi, serif;
+      font-size: 2.8rem;
+      line-height: 1.1;
+      color: var(--p-text);
+    }
+    .char-card-pinyin {
+      font-size: 0.78rem;
+      color: var(--p-xl);
+      font-weight: 600;
+      text-align: center;
+    }
+    .char-card-en {
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.3;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .char-card-lesson {
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: var(--brd);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── Empty state ── */
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 48px 16px;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    /* ── Character Card Modal ── */
+    .char-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 900;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .char-modal-overlay.open { display: flex; }
+    .char-modal {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 22px;
+      padding: 28px 22px 22px;
+      width: 100%;
+      max-width: 380px;
+      max-height: 88dvh;
+      overflow-y: auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .char-modal-close {
+      position: absolute;
+      top: 12px; right: 14px;
+      background: none; border: none;
+      color: var(--muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-family: inherit;
+      line-height: 1;
+    }
+    .char-modal-close:hover { color: var(--p-text); background: rgba(255,255,255,0.06); }
+    .char-modal-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(76,29,149,0.4);
+    }
+    .char-modal-big {
+      font-family: STKaiti, 'Kaiti SC', KaiTi, serif;
+      font-size: 5.5rem;
+      line-height: 1;
+      color: var(--p-text);
+    }
+    .char-modal-pinyin-lg { font-size: 1.4rem; color: var(--p-xl); font-weight: 700; }
+    .char-modal-eng { font-size: 0.9rem; color: var(--muted); font-style: italic; }
+    .char-modal-section { display: flex; flex-direction: column; gap: 8px; }
+    .char-modal-sec-label {
+      font-size: 0.6rem; font-weight: 800;
+      letter-spacing: 0.14em; color: var(--muted);
+      text-transform: uppercase;
+    }
+    .char-modal-text { font-size: 0.9rem; color: var(--p-text); line-height: 1.6; }
+    .char-modal-text.zh { font-family: STKaiti, 'Kaiti SC', KaiTi, serif; font-size: 1rem; }
+    .char-modal-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .char-modal-chip {
+      background: rgba(109,40,217,0.15);
+      border: 1.5px solid var(--brd);
+      border-radius: 10px;
+      padding: 5px 12px;
+      font-size: 0.85rem;
+      color: var(--p-text);
+    }
+    .char-modal-chip.zh { font-family: STKaiti, 'Kaiti SC', KaiTi, serif; font-size: 1rem; }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="topbar">
+    <a class="back-link" href="chinese.html">← Practice</a>
+    <h1>Character Cards</h1>
+    <div style="min-width:60px"></div>
+  </div>
+
+  <div class="section-label">Level</div>
+  <div class="tab-row" id="level-tabs">
+    <button class="tab active" data-level="p1">Primary 1</button>
+    <button class="tab" data-level="p2">Primary 2</button>
+  </div>
+
+  <div class="section-label">Lesson</div>
+  <div class="tab-row scrollable" id="lesson-tabs"></div>
+
+  <div class="divider"></div>
+  <div class="word-count" id="word-count"></div>
+  <div class="char-grid" id="char-grid"></div>
+</div>
+
+<!-- Character Card Modal -->
+<div id="char-modal" class="char-modal-overlay">
+  <div class="char-modal">
+    <button class="char-modal-close" id="cm-close">✕</button>
+    <div class="char-modal-header">
+      <div class="char-modal-big" id="cm-char"></div>
+      <div class="char-modal-pinyin-lg" id="cm-pinyin"></div>
+      <div class="char-modal-eng" id="cm-eng"></div>
+    </div>
+    <div class="char-modal-section">
+      <div class="char-modal-sec-label">Definition</div>
+      <div class="char-modal-text" id="cm-def-en"></div>
+      <div class="char-modal-text zh" id="cm-def-zh"></div>
+    </div>
+    <div class="char-modal-section">
+      <div class="char-modal-sec-label">Words</div>
+      <div class="char-modal-chips" id="cm-words"></div>
+    </div>
+    <div class="char-modal-section">
+      <div class="char-modal-sec-label">Same Sound</div>
+      <div class="char-modal-chips" id="cm-same"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const DATA = { p1: null, p2: null };
+const dataPromise = Promise.all([
+  fetch('chinese-p1.json').then(r => r.json()).catch(() => null),
+  fetch('chinese-p2.json').then(r => r.json()).catch(() => null),
+]).then(([p1, p2]) => { DATA.p1 = p1; DATA.p2 = p2; });
+
+const S = { level: 'p1', lesson: 'all' };
+
+// ── Lesson tabs ──
+const LESSONS = Array.from({length: 19}, (_, i) => i + 1);
+
+function buildLessonTabs() {
+  const container = document.getElementById('lesson-tabs');
+  container.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.className = 'tab active';
+  allBtn.textContent = 'All';
+  allBtn.dataset.lesson = 'all';
+  allBtn.addEventListener('click', () => selectLesson('all'));
+  container.appendChild(allBtn);
+
+  LESSONS.forEach(n => {
+    const key = `${S.level}-${n}`;
+    if (!DATA[S.level] || !DATA[S.level][key]) return;
+    const btn = document.createElement('button');
+    btn.className = 'tab';
+    btn.textContent = `L${n}`;
+    btn.dataset.lesson = String(n);
+    btn.addEventListener('click', () => selectLesson(String(n)));
+    container.appendChild(btn);
+  });
+}
+
+function selectLesson(lesson) {
+  S.lesson = lesson;
+  document.querySelectorAll('#lesson-tabs .tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.lesson === lesson);
+  });
+  renderGrid();
+}
+
+// ── Level tabs ──
+document.getElementById('level-tabs').querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('#level-tabs .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    S.level = tab.dataset.level;
+    S.lesson = 'all';
+    buildLessonTabs();
+    renderGrid();
+  });
+});
+
+// ── Grid ──
+function getWords() {
+  const data = DATA[S.level];
+  if (!data) return [];
+  const words = [];
+  LESSONS.forEach(n => {
+    const key = `${S.level}-${n}`;
+    (data[key] || []).forEach(entry => {
+      if (S.lesson === 'all' || S.lesson === String(n)) {
+        words.push({ ...entry, lessonNum: n, lessonKey: key });
+      }
+    });
+  });
+  return words;
+}
+
+function renderGrid() {
+  const words = getWords();
+  const grid = document.getElementById('char-grid');
+  const count = document.getElementById('word-count');
+
+  count.textContent = words.length ? `${words.length} character${words.length !== 1 ? 's' : ''}` : '';
+
+  if (words.length === 0) {
+    grid.innerHTML = '<div class="empty">No characters found.</div>';
+    return;
+  }
+
+  grid.innerHTML = '';
+  words.forEach(w => {
+    const card = document.createElement('div');
+    card.className = 'char-card';
+    card.innerHTML = `
+      <div class="char-card-big">${w.character}</div>
+      <div class="char-card-pinyin">${w.pinyin}</div>
+      <div class="char-card-en">${esc(w.english)}</div>
+      <div class="char-card-lesson">L${w.lessonNum}</div>`;
+    card.addEventListener('click', () => showCharModal(w));
+    grid.appendChild(card);
+  });
+}
+
+// ── Character modal ──
+function showCharModal(word) {
+  document.getElementById('cm-char').textContent   = word.character;
+  document.getElementById('cm-pinyin').textContent = word.pinyin;
+  document.getElementById('cm-eng').textContent    = word.english;
+  document.getElementById('cm-def-en').textContent = word['definition-english'] || '';
+  document.getElementById('cm-def-zh').textContent = word['definition-chinese'] || '';
+
+  const wordsEl = document.getElementById('cm-words');
+  wordsEl.innerHTML = '';
+  (word.words || []).forEach(w => {
+    const chip = document.createElement('span');
+    chip.className = 'char-modal-chip zh';
+    chip.textContent = w;
+    wordsEl.appendChild(chip);
+  });
+
+  const sameEl = document.getElementById('cm-same');
+  sameEl.innerHTML = '';
+  (word['same-sounding-character'] || []).forEach(s => {
+    const chip = document.createElement('span');
+    chip.className = 'char-modal-chip';
+    chip.textContent = s;
+    sameEl.appendChild(chip);
+  });
+
+  document.getElementById('char-modal').classList.add('open');
+}
+
+document.getElementById('char-modal').addEventListener('click', e => {
+  if (e.target.id === 'char-modal') document.getElementById('char-modal').classList.remove('open');
+});
+document.getElementById('cm-close').addEventListener('click', () => {
+  document.getElementById('char-modal').classList.remove('open');
+});
+
+function esc(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ── Init ──
+dataPromise.then(() => {
+  buildLessonTabs();
+  renderGrid();
+});
+</script>
+</body>
+</html>
