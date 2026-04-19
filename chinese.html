@@ -243,17 +243,20 @@
       color: var(--p-text);
       line-height: 1.05;
       text-align: center;
+      font-family: STKaiti, 'Kaiti SC', KaiTi, serif;
     }
     .question-text.is-pinyin {
       font-size: clamp(2rem, 8vw, 3.5rem);
       color: var(--p-xl);
       letter-spacing: 0.04em;
+      font-family: system-ui, -apple-system, sans-serif;
     }
     .question-text.is-english {
       font-size: clamp(1.2rem, 5vw, 2rem);
       color: var(--p-xl);
       font-style: italic;
       font-weight: 700;
+      font-family: system-ui, -apple-system, sans-serif;
     }
 
     .options-grid {
@@ -270,7 +273,7 @@
       border: 2px solid var(--brd);
       background: var(--surface);
       color: var(--p-text);
-      font-size: clamp(1.6rem, 7vw, 2.8rem);
+      font-size: clamp(2.4rem, 10vw, 4rem);
       font-weight: 900;
       cursor: pointer;
       transition: border-color 0.12s, background 0.12s, transform 0.1s;
@@ -280,11 +283,13 @@
       justify-content: center;
       min-height: 80px;
       line-height: 1;
+      font-family: STKaiti, 'Kaiti SC', KaiTi, serif;
     }
     .opt-btn.is-pinyin-opt {
       font-size: clamp(1rem, 4vw, 1.5rem);
       font-weight: 700;
       letter-spacing: 0.02em;
+      font-family: system-ui, -apple-system, sans-serif;
     }
     .opt-btn:hover { border-color: var(--p-lt); background: #241a45; }
     .opt-btn:active { transform: scale(0.96); }
