@@ -75,84 +75,129 @@
       text-align: center;
       line-height: 1.3;
     }
+
+    .section {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .section-header {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #a78bfa;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      margin-top: 20px;
+    }
+
+    .section:first-of-type .section-header {
+      margin-top: 0;
+    }
+
+    .section .grid {
+      max-width: 100%;
+    }
   </style>
 </head>
 <body>
 
   <h1>Puzzles</h1>
 
-  <div class="grid">
-    <a class="card" href="avatar.html" onclick="window.location.href='avatar.html';return false;" style="border-color:#7c3aed;background:linear-gradient(135deg,#1c1730 60%,#2a1045);">
-      <div class="card-icon"><span id="index-avatar-icon">🧑</span></div>
-      <div class="card-title" style="color:#a78bfa;">Avatars</div>
-      <div class="card-desc">Create &amp; switch player profiles with custom avatars</div>
-    </a>
-    <a class="card" href="leaderboard.html" onclick="window.location.href='leaderboard.html';return false;" style="border-color:#0e7490;background:linear-gradient(135deg,#1c1730 60%,#0c2a30);">
-      <div class="card-icon">🏆</div>
-      <div class="card-title" style="color:#67e8f9;">Leaderboard</div>
-      <div class="card-desc">Rankings across all avatars for every game</div>
-    </a>
-    <a class="card" href="number.html" onclick="window.location.href='number.html';return false;">
-      <div class="card-icon">🔢</div>
-      <div class="card-title">Number Puzzle</div>
-      <div class="card-desc">Slide tiles into order on a 3×3 to 6×6 grid</div>
-    </a>
-    <a class="card" href="goblet.html" onclick="window.location.href='goblet.html';return false;">
-      <div class="card-icon">🪣</div>
-      <div class="card-title">Goblet Gobblers</div>
-      <div class="card-desc">2-player gobbling battle — get 3 in a row to win</div>
-    </a>
-    <a class="card" href="minesweeper.html" onclick="window.location.href='minesweeper.html';return false;">
-      <div class="card-icon">💣</div>
-      <div class="card-title">Minesweeper</div>
-      <div class="card-desc">Clear the minefield without hitting a bomb</div>
-    </a>
-    <a class="card" href="carjam.html" onclick="window.location.href='carjam.html';return false;">
-      <div class="card-icon">🚦</div>
-      <div class="card-title">Car Jam</div>
-      <div class="card-desc">Dispatch colored vehicles to clear the queue before patience runs out</div>
-    </a>
-    <a class="card" href="mastermind.html" onclick="window.location.href='mastermind.html';return false;">
-      <div class="card-icon">🎯</div>
-      <div class="card-title">Mastermind</div>
-      <div class="card-desc">Crack the secret color code in 10 guesses</div>
-    </a>
-    <a class="card" href="whackamole.html" onclick="window.location.href='whackamole.html';return false;">
-      <div class="card-icon">🐹</div>
-      <div class="card-title">Whack-a-Mole</div>
-      <div class="card-desc">Smash moles, dodge bombs — 60 seconds on the clock</div>
-    </a>
-    <a class="card" href="wordle.html" onclick="window.location.href='wordle.html';return false;">
-      <div class="card-icon">📝</div>
-      <div class="card-title">Wordle</div>
-      <div class="card-desc">Guess the hidden word in 6 tries — 5 to 8 letters</div>
-    </a>
-    <a class="card" href="mathblitz.html" onclick="window.location.href='mathblitz.html';return false;">
-      <div class="card-icon">🧮</div>
-      <div class="card-title">Math Blitz</div>
-      <div class="card-desc">60-second times-table sprint — beat the clock &amp; build your streak</div>
-    </a>
-    <a class="card" href="memory.html" onclick="window.location.href='memory.html';return false;">
-      <div class="card-icon">🃏</div>
-      <div class="card-title">Memory Match</div>
-      <div class="card-desc">Flip emoji cards to find all pairs — 4 levels of difficulty</div>
-    </a>
-    <a class="card" href="chinese.html" onclick="window.location.href='chinese.html';return false;">
-      <div class="card-icon">汉</div>
-      <div class="card-title">Chinese Practice</div>
-      <div class="card-desc">Spaced repetition flashcards — Primary 1 &amp; 2 vocabulary</div>
-    </a>
-    <a class="card" href="spaceinvaders.html" onclick="window.location.href='spaceinvaders.html';return false;">
-      <div class="card-icon">👾</div>
-      <div class="card-title">Space Invaders</div>
-      <div class="card-desc">Defend Earth from the alien invasion — 5 levels of escalating difficulty</div>
-    </a>
-    <a class="card" href="typingtutor.html" onclick="window.location.href='typingtutor.html';return false;">
-      <div class="card-icon">⌨️</div>
-      <div class="card-title">Typing Tutor</div>
-      <div class="card-desc">Learn to type with 13 progressive levels — track your speed per key</div>
-    </a>
+  <div class="section">
+    <div class="section-header">Admin</div>
+    <div class="grid">
+      <a class="card" href="avatar.html" onclick="window.location.href='avatar.html';return false;" style="border-color:#7c3aed;background:linear-gradient(135deg,#1c1730 60%,#2a1045);">
+        <div class="card-icon"><span id="index-avatar-icon">🧑</span></div>
+        <div class="card-title" style="color:#a78bfa;">Avatars</div>
+        <div class="card-desc">Create &amp; switch player profiles with custom avatars</div>
+      </a>
+      <a class="card" href="leaderboard.html" onclick="window.location.href='leaderboard.html';return false;" style="border-color:#0e7490;background:linear-gradient(135deg,#1c1730 60%,#0c2a30);">
+        <div class="card-icon">🏆</div>
+        <div class="card-title" style="color:#67e8f9;">Leaderboard</div>
+        <div class="card-desc">Rankings across all avatars for every game</div>
+      </a>
+    </div>
   </div>
+
+  <div class="section">
+    <div class="section-header">Learning</div>
+    <div class="grid">
+      <a class="card" href="mathblitz.html" onclick="window.location.href='mathblitz.html';return false;">
+        <div class="card-icon">🧮</div>
+        <div class="card-title">Math Blitz</div>
+        <div class="card-desc">60-second times-table sprint — beat the clock &amp; build your streak</div>
+      </a>
+      <a class="card" href="chinese.html" onclick="window.location.href='chinese.html';return false;">
+        <div class="card-icon">汉</div>
+        <div class="card-title">Chinese Practice</div>
+        <div class="card-desc">Spaced repetition flashcards — Primary 1 &amp; 2 vocabulary</div>
+      </a>
+      <a class="card" href="typingtutor.html" onclick="window.location.href='typingtutor.html';return false;">
+        <div class="card-icon">⌨️</div>
+        <div class="card-title">Typing Tutor</div>
+        <div class="card-desc">Learn to type with 13 progressive levels — track your speed per key</div>
+      </a>
+    </div>
+  </div>
+  
+  <div class="section">
+    <div class="section-header">Games</div>
+    <div class="grid">
+      <a class="card" href="spaceinvaders.html" onclick="window.location.href='spaceinvaders.html';return false;">
+        <div class="card-icon">👾</div>
+        <div class="card-title">Space Invaders</div>
+        <div class="card-desc">Defend Earth from the alien invasion — 5 levels of escalating difficulty</div>
+      </a>
+      <a class="card" href="whackamole.html" onclick="window.location.href='whackamole.html';return false;">
+        <div class="card-icon">🐹</div>
+        <div class="card-title">Whack-a-Mole</div>
+        <div class="card-desc">Smash moles, dodge bombs — 60 seconds on the clock</div>
+      </a>
+      <a class="card" href="goblet.html" onclick="window.location.href='goblet.html';return false;">
+        <div class="card-icon">🪣</div>
+        <div class="card-title">Goblet Gobblers</div>
+        <div class="card-desc">2-player gobbling battle — get 3 in a row to win</div>
+      </a>
+      <a class="card" href="wordle.html" onclick="window.location.href='wordle.html';return false;">
+        <div class="card-icon">📝</div>
+        <div class="card-title">Wordle</div>
+        <div class="card-desc">Guess the hidden word in 6 tries — 5 to 8 letters</div>
+      </a>
+      <a class="card" href="memory.html" onclick="window.location.href='memory.html';return false;">
+        <div class="card-icon">🃏</div>
+        <div class="card-title">Memory Match</div>
+        <div class="card-desc">Flip emoji cards to find all pairs — 4 levels of difficulty</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">Puzzles</div>
+    <div class="grid">
+      <a class="card" href="number.html" onclick="window.location.href='number.html';return false;">
+        <div class="card-icon">🔢</div>
+        <div class="card-title">Number Puzzle</div>
+        <div class="card-desc">Slide tiles into order on a 3×3 to 6×6 grid</div>
+      </a>
+      <a class="card" href="minesweeper.html" onclick="window.location.href='minesweeper.html';return false;">
+        <div class="card-icon">💣</div>
+        <div class="card-title">Minesweeper</div>
+        <div class="card-desc">Clear the minefield without hitting a bomb</div>
+      </a>
+      <a class="card" href="carjam.html" onclick="window.location.href='carjam.html';return false;">
+        <div class="card-icon">🚦</div>
+        <div class="card-title">Car Jam</div>
+        <div class="card-desc">Dispatch colored vehicles to clear the queue before patience runs out</div>
+      </a>
+      <a class="card" href="mastermind.html" onclick="window.location.href='mastermind.html';return false;">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Mastermind</div>
+        <div class="card-desc">Crack the secret color code in 10 guesses</div>
+      </a>
+    </div>
+  </div>
+
 
   <script src="avatar.js"></script>
   <script>
