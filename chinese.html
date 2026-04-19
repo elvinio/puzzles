@@ -4,9 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Chinese Practice</title>
-<!-- Lighter subset build, faster load -->
-<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
   <style>
+    @font-face {
+  font-family: 'KaiTiRegular';
+  src: url('fonts/KaiTiRegular.ttf') format('truetype');
+}
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -245,7 +247,7 @@
       color: var(--p-text);
       line-height: 1.05;
       text-align: center;
-      font-family: "Kaiti SC", "SCKaiti", "STKaiti", serif;
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
     }
     .question-text.is-pinyin {
       font-size: clamp(2rem, 8vw, 3.5rem);
@@ -285,7 +287,7 @@
       justify-content: center;
       min-height: 80px;
       line-height: 1;
-      font-family: 'Kaiti SC','LXGW WenKai', 'STKaiti', 'KaiTi', 'FZKai', serif;
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
     }
     .opt-btn.is-pinyin-opt {
       font-size: clamp(1rem, 4vw, 1.5rem);
@@ -369,7 +371,7 @@
     }
     .result-item.ok { border-left-color: var(--ok-lt); }
     .result-item.err { border-left-color: var(--err-lt); }
-    .result-char { font-size: 1.6rem; font-weight: 900; flex-shrink: 0; min-width: 32px; text-align: center; font-family: 'Kaiti SC','LXGW WenKai', 'STKaiti', 'KaiTi', 'FZKai', serif; cursor: pointer; }
+    .result-char { font-size: 1.6rem; font-weight: 900; flex-shrink: 0; min-width: 32px; text-align: center; font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; cursor: pointer; }
     .result-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
     .result-pinyin { font-size: 0.82rem; color: var(--p-xl); }
     .result-english { font-size: 0.75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -450,7 +452,7 @@
       border-bottom: 1px solid rgba(76,29,149,0.25);
       color: var(--p-text);
     }
-    .stats-table td.td-char { font-size: 1.4rem; font-weight: 900; font-family: "Kaiti SC", "SCKaiti", "STKaiti", serif; cursor: pointer; }
+    .stats-table td.td-char { font-size: 1.4rem; font-weight: 900; font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; cursor: pointer; }
     .stats-table td.td-pinyin { color: var(--p-xl); }
     .stats-table td.td-lesson { color: var(--muted); font-size: 0.75rem; }
     .stats-table td.ok { color: var(--ok-lt); font-weight: 700; }
@@ -508,7 +510,7 @@
       border-bottom: 1px solid rgba(76,29,149,0.4);
     }
     .char-modal-big {
-      font-family: "Kaiti SC", "SCKaiti", "STKaiti", serif;
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
       font-size: 5.5rem;
       line-height: 1;
       color: var(--p-text);
@@ -522,7 +524,7 @@
       text-transform: uppercase;
     }
     .char-modal-text { font-size: 0.9rem; color: var(--p-text); line-height: 1.6; }
-    .char-modal-text.zh { font-family: "Kaiti SC", "SCKaiti", "STKaiti", serif; font-size: 1rem; }
+    .char-modal-text.zh { font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; font-size: 1rem; }
     .char-modal-chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .char-modal-chip {
       background: rgba(109,40,217,0.15);
@@ -532,7 +534,7 @@
       font-size: 0.85rem;
       color: var(--p-text);
     }
-    .char-modal-chip.zh { font-family: "Kaiti SC", "SCKaiti", "STKaiti", serif; font-size: 1rem; }
+    .char-modal-chip.zh { font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; font-size: 1rem; }
 
     /* ── Toast ── */
     #toast {
