@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Typing Tutor</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #13111c;
+      --surface: #1c1730;
+      --brd: #4c1d95;
+      --p: #6d28d9;
+      --p-lt: #7c3aed;
+      --p-xl: #a78bfa;
+      --p-text: #e2d9f3;
+      --muted: #7c6fa0;
+    }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 12px 16px 32px;
+      gap: 10px;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .back-link:hover { color: var(--p-xl); }
+    h1 {
+      font-size: clamp(1.1rem, 4vw, 1.6rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .stats-link {
+      background: none;
+      border: 1px solid var(--brd);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .stats-link:hover { color: var(--p-xl); border-color: var(--p-lt); }
+
+    /* ── Screens ── */
+    .screen { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 700px; gap: 14px; }
+    .screen.active { display: flex; }
+
+    /* ── Level Select ── */
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      width: 100%;
+    }
+    .level-card {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 12px;
+      padding: 14px 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      position: relative;
+    }
+    .level-card:not(.locked):hover { background: #241d40; border-color: var(--p-lt); }
+    .level-card:not(.locked):active { transform: scale(0.97); }
+    .level-card.locked { opacity: 0.45; cursor: not-allowed; }
+    .level-card.active-level { border-color: var(--p-xl); }
+    .level-num { font-size: 0.72rem; color: var(--muted); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .level-name { font-size: 0.85rem; font-weight: 800; color: var(--p-text); margin: 4px 0; line-height: 1.2; }
+    .level-best { font-size: 0.75rem; color: #4ade80; margin-top: 4px; }
+    .level-lock { font-size: 1.1rem; position: absolute; top: 8px; right: 10px; }
+
+    /* ── Hand Guide ── */
+    .guide-hands {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .hand-col {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 12px;
+      padding: 14px;
+      min-width: 180px;
+      flex: 1;
+      max-width: 280px;
+    }
+    .hand-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .hand-title.left { color: #a855f7; }
+    .hand-title.right { color: #2dd4bf; }
+    .finger-row {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      margin-bottom: 4px;
+    }
+    .finger-col { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+    .guide-key {
+      width: 32px;
+      height: 28px;
+      border-radius: 5px;
+      border: 1px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: monospace;
+      background: #0f0d1a;
+      color: var(--muted);
+    }
+    .guide-key.left-key { background: #3b0764; border-color: #a855f7; color: #d8b4fe; }
+    .guide-key.right-key { background: #042f2e; border-color: #2dd4bf; color: #99f6e4; }
+    .finger-label { font-size: 0.6rem; color: var(--muted); text-align: center; margin-top: 2px; }
+    .guide-info {
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      width: 100%;
+    }
+    .free-text-input {
+      width: 100%;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--p-text);
+      font-size: 1rem;
+      font-family: monospace;
+      resize: none;
+      outline: none;
+    }
+    .free-text-input:focus { border-color: var(--p-lt); }
+
+    /* ── Game Screen ── */
+    .game-hud {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      justify-content: center;
+    }
+    .hud-item {
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 10px;
+      padding: 8px 16px;
+      text-align: center;
+      min-width: 70px;
+    }
+    .hud-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .hud-value { font-size: 1.1rem; font-weight: 900; color: var(--p-xl); }
+
+    .char-display-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .char-display {
+      width: 140px;
+      height: 140px;
+      background: var(--surface);
+      border: 3px solid var(--brd);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4.5rem;
+      font-weight: 900;
+      font-family: monospace;
+      color: var(--p-text);
+      transition: border-color 0.1s;
+      animation: pop-in 0.22s ease-out;
+    }
+    .char-display.correct-flash {
+      animation: correct-flash 0.25s ease-out;
+    }
+    .char-display.wrong-shake {
+      animation: wrong-shake 0.4s ease-out;
+      border-color: #f87171 !important;
+    }
+    .progress-bar-wrap {
+      width: 160px;
+      height: 6px;
+      background: var(--surface);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--p-lt);
+      border-radius: 3px;
+      transition: width 0.2s ease;
+    }
+    .progress-text { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── Keyboard Visual ── */
+    .keyboard-wrap {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .kb-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 480px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .kb-row {
+      display: flex;
+      gap: 3px;
+      justify-content: center;
+    }
+    .kb-key {
+      min-width: 38px;
+      height: 36px;
+      border-radius: 5px;
+      border: 1px solid #2a2040;
+      background: #0f0d1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      font-family: monospace;
+      color: #3d3460;
+      flex-shrink: 0;
+      padding: 0 4px;
+      transition: background 0.1s, border-color 0.1s, color 0.1s;
+    }
+    .kb-key.wide { min-width: 56px; }
+    .kb-key.wider { min-width: 72px; }
+    .kb-key.space { min-width: 200px; }
+    .kb-key.kb-left { background: #3b0764; border-color: #7e22ce; color: #d8b4fe; }
+    .kb-key.kb-right { background: #042f2e; border-color: #0f766e; color: #99f6e4; }
+    .kb-key.kb-target { background: #854d0e; border-color: #facc15; color: #facc15; font-weight: 900; font-size: 0.85rem; }
+    .kb-key.kb-shift-target { background: #422006; border-color: #f59e0b; color: #fde68a; }
+
+    /* ── Buttons ── */
+    .primary-btn {
+      background: var(--p);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      font-family: inherit;
+      padding: 14px 32px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      width: 100%;
+      max-width: 320px;
+    }
+    .primary-btn:hover { background: var(--p-lt); }
+    .primary-btn:active { transform: scale(0.97); }
+    .secondary-btn {
+      background: transparent;
+      border: 2px solid var(--brd);
+      border-radius: 12px;
+      color: var(--p-xl);
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: inherit;
+      padding: 10px 24px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .secondary-btn:hover { border-color: var(--p-lt); }
+    .danger-btn {
+      background: transparent;
+      border: 2px solid #7f1d1d;
+      border-radius: 12px;
+      color: #f87171;
+      font-size: 0.85rem;
+      font-weight: 700;
+      font-family: inherit;
+      padding: 8px 20px;
+      cursor: pointer;
+    }
+    .danger-btn:hover { border-color: #ef4444; }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    /* ── Results ── */
+    .result-accuracy {
+      font-size: 4rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .result-accuracy.great { color: #4ade80; }
+    .result-accuracy.ok { color: #facc15; }
+    .result-accuracy.poor { color: #f87171; }
+    .result-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .result-stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .result-stat {
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 10px;
+      padding: 12px 18px;
+      text-align: center;
+      min-width: 90px;
+    }
+    .result-stat-val { font-size: 1.4rem; font-weight: 900; color: var(--p-xl); }
+    .result-stat-lbl { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .unlock-banner {
+      background: linear-gradient(135deg, #14532d, #1a3a1a);
+      border: 2px solid #4ade80;
+      border-radius: 12px;
+      padding: 12px 20px;
+      text-align: center;
+      color: #4ade80;
+      font-weight: 800;
+      font-size: 0.95rem;
+      width: 100%;
+    }
+
+    /* ── Stats Screen ── */
+    .sort-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+    .sort-btn {
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: inherit;
+      padding: 6px 14px;
+      cursor: pointer;
+    }
+    .sort-btn.active { border-color: var(--p-xl); color: var(--p-xl); }
+    .stats-table-wrap {
+      width: 100%;
+      overflow-y: auto;
+      max-height: calc(100dvh - 220px);
+      border: 1px solid var(--brd);
+      border-radius: 12px;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 10px 12px;
+      text-align: left;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    td {
+      padding: 9px 12px;
+      font-size: 0.88rem;
+      border-top: 1px solid #1f1833;
+    }
+    tr:hover td { background: #1a1528; }
+    .char-cell {
+      font-family: monospace;
+      font-size: 1.1rem;
+      font-weight: 900;
+      background: #0f0d1a;
+      border: 1px solid var(--brd);
+      border-radius: 5px;
+      padding: 2px 8px;
+      display: inline-block;
+      min-width: 28px;
+      text-align: center;
+    }
+    .acc-green { color: #4ade80; }
+    .acc-yellow { color: #facc15; }
+    .acc-red { color: #f87171; }
+    .time-green { color: #4ade80; }
+    .time-yellow { color: #facc15; }
+    .time-red { color: #f87171; }
+    .stats-summary {
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      width: 100%;
+      text-align: center;
+    }
+    .stats-summary strong { color: var(--p-xl); }
+    .no-stats { color: var(--muted); font-size: 0.9rem; padding: 32px; text-align: center; }
+
+    /* ── Keyframes ── */
+    @keyframes pop-in {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    @keyframes correct-flash {
+      0%   { transform: scale(1.25); color: #4ade80; border-color: #4ade80; }
+      100% { transform: scale(1);    color: var(--p-text); border-color: var(--brd); }
+    }
+    @keyframes wrong-shake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-8px); }
+      40%      { transform: translateX(8px); }
+      60%      { transform: translateX(-6px); }
+      80%      { transform: translateX(6px); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <a class="back-link" href="index.html">&#8592; Games</a>
+    <h1 id="page-title">Typing Tutor</h1>
+    <button class="stats-link" id="stats-nav-btn">Stats</button>
+  </div>
+
+  <!-- ── Screen: Level Select ── -->
+  <div class="screen active" id="screen-levels">
+    <div class="level-grid" id="level-grid"></div>
+  </div>
+
+  <!-- ── Screen: Hand Guide ── -->
+  <div class="screen" id="screen-guide">
+    <div id="guide-content"></div>
+    <button class="primary-btn" id="start-session-btn">Start Session</button>
+    <button class="secondary-btn" id="guide-back-btn">&#8592; Back to Levels</button>
+  </div>
+
+  <!-- ── Screen: Game ── -->
+  <div class="screen" id="screen-game">
+    <div class="game-hud">
+      <div class="hud-item">
+        <div class="hud-label">Progress</div>
+        <div class="hud-value" id="hud-progress">0 / 20</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Correct</div>
+        <div class="hud-value" id="hud-correct" style="color:#4ade80">0</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Wrong</div>
+        <div class="hud-value" id="hud-wrong" style="color:#f87171">0</div>
+      </div>
+    </div>
+
+    <div class="char-display-wrap">
+      <div class="char-display" id="char-display">?</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-text" id="progress-text">0 of 20</div>
+    </div>
+
+    <div class="keyboard-wrap">
+      <div class="kb-rows" id="kb-visual"></div>
+    </div>
+
+    <button class="primary-btn" id="end-session-btn">End</button>
+  </div>
+
+  <!-- ── Screen: Results ── -->
+  <div class="screen" id="screen-results">
+    <div id="unlock-banner-wrap"></div>
+    <div class="result-label">Session Accuracy</div>
+    <div class="result-accuracy" id="result-accuracy">0%</div>
+    <div class="result-stats">
+      <div class="result-stat">
+        <div class="result-stat-val" id="res-total">0</div>
+        <div class="result-stat-lbl">Typed</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-val" id="res-correct" style="color:#4ade80">0</div>
+        <div class="result-stat-lbl">Correct</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-val" id="res-wrong" style="color:#f87171">0</div>
+        <div class="result-stat-lbl">Wrong</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-val" id="res-avgtime">—</div>
+        <div class="result-stat-lbl">Avg Time</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="primary-btn" id="play-again-btn">Play Again</button>
+    </div>
+    <div class="btn-row">
+      <button class="secondary-btn" id="change-level-btn">Change Level</button>
+      <button class="secondary-btn" id="view-stats-btn">View Stats</button>
+    </div>
+  </div>
+
+  <!-- ── Screen: Stats ── -->
+  <div class="screen" id="screen-stats">
+    <div class="stats-summary" id="stats-summary"></div>
+    <div class="sort-row">
+      <button class="sort-btn active" data-sort="time" id="sort-time">Slowest First</button>
+      <button class="sort-btn" data-sort="az" id="sort-az">A – Z</button>
+      <button class="sort-btn" data-sort="acc" id="sort-acc">Accuracy</button>
+    </div>
+    <div class="stats-table-wrap" id="stats-table-wrap">
+      <table id="stats-table">
+        <thead>
+          <tr>
+            <th>Char</th>
+            <th>Right</th>
+            <th>Wrong</th>
+            <th>Accuracy</th>
+            <th>Avg Time</th>
+          </tr>
+        </thead>
+        <tbody id="stats-tbody"></tbody>
+      </table>
+    </div>
+    <button class="secondary-btn" id="stats-back-btn">&#8592; Back to Levels</button>
+  </div>
+
+  <script>
+    // ── Audio ──────────────────────────────────────────────────────────────────
+    let audioCtx = null;
+    function getAC() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+    function playTone(freq, type, startTime, duration, gain, endFreq) {
+      gain = gain || 0.25;
+      const ac = getAC();
+      const osc = ac.createOscillator();
+      const g   = ac.createGain();
+      osc.connect(g); g.connect(ac.destination);
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, startTime);
+      if (endFreq) osc.frequency.exponentialRampToValueAtTime(endFreq, startTime + duration);
+      g.gain.setValueAtTime(gain, startTime);
+      g.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+      osc.start(startTime);
+      osc.stop(startTime + duration + 0.01);
+    }
+    function sfxCorrect() {
+      try {
+        const ac = getAC(), now = ac.currentTime;
+        playTone(523, 'sine', now,      0.12, 0.2);
+        playTone(659, 'sine', now+0.08, 0.12, 0.18);
+      } catch(e) {}
+    }
+    function sfxWrong() {
+      try {
+        const ac = getAC(), now = ac.currentTime;
+        playTone(180, 'sawtooth', now,      0.08, 0.18, 140);
+        playTone(130, 'sawtooth', now+0.07, 0.1,  0.12, 100);
+      } catch(e) {}
+    }
+    function sfxComplete() {
+      try {
+        const ac = getAC(), now = ac.currentTime;
+        [[523,0],[659,0.10],[784,0.20],[1047,0.32]].forEach(([f,t]) =>
+          playTone(f, 'sine', now+t, 0.25, 0.28));
+      } catch(e) {}
+    }
+
+    // ── Level Definitions ───────────────────────────────────────────────────────
+    const LEVELS = [
+      { name: 'Left Home Row',      chars: 'asdfg',                              leftHand: 'asdfg',           rightHand: '' },
+      { name: 'Right Home Row',     chars: 'hjkl;',                              leftHand: '',                rightHand: 'hjkl;' },
+      { name: 'Left Home + Top',    chars: 'asdfgqwert',                         leftHand: 'asdfgqwert',      rightHand: '' },
+      { name: 'Right Home + Top',   chars: 'hjkl;yuiop',                         leftHand: '',                rightHand: 'hjkl;yuiop' },
+      { name: 'Left Home + Bottom', chars: 'asdfgzxcvb',                         leftHand: 'asdfgzxcvb',      rightHand: '' },
+      { name: 'Right Home + Bottom',chars: 'hjkl;bnm,./',                        leftHand: '',                rightHand: 'hjkl;bnm,./' },
+      { name: 'Left Full Hand',     chars: 'qwertasdfgzxcvb',                    leftHand: 'qwertasdfgzxcvb', rightHand: '' },
+      { name: 'Right Full Hand',    chars: 'yuiophjkl;bnm,./',                   leftHand: '',                rightHand: 'yuiophjkl;bnm,./' },
+      { name: 'Both Hands',         chars: 'qwertyuiopasdfghjkl;zxcvbnm,./',     leftHand: 'qwertasdfgzxcvb', rightHand: 'yuiophjkl;bnm,./' },
+      { name: 'Both + Uppercase',   chars: 'qwertyuiopasdfghjkl;zxcvbnm,./',     leftHand: 'qwertasdfgzxcvb', rightHand: 'yuiophjkl;bnm,./', hasShift: true },
+      { name: 'Both + Numbers',     chars: 'qwertyuiopasdfghjkl;zxcvbnm,./1234567890', leftHand: 'qwertasdfgzxcvb12345', rightHand: 'yuiophjkl;bnm,./67890', hasShift: true },
+      { name: 'Full Keyboard',      chars: 'qwertyuiopasdfghjkl;zxcvbnm,./1234567890', leftHand: 'qwertasdfgzxcvb12345', rightHand: 'yuiophjkl;bnm,./67890', hasShift: true, hasPunct: true },
+      { name: 'Free Text',          chars: null, isFreeText: true },
+    ];
+
+    // Extra punctuation for level 12 (shift combos + standalone)
+    const PUNCT_CHARS = '!@#$%^&*()-_=+[]{}\\|;:\'",./<>?`~';
+
+    // Map shifted char → base key (for keyboard highlight)
+    const SHIFT_MAP = {
+      '!':'1','@':'2','#':'3','$':'4','%':'5',
+      '^':'6','&':'7','*':'8','(':'9',')':'0',
+      '_':'-','+':'=','<':',','>':'.','?':'/',
+      '{':'[','}':']','|':'\\',':':';','"':"'",
+      '~':'`'
+    };
+
+    // Finger assignments for hand guide
+    const FINGER_MAP = {
+      q:'L4',a:'L4',z:'L4',
+      w:'L3',s:'L3',x:'L3',
+      e:'L2',d:'L2',c:'L2',
+      r:'L1',f:'L1',v:'L1',
+      t:'L1',g:'L1',b:'L1',
+      y:'R1',h:'R1',n:'R1',
+      u:'R1',j:'R1',m:'R1',
+      i:'R2',k:'R2',',':'R2',
+      o:'R3',l:'R3','.':'R3',
+      p:'R4',';':'R4','/':'R4',
+    };
+
+    const KB_ROWS = [
+      { keys: ['`','1','2','3','4','5','6','7','8','9','0','-','='], offsets: [0] },
+      { keys: ['q','w','e','r','t','y','u','i','o','p','[',']','\\'], indent: 18 },
+      { keys: ['a','s','d','f','g','h','j','k','l',";","'"], indent: 26 },
+      { keys: ['z','x','c','v','b','n','m',',','.','/'], indent: 44 },
+    ];
+
+    // ── State ───────────────────────────────────────────────────────────────────
+    let currentLevelIdx = 0;
+    let sessionChars    = [];
+    let sessionIdx      = 0;
+    let sessionRight    = 0;
+    let sessionWrong    = 0;
+    let sessionTimes    = []; // ms per correct answer
+    let charStartTime   = 0;
+    let gameActive      = false;
+    let freeTextSentence = '';
+    let currentSort     = 'time';
+
+    // ── Storage Helpers ─────────────────────────────────────────────────────────
+    function getAvatarId() {
+      const av = window.__avatarGetActive ? window.__avatarGetActive() : null;
+      return av ? av.id : 'guest';
+    }
+
+    function loadStats() {
+      try { return JSON.parse(localStorage.getItem('typing-stats-' + getAvatarId()) || '{}'); } catch { return {}; }
+    }
+
+    function saveStats(stats) {
+      try { localStorage.setItem('typing-stats-' + getAvatarId(), JSON.stringify(stats)); } catch {}
+    }
+
+    function loadUnlocks() {
+      try {
+        const u = JSON.parse(localStorage.getItem('typing-unlocks-' + getAvatarId()) || '[]');
+        while (u.length < 13) u.push(false);
+        u[0] = true;
+        return u;
+      } catch { return [true, ...Array(12).fill(false)]; }
+    }
+
+    function saveUnlocks(u) {
+      try { localStorage.setItem('typing-unlocks-' + getAvatarId(), JSON.stringify(u)); } catch {}
+    }
+
+    function recordKeypress(ch, isRight, elapsedMs) {
+      const stats = loadStats();
+      if (!stats[ch]) stats[ch] = { right: 0, wrong: 0, totalTime: 0 };
+      if (isRight) {
+        stats[ch].right++;
+        stats[ch].totalTime += elapsedMs;
+      } else {
+        stats[ch].wrong++;
+      }
+      saveStats(stats);
+    }
+
+    // ── Screen Management ───────────────────────────────────────────────────────
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      gameActive = (id === 'screen-game');
+    }
+
+    // ── Level Select ─────────────────────────────────────────────────────────────
+    function renderLevelSelect() {
+      const unlocks = loadUnlocks();
+      const av = window.__avatarGetActive ? window.__avatarGetActive() : null;
+      const scores = (av && av.scores) ? av.scores : {};
+      const grid = document.getElementById('level-grid');
+      grid.innerHTML = '';
+      LEVELS.forEach((lv, i) => {
+        const unlocked = unlocks[i];
+        const card = document.createElement('div');
+        card.className = 'level-card' + (unlocked ? '' : ' locked');
+        const best = scores['typing-tutor-lvl-' + (i+1)];
+        card.innerHTML = `
+          <div class="level-num">Level ${i+1}</div>
+          <div class="level-name">${lv.name}</div>
+          ${best !== undefined ? `<div class="level-best">${best}% best</div>` : ''}
+          ${!unlocked ? '<div class="level-lock">🔒</div>' : ''}
+        `;
+        if (unlocked) {
+          card.addEventListener('click', () => {
+            currentLevelIdx = i;
+            showGuide(i);
+          });
+        }
+        grid.appendChild(card);
+      });
+    }
+
+    // ── Hand Guide ───────────────────────────────────────────────────────────────
+    function showGuide(idx) {
+      const lv = LEVELS[idx];
+      const container = document.getElementById('guide-content');
+      container.innerHTML = '';
+
+      if (lv.isFreeText) {
+        container.innerHTML = `
+          <div class="guide-info" style="margin-bottom:10px;">
+            <strong style="color:var(--p-xl)">Level 13 — Free Text</strong><br>
+            Type a sentence below (max 80 characters). You'll type each character one at a time.
+          </div>
+          <textarea class="free-text-input" id="free-text-area" rows="3" maxlength="80" placeholder="Type or paste a sentence here…"></textarea>
+        `;
+        document.getElementById('start-session-btn').onclick = () => {
+          const val = (document.getElementById('free-text-area').value || '').trim();
+          if (!val) { document.getElementById('free-text-area').style.borderColor = '#f87171'; return; }
+          freeTextSentence = val;
+          startSession();
+        };
+      } else {
+        const leftKeys  = lv.leftHand.split('');
+        const rightKeys = lv.rightHand.split('');
+        const allKeys   = [...leftKeys, ...rightKeys];
+
+        // Build finger columns: L4 L3 L2 L1  R1 R2 R3 R4
+        const fingerOrder = ['L4','L3','L2','L1','R1','R2','R3','R4'];
+        const fingerNames = { L4:'Pinky',L3:'Ring',L2:'Middle',L1:'Index',R1:'Index',R2:'Middle',R3:'Ring',R4:'Pinky' };
+
+        // Group keys by finger
+        const byFinger = {};
+        fingerOrder.forEach(f => byFinger[f] = []);
+        allKeys.forEach(k => {
+          const f = FINGER_MAP[k];
+          if (f && byFinger[f]) byFinger[f].push(k);
+        });
+
+        // Key rows in order for each finger: top, home, bottom
+        const keyRowOrder = {
+          L4: ['q','a','z'], L3: ['w','s','x'], L2: ['e','d','c'], L1: ['r','f','v','t','g','b'],
+          R1: ['y','h','n','u','j','m'], R2: ['i','k',','], R3: ['o','l','.'], R4: ['p',';','/']
+        };
+
+        const leftFingers  = ['L4','L3','L2','L1'];
+        const rightFingers = ['R1','R2','R3','R4'];
+
+        function buildHandHTML(fingers, side) {
+          const hasAny = fingers.some(f => byFinger[f].length > 0);
+          if (!hasAny) return '';
+          const cls = side === 'left' ? 'left' : 'right';
+          const keyCls = side === 'left' ? 'left-key' : 'right-key';
+          let cols = '';
+          fingers.forEach(f => {
+            const keys = keyRowOrder[f].filter(k => byFinger[f].includes(k));
+            if (!keys.length) return;
+            cols += `<div class="finger-col">`;
+            keys.forEach(k => {
+              cols += `<div class="guide-key ${keyCls}">${k}</div>`;
+            });
+            cols += `<div class="finger-label">${fingerNames[f]}</div></div>`;
+          });
+          if (!cols) return '';
+          return `
+            <div class="hand-col">
+              <div class="hand-title ${cls}">${side === 'left' ? '◀ Left Hand' : 'Right Hand ▶'}</div>
+              <div class="finger-row">${cols}</div>
+            </div>
+          `;
+        }
+
+        const leftHTML  = buildHandHTML(leftFingers, 'left');
+        const rightHTML = buildHandHTML(rightFingers, 'right');
+
+        container.innerHTML = `
+          <div class="guide-info" style="margin-bottom:10px;">
+            <strong style="color:var(--p-xl)">Level ${idx+1} — ${lv.name}</strong><br>
+            Place your fingers on the highlighted keys. Type each character shown — 20 chars per session.
+            ${lv.hasShift ? '<br><em style="color:var(--muted)">Some characters need the Shift key!</em>' : ''}
+          </div>
+          <div class="guide-hands">${leftHTML}${rightHTML}</div>
+        `;
+        document.getElementById('start-session-btn').onclick = startSession;
+      }
+
+      showScreen('screen-guide');
+    }
+
+    // ── Session Generation ───────────────────────────────────────────────────────
+    function buildSessionChars() {
+      const lv = LEVELS[currentLevelIdx];
+
+      if (lv.isFreeText) {
+        // Use up to 20 chars from the sentence (individual characters)
+        return freeTextSentence.slice(0, 20).split('');
+      }
+
+      const stats = loadStats();
+      let pool = lv.chars.split('');
+
+      // For levels with shift, mix in uppercase (30% chance per slot)
+      // For level 12 (hasPunct), also mix in punctuation
+      const chars = [];
+      for (let i = 0; i < 20; i++) {
+        let ch;
+        if (lv.hasPunct && Math.random() < 0.25) {
+          // punctuation character
+          ch = PUNCT_CHARS[Math.floor(Math.random() * PUNCT_CHARS.length)];
+        } else {
+          // pick from pool, weighted by slowness (slower = more likely)
+          const weights = pool.map(c => {
+            const s = stats[c];
+            if (!s || s.right === 0) return 3; // untested chars get high weight
+            const avg = s.totalTime / s.right;
+            return Math.max(1, avg / 200);
+          });
+          const totalW = weights.reduce((a, b) => a + b, 0);
+          let rand = Math.random() * totalW;
+          let idx = 0;
+          for (; idx < weights.length - 1; idx++) {
+            rand -= weights[idx];
+            if (rand <= 0) break;
+          }
+          ch = pool[idx];
+          // Uppercase?
+          if (lv.hasShift && /[a-z]/.test(ch) && Math.random() < 0.3) {
+            ch = ch.toUpperCase();
+          }
+        }
+        chars.push(ch);
+      }
+      return chars;
+    }
+
+    function startSession() {
+      sessionChars  = buildSessionChars();
+      sessionIdx    = 0;
+      sessionRight  = 0;
+      sessionWrong  = 0;
+      sessionTimes  = [];
+      showScreen('screen-game');
+      showChar();
+    }
+
+    // ── Game Logic ───────────────────────────────────────────────────────────────
+    function showChar() {
+      const ch = sessionChars[sessionIdx];
+      const el = document.getElementById('char-display');
+      el.textContent = ch;
+      el.className = 'char-display';
+      // Re-trigger pop-in
+      void el.offsetWidth;
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+      el.className = 'char-display';
+
+      updateHUD();
+      renderKeyboard(LEVELS[currentLevelIdx], ch);
+      charStartTime = performance.now();
+    }
+
+    function updateHUD() {
+      document.getElementById('hud-progress').textContent = sessionIdx + ' / ' + sessionChars.length;
+      document.getElementById('hud-correct').textContent  = sessionRight;
+      document.getElementById('hud-wrong').textContent    = sessionWrong;
+      const pct = (sessionIdx / sessionChars.length) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = sessionIdx + ' of ' + sessionChars.length;
+    }
+
+    function handleKeyPress(key) {
+      const target = sessionChars[sessionIdx];
+      const elapsed = performance.now() - charStartTime;
+
+      if (key === target) {
+        // Correct
+        recordKeypress(target, true, Math.round(elapsed));
+        sessionRight++;
+        sessionTimes.push(Math.round(elapsed));
+        sfxCorrect();
+
+        const el = document.getElementById('char-display');
+        el.classList.remove('wrong-shake');
+        void el.offsetWidth;
+        el.classList.add('correct-flash');
+
+        setTimeout(() => {
+          sessionIdx++;
+          if (sessionIdx >= sessionChars.length) {
+            endSession(true);
+          } else {
+            showChar();
+          }
+        }, 220);
+      } else {
+        // Wrong
+        recordKeypress(target, false, 0);
+        sessionWrong++;
+        sfxWrong();
+        updateHUD();
+
+        const el = document.getElementById('char-display');
+        el.classList.remove('wrong-shake');
+        void el.offsetWidth;
+        el.classList.add('wrong-shake');
+        el.addEventListener('animationend', () => el.classList.remove('wrong-shake'), { once: true });
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (!gameActive || e.repeat) return;
+      if (['Shift','Control','Alt','Meta','Tab','Escape','CapsLock','Backspace','Enter'].includes(e.key)) return;
+      handleKeyPress(e.key);
+    });
+
+    document.getElementById('end-session-btn').addEventListener('click', () => {
+      if (sessionIdx === 0 && sessionRight === 0 && sessionWrong === 0) {
+        // Nothing typed yet — just go back
+        showScreen('screen-guide');
+        return;
+      }
+      endSession(false);
+    });
+
+    // ── End Session ──────────────────────────────────────────────────────────────
+    function endSession(completed) {
+      gameActive = false;
+      const total = sessionIdx;
+      const accuracy = total > 0 ? sessionRight / total : 0;
+      const avgTime = sessionTimes.length > 0
+        ? Math.round(sessionTimes.reduce((a, b) => a + b, 0) / sessionTimes.length)
+        : null;
+
+      // Save avatar score
+      if (window.__avatarSave) {
+        window.__avatarSave('typing-tutor-lvl-' + (currentLevelIdx + 1), Math.round(accuracy * 100), false);
+      }
+
+      // Check unlock (only if completed full session)
+      let newlyUnlocked = false;
+      if (completed && accuracy >= 0.80 && currentLevelIdx < 12) {
+        const unlocks = loadUnlocks();
+        if (!unlocks[currentLevelIdx + 1]) {
+          unlocks[currentLevelIdx + 1] = true;
+          saveUnlocks(unlocks);
+          newlyUnlocked = true;
+        }
+      }
+
+      if (completed) sfxComplete();
+
+      // Populate results
+      const accEl = document.getElementById('result-accuracy');
+      const pct = Math.round(accuracy * 100);
+      accEl.textContent = pct + '%';
+      accEl.className = 'result-accuracy ' + (pct >= 80 ? 'great' : pct >= 50 ? 'ok' : 'poor');
+
+      document.getElementById('res-total').textContent   = total;
+      document.getElementById('res-correct').textContent = sessionRight;
+      document.getElementById('res-wrong').textContent   = sessionWrong;
+      document.getElementById('res-avgtime').textContent = avgTime !== null ? avgTime + 'ms' : '—';
+
+      const banner = document.getElementById('unlock-banner-wrap');
+      banner.innerHTML = newlyUnlocked
+        ? `<div class="unlock-banner">🎉 Level ${currentLevelIdx + 2} Unlocked — ${LEVELS[currentLevelIdx + 1].name}!</div>`
+        : '';
+
+      showScreen('screen-results');
+    }
+
+    // ── Keyboard Visual ──────────────────────────────────────────────────────────
+    function renderKeyboard(lv, targetChar) {
+      const container = document.getElementById('kb-visual');
+      container.innerHTML = '';
+
+      const leftSet  = new Set(lv.leftHand.split(''));
+      const rightSet = new Set(lv.rightHand.split(''));
+
+      const targetLower = targetChar.toLowerCase();
+      const needsShift  = targetChar !== targetLower || SHIFT_MAP[targetChar] !== undefined;
+      const baseKey     = SHIFT_MAP[targetChar] || targetLower;
+
+      // Helper to classify a key
+      function keyClass(k) {
+        if (k === baseKey) return 'kb-target';
+        if (leftSet.has(k))  return 'kb-left';
+        if (rightSet.has(k)) return 'kb-right';
+        // Also include number keys for levels 11+
+        return '';
+      }
+
+      // Row 1: number row
+      const row1keys = ['`','1','2','3','4','5','6','7','8','9','0','-','='];
+      const row1 = document.createElement('div');
+      row1.className = 'kb-row';
+      row1keys.forEach(k => {
+        const d = document.createElement('div');
+        d.className = 'kb-key ' + keyClass(k);
+        d.textContent = k;
+        row1.appendChild(d);
+      });
+      // Backspace
+      const bksp = document.createElement('div');
+      bksp.className = 'kb-key wider';
+      bksp.textContent = '⌫';
+      row1.appendChild(bksp);
+      container.appendChild(row1);
+
+      // Row 2: QWERTY
+      const row2keys = ['q','w','e','r','t','y','u','i','o','p','[',']','\\'];
+      const row2 = document.createElement('div');
+      row2.className = 'kb-row';
+      const tab = document.createElement('div');
+      tab.className = 'kb-key wide'; tab.textContent = 'Tab'; row2.appendChild(tab);
+      row2keys.forEach(k => {
+        const d = document.createElement('div');
+        d.className = 'kb-key ' + keyClass(k);
+        d.textContent = k;
+        row2.appendChild(d);
+      });
+      container.appendChild(row2);
+
+      // Row 3: ASDF (home row)
+      const row3keys = ['a','s','d','f','g','h','j','k','l',';',"'"];
+      const row3 = document.createElement('div');
+      row3.className = 'kb-row';
+      const caps = document.createElement('div');
+      caps.className = 'kb-key wide'; caps.textContent = 'Caps'; row3.appendChild(caps);
+      row3keys.forEach(k => {
+        const d = document.createElement('div');
+        d.className = 'kb-key ' + keyClass(k);
+        d.textContent = k;
+        row3.appendChild(d);
+      });
+      const enter = document.createElement('div');
+      enter.className = 'kb-key wider'; enter.textContent = '↵'; row3.appendChild(enter);
+      container.appendChild(row3);
+
+      // Row 4: ZXCV (bottom row) with Shift keys
+      const row4keys = ['z','x','c','v','b','n','m',',','.','/'];
+      const row4 = document.createElement('div');
+      row4.className = 'kb-row';
+      const shiftL = document.createElement('div');
+      shiftL.className = 'kb-key wider' + (needsShift ? ' kb-shift-target' : '');
+      shiftL.textContent = '⇧ Shift'; row4.appendChild(shiftL);
+      row4keys.forEach(k => {
+        const d = document.createElement('div');
+        d.className = 'kb-key ' + keyClass(k);
+        d.textContent = k;
+        row4.appendChild(d);
+      });
+      const shiftR = document.createElement('div');
+      shiftR.className = 'kb-key wider' + (needsShift ? ' kb-shift-target' : '');
+      shiftR.textContent = 'Shift ⇧'; row4.appendChild(shiftR);
+      container.appendChild(row4);
+
+      // Row 5: Spacebar
+      const row5 = document.createElement('div');
+      row5.className = 'kb-row';
+      ['Ctrl','Alt'].forEach(k => {
+        const d = document.createElement('div'); d.className='kb-key wide'; d.textContent=k; row5.appendChild(d);
+      });
+      const sp = document.createElement('div');
+      sp.className = 'kb-key space' + (targetChar === ' ' ? ' kb-target' : '');
+      sp.textContent = ''; row5.appendChild(sp);
+      ['Alt','Ctrl'].forEach(k => {
+        const d = document.createElement('div'); d.className='kb-key wide'; d.textContent=k; row5.appendChild(d);
+      });
+      container.appendChild(row5);
+    }
+
+    // ── Stats Screen ─────────────────────────────────────────────────────────────
+    function showStats() {
+      const stats = loadStats();
+      const entries = Object.keys(stats).map(ch => {
+        const s = stats[ch];
+        const avg = s.right > 0 ? Math.round(s.totalTime / s.right) : null;
+        const total = s.right + s.wrong;
+        const acc = total > 0 ? Math.round(s.right / total * 100) : 0;
+        return { ch, right: s.right, wrong: s.wrong, acc, avg };
+      });
+
+      // Summary
+      const totalRight = entries.reduce((a, e) => a + e.right, 0);
+      const totalWrong = entries.reduce((a, e) => a + e.wrong, 0);
+      const totalAll   = totalRight + totalWrong;
+      const overallAcc = totalAll > 0 ? Math.round(totalRight / totalAll * 100) : 0;
+      const timesArr   = entries.filter(e => e.avg !== null).map(e => e.avg);
+      const overallAvg = timesArr.length > 0 ? Math.round(timesArr.reduce((a,b)=>a+b,0)/timesArr.length) : null;
+      document.getElementById('stats-summary').innerHTML =
+        `<strong>${entries.length}</strong> chars tracked &nbsp;|&nbsp; ` +
+        `Overall accuracy: <strong>${overallAcc}%</strong> &nbsp;|&nbsp; ` +
+        `Avg response: <strong>${overallAvg !== null ? overallAvg+'ms' : '—'}</strong>`;
+
+      renderStatsTable(entries, currentSort);
+      showScreen('screen-stats');
+    }
+
+    function renderStatsTable(entries, sort) {
+      // Sort
+      if (sort === 'az') {
+        entries.sort((a,b) => a.ch.localeCompare(b.ch));
+      } else if (sort === 'acc') {
+        entries.sort((a,b) => a.acc - b.acc);
+      } else {
+        // slowest first; null avg goes last
+        entries.sort((a,b) => {
+          if (a.avg === null && b.avg === null) return 0;
+          if (a.avg === null) return 1;
+          if (b.avg === null) return -1;
+          return b.avg - a.avg;
+        });
+      }
+
+      const tbody = document.getElementById('stats-tbody');
+      if (entries.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="no-stats">No typing data yet. Complete a session to see stats!</td></tr>';
+        return;
+      }
+      tbody.innerHTML = entries.map(e => {
+        const accCls = e.acc >= 80 ? 'acc-green' : e.acc >= 50 ? 'acc-yellow' : 'acc-red';
+        const timeCls = e.avg === null ? '' : e.avg < 500 ? 'time-green' : e.avg < 1500 ? 'time-yellow' : 'time-red';
+        const timeStr = e.avg !== null ? e.avg + 'ms' : '—';
+        const total = e.right + e.wrong;
+        return `<tr>
+          <td><span class="char-cell">${escHtml(e.ch)}</span></td>
+          <td>${e.right}</td>
+          <td>${e.wrong}</td>
+          <td class="${accCls}">${total > 0 ? e.acc + '%' : '—'}</td>
+          <td class="${timeCls}">${timeStr}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── Sort Buttons ─────────────────────────────────────────────────────────────
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentSort = btn.dataset.sort;
+        const stats = loadStats();
+        const entries = Object.keys(stats).map(ch => {
+          const s = stats[ch];
+          const avg = s.right > 0 ? Math.round(s.totalTime / s.right) : null;
+          const total = s.right + s.wrong;
+          const acc = total > 0 ? Math.round(s.right / total * 100) : 0;
+          return { ch, right: s.right, wrong: s.wrong, acc, avg };
+        });
+        renderStatsTable(entries, currentSort);
+      });
+    });
+
+    // ── Nav Wiring ───────────────────────────────────────────────────────────────
+    document.getElementById('stats-nav-btn').addEventListener('click', showStats);
+    document.getElementById('stats-back-btn').addEventListener('click', () => { renderLevelSelect(); showScreen('screen-levels'); });
+    document.getElementById('guide-back-btn').addEventListener('click', () => { renderLevelSelect(); showScreen('screen-levels'); });
+
+    document.getElementById('play-again-btn').addEventListener('click', startSession);
+    document.getElementById('change-level-btn').addEventListener('click', () => { renderLevelSelect(); showScreen('screen-levels'); });
+    document.getElementById('view-stats-btn').addEventListener('click', showStats);
+
+    // ── Init ─────────────────────────────────────────────────────────────────────
+    renderLevelSelect();
+    showScreen('screen-levels');
+  </script>
+  <script src="avatar.js"></script>
+</body>
+</html>
