@@ -1259,5 +1259,931 @@
       "definition-english": "Accurate; standard; to allow; to prepare",
       "definition-chinese": "准确；标准；允许"
     }
+  ],
+  "p3-6": [
+    {
+      "character": "软",
+      "english": "soft, weak, flexible",
+      "pinyin": "ruǎn",
+      "same-sounding-character": ["阮 (surname/lute)", "朊 (protein)"],
+      "words": ["软件 (ruǎn jiàn， software)", "柔软 (róu ruǎn， soft/flexible)", "软弱 (ruǎn ruò， weak/feeble)"],
+      "definition-english": "Soft; weak; flexible",
+      "definition-chinese": "柔软；软弱；软件"
+    },
+    {
+      "character": "硬",
+      "english": "hard, stiff, firm",
+      "pinyin": "yìng",
+      "same-sounding-character": ["应 (respond)", "映 (reflect)", "英 (hero/England)"],
+      "words": ["硬件 (yìng jiàn， hardware)", "坚硬 (jiān yìng， hard/solid)", "硬币 (yìng bì， coin)"],
+      "definition-english": "Hard; stiff; firm; hardware",
+      "definition-chinese": "坚硬；硬件；硬币"
+    },
+    {
+      "character": "松",
+      "english": "loose, relax, pine tree",
+      "pinyin": "sōng",
+      "same-sounding-character": ["嵩 (high mountain)", "崧 (high mountain)", "送 (send/give)"],
+      "words": ["松开 (sōng kāi， loosen/release)", "轻松 (qīng sōng， relaxed/easy)", "松树 (sōng shù， pine tree)"],
+      "definition-english": "Loose; relaxed; a pine tree",
+      "definition-chinese": "松开；轻松；松树"
+    },
+    {
+      "character": "紧",
+      "english": "tight, urgent, close",
+      "pinyin": "jǐn",
+      "same-sounding-character": ["谨 (careful/prudent)", "锦 (brocade)", "仅 (only)"],
+      "words": ["紧张 (jǐn zhāng， nervous/tense)", "紧急 (jǐn jí， urgent)", "抓紧 (zhuā jǐn， grasp firmly/hurry)"],
+      "definition-english": "Tight; urgent; close; nervous",
+      "definition-chinese": "紧张；紧急；抓紧"
+    },
+    {
+      "character": "失",
+      "english": "lose, miss, fail",
+      "pinyin": "shī",
+      "same-sounding-character": ["师 (teacher)", "诗 (poem)", "狮 (lion)"],
+      "words": ["失去 (shī qù， lose)", "失败 (shī bài， fail/defeat)", "失望 (shī wàng， disappointed)"],
+      "definition-english": "To lose; to miss; to fail",
+      "definition-chinese": "失去；失败；失望"
+    },
+    {
+      "character": "错",
+      "english": "wrong, mistake, error",
+      "pinyin": "cuò",
+      "same-sounding-character": ["措 (measure/arrange)", "挫 (frustrate)", "锉 (file/rasp)"],
+      "words": ["错误 (cuò wù， mistake/error)", "不错 (bù cuò， not bad/pretty good)", "犯错 (fàn cuò， make a mistake)"],
+      "definition-english": "Wrong; a mistake; error; not bad",
+      "definition-chinese": "错误；不错；犯错"
+    },
+    {
+      "character": "误",
+      "english": "mistake, error, delay",
+      "pinyin": "wù",
+      "same-sounding-character": ["务 (affair/must)", "雾 (fog)", "悟 (realize/enlighten)"],
+      "words": ["错误 (cuò wù， mistake/error)", "误会 (wù huì， misunderstanding)", "延误 (yán wù， delay)"],
+      "definition-english": "A mistake; error; to miss; to delay",
+      "definition-chinese": "错误；误会；延误"
+    },
+    {
+      "character": "扔",
+      "english": "throw, toss, discard",
+      "pinyin": "rēng",
+      "same-sounding-character": ["仍 (still/remain)", "扔 (throw)"],
+      "words": ["扔掉 (rēng diào， throw away)", "扔球 (rēng qiú， throw a ball)", "乱扔 (luàn rēng， litter/throw carelessly)"],
+      "definition-english": "To throw; to toss; to discard",
+      "definition-chinese": "扔掉；投掷；丢弃"
+    },
+    {
+      "character": "谅",
+      "english": "forgive, understand, excuse",
+      "pinyin": "liàng",
+      "same-sounding-character": ["亮 (bright)", "量 (measure)", "辆 (measure word for vehicles)"],
+      "words": ["原谅 (yuán liàng， forgive/excuse)", "谅解 (liàng jiě， understanding/forgiveness)", "体谅 (tǐ liàng， be considerate)"],
+      "definition-english": "To forgive; to understand; to excuse",
+      "definition-chinese": "原谅；谅解；体谅"
+    },
+    {
+      "character": "系",
+      "english": "system, tie, connect, department",
+      "pinyin": "xì / jì",
+      "same-sounding-character": ["细 (thin)", "戏 (drama/play)", "隙 (gap/crack)"],
+      "words": ["关系 (guān xi， relationship)", "系统 (xì tǒng， system)", "联系 (lián xì， contact/connect)"],
+      "definition-english": "System; to tie; to connect; a department",
+      "definition-chinese": "关系；系统；联系"
+    },
+    {
+      "character": "突",
+      "english": "sudden, protrude, break through",
+      "pinyin": "tū",
+      "same-sounding-character": ["秃 (bald)", "凸 (convex)", "图 (map/plan)"],
+      "words": ["突然 (tū rán， suddenly)", "突破 (tū pò， break through)", "突出 (tū chū， prominent/outstanding)"],
+      "definition-english": "Sudden; to protrude; to break through",
+      "definition-chinese": "突然；突破；突出"
+    },
+    {
+      "character": "及",
+      "english": "and, reach, timely",
+      "pinyin": "jí",
+      "same-sounding-character": ["急 (urgent)", "级 (level/grade)", "集 (gather/set)"],
+      "words": ["及时 (jí shí， timely/in time)", "以及 (yǐ jí， as well as/and)", "来不及 (lái bu jí， not enough time)"],
+      "definition-english": "And; to reach; timely",
+      "definition-chinese": "以及；及时；来得及"
+    },
+    {
+      "character": "理",
+      "english": "reason, manage, tidy",
+      "pinyin": "lǐ",
+      "same-sounding-character": ["里 (inside)", "礼 (courtesy)", "李 (surname Li/plum)"],
+      "words": ["道理 (dào lǐ， reason/sense)", "管理 (guǎn lǐ， manage)", "理解 (lǐ jiě， understand)"],
+      "definition-english": "Reason; to manage; to tidy; to understand",
+      "definition-chinese": "道理；管理；理解"
+    },
+    {
+      "character": "赛",
+      "english": "compete, match, race",
+      "pinyin": "sài",
+      "same-sounding-character": ["塞 (block/stuff)", "腮 (cheek)", "噻 (thiazole)"],
+      "words": ["比赛 (bǐ sài， competition/match)", "赛跑 (sài pǎo， race)", "赛车 (sài chē， car race)"],
+      "definition-english": "To compete; a match or race; a competition",
+      "definition-chinese": "比赛；竞赛；赛跑"
+    },
+    {
+      "character": "跌",
+      "english": "fall, drop, stumble",
+      "pinyin": "diē",
+      "same-sounding-character": ["爹 (dad)", "碟 (dish/disc)", "蝶 (butterfly)"],
+      "words": ["跌倒 (diē dǎo， fall down)", "跌跤 (diē jiāo， stumble/fall)", "下跌 (xià diē， fall/drop in value)"],
+      "definition-english": "To fall; to drop; to stumble",
+      "definition-chinese": "跌倒；下跌；跌跤"
+    },
+    {
+      "character": "受",
+      "english": "receive, accept, suffer",
+      "pinyin": "shòu",
+      "same-sounding-character": ["寿 (longevity)", "售 (sell)", "瘦 (thin)"],
+      "words": ["接受 (jiē shòu， accept/receive)", "受伤 (shòu shāng， get injured)", "受到 (shòu dào， receive/be subjected to)"],
+      "definition-english": "To receive; to accept; to suffer",
+      "definition-chinese": "接受；受伤；受到"
+    },
+    {
+      "character": "刻",
+      "english": "carve, moment, quarter hour",
+      "pinyin": "kè",
+      "same-sounding-character": ["课 (class)", "克 (gram/overcome)", "客 (guest)"],
+      "words": ["立刻 (lì kè， immediately)", "时刻 (shí kè， moment/time)", "深刻 (shēn kè， profound/deep)"],
+      "definition-english": "To carve; a quarter hour; a moment; profound",
+      "definition-chinese": "立刻；时刻；深刻"
+    },
+    {
+      "character": "推",
+      "english": "push, promote, deduce",
+      "pinyin": "tuī",
+      "same-sounding-character": ["颓 (decline/dejected)", "腿 (leg)", "退 (retreat)"],
+      "words": ["推开 (tuī kāi， push open)", "推荐 (tuī jiàn， recommend)", "推动 (tuī dòng， promote/drive)"],
+      "definition-english": "To push; to promote; to deduce",
+      "definition-chinese": "推开；推荐；推动"
+    },
+    {
+      "character": "撞",
+      "english": "bump into, collide, ram",
+      "pinyin": "zhuàng",
+      "same-sounding-character": ["状 (shape/condition)", "壮 (strong)", "装 (dress up)"],
+      "words": ["撞车 (zhuàng chē， car crash)", "碰撞 (pèng zhuàng， collision)", "撞上 (zhuàng shàng， bump into)"],
+      "definition-english": "To bump into; to collide; to ram",
+      "definition-chinese": "碰撞；撞上；撞车"
+    },
+    {
+      "character": "原",
+      "english": "original, source, plain",
+      "pinyin": "yuán",
+      "same-sounding-character": ["园 (garden)", "源 (source)", "员 (member)"],
+      "words": ["原来 (yuán lái， originally/it turns out)", "原因 (yuán yīn， reason/cause)", "原谅 (yuán liàng， forgive)"],
+      "definition-english": "Original; source; a plain; to forgive",
+      "definition-chinese": "原来；原因；原谅"
+    },
+    {
+      "character": "弄",
+      "english": "play with, do, make",
+      "pinyin": "nòng",
+      "same-sounding-character": ["农 (farming)", "浓 (thick/concentrated)", "脓 (pus)"],
+      "words": ["弄坏 (nòng huài， break/ruin)", "弄清楚 (nòng qīng chǔ， clarify)", "摆弄 (bǎi nòng， fiddle with)"],
+      "definition-english": "To play with; to do; to make; to handle",
+      "definition-chinese": "弄坏；弄清楚；摆弄"
+    },
+    {
+      "character": "破",
+      "english": "break, broken, worn out",
+      "pinyin": "pò",
+      "same-sounding-character": ["迫 (force/press)", "珀 (amber)", "魄 (soul/spirit)"],
+      "words": ["破坏 (pò huài， destroy/damage)", "突破 (tū pò， break through)", "破旧 (pò jiù， worn out/dilapidated)"],
+      "definition-english": "To break; broken; worn out; to damage",
+      "definition-chinese": "破坏；突破；破旧"
+    },
+    {
+      "character": "像",
+      "english": "resemble, image, like",
+      "pinyin": "xiàng",
+      "same-sounding-character": ["向 (toward)", "象 (elephant/appearance)", "项 (item/neck)"],
+      "words": ["好像 (hǎo xiàng， seem/as if)", "图像 (tú xiàng， image/picture)", "像样 (xiàng yàng， decent/proper)"],
+      "definition-english": "To resemble; an image; like; as if",
+      "definition-chinese": "好像；图像；像样"
+    },
+    {
+      "character": "倒",
+      "english": "fall over, pour, reverse",
+      "pinyin": "dǎo / dào",
+      "same-sounding-character": ["导 (guide)", "岛 (island)", "捣 (pound/disturb)"],
+      "words": ["跌倒 (diē dǎo， fall down)", "倒下 (dǎo xià， fall/collapse)", "倒水 (dào shuǐ， pour water)"],
+      "definition-english": "To fall over; to pour; reverse; on the contrary",
+      "definition-chinese": "跌倒；倒水；倒退"
+    },
+    {
+      "character": "谁",
+      "english": "who, whoever",
+      "pinyin": "shéi",
+      "same-sounding-character": ["水 (water)", "税 (tax)", "睡 (sleep)"],
+      "words": ["谁的 (shéi de， whose)", "是谁 (shì shéi， who is it)", "谁都 (shéi dōu， everyone/whoever)"],
+      "definition-english": "Who; whoever",
+      "definition-chinese": "谁；哪个人"
+    },
+    {
+      "character": "扶",
+      "english": "support, help up, lean on",
+      "pinyin": "fú",
+      "same-sounding-character": ["福 (fortune)", "符 (symbol)", "服 (clothing/serve)"],
+      "words": ["扶起 (fú qǐ， help up)", "扶手 (fú shǒu， handrail/armrest)", "搀扶 (chān fú， support/help walk)"],
+      "definition-english": "To support; to help up; to lean on",
+      "definition-chinese": "扶起；扶手；搀扶"
+    },
+    {
+      "character": "谢",
+      "english": "thank, wither, decline",
+      "pinyin": "xiè",
+      "same-sounding-character": ["卸 (unload)", "泄 (leak)", "屑 (bits/fragments)"],
+      "words": ["谢谢 (xiè xiè， thank you)", "感谢 (gǎn xiè， thank/be grateful)", "凋谢 (diāo xiè， wither/fade)"],
+      "definition-english": "To thank; to wither; to decline",
+      "definition-chinese": "感谢；谢谢；凋谢"
+    }
+  ],
+  "p3-7": [
+    {
+      "character": "碎",
+      "english": "broken, smashed, fragment",
+      "pinyin": "suì",
+      "same-sounding-character": ["岁 (year/age)", "穗 (ear of grain)", "遂 (follow/accomplish)"],
+      "words": ["打碎 (dǎ suì， smash/break)", "碎片 (suì piàn， fragment/piece)", "破碎 (pò suì， broken/shattered)"],
+      "definition-english": "Broken; smashed; a fragment",
+      "definition-chinese": "碎片；打碎；破碎"
+    },
+    {
+      "character": "赔",
+      "english": "compensate, pay for damage, apologize",
+      "pinyin": "péi",
+      "same-sounding-character": ["陪 (accompany)", "培 (cultivate)", "佩 (admire/wear)"],
+      "words": ["赔偿 (péi cháng， compensate)", "赔钱 (péi qián， pay for damage)", "赔礼 (péi lǐ， apologize)"],
+      "definition-english": "To compensate; to pay for damage; to apologize",
+      "definition-chinese": "赔偿；赔钱；赔礼"
+    },
+    {
+      "character": "留",
+      "english": "stay, keep, leave behind",
+      "pinyin": "liú",
+      "same-sounding-character": ["流 (flow)", "刘 (surname Liu)", "硫 (sulfur)"],
+      "words": ["留下 (liú xià， stay/leave behind)", "保留 (bǎo liú， keep/retain)", "留学 (liú xué， study abroad)"],
+      "definition-english": "To stay; to keep; to leave behind",
+      "definition-chinese": "留下；保留；留学"
+    },
+    {
+      "character": "便",
+      "english": "convenient, cheap, casual",
+      "pinyin": "biàn / pián",
+      "same-sounding-character": ["变 (change)", "辨 (distinguish)", "遍 (everywhere)"],
+      "words": ["方便 (fāng biàn， convenient)", "便宜 (pián yi， cheap/inexpensive)", "随便 (suí biàn， casual/as you like)"],
+      "definition-english": "Convenient; then; cheap; casual",
+      "definition-chinese": "方便；便宜；随便"
+    },
+    {
+      "character": "盆",
+      "english": "basin, pot, tub",
+      "pinyin": "pén",
+      "same-sounding-character": ["喷 (spray)", "湓 (overflow)", "盆 (basin)"],
+      "words": ["花盆 (huā pén， flower pot)", "盆地 (pén dì， basin/valley)", "水盆 (shuǐ pén， washbasin)"],
+      "definition-english": "A basin; a pot; a tub",
+      "definition-chinese": "花盆；盆地；水盆"
+    },
+    {
+      "character": "歉",
+      "english": "apologize, sorry, poor harvest",
+      "pinyin": "qiàn",
+      "same-sounding-character": ["欠 (owe/lack)", "嵌 (inlay)", "堑 (moat)"],
+      "words": ["道歉 (dào qiàn， apologize)", "抱歉 (bào qiàn， sorry/apologize)", "歉意 (qiàn yì， apology/regret)"],
+      "definition-english": "To apologize; sorry; a poor harvest",
+      "definition-chinese": "道歉；抱歉；歉意"
+    },
+    {
+      "character": "堂",
+      "english": "hall, court, dignified",
+      "pinyin": "táng",
+      "same-sounding-character": ["糖 (sugar)", "唐 (Tang dynasty)", "膛 (chest cavity)"],
+      "words": ["课堂 (kè táng， classroom)", "食堂 (shí táng， canteen)", "堂兄 (táng xiōng， male cousin)"],
+      "definition-english": "A hall; a court; dignified; a generation",
+      "definition-chinese": "课堂；食堂；堂兄"
+    },
+    {
+      "character": "溜",
+      "english": "slide, sneak away, smooth",
+      "pinyin": "liū",
+      "same-sounding-character": ["蹓 (stroll)", "遛 (walk/exercise)", "流 (flow)"],
+      "words": ["溜走 (liū zǒu， sneak away)", "溜冰 (liū bīng， ice skate)", "顺溜 (shùn liū， smooth/fluent)"],
+      "definition-english": "To slide; to sneak away; smooth",
+      "definition-chinese": "溜走；溜冰；顺溜"
+    },
+    {
+      "character": "踩",
+      "english": "step on, trample",
+      "pinyin": "cǎi",
+      "same-sounding-character": ["采 (pick/gather)", "彩 (color/brilliant)", "睬 (pay attention to)"],
+      "words": ["踩到 (cǎi dào， step on)", "踩踏 (cǎi tà， trample)", "踩脚 (cǎi jiǎo， step on someone's foot)"],
+      "definition-english": "To step on; to trample",
+      "definition-chinese": "踩到；踩踏；踩脚"
+    },
+    {
+      "character": "镜",
+      "english": "mirror, lens, glasses",
+      "pinyin": "jìng",
+      "same-sounding-character": ["净 (clean)", "静 (quiet/still)", "竟 (actually/unexpectedly)"],
+      "words": ["镜子 (jìng zi， mirror)", "眼镜 (yǎn jìng， glasses/spectacles)", "望远镜 (wàng yuǎn jìng， telescope)"],
+      "definition-english": "A mirror; a lens; glasses",
+      "definition-chinese": "镜子；眼镜；望远镜"
+    },
+    {
+      "character": "休",
+      "english": "rest, stop, vacation",
+      "pinyin": "xiū",
+      "same-sounding-character": ["修 (repair/study)", "羞 (shy/ashamed)", "须 (must/beard)"],
+      "words": ["休息 (xiū xi， rest)", "休假 (xiū jià， take a holiday)", "退休 (tuì xiū， retire)"],
+      "definition-english": "To rest; to stop; vacation",
+      "definition-chinese": "休息；休假；退休"
+    },
+    {
+      "character": "息",
+      "english": "breath, rest, news, interest",
+      "pinyin": "xī",
+      "same-sounding-character": ["希 (hope)", "西 (west)", "吸 (inhale)"],
+      "words": ["休息 (xiū xi， rest)", "消息 (xiāo xi， news/message)", "呼吸 (hū xī， breathe)"],
+      "definition-english": "Breath; rest; news; interest (financial)",
+      "definition-chinese": "休息；消息；呼吸"
+    },
+    {
+      "character": "视",
+      "english": "see, look at, regard",
+      "pinyin": "shì",
+      "same-sounding-character": ["是 (is/yes)", "事 (matter/affair)", "式 (style/formula)"],
+      "words": ["电视 (diàn shì， television)", "视力 (shì lì， eyesight/vision)", "重视 (zhòng shì， value/attach importance to)"],
+      "definition-english": "To see; to look at; to regard; vision",
+      "definition-chinese": "电视；视力；重视"
+    },
+    {
+      "character": "脱",
+      "english": "take off, escape, come off",
+      "pinyin": "tuō",
+      "same-sounding-character": ["拖 (drag/delay)", "托 (entrust/support)", "驼 (camel)"],
+      "words": ["脱下 (tuō xià， take off)", "脱离 (tuō lí， break away from)", "摆脱 (bǎi tuō， break free from)"],
+      "definition-english": "To take off; to escape; to come off",
+      "definition-chinese": "脱下；脱离；摆脱"
+    },
+    {
+      "character": "搬",
+      "english": "move, carry, transport",
+      "pinyin": "bān",
+      "same-sounding-character": ["班 (class/shift)", "般 (sort/kind)", "斑 (spot/speckle)"],
+      "words": ["搬家 (bān jiā， move house)", "搬运 (bān yùn， transport/carry)", "搬走 (bān zǒu， move away)"],
+      "definition-english": "To move; to carry; to transport",
+      "definition-chinese": "搬家；搬运；搬走"
+    },
+    {
+      "character": "板",
+      "english": "board, plank, stiff, boss",
+      "pinyin": "bǎn",
+      "same-sounding-character": ["版 (edition/print)", "钣 (metal sheet)", "阪 (hillside)"],
+      "words": ["黑板 (hēi bǎn， blackboard)", "木板 (mù bǎn， wooden board)", "老板 (lǎo bǎn， boss/owner)"],
+      "definition-english": "A board; a plank; stiff; boss",
+      "definition-chinese": "黑板；木板；老板"
+    },
+    {
+      "character": "灵",
+      "english": "spirit, soul, clever, flexible",
+      "pinyin": "líng",
+      "same-sounding-character": ["铃 (bell)", "零 (zero)", "龄 (age)"],
+      "words": ["灵活 (líng huó， flexible/agile)", "心灵 (xīn líng， heart/soul)", "灵感 (líng gǎn， inspiration)"],
+      "definition-english": "Spirit; soul; clever; effective; flexible",
+      "definition-chinese": "心灵；灵活；灵感"
+    },
+    {
+      "character": "病",
+      "english": "sick, illness, disease",
+      "pinyin": "bìng",
+      "same-sounding-character": ["并 (and/also)", "摒 (discard)", "冰 (ice)"],
+      "words": ["生病 (shēng bìng， get sick)", "病人 (bìng rén， patient/sick person)", "疾病 (jí bìng， disease/illness)"],
+      "definition-english": "Sick; illness; disease",
+      "definition-chinese": "生病；疾病；病人"
+    },
+    {
+      "character": "轻",
+      "english": "light (weight), slight, gentle",
+      "pinyin": "qīng",
+      "same-sounding-character": ["清 (clear/clean)", "青 (blue-green/young)", "倾 (lean/pour)"],
+      "words": ["轻松 (qīng sōng， relaxed/easy)", "轻易 (qīng yì， easily/lightly)", "轻轻 (qīng qīng， gently/softly)"],
+      "definition-english": "Light (weight); slight; gentle; easy",
+      "definition-chinese": "轻松；轻易；轻轻"
+    },
+    {
+      "character": "路",
+      "english": "road, path, route",
+      "pinyin": "lù",
+      "same-sounding-character": ["录 (record)", "鹿 (deer)", "露 (dew/reveal)"],
+      "words": ["路上 (lù shàng， on the road)", "道路 (dào lù， road/path)", "路线 (lù xiàn， route/line)"],
+      "definition-english": "A road; a path; a route",
+      "definition-chinese": "道路；路线；路上"
+    },
+    {
+      "character": "碰",
+      "english": "bump, touch, meet by chance",
+      "pinyin": "pèng",
+      "same-sounding-character": ["捧 (hold with both hands)", "蓬 (disheveled/fluffy)", "膨 (swell)"],
+      "words": ["碰到 (pèng dào， bump into/meet)", "碰撞 (pèng zhuàng， collision)", "碰巧 (pèng qiǎo， happen to/by chance)"],
+      "definition-english": "To bump; to touch; to meet by chance",
+      "definition-chinese": "碰到；碰撞；碰巧"
+    }
+  ],
+  "p3-8": [
+    {
+      "character": "需",
+      "english": "need, require",
+      "pinyin": "xū",
+      "same-sounding-character": ["虚 (empty/false)", "须 (must/beard)", "墟 (ruins)"],
+      "words": ["需要 (xū yào， need/require)", "必需 (bì xū， necessary)", "需求 (xū qiú， demand/need)"],
+      "definition-english": "To need; to require; necessity",
+      "definition-chinese": "需要；必需；需求"
+    },
+    {
+      "character": "贺",
+      "english": "congratulate, celebrate",
+      "pinyin": "hè",
+      "same-sounding-character": ["鹤 (crane)", "赫 (prominent/bright)", "喝 (drink/shout)"],
+      "words": ["祝贺 (zhù hè， congratulate)", "贺卡 (hè kǎ， greeting card)", "贺年 (hè nián， New Year greetings)"],
+      "definition-english": "To congratulate; to celebrate",
+      "definition-chinese": "祝贺；贺卡；庆贺"
+    },
+    {
+      "character": "部",
+      "english": "part, department, unit",
+      "pinyin": "bù",
+      "same-sounding-character": ["不 (not/no)", "步 (step)", "布 (cloth)"],
+      "words": ["部分 (bù fēn， part/portion)", "全部 (quán bù， all/entire)", "部门 (bù mén， department)"],
+      "definition-english": "A part; a department; a unit; measure word for films/books",
+      "definition-chinese": "部分；部门；全部"
+    },
+    {
+      "character": "涂",
+      "english": "smear, apply, scribble",
+      "pinyin": "tú",
+      "same-sounding-character": ["图 (map/plan)", "途 (road/way)", "徒 (disciple/on foot)"],
+      "words": ["涂色 (tú sè， color/paint)", "涂鸦 (tú yā， graffiti/scribble)", "涂抹 (tú mǒ， smear/apply)"],
+      "definition-english": "To smear; to apply; to scribble; to paint",
+      "definition-chinese": "涂色；涂鸦；涂抹"
+    },
+    {
+      "character": "洞",
+      "english": "hole, cave, understand thoroughly",
+      "pinyin": "dòng",
+      "same-sounding-character": ["动 (move)", "冻 (freeze)", "栋 (measure for buildings)"],
+      "words": ["洞口 (dòng kǒu， cave entrance)", "山洞 (shān dòng， cave)", "洞察 (dòng chá， perceive clearly)"],
+      "definition-english": "A hole; a cave; to understand thoroughly",
+      "definition-chinese": "洞口；山洞；洞察"
+    },
+    {
+      "character": "吊",
+      "english": "hang, suspend, mourn",
+      "pinyin": "diào",
+      "same-sounding-character": ["掉 (fall/drop)", "钓 (fish/angle)", "调 (tune/transfer)"],
+      "words": ["吊起 (diào qǐ， hang up/lift)", "悬吊 (xuán diào， suspend/hang)", "吊灯 (diào dēng， chandelier)"],
+      "definition-english": "To hang; to suspend; to mourn",
+      "definition-chinese": "悬吊；吊灯；吊起"
+    },
+    {
+      "character": "笼",
+      "english": "cage, steamer basket, envelop",
+      "pinyin": "lóng / lǒng",
+      "same-sounding-character": ["龙 (dragon)", "聋 (deaf)", "隆 (prosperous/solemn)"],
+      "words": ["笼子 (lóng zi， cage)", "鸟笼 (niǎo lóng， bird cage)", "笼罩 (lǒng zhào， envelop/shroud)"],
+      "definition-english": "A cage; a steamer basket; to envelop",
+      "definition-chinese": "笼子；鸟笼；笼罩"
+    },
+    {
+      "character": "挂",
+      "english": "hang, hang up, register",
+      "pinyin": "guà",
+      "same-sounding-character": ["卦 (hexagram)", "褂 (gown/jacket)", "瓜 (melon)"],
+      "words": ["挂上 (guà shàng， hang up)", "挂号 (guà hào， register/registered mail)", "悬挂 (xuán guà， hang/suspend)"],
+      "definition-english": "To hang; to hang up; to register",
+      "definition-chinese": "挂上；挂号；悬挂"
+    },
+    {
+      "character": "裙",
+      "english": "skirt",
+      "pinyin": "qún",
+      "same-sounding-character": ["群 (group/crowd)", "逡 (hesitate)", "麇 (roe deer)"],
+      "words": ["裙子 (qún zi， skirt)", "连衣裙 (lián yī qún， dress)", "短裙 (duǎn qún， mini skirt)"],
+      "definition-english": "A skirt",
+      "definition-chinese": "裙子；连衣裙"
+    },
+    {
+      "character": "裤",
+      "english": "trousers, pants",
+      "pinyin": "kù",
+      "same-sounding-character": ["库 (warehouse/library)", "酷 (cool/cruel)", "窟 (cave/den)"],
+      "words": ["裤子 (kù zi， trousers/pants)", "短裤 (duǎn kù， shorts)", "牛仔裤 (niú zǎi kù， jeans)"],
+      "definition-english": "Trousers; pants",
+      "definition-chinese": "裤子；短裤；牛仔裤"
+    },
+    {
+      "character": "求",
+      "english": "seek, request, demand",
+      "pinyin": "qiú",
+      "same-sounding-character": ["球 (ball)", "囚 (prisoner)", "酋 (chieftain)"],
+      "words": ["要求 (yāo qiú， require/demand)", "请求 (qǐng qiú， request)", "求助 (qiú zhù， seek help)"],
+      "definition-english": "To seek; to request; to demand",
+      "definition-chinese": "要求；请求；求助"
+    },
+    {
+      "character": "较",
+      "english": "compare, relatively, fairly",
+      "pinyin": "jiào",
+      "same-sounding-character": ["叫 (call/shout)", "教 (teach)", "觉 (feel/sleep)"],
+      "words": ["比较 (bǐ jiào， compare/relatively)", "较好 (jiào hǎo， relatively good)", "较量 (jiào liàng， compete/contest)"],
+      "definition-english": "To compare; relatively; fairly",
+      "definition-chinese": "比较；较好；较量"
+    },
+    {
+      "character": "晒",
+      "english": "dry in the sun, sunbathe",
+      "pinyin": "shài",
+      "same-sounding-character": ["筛 (sieve)", "色 (color)", "晒 (sun-dry)"],
+      "words": ["晒太阳 (shài tài yáng， sunbathe)", "晒干 (shài gān， dry in the sun)", "晾晒 (liàng shài， air dry in sun)"],
+      "definition-english": "To dry in the sun; to sunbathe",
+      "definition-chinese": "晒太阳；晒干；晾晒"
+    },
+    {
+      "character": "歪",
+      "english": "crooked, askew, devious",
+      "pinyin": "wāi",
+      "same-sounding-character": ["外 (outside)", "喂 (feed)", "威 (power/prestige)"],
+      "words": ["歪斜 (wāi xié， crooked/askew)", "歪嘴 (wāi zuǐ， crooked mouth)", "东倒西歪 (dōng dǎo xī wāi， topsy-turvy)"],
+      "definition-english": "Crooked; askew; devious",
+      "definition-chinese": "歪斜；不正；东倒西歪"
+    },
+    {
+      "character": "乱",
+      "english": "chaotic, disorder, mess",
+      "pinyin": "luàn",
+      "same-sounding-character": ["卵 (egg)", "峦 (mountain range)", "滦 (river name)"],
+      "words": ["乱七八糟 (luàn qī bā zāo， in a mess)", "混乱 (hùn luàn， confusion/disorder)", "乱跑 (luàn pǎo， run around wildly)"],
+      "definition-english": "Chaotic; disorder; a mess; confused",
+      "definition-chinese": "混乱；乱七八糟；乱跑"
+    },
+    {
+      "character": "累",
+      "english": "tired, weary; accumulate",
+      "pinyin": "lèi / lěi",
+      "same-sounding-character": ["泪 (tear)", "类 (type/category)", "擂 (beat/grind)"],
+      "words": ["累了 (lèi le， tired)", "疲累 (pí lèi， fatigued/tired)", "劳累 (láo lèi， worn out/exhausted)"],
+      "definition-english": "Tired; weary; to accumulate; to involve",
+      "definition-chinese": "疲累；劳累；积累"
+    },
+    {
+      "character": "汗",
+      "english": "sweat, perspiration",
+      "pinyin": "hàn",
+      "same-sounding-character": ["汉 (Han/man)", "旱 (drought)", "憾 (regret)"],
+      "words": ["流汗 (liú hàn， sweat)", "出汗 (chū hàn， perspire)", "汗水 (hàn shuǐ， sweat/perspiration)"],
+      "definition-english": "Sweat; perspiration",
+      "definition-chinese": "汗水；出汗；流汗"
+    },
+    {
+      "character": "塞",
+      "english": "stuff, block, cork; frontier",
+      "pinyin": "sāi / sè",
+      "same-sounding-character": ["腮 (cheek)", "鳃 (gill)", "赛 (compete)"],
+      "words": ["塞满 (sāi mǎn， stuff full)", "堵塞 (dǔ sè， block/jam)", "塞子 (sāi zi， stopper/cork)"],
+      "definition-english": "To stuff; to block; a cork; a frontier pass",
+      "definition-chinese": "塞满；堵塞；塞子"
+    },
+    {
+      "character": "纸",
+      "english": "paper",
+      "pinyin": "zhǐ",
+      "same-sounding-character": ["止 (stop)", "只 (only/measure word)", "指 (finger/point)"],
+      "words": ["纸张 (zhǐ zhāng， paper)", "报纸 (bào zhǐ， newspaper)", "纸巾 (zhǐ jīn， tissue/paper towel)"],
+      "definition-english": "Paper",
+      "definition-chinese": "纸张；报纸；纸巾"
+    },
+    {
+      "character": "接",
+      "english": "receive, connect, meet",
+      "pinyin": "jiē",
+      "same-sounding-character": ["街 (street)", "阶 (step/rank)", "皆 (all)"],
+      "words": ["接受 (jiē shòu， accept/receive)", "接触 (jiē chù， contact/touch)", "迎接 (yíng jiē， welcome/meet)"],
+      "definition-english": "To receive; to connect; to meet; to catch",
+      "definition-chinese": "接受；接触；迎接"
+    },
+    {
+      "character": "穿",
+      "english": "wear, put on, pierce through",
+      "pinyin": "chuān",
+      "same-sounding-character": ["川 (river/Sichuan)", "氚 (tritium)", "传 (pass/spread)"],
+      "words": ["穿衣服 (chuān yī fu， put on clothes)", "穿过 (chuān guò， pass through)", "穿着 (chuān zhuó， dress/attire)"],
+      "definition-english": "To wear; to put on; to pierce through",
+      "definition-chinese": "穿衣服；穿过；穿着"
+    },
+    {
+      "character": "然",
+      "english": "so, like that, of course",
+      "pinyin": "rán",
+      "same-sounding-character": ["燃 (burn)", "髯 (beard/whiskers)", "冉 (slowly)"],
+      "words": ["当然 (dāng rán， of course)", "突然 (tū rán， suddenly)", "虽然 (suī rán， although)"],
+      "definition-english": "So; like that; but; correct; of course",
+      "definition-chinese": "当然；突然；虽然"
+    },
+    {
+      "character": "台",
+      "english": "platform, stage, Taiwan",
+      "pinyin": "tái",
+      "same-sounding-character": ["抬 (lift/raise)", "苔 (moss)", "胎 (fetus/tire)"],
+      "words": ["舞台 (wǔ tái， stage)", "台湾 (Tái wān， Taiwan)", "讲台 (jiǎng tái， podium/lectern)"],
+      "definition-english": "A platform; a stage; Taiwan; measure word for machines",
+      "definition-chinese": "舞台；台湾；讲台"
+    },
+    {
+      "character": "客",
+      "english": "guest, customer, visitor",
+      "pinyin": "kè",
+      "same-sounding-character": ["课 (class)", "刻 (carve/moment)", "克 (gram/overcome)"],
+      "words": ["客人 (kè rén， guest/visitor)", "旅客 (lǚ kè， traveler/passenger)", "客厅 (kè tīng， living room)"],
+      "definition-english": "A guest; a customer; a visitor",
+      "definition-chinese": "客人；旅客；客厅"
+    },
+    {
+      "character": "厅",
+      "english": "hall, living room, office",
+      "pinyin": "tīng",
+      "same-sounding-character": ["听 (listen)", "亭 (pavilion)", "停 (stop/park)"],
+      "words": ["客厅 (kè tīng， living room)", "餐厅 (cān tīng， restaurant/dining hall)", "大厅 (dà tīng， lobby/hall)"],
+      "definition-english": "A hall; a living room; an office",
+      "definition-chinese": "客厅；餐厅；大厅"
+    },
+    {
+      "character": "始",
+      "english": "begin, start, original",
+      "pinyin": "shǐ",
+      "same-sounding-character": ["史 (history)", "使 (use/make)", "驶 (drive/sail)"],
+      "words": ["开始 (kāi shǐ， begin/start)", "始终 (shǐ zhōng， from beginning to end)", "原始 (yuán shǐ， original/primitive)"],
+      "definition-english": "To begin; to start; original",
+      "definition-chinese": "开始；始终；原始"
+    },
+    {
+      "character": "整",
+      "english": "whole, tidy, organize",
+      "pinyin": "zhěng",
+      "same-sounding-character": ["拯 (save/rescue)", "正 (correct/straight)", "征 (march/levy)"],
+      "words": ["整理 (zhěng lǐ， organize/tidy)", "整齐 (zhěng qí， neat/orderly)", "整个 (zhěng gè， whole/entire)"],
+      "definition-english": "Whole; tidy; to organize; neat",
+      "definition-chinese": "整理；整齐；整个"
+    },
+    {
+      "character": "齐",
+      "english": "neat, uniform, complete, together",
+      "pinyin": "qí",
+      "same-sounding-character": ["其 (its/that)", "奇 (strange/odd)", "期 (period/expect)"],
+      "words": ["整齐 (zhěng qí， neat/orderly)", "齐全 (qí quán， complete/comprehensive)", "一齐 (yī qí， together/at the same time)"],
+      "definition-english": "Neat; uniform; complete; together",
+      "definition-chinese": "整齐；齐全；一齐"
+    },
+    {
+      "character": "让",
+      "english": "let, allow, yield, make",
+      "pinyin": "ràng",
+      "same-sounding-character": ["嚷 (shout/clamor)", "瓤 (pulp/flesh)", "壤 (soil/earth)"],
+      "words": ["让步 (ràng bù， give way/concede)", "让座 (ràng zuò， give up one's seat)", "让我 (ràng wǒ， let me)"],
+      "definition-english": "To let; to allow; to yield; to make",
+      "definition-chinese": "让步；让座；允许"
+    }
+  ],
+  "p3-9": [
+    {
+      "character": "熊",
+      "english": "bear",
+      "pinyin": "xióng",
+      "same-sounding-character": ["雄 (male/heroic)", "胸 (chest)", "兄 (elder brother)"],
+      "words": ["熊猫 (xióng māo， panda)", "北极熊 (běi jí xióng， polar bear)", "小熊 (xiǎo xióng， little bear)"],
+      "definition-english": "A bear",
+      "definition-chinese": "熊；熊猫"
+    },
+    {
+      "character": "坑",
+      "english": "pit, hole, hollow",
+      "pinyin": "kēng",
+      "same-sounding-character": ["铿 (clang)", "吭 (throat/groan)", "坑 (pit)"],
+      "words": ["坑洞 (kēng dòng， pit/hole)", "水坑 (shuǐ kēng， puddle/water hole)", "陷坑 (xiàn kēng， pit/trap)"],
+      "definition-english": "A pit; a hole; a hollow",
+      "definition-chinese": "坑洞；水坑；陷坑"
+    },
+    {
+      "character": "鼻",
+      "english": "nose",
+      "pinyin": "bí",
+      "same-sounding-character": ["荸 (water chestnut)", "比 (compare)", "笔 (pen)"],
+      "words": ["鼻子 (bí zi， nose)", "鼻孔 (bí kǒng， nostril)", "流鼻涕 (liú bí tì， runny nose)"],
+      "definition-english": "The nose",
+      "definition-chinese": "鼻子；鼻孔"
+    },
+    {
+      "character": "救",
+      "english": "rescue, save, help",
+      "pinyin": "jiù",
+      "same-sounding-character": ["就 (just/then)", "旧 (old/used)", "舅 (maternal uncle)"],
+      "words": ["救人 (jiù rén， rescue someone)", "救护车 (jiù hù chē， ambulance)", "急救 (jí jiù， first aid)"],
+      "definition-english": "To rescue; to save; to help",
+      "definition-chinese": "救人；急救；救护车"
+    },
+    {
+      "character": "猴",
+      "english": "monkey",
+      "pinyin": "hóu",
+      "same-sounding-character": ["侯 (marquis/nobleman)", "喉 (throat)", "瘊 (wart)"],
+      "words": ["猴子 (hóu zi， monkey)", "猴年 (hóu nián， Year of the Monkey)", "小猴 (xiǎo hóu， little monkey)"],
+      "definition-english": "A monkey",
+      "definition-chinese": "猴子；猴年"
+    },
+    {
+      "character": "竿",
+      "english": "pole, rod",
+      "pinyin": "gān",
+      "same-sounding-character": ["干 (dry/do)", "肝 (liver)", "甘 (sweet/willing)"],
+      "words": ["竹竿 (zhú gān， bamboo pole)", "钓竿 (diào gān， fishing rod)", "旗竿 (qí gān， flagpole)"],
+      "definition-english": "A pole; a rod; a bamboo pole",
+      "definition-chinese": "竹竿；钓竿；旗竿"
+    },
+    {
+      "character": "篮",
+      "english": "basket, basketball",
+      "pinyin": "lán",
+      "same-sounding-character": ["蓝 (blue)", "兰 (orchid)", "拦 (block)"],
+      "words": ["篮球 (lán qiú， basketball)", "篮子 (lán zi， basket)", "篮板 (lán bǎn， backboard)"],
+      "definition-english": "A basket; basketball",
+      "definition-chinese": "篮球；篮子；篮板"
+    },
+    {
+      "character": "喷",
+      "english": "spray, spurt, sneeze",
+      "pinyin": "pēn",
+      "same-sounding-character": ["盆 (basin)", "湓 (overflow)", "喷 (spray)"],
+      "words": ["喷水 (pēn shuǐ， spray water)", "喷嚏 (pēn tì， sneeze)", "喷泉 (pēn quán， fountain)"],
+      "definition-english": "To spray; to spurt; to sneeze",
+      "definition-chinese": "喷水；喷嚏；喷泉"
+    },
+    {
+      "character": "升",
+      "english": "rise, go up, liter",
+      "pinyin": "shēng",
+      "same-sounding-character": ["生 (life/raw)", "声 (sound/voice)", "牲 (livestock)"],
+      "words": ["上升 (shàng shēng， rise/go up)", "升起 (shēng qǐ， rise/hoist)", "一升 (yī shēng， one liter)"],
+      "definition-english": "To rise; to go up; a liter",
+      "definition-chinese": "上升；升起；升华"
+    },
+    {
+      "character": "称",
+      "english": "call, name, weigh, praise",
+      "pinyin": "chēng",
+      "same-sounding-character": ["撑 (prop up)", "瞠 (stare)", "噌 (angry sound)"],
+      "words": ["称呼 (chēng hū， address/call)", "称赞 (chēng zàn， praise)", "自称 (zì chēng， call oneself)"],
+      "definition-english": "To call; to name; to weigh; to praise",
+      "definition-chinese": "称呼；称赞；自称"
+    },
+    {
+      "character": "官",
+      "english": "official, government, organ (body)",
+      "pinyin": "guān",
+      "same-sounding-character": ["关 (close/concern)", "观 (observe)", "棺 (coffin)"],
+      "words": ["官员 (guān yuán， official)", "器官 (qì guān， organ/body part)", "当官 (dāng guān， be an official)"],
+      "definition-english": "An official; a government post; an organ of the body",
+      "definition-chinese": "官员；器官；当官"
+    },
+    {
+      "character": "墙",
+      "english": "wall",
+      "pinyin": "qiáng",
+      "same-sounding-character": ["强 (strong)", "蔷 (rose)", "嫱 (court lady)"],
+      "words": ["墙壁 (qiáng bì， wall)", "围墙 (wéi qiáng， surrounding wall)", "爬墙 (pá qiáng， climb a wall)"],
+      "definition-english": "A wall",
+      "definition-chinese": "墙壁；围墙"
+    },
+    {
+      "character": "沉",
+      "english": "sink, heavy, deep, silent",
+      "pinyin": "chén",
+      "same-sounding-character": ["陈 (surname Chen/arrange)", "晨 (morning)", "臣 (official)"],
+      "words": ["沉下去 (chén xià qù， sink down)", "沉重 (chén zhòng， heavy/serious)", "沉默 (chén mò， silent/quiet)"],
+      "definition-english": "To sink; heavy; deep; silent",
+      "definition-chinese": "下沉；沉重；沉默"
+    },
+    {
+      "character": "量",
+      "english": "quantity, amount, measure",
+      "pinyin": "liàng / liáng",
+      "same-sounding-character": ["亮 (bright)", "谅 (forgive)", "辆 (measure for vehicles)"],
+      "words": ["数量 (shù liàng， quantity/amount)", "质量 (zhì liàng， quality)", "量一量 (liáng yi liáng， measure)"],
+      "definition-english": "Quantity; amount; to measure",
+      "definition-chinese": "数量；质量；测量"
+    },
+    {
+      "character": "夸",
+      "english": "boast, praise, exaggerate",
+      "pinyin": "kuā",
+      "same-sounding-character": ["垮 (collapse)", "跨 (stride/span)", "胯 (hip/crotch)"],
+      "words": ["夸奖 (kuā jiǎng， praise/compliment)", "夸张 (kuā zhāng， exaggerate)", "自夸 (zì kuā， boast)"],
+      "definition-english": "To boast; to praise; to exaggerate",
+      "definition-chinese": "夸奖；夸张；自夸"
+    },
+    {
+      "character": "神",
+      "english": "god, spirit, magical, expression",
+      "pinyin": "shén",
+      "same-sounding-character": ["甚 (very/even)", "沈 (surname Shen)", "什 (what)"],
+      "words": ["神奇 (shén qí， magical/miraculous)", "精神 (jīng shén， spirit/energy)", "神话 (shén huà， myth/fairy tale)"],
+      "definition-english": "A god; spirit; magical; expression/look",
+      "definition-chinese": "神奇；精神；神话"
+    },
+    {
+      "character": "伸",
+      "english": "stretch, extend",
+      "pinyin": "shēn",
+      "same-sounding-character": ["申 (state/extend)", "身 (body)", "深 (deep)"],
+      "words": ["伸手 (shēn shǒu， stretch out hand)", "伸展 (shēn zhǎn， stretch/extend)", "延伸 (yán shēn， extend/stretch)"],
+      "definition-english": "To stretch; to extend",
+      "definition-chinese": "伸手；伸展；延伸"
+    },
+    {
+      "character": "河",
+      "english": "river",
+      "pinyin": "hé",
+      "same-sounding-character": ["和 (and/peace)", "何 (what/which)", "合 (combine/fit)"],
+      "words": ["河流 (hé liú， river)", "黄河 (Huáng Hé， Yellow River)", "河边 (hé biān， riverside)"],
+      "definition-english": "A river",
+      "definition-chinese": "河流；黄河；河边"
+    },
+    {
+      "character": "停",
+      "english": "stop, park, cease",
+      "pinyin": "tíng",
+      "same-sounding-character": ["亭 (pavilion)", "庭 (courtyard)", "廷 (imperial court)"],
+      "words": ["停止 (tíng zhǐ， stop/cease)", "停车 (tíng chē， park a car)", "暂停 (zàn tíng， pause/suspend)"],
+      "definition-english": "To stop; to park; to cease",
+      "definition-chinese": "停止；停车；暂停"
+    },
+    {
+      "character": "满",
+      "english": "full, filled, satisfied",
+      "pinyin": "mǎn",
+      "same-sounding-character": ["螨 (mite)", "瞒 (hide/deceive)", "蔓 (vine)"],
+      "words": ["满意 (mǎn yì， satisfied)", "满足 (mǎn zú， satisfied/content)", "装满 (zhuāng mǎn， fill up)"],
+      "definition-english": "Full; filled; satisfied",
+      "definition-chinese": "满意；满足；装满"
+    },
+    {
+      "character": "题",
+      "english": "topic, question, problem",
+      "pinyin": "tí",
+      "same-sounding-character": ["提 (carry/raise)", "啼 (cry/crow)", "蹄 (hoof)"],
+      "words": ["题目 (tí mù， title/topic)", "问题 (wèn tí， question/problem)", "试题 (shì tí， exam question)"],
+      "definition-english": "A topic; a question; a problem",
+      "definition-chinese": "题目；问题；课题"
+    },
+    {
+      "character": "答",
+      "english": "answer, reply",
+      "pinyin": "dá",
+      "same-sounding-character": ["达 (reach/attain)", "搭 (build/take)", "哒 (sound)"],
+      "words": ["回答 (huí dá， answer/reply)", "答案 (dá àn， answer/solution)", "解答 (jiě dá， answer/explain)"],
+      "definition-english": "To answer; to reply; an answer",
+      "definition-chinese": "回答；答案；解答"
+    },
+    {
+      "character": "拉",
+      "english": "pull, drag, play (string instrument)",
+      "pinyin": "lā",
+      "same-sounding-character": ["啦 (particle)", "垃 (garbage/rubbish)", "喇 (horn)"],
+      "words": ["拉开 (lā kāi， pull open)", "拉小提琴 (lā xiǎo tí qín， play violin)", "拖拉 (tuō lā， drag/procrastinate)"],
+      "definition-english": "To pull; to drag; to play (string instrument)",
+      "definition-chinese": "拉开；拉小提琴；拖拉"
+    },
+    {
+      "character": "船",
+      "english": "boat, ship",
+      "pinyin": "chuán",
+      "same-sounding-character": ["传 (pass/spread)", "椽 (rafter)", "遄 (speedy)"],
+      "words": ["船只 (chuán zhī， vessel/ship)", "小船 (xiǎo chuán， small boat)", "坐船 (zuò chuán， travel by boat)"],
+      "definition-english": "A boat; a ship",
+      "definition-chinese": "船只；小船；坐船"
+    },
+    {
+      "character": "童",
+      "english": "child, young, childhood",
+      "pinyin": "tóng",
+      "same-sounding-character": ["同 (same/together)", "铜 (copper)", "桐 (paulownia tree)"],
+      "words": ["儿童 (ér tóng， children)", "童年 (tóng nián， childhood)", "童话 (tóng huà， fairy tale)"],
+      "definition-english": "A child; young; naive; childhood",
+      "definition-chinese": "儿童；童年；童话"
+    }
   ]
 }
