@@ -5,7 +5,7 @@
       "english": "clothing, garment",
       "pinyin": "yī",
       "same-sounding-character": ["一 (one)", "医 (doctor)", "仪 (ceremony)"],
-      "words": ["衣服 (clothes)", "衣柜 (wardrobe)", "衣架 (clothes rack)"],
+      "words": ["衣服 (yī fu， clothes)", "衣柜 (yī guì， wardrobe)", "衣架 (yī jià， clothes rack)"],
       "definition-english": "Clothing worn on the body; garment or dress",
       "definition-chinese": "穿在身体上面的东西"
     },
@@ -14,7 +14,7 @@
       "english": "fish",
       "pinyin": "yú",
       "same-sounding-character": ["余 (remaining)", "愉 (happy)", "俞 (surname)"],
-      "words": ["金鱼 (goldfish)", "鱼肉 (fish meat)", "钓鱼 (fishing)"],
+      "words": ["鱼儿 (yú ér， fish)", "小鱼 (xiǎo yú， fish)", "钓鱼 (diào yú， fishing)"],
       "definition-english": "An aquatic vertebrate animal with gills, fins, and scales",
       "definition-chinese": "生活在水里的脊椎动物，有鳍、鳃和鳞片"
     },
@@ -23,7 +23,7 @@
       "english": "rain",
       "pinyin": "yǔ",
       "same-sounding-character": ["语 (language)", "羽 (feather)", "玉 (jade)"],
-      "words": ["下雨 (raining)", "雨衣 (raincoat)", "雨伞 (umbrella)"],
+      "words": ["下雨 (xià yǔ， raining)", "雨衣 (yǔ yī， raincoat)", "雨伞 (yǔ sǎn， umbrella)"],
       "definition-english": "Water falling from clouds in drops",
       "definition-chinese": "从云里降落下来的水"
     },
@@ -31,8 +31,8 @@
       "character": "一",
       "english": "one",
       "pinyin": "yī",
-      "same-sounding-character": ["衣 (clothing)", "医 (doctor)", "仪 (ceremony)"],
-      "words": ["一个 (one)", "第一 (first)", "一起 (together)"],
+      "same-sounding-character": ["衣 (clothing)", "医 (doctor)", "椅 (chair)"],
+      "words": ["一个人 (yī gè rén， one)", "第一 (dì yī， first)", "一起 (yī qǐ， together)"],
       "definition-english": "The number 1; first",
       "definition-chinese": "数字1；第一个"
     },
@@ -41,7 +41,7 @@
       "english": "two",
       "pinyin": "èr",
       "same-sounding-character": ["儿 (child)", "耳 (ear)", "贰 (two/formal)"],
-      "words": ["第二 (second)", "二十 (twenty)", "二月 (February)"],
+      "words": ["第二 (dì èr，second)", "二十 (èr shí，twenty)", "二月 (èr yuè，February)"],
       "definition-english": "The number 2; second",
       "definition-chinese": "数字2；第二个"
     },
@@ -49,8 +49,8 @@
       "character": "五",
       "english": "five",
       "pinyin": "wǔ",
-      "same-sounding-character": ["午 (noon)", "武 (martial)", "舞 (dance)"],
-      "words": ["第五 (fifth)", "五十 (fifty)", "五月 (May)"],
+      "same-sounding-character": ["午 (noon)", "屋 (house)"],
+      "words": ["第五 (dì wǔ， fifth)", "五十 (wǔ shí， fifty)", "五月 (wǔ yuè， May)"],
       "definition-english": "The number 5",
       "definition-chinese": "数字5"
     },
@@ -59,7 +59,7 @@
       "english": "ear",
       "pinyin": "ěr",
       "same-sounding-character": ["儿 (child)", "二 (two)", "贰 (two/formal)"],
-      "words": ["耳朵 (ear)", "耳环 (earring)", "耳语 (whisper)"],
+      "words": ["耳朵 (ěr duo， ear)", "耳环 (ěr huán， earring)", "耳语 (ěr yǔ， whisper)"],
       "definition-english": "The organ for hearing; ear",
       "definition-chinese": "听觉器官"
     },
@@ -67,8 +67,8 @@
       "character": "牙",
       "english": "tooth",
       "pinyin": "yá",
-      "same-sounding-character": ["雅 (elegant)", "鸦 (crow)", "蛙 (frog)"],
-      "words": ["牙齿 (teeth)", "牙刷 (toothbrush)", "牙医 (dentist)"],
+      "same-sounding-character": ["娃 (baby)", "鸦 (crow)", "蛙 (frog)"],
+      "words": ["牙齿 (yá chǐ， teeth)", "牙刷 (yá shuā， toothbrush)", "牙医 (yá yī， dentist)"],
       "definition-english": "One of the hard white structures in the mouth used for chewing",
       "definition-chinese": "口腔内用来咀嚼食物的硬白色结构"
     },
@@ -77,7 +77,7 @@
       "english": "mouth",
       "pinyin": "kǒu",
       "same-sounding-character": ["扣 (button)", "寇 (bandit)", "蔻 (bud)"],
-      "words": ["口语 (spoken language)", "人口 (population)", "口腔 (oral cavity)"],
+      "words": ["口语 (kóu yǔ， spoken language)", "人口 (rén kǒu， population)", "口味 (kǒu wèi， taste)"],
       "definition-english": "The opening in the face through which food enters and sounds come out",
       "definition-chinese": "脸上进食和发声的开口"
     },
@@ -86,7 +86,7 @@
       "english": "person, people",
       "pinyin": "rén",
       "same-sounding-character": ["仁 (benevolence)", "认 (recognize)", "任 (task)"],
-      "words": ["人类 (humanity)", "人口 (population)", "人物 (character)"],
+      "words": ["人们 (rén men， people)", "人口 (rén kǒu， population)", "家人 (jiā rén， family)"],
       "definition-english": "A human being; people",
       "definition-chinese": "人类；人"
     }
@@ -97,7 +97,7 @@
       "english": "wood, tree",
       "pinyin": "mù",
       "same-sounding-character": ["目 (eye)", "牧 (graze)", "募 (recruit)"],
-      "words": ["木头 (timber)", "树木 (trees)", "木板 (wooden board)"],
+      "words": ["木头 (mù tóu， timber)", "树木 (shù mù， trees)", "木板 (mù bǎn， wooden board)"],
       "definition-english": "The hard fibrous substance of a tree; wood",
       "definition-chinese": "树的坚硬部分；木材"
     },
@@ -106,7 +106,7 @@
       "english": "soil, earth, ground",
       "pinyin": "tǔ",
       "same-sounding-character": ["兔 (rabbit)", "吐 (spit)", "图 (picture)"],
-      "words": ["土地 (land)", "土壤 (soil)", "泥土 (earth)"],
+      "words": ["土地 (tǔ dì， land)", "土壤 (tǔ rǎng， soil)", "泥土 (ní tǔ， earth)"],
       "definition-english": "The loose material that covers the ground; earth; soil",
       "definition-chinese": "覆盖地面的松散物质"
     },
@@ -115,7 +115,7 @@
       "english": "horse",
       "pinyin": "mǎ",
       "same-sounding-character": ["妈 (mother)", "麻 (hemp)", "码 (code)"],
-      "words": ["马匹 (horse)", "马车 (carriage)", "骑马 (ride a horse)"],
+      "words": ["木马 (mù mǎ， horse)", "马车 (mǎ chē， carriage)", "马路 (mǎ lù， road)"],
       "definition-english": "A large domesticated animal with hooves and a tail, used for riding",
       "definition-chinese": "有蹄子和尾巴的大型驯养动物"
     },
@@ -124,7 +124,7 @@
       "english": "eight",
       "pinyin": "bā",
       "same-sounding-character": ["巴 (cling)", "跋 (trek)", "拔 (pull out)"],
-      "words": ["第八 (eighth)", "八十 (eighty)", "八月 (August)"],
+      "words": ["第八 (dì bā， eighth)", "八十 (bā shí， eighty)", "八月 (bā yuè， August)"],
       "definition-english": "The number 8",
       "definition-chinese": "数字8"
     },
@@ -133,7 +133,7 @@
       "english": "cling to, hope for",
       "pinyin": "bā",
       "same-sounding-character": ["八 (eight)", "跋 (trek)", "拔 (pull out)"],
-      "words": ["巴巴 (eagerly)", "巴西 (Brazil)", "巴掌 (palm)"],
+      "words": ["巴士 (bā shì， bus)", "巴西 (bā xī， Brazil)", "巴掌 (bā zhǎng， palm)"],
       "definition-english": "To cling to; to hope for; to yearn",
       "definition-chinese": "粘着；期望；渴望"
     },
@@ -142,7 +142,7 @@
       "english": "you",
       "pinyin": "nǐ",
       "same-sounding-character": ["拟 (imitate)", "逆 (reverse)", "溺 (drown)"],
-      "words": ["你好 (hello)", "你们 (you all)", "你的 (your)"],
+      "words": ["你好 (nǐ hǎo， hello)", "你们 (nǐ men， you all)", "你的 (nǐ de， your)"],
       "definition-english": "Second person singular pronoun; you",
       "definition-chinese": "第二人称代词"
     },
@@ -151,7 +151,7 @@
       "english": "I, me",
       "pinyin": "wǒ",
       "same-sounding-character": ["握 (grasp)", "我 (I)", "卧 (lie)"],
-      "words": ["我的 (my)", "我们 (we)", "我自己 (myself)"],
+      "words": ["我的 (wǒ de， my)", "我们 (wǒ men， we)", "我自己 (wǒ zì jǐ， myself)"],
       "definition-english": "First person singular pronoun; I; me",
       "definition-chinese": "第一人称代词"
     },
@@ -160,7 +160,7 @@
       "english": "also, too",
       "pinyin": "yě",
       "same-sounding-character": ["野 (wild)", "夜 (night)", "页 (page)"],
-      "words": ["也是 (also is)", "也许 (maybe)", "也没有 (also don't have)"],
+      "words": ["也是 (yě shì， also is)", "也许 (yě xǔ， maybe)", "也没有 (yě méi yǒu， also don't have)"],
       "definition-english": "Also; too; as well",
       "definition-chinese": "同样；也"
     },
@@ -169,7 +169,7 @@
       "english": "he, him",
       "pinyin": "tā",
       "same-sounding-character": ["她 (she)", "它 (it)", "他 (he)"],
-      "words": ["他的 (his)", "他们 (they)", "他人 (other people)"],
+      "words": ["他的 (tā de， his)", "他们 (tā men， they)", "他人 (tā rén， other people)"],
       "definition-english": "Third person masculine singular pronoun; he; him",
       "definition-chinese": "第三人称男性代词"
     },
@@ -178,7 +178,7 @@
       "english": "younger brother",
       "pinyin": "dì",
       "same-sounding-character": ["第 (ordinal)", "递 (hand over)", "敌 (enemy)"],
-      "words": ["弟弟 (younger brother)", "兄弟 (brothers)", "堂弟 (cousin)"],
+      "words": ["弟弟 (dì di， younger brother)", "兄弟 (xiōng dì， brothers)", "堂弟 (táng dì， cousin)"],
       "definition-english": "A male younger than oneself; younger brother",
       "definition-chinese": "年纪比自己小的男性；小弟弟"
     },
@@ -187,7 +187,7 @@
       "english": "not, no",
       "pinyin": "bù",
       "same-sounding-character": ["布 (cloth)", "卜 (divination)", "怖 (fear)"],
-      "words": ["不是 (is not)", "不好 (not good)", "不能 (cannot)"],
+      "words": ["不是 (bù shì， is not)", "不会 (bù huì， not able)", "不要 (bù yào， do not want)"],
       "definition-english": "Negation; not; no",
       "definition-chinese": "否定词；不"
     },
@@ -196,7 +196,7 @@
       "english": "father, dad",
       "pinyin": "bà",
       "same-sounding-character": ["把 (handle)", "巴 (cling)", "霸 (dominate)"],
-      "words": ["爸爸 (father)", "爸妈 (parents)", "我爸 (my father)"],
+      "words": ["爸爸 (bà ba， father)", "爸妈 (bà mā， parents)"],
       "definition-english": "Father; dad; papa",
       "definition-chinese": "父亲；爸爸"
     },
@@ -205,7 +205,7 @@
       "english": "she, her",
       "pinyin": "tā",
       "same-sounding-character": ["他 (he)", "它 (it)", "她 (she)"],
-      "words": ["她的 (her)", "她们 (they/females)", "她自己 (herself)"],
+      "words": ["她的 (tā de， hers)", "她们 (tā men， they/females)", "她自己 (tā zì jǐ， herself)"],
       "definition-english": "Third person feminine singular pronoun; she; her",
       "definition-chinese": "第三人称女性代词"
     },
@@ -214,7 +214,7 @@
       "english": "mother, mom",
       "pinyin": "mā",
       "same-sounding-character": ["马 (horse)", "麻 (hemp)", "妈 (mother)"],
-      "words": ["妈妈 (mother)", "妈咪 (mommy)", "我妈 (my mother)"],
+      "words": ["妈妈 (mā ma， mother)", "妈咪 (mā mī， mommy)"],
       "definition-english": "Mother; mom; mama",
       "definition-chinese": "母亲；妈妈"
     },
@@ -223,7 +223,7 @@
       "english": "possessive particle",
       "pinyin": "de",
       "same-sounding-character": ["得 (get)", "德 (virtue)", "地 (earth)"],
-      "words": ["我的 (my)", "你的 (your)", "他的 (his)"],
+      "words": ["我的 (wǒ de， my)", "你的 (nǐ de， your)", "他的 (tā de， his)"],
       "definition-english": "Possessive particle indicating ownership or relationship",
       "definition-chinese": "表示所有或关系的虚词"
     },
@@ -232,7 +232,7 @@
       "english": "father",
       "pinyin": "fù",
       "same-sounding-character": ["符 (symbol)", "富 (rich)", "腐 (rotten)"],
-      "words": ["父亲 (father)", "父母 (parents)", "父子 (father and son)"],
+      "words": ["父亲 (fù qīn， father)", "父母 (fù mǔ， parents)", "父子 (fù zǐ， father and son)"],
       "definition-english": "Father; male parent",
       "definition-chinese": "男性父亲"
     },
@@ -241,7 +241,7 @@
       "english": "mother",
       "pinyin": "mǔ",
       "same-sounding-character": ["木 (wood)", "募 (recruit)", "亩 (mu measure)"],
-      "words": ["母亲 (mother)", "父母 (parents)", "母子 (mother and child)"],
+      "words": ["母亲 (mǔ qīn， mother)", "父母 (fù mǔ， parents)", "母子 (mǔ zǐ， mother and child)"],
       "definition-english": "Mother; female parent",
       "definition-chinese": "女性父亲"
     },
@@ -250,7 +250,7 @@
       "english": "woman, girl, female",
       "pinyin": "nǚ",
       "same-sounding-character": ["奴 (slave)", "努 (exert)", "怒 (anger)"],
-      "words": ["女儿 (daughter)", "女人 (woman)", "女孩 (girl)"],
+      "words": ["女儿 (nǚ ér, daughter)", "女人 (nǚ rén, woman)", "女孩 (nǚ hái, girl)"],
       "definition-english": "A female human; woman; girl",
       "definition-chinese": "女性人类；女人；女孩"
     },
@@ -259,7 +259,7 @@
       "english": "son, child",
       "pinyin": "ér",
       "same-sounding-character": ["二 (two)", "耳 (ear)", "贰 (two/formal)"],
-      "words": ["儿子 (son)", "女儿 (daughter)", "儿童 (child)"],
+      "words": ["儿子 (ér zi, son)", "女儿 (nǚ ér, daughter)", "儿童 (ér tóng, child)"],
       "definition-english": "Son; child; boy",
       "definition-chinese": "儿子；小孩；男孩"
     }
@@ -270,7 +270,7 @@
       "english": "power, strength, force",
       "pinyin": "lì",
       "same-sounding-character": ["历 (history)", "立 (stand)", "利 (benefit)"],
-      "words": ["力量 (strength)", "努力 (strive)", "有力 (forceful)"],
+      "words": ["力量 (lì liàng, strength)", "努力 (nǔ lì, strive)", "有力 (yǒu lì, forceful)"],
       "definition-english": "Power; strength; force; ability",
       "definition-chinese": "力量；强度；力"
     },

@@ -1030,9 +1030,14 @@ function makeWordFill(word, pool) {
   const phraseMatch = phraseStr.match(/^([^\s(]+)/);
   const phrase = phraseMatch ? phraseMatch[1] : phraseStr;
 
-  // Extract English from parentheses (e.g., "clothes" from "衣服 (clothes)")
+  // Extract English from parentheses; if comma-separated (pinyin， english), take the part after the comma
   const englishMatch = phraseStr.match(/\(([^)]+)\)/);
-  const englishFromPhrase = englishMatch ? englishMatch[1] : word.english;
+  let englishFromPhrase = word.english;
+  if (englishMatch) {
+    const content = englishMatch[1];
+    const commaIdx = content.search(/[,，]/);
+    englishFromPhrase = commaIdx !== -1 ? content.slice(commaIdx + 1).trim() : content;
+  }
 
   if (phrase.length === 0 || !phrase.includes(word.character)) return null;
 
