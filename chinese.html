@@ -1030,13 +1030,19 @@ function makeWordFill(word, pool) {
   const phraseMatch = phraseStr.match(/^([^\s(]+)/);
   const phrase = phraseMatch ? phraseMatch[1] : phraseStr;
 
-  // Extract English from parentheses; if comma-separated (pinyin， english), take the part after the comma
+  // Extract pinyin and English from parentheses; format: (pinyin, english)
   const englishMatch = phraseStr.match(/\(([^)]+)\)/);
   let englishFromPhrase = word.english;
+  let phraseP = null;
   if (englishMatch) {
     const content = englishMatch[1];
     const commaIdx = content.search(/[,，]/);
-    englishFromPhrase = commaIdx !== -1 ? content.slice(commaIdx + 1).trim() : content;
+    if (commaIdx !== -1) {
+      phraseP = content.slice(0, commaIdx).trim();
+      englishFromPhrase = content.slice(commaIdx + 1).trim();
+    } else {
+      englishFromPhrase = content;
+    }
   }
 
   if (phrase.length === 0 || !phrase.includes(word.character)) return null;
@@ -1048,6 +1054,16 @@ function makeWordFill(word, pool) {
   // Generate 3 distractors
   const distractors = pickChars(pool, [word.character], 3);
 
+  // Mask the pinyin syllable that is being tested
+  let maskedPinyin = phraseP;
+  if (phraseP) {
+    const syllables = phraseP.split(' ');
+    if (blankPos < syllables.length) {
+      syllables[blankPos] = '_';
+      maskedPinyin = syllables.join(' ');
+    }
+  }
+
   return {
     type: 'word-fill',
     prompt,
@@ -1055,7 +1071,8 @@ function makeWordFill(word, pool) {
     options: shuffle([word.character, ...distractors.slice(0,3)]),
     word,
     phrase,
-    english: englishFromPhrase
+    english: englishFromPhrase,
+    phrasePinyin: maskedPinyin
   };
 }
 
@@ -1249,7 +1266,8 @@ function renderCard() {
     qText.onclick = () => showCharModal(card.word);
   } else if (card.type === 'word-fill') {
     typeLabel.textContent = 'Fill in the blank';
-    qText.innerHTML = `<div>${card.prompt}</div><div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500">${esc(card.english)}</div>`;
+    const pinyinHint = card.phrasePinyin ? `<div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.phrasePinyin)}</div>` : '';
+    qText.innerHTML = `<div>${card.prompt}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500">${esc(card.english)}</div>`;
     qText.className = 'question-text';
     qText.style.cursor = 'pointer';
     qText.onclick = () => showCharModal(card.word);
