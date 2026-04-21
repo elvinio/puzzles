@@ -100,10 +100,10 @@ const GROUND_MARGIN = 80; // px from bottom to ground line at rest
 // minFloor/maxFloor: placement floor constraints (floor = bottom floor of room)
 const ROOM_DEFS = {
   lobby:  { widthCells: 16, heightFloors: 4, minFloor: 0, maxFloor: 0,   color: '#7A6040', label: 'Lobby'  },
-  office: { widthCells:  9, heightFloors: 1, minFloor: 1, maxFloor: 999, color: '#3A6BC4', label: 'Office' },
-  condo:  { widthCells: 16, heightFloors: 1, minFloor: 1, maxFloor: 999, color: '#2E8B57', label: 'Condo'  },
-  hotel:  { widthCells:  4, heightFloors: 1, minFloor: 1, maxFloor: 999, color: '#9B2335', label: 'Hotel'  },
-  retail: { widthCells: 12, heightFloors: 1, minFloor: 1, maxFloor: 999, color: '#C47A20', label: 'Retail' },
+  office: { widthCells:  9, heightFloors: 1, minFloor: -100, maxFloor: 999, color: '#3A6BC4', label: 'Office' },
+  condo:  { widthCells: 16, heightFloors: 1, minFloor: -100, maxFloor: 999, color: '#2E8B57', label: 'Condo'  },
+  hotel:  { widthCells:  4, heightFloors: 1, minFloor: -100, maxFloor: 999, color: '#9B2335', label: 'Hotel'  },
+  retail: { widthCells: 12, heightFloors: 1, minFloor: -100, maxFloor: 999, color: '#C47A20', label: 'Retail' },
 };
 
 // Sprite sheet crop coordinates (sx, sy, sw, sh) — exact from pixel analysis
@@ -313,7 +313,7 @@ function draw() {
   ctx.save();
   ctx.strokeStyle = 'rgba(255,255,255,0.08)';
   ctx.lineWidth = 1;
-  for (let f = 0; f <= MAX_FLOORS; f++) {
+  for (let f = -100; f <= MAX_FLOORS; f++) {
     const y = gY - f * FLOOR_H;
     if (y < -FLOOR_H || y > H) continue;
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
@@ -355,10 +355,11 @@ function draw() {
   ctx.fillStyle = 'rgba(255,255,255,0.5)';
   ctx.font = '9px monospace';
   ctx.textAlign = 'right';
-  for (let f = 0; f <= MAX_FLOORS; f++) {
+  for (let f = -100; f <= MAX_FLOORS; f++) {
     const y = gY - f * FLOOR_H;
     if (y < -FLOOR_H || y > H + FLOOR_H) continue;
-    ctx.fillText(f === 0 ? 'G' : `${f}`, W - 4, y - 2);
+    let label = f === 0 ? 'G' : (f < 0 ? `B${-f}` : `${f}`);
+    ctx.fillText(label, W - 4, y - 2);
     ctx.fillRect(W - 18, y - 0.5, 12, 1);
   }
   ctx.restore();
@@ -485,6 +486,8 @@ function touchMidpoint(touches) {
   };
 }
 
+let wasPanning = false;
+
 canvas.addEventListener('touchstart', e => {
   e.preventDefault();
   const r = canvas.getBoundingClientRect();
@@ -493,6 +496,19 @@ canvas.addEventListener('touchstart', e => {
   lastTouchMidY = m.y - r.top;
   dragViewX = viewX; dragViewY = viewY;
   touchMoved = false;
+
+  if (e.touches.length >= 2) {
+    wasPanning = true;
+    hoverFloor = -1;
+  } else if (e.touches.length === 1) {
+    wasPanning = false;
+    const t = e.touches[0];
+    const mx = t.clientX - r.left, my = t.clientY - r.top;
+    const g = screenToGrid(mx, my);
+    hoverCol = g.col; hoverFloor = g.floor;
+    mouseInCanvas = true;
+  }
+  draw();
 }, { passive: false });
 
 canvas.addEventListener('touchmove', e => {
@@ -501,10 +517,21 @@ canvas.addEventListener('touchmove', e => {
   const m = touchMidpoint(e.touches);
   const mx = m.x - r.left, my = m.y - r.top;
   const dx = mx - lastTouchMidX, dy = my - lastTouchMidY;
+  
   if (Math.abs(dx) > 3 || Math.abs(dy) > 3) touchMoved = true;
-  if (e.touches.length >= 2 || touchMoved) {
+  
+  if (e.touches.length >= 2) {
     viewX = clampViewX(viewX - dx);
-    viewY = clampViewY(viewY - dy);  // drag up (dy<0) → see higher floors
+    viewY = clampViewY(viewY + dy);
+    lastTouchMidX = mx; lastTouchMidY = my;
+    hoverFloor = -1;
+    draw();
+  } else if (e.touches.length === 1) {
+    const t = e.touches[0];
+    const tmx = t.clientX - r.left, tmy = t.clientY - r.top;
+    const g = screenToGrid(tmx, tmy);
+    hoverCol = g.col; hoverFloor = g.floor;
+    mouseInCanvas = true;
     lastTouchMidX = mx; lastTouchMidY = my;
     draw();
   }
@@ -512,15 +539,20 @@ canvas.addEventListener('touchmove', e => {
 
 canvas.addEventListener('touchend', e => {
   e.preventDefault();
-  if (!touchMoved && e.changedTouches.length === 1) {
+  if (!wasPanning && e.changedTouches.length === 1 && e.touches.length === 0) {
     const r = canvas.getBoundingClientRect();
     const t = e.changedTouches[0];
     const mx = t.clientX - r.left, my = t.clientY - r.top;
     const { col, floor } = screenToGrid(mx, my);
     if (tool === 'destroy') deleteAt(col, floor);
     else placeRoom(tool, col, floor);
-    draw();
   }
+  
+  if (e.touches.length === 0) {
+    hoverFloor = -1;
+    mouseInCanvas = false;
+  }
+  draw();
 }, { passive: false });
 
 // ─── View clamping ────────────────────────────────────────────────────────────
@@ -531,8 +563,9 @@ function clampViewX(x) {
 
 function clampViewY(y) {
   // 0 = ground near bottom; max = top floor near top of screen
+  const minY = -100 * FLOOR_H;
   const maxY = MAX_FLOORS * FLOOR_H - (canvas.height - GROUND_MARGIN) + FLOOR_H * 4;
-  return Math.max(0, Math.min(Math.max(0, maxY), y));
+  return Math.max(minY, Math.min(Math.max(minY, maxY), y));
 }
 
 // ─── Toolbar ───────────────────────────────────────────────────────────────────
