@@ -1268,9 +1268,9 @@ function renderCard() {
     qText.style.cursor = 'pointer';
     qText.onclick = () => showCharModal(card.word);
   } else if (card.type === 'word-fill') {
-    typeLabel.textContent = 'Fill in the blank';
+    typeLabel.textContent = '';
     const pinyinHint = card.phrasePinyin ? `<div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.phrasePinyin)}</div>` : '';
-    qText.innerHTML = `<div>${card.prompt}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500">${esc(card.english)}</div>`;
+    qText.innerHTML = `<div>${card.prompt}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.english)}</div>`;
     qText.className = 'question-text';
     qText.style.cursor = 'pointer';
     qText.onclick = () => showCharModal(card.word);

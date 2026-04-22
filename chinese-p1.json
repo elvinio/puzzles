@@ -2,7 +2,7 @@
   "p1-1": [
     {
       "character": "衣",
-      "english": "clothing, garment",
+      "english": "clothing",
       "pinyin": "yī",
       "same-sounding-character": [
         "一 (one)",
@@ -154,7 +154,7 @@
     },
     {
       "character": "人",
-      "english": "person, people",
+      "english": "person",
       "pinyin": "rén",
       "same-sounding-character": [
         "仁 (benevolence)",
@@ -5972,8 +5972,7 @@
       "pinyin": "shāng",
       "same-sounding-character": [
         "伤 (hurt)",
-        "尚 (still)",
-        "裳 (garment)"
+        "尚 (still)"
       ],
       "words": [
         "商人 (shāng rén, merchant)",
