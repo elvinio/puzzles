@@ -241,7 +241,7 @@
     },
     {
       "character": "巴",
-      "english": "cling to, hope for",
+      "english": "Bus",
       "pinyin": "bā",
       "same-sounding-character": [
         "八 (eight)",
@@ -343,7 +343,7 @@
     },
     {
       "character": "不",
-      "english": "not, no",
+      "english": "no",
       "pinyin": "bù",
       "same-sounding-character": [
         "布 (cloth)",
@@ -360,7 +360,7 @@
     },
     {
       "character": "爸",
-      "english": "father, dad",
+      "english": "father",
       "pinyin": "bà",
       "same-sounding-character": [
         "把 (handle)",
@@ -376,7 +376,7 @@
     },
     {
       "character": "她",
-      "english": "she, her",
+      "english": "she",
       "pinyin": "tā",
       "same-sounding-character": [
         "他 (he)",
@@ -393,7 +393,7 @@
     },
     {
       "character": "妈",
-      "english": "mother, mom",
+      "english": "mother",
       "pinyin": "mā",
       "same-sounding-character": [
         "马 (horse)",
@@ -556,8 +556,7 @@
       ],
       "words": [
         "站立 (zhàn lì, stand)",
-        "立刻 (lì kè, immediately)",
-        "建立 (jiàn lì, establish)"
+        "立刻 (lì kè, immediately)"
       ],
       "definition-english": "To stand; to set up; to erect",
       "definition-chinese": "站起来；建立；竖立"
@@ -658,8 +657,7 @@
       ],
       "words": [
         "几个 (jǐ gè, how many)",
-        "几岁 (jǐ suì, how old)",
-        "有几分 (yǒu jǐ fēn, somewhat)"
+        "几岁 (jǐ suì, how old)"
       ],
       "definition-english": "How many; several; a few",
       "definition-chinese": "多少；若干；几个"
