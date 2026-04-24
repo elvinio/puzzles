@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>English Practice</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #13111c;
+      --surface: #1c1730;
+      --brd:     #4c1d95;
+      --p:       #6d28d9;
+      --p-lt:    #7c3aed;
+      --p-xl:    #a78bfa;
+      --p-text:  #e2d9f3;
+      --muted:   #7c6fa0;
+      --ok:      #16a34a;
+      --ok-lt:   #22c55e;
+      --err:     #dc2626;
+      --err-lt:  #ef4444;
+      --warn:    #f59e0b;
+    }
+
+    body {
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      overscroll-behavior: none;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100dvh;
+      padding: 12px 16px 40px;
+      gap: 12px;
+    }
+    .screen.active { display: flex; }
+
+    .topbar {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+    .back-link:hover { color: var(--p-xl); }
+    h1 {
+      font-size: clamp(1.1rem, 4vw, 1.6rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .topbar-right { min-width: 60px; display: flex; justify-content: flex-end; }
+
+    .section-label {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+      align-self: flex-start;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .avatar-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 40px;
+      padding: 6px 18px 6px 6px;
+      max-width: 620px;
+    }
+    .avatar-chip-name { font-size: 0.95rem; font-weight: 700; }
+    .no-avatar-warn {
+      color: var(--err-lt);
+      font-size: 0.85rem;
+      text-align: center;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .tab-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 620px;
+    }
+    .tab {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--brd);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.15s;
+      touch-action: manipulation;
+    }
+    .tab:hover { border-color: var(--p-lt); color: var(--p-text); }
+    .tab.active { background: var(--p); border-color: var(--p-lt); color: #fff; }
+
+    .btn {
+      padding: 13px 28px;
+      border-radius: 12px;
+      border: none;
+      background: var(--p);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      touch-action: manipulation;
+    }
+    .btn:hover { background: var(--p-lt); }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--brd);
+      color: var(--muted);
+    }
+    .btn-outline:hover { border-color: var(--p-lt); color: var(--p-text); background: transparent; }
+    .btn-sm { padding: 8px 18px; font-size: 0.85rem; border-radius: 10px; }
+    .btn-danger { background: var(--err); }
+    .btn-danger:hover { background: var(--err-lt); }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .divider {
+      width: 100%;
+      max-width: 620px;
+      height: 1px;
+      background: var(--brd);
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════════════ GAME SCREEN */
+    .hud {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      width: 100%;
+      max-width: 620px;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .hud-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .hud-label { font-size: 0.6rem; font-weight: 800; color: var(--muted); letter-spacing: 0.12em; }
+    .hud-val { font-size: 1.35rem; font-weight: 900; color: var(--p-xl); line-height: 1; }
+    .hud-val.warn { color: var(--warn); }
+    .hud-val.danger { color: var(--err-lt); }
+
+    .progress-bar-wrap {
+      width: 100%;
+      max-width: 620px;
+      height: 6px;
+      background: var(--surface);
+      border-radius: 3px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--p-lt);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .question-wrap {
+      width: 100%;
+      max-width: 620px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 120px;
+      position: relative;
+    }
+    .source-key {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 0.55rem;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+    .question-type-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .question-text {
+      font-size: clamp(1.1rem, 5vw, 2rem);
+      font-weight: 700;
+      color: var(--p-text);
+      line-height: 1.3;
+      text-align: center;
+      font-style: italic;
+    }
+    .definition-text {
+      font-size: clamp(1rem, 4vw, 1.4rem);
+      color: var(--p-xl);
+      text-align: center;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+    .blank-word {
+      font-size: clamp(1.8rem, 7vw, 3rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.1em;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+      max-width: 620px;
+      flex-shrink: 0;
+    }
+    .opt-btn {
+      padding: 14px 8px;
+      border-radius: 14px;
+      border: 2px solid var(--brd);
+      background: var(--surface);
+      color: var(--p-text);
+      font-size: clamp(1.2rem, 5vw, 1.8rem);
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.12s, background 0.12s, transform 0.1s;
+      touch-action: manipulation;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 80px;
+      line-height: 1;
+    }
+    .opt-btn:hover { border-color: var(--p-lt); background: #241a45; }
+    .opt-btn:active { transform: scale(0.96); }
+    .opt-btn.flash-correct {
+      border-color: var(--ok-lt);
+      background: #0a2016;
+      color: var(--ok-lt);
+      pointer-events: none;
+    }
+    .opt-btn.flash-wrong {
+      border-color: var(--err-lt);
+      background: #1a0a0a;
+      color: var(--err-lt);
+      pointer-events: none;
+    }
+    .opt-btn.flash-reveal {
+      border-color: var(--ok-lt);
+      background: #0f2d1a;
+      color: var(--ok-lt);
+      pointer-events: none;
+    }
+    .opt-btn[disabled] { pointer-events: none; }
+
+    /* Keyboard */
+    .keyboard-wrap {
+      width: 100%;
+      max-width: 620px;
+      flex-shrink: 0;
+    }
+    .keyboard-row {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 4px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .key-btn {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 2px solid var(--brd);
+      background: var(--surface);
+      color: var(--p-text);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.1s;
+      touch-action: manipulation;
+      min-width: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .key-btn:hover:not(:disabled) { border-color: var(--p-lt); background: #241a45; }
+    .key-btn:active:not(:disabled) { transform: scale(0.95); }
+    .key-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .input-display {
+      width: 100%;
+      max-width: 620px;
+      padding: 14px;
+      border: 2px solid var(--brd);
+      border-radius: 10px;
+      background: var(--surface);
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--p-xl);
+      margin-bottom: 10px;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.05em;
+    }
+
+    .submit-row {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      max-width: 620px;
+      flex-shrink: 0;
+    }
+    .submit-row .btn { flex: 1; }
+
+    /* ═══════════════════════════════════════ SUMMARY SCREEN */
+    .summary-stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 620px;
+    }
+    .summary-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      padding: 12px 24px;
+      min-width: 80px;
+      gap: 4px;
+    }
+    .summary-val {
+      font-size: 2.2rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--p-xl);
+    }
+    .summary-val.ok { color: var(--ok-lt); }
+    .summary-val.err { color: var(--err-lt); }
+    .summary-lbl { font-size: 0.62rem; font-weight: 800; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .result-list {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+      max-height: 300px;
+      flex-shrink: 0;
+    }
+    .result-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 10px 14px;
+      border-left: 4px solid var(--brd);
+      flex-shrink: 0;
+    }
+    .result-item.ok { border-left-color: var(--ok-lt); }
+    .result-item.err { border-left-color: var(--err-lt); }
+    .result-word { font-size: 1.2rem; font-weight: 900; flex-shrink: 0; min-width: 50px; text-align: center; }
+    .result-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .result-meaning { font-size: 0.8rem; color: var(--p-xl); }
+    .result-time { font-size: 0.8rem; color: var(--muted); flex-shrink: 0; text-align: right; }
+
+    /* ═══════════════════════════════════════ STATS SCREEN */
+    .av-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 720px;
+    }
+    .av-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 30px;
+      padding: 4px 14px 4px 4px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      touch-action: manipulation;
+    }
+    .av-chip.active { border-color: var(--p-lt); color: var(--p-text); }
+    .av-chip:hover { border-color: var(--p-lt); color: var(--p-text); }
+
+    .stats-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      width: 100%;
+      max-width: 720px;
+    }
+    .sort-select {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 10px;
+      color: var(--p-text);
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .stats-table-wrap {
+      width: 100%;
+      max-width: 720px;
+      overflow-x: auto;
+      flex: 1;
+    }
+    .stats-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+    }
+    .stats-table th {
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 9px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--brd);
+      white-space: nowrap;
+    }
+    .stats-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(76,29,149,0.25);
+      color: var(--p-text);
+    }
+    .stats-table td.td-word { font-size: 1.1rem; font-weight: 900; cursor: pointer; }
+    .stats-table td.td-meaning { color: var(--p-xl); font-size: 0.75rem; }
+    .stats-table td.td-lesson { color: var(--muted); font-size: 0.75rem; }
+    .stats-table td.ok { color: var(--ok-lt); font-weight: 700; }
+    .stats-table td.err { color: var(--err-lt); font-weight: 700; }
+    .stats-table td.warn { color: var(--warn); font-weight: 700; }
+    .stats-table tr:hover td { background: rgba(109,40,217,0.1); }
+    .stats-empty { text-align: center; color: var(--muted); padding: 48px 16px; font-size: 0.9rem; }
+    .stats-count { color: var(--muted); font-size: 0.78rem; align-self: flex-start; width: 100%; max-width: 720px; }
+
+    /* Word Card Modal */
+    .word-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 900;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .word-modal-overlay.open { display: flex; }
+    .word-modal {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 22px;
+      padding: 28px 22px 22px;
+      width: 100%;
+      max-width: 380px;
+      max-height: 88dvh;
+      overflow-y: auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .word-modal-close {
+      position: absolute;
+      top: 12px; right: 14px;
+      background: none; border: none;
+      color: var(--muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-family: inherit;
+      line-height: 1;
+    }
+    .word-modal-close:hover { color: var(--p-text); background: rgba(255,255,255,0.06); }
+    .word-modal-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(76,29,149,0.4);
+    }
+    .word-modal-big {
+      font-size: 3.5rem;
+      line-height: 1;
+      color: var(--p-text);
+      font-weight: 900;
+    }
+    .word-modal-sec-label {
+      font-size: 0.6rem; font-weight: 800;
+      letter-spacing: 0.14em; color: var(--muted);
+      text-transform: uppercase;
+    }
+    .word-modal-text { font-size: 0.9rem; color: var(--p-text); line-height: 1.6; }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #261c48;
+      border: 1.5px solid var(--p-lt);
+      color: var(--p-text);
+      border-radius: 20px;
+      padding: 9px 22px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 500;
+      white-space: nowrap;
+      max-width: 90vw;
+      text-align: center;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- SCREEN: SETUP -->
+<div id="screen-setup" class="screen active">
+  <div class="topbar">
+    <a class="back-link" href="index.html">← Games</a>
+    <h1>English Practice</h1>
+    <div class="topbar-right" style="display:flex;gap:6px">
+      <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
+    </div>
+  </div>
+
+  <div class="avatar-chip" id="setup-avatar-chip" style="display:none">
+    <div id="setup-avatar-svg"></div>
+    <span class="avatar-chip-name" id="setup-avatar-name"></span>
+  </div>
+  <div class="no-avatar-warn" id="setup-no-avatar" style="display:none">
+    No avatar selected — <a href="avatar.html" style="color:var(--p-xl)">create one first</a>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">Test Mode</div>
+  <div class="tab-row" id="setup-mode-tabs">
+    <button class="tab active" data-mode="fill-blank">Fill Blank</button>
+    <button class="tab" data-mode="definition">Definition</button>
+    <button class="tab" data-mode="mix">Mix All</button>
+  </div>
+
+  <div class="divider"></div>
+  <button class="btn" id="setup-start" style="width:100%;max-width:620px">▶ Start Practice</button>
+</div>
+
+<!-- SCREEN: GAME -->
+<div id="screen-game" class="screen">
+  <div class="topbar">
+    <div style="width:60px"></div>
+    <h1>English Practice</h1>
+    <div class="topbar-right">
+      <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
+    </div>
+  </div>
+
+  <div class="hud">
+    <div class="hud-cell">
+      <div class="hud-label">REMAINING</div>
+      <div class="hud-val" id="hud-timer">—</div>
+    </div>
+    <div class="hud-cell">
+      <div class="hud-label">CARD</div>
+      <div class="hud-val" id="hud-card">—</div>
+    </div>
+    <div class="hud-cell">
+      <div class="hud-label">CORRECT</div>
+      <div class="hud-val ok" id="hud-correct">0</div>
+    </div>
+    <div class="hud-cell">
+      <div class="hud-label">WRONG</div>
+      <div class="hud-val" style="color:var(--err-lt)" id="hud-wrong">0</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <div class="question-wrap" id="question-wrap">
+    <div class="question-type-label" id="question-type-label"></div>
+    <div class="question-text" id="question-text"></div>
+  </div>
+
+  <div class="options-grid" id="options-grid"></div>
+
+  <div class="keyboard-wrap" id="keyboard-wrap" style="display:none">
+    <div class="input-display" id="input-display"></div>
+    <div id="keyboard-rows"></div>
+    <div class="submit-row">
+      <button class="btn" id="submit-btn">Submit</button>
+      <button class="btn btn-outline" id="clear-btn">Clear</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: SUMMARY -->
+<div id="screen-summary" class="screen">
+  <div class="topbar">
+    <div style="width:60px"></div>
+    <h1>Session Complete</h1>
+    <div style="width:60px"></div>
+  </div>
+
+  <div class="summary-stats">
+    <div class="summary-stat">
+      <div class="summary-val ok" id="summary-correct">0</div>
+      <div class="summary-lbl">Correct</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-val err" id="summary-wrong">0</div>
+      <div class="summary-lbl">Wrong</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-val" id="summary-time">0:00</div>
+      <div class="summary-lbl">Time</div>
+    </div>
+  </div>
+
+  <div class="result-list" id="summary-result-list"></div>
+
+  <div class="btn-row">
+    <button class="btn" id="summary-again-btn">Play Again</button>
+    <button class="btn btn-outline" id="summary-setup-btn">Change Settings</button>
+    <button class="btn btn-outline" id="summary-stats-btn">View Stats</button>
+  </div>
+</div>
+
+<!-- SCREEN: STATS -->
+<div id="screen-stats" class="screen">
+  <div class="topbar">
+    <button class="back-link" id="stats-back-btn">← Back</button>
+    <h1>Stats</h1>
+    <div style="width:60px"></div>
+  </div>
+
+  <div class="section-label">Player</div>
+  <div class="av-chips" id="stats-av-chips"></div>
+
+  <div class="stats-controls">
+    <div class="tab-row" id="stats-level-tabs" style="flex:1">
+      <button class="tab active" data-level="p1">Primary 1</button>
+    </div>
+    <select class="sort-select" id="stats-sort">
+      <option value="wrong">Most Wrong</option>
+      <option value="time">Slowest</option>
+      <option value="due">Next Due</option>
+      <option value="lesson">By Lesson</option>
+    </select>
+  </div>
+
+  <div class="stats-count" id="stats-count"></div>
+
+  <div class="stats-table-wrap">
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Word</th>
+          <th>Meaning</th>
+          <th>Lesson</th>
+          <th>✓</th>
+          <th>✗</th>
+          <th>Avg Time</th>
+          <th>Next Review</th>
+        </tr>
+      </thead>
+      <tbody id="stats-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Word Card Modal -->
+<div id="word-modal" class="word-modal-overlay">
+  <div class="word-modal">
+    <button class="word-modal-close" id="wm-close">✕</button>
+    <div class="word-modal-header">
+      <div class="word-modal-big" id="wm-word"></div>
+    </div>
+    <div>
+      <div class="word-modal-sec-label">Meaning</div>
+      <div class="word-modal-text" id="wm-meaning"></div>
+    </div>
+    <div>
+      <div class="word-modal-sec-label">Example</div>
+      <div class="word-modal-text" id="wm-example"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="avatar.js"></script>
+<script>
+'use strict';
+
+const SESSION_CONFIG = {
+  p1: { cards: 10, minutes: 6 },
+};
+const LESSON_GROUPS = [3, 6, 9, 12, 15, 19];
+
+const DATA = { p1: null };
+const dataPromise = fetch('english-p1.json')
+  .then(r => r.json())
+  .then(words => {
+    const lessons = {};
+    const wordsPerLesson = 12;
+    words.forEach((word, idx) => {
+      const lessonNum = Math.floor(idx / wordsPerLesson) + 1;
+      const lessonKey = `p1-${lessonNum}`;
+      if (!lessons[lessonKey]) lessons[lessonKey] = [];
+      lessons[lessonKey].push({ word: word.word, meaning: word.meaning, example: word.example });
+    });
+    DATA.p1 = lessons;
+  })
+  .catch(() => null);
+
+function getWordPool(level, lessonMax) {
+  const data = DATA[level];
+  if (!data) return [];
+  const seen = new Set();
+  const words = [];
+  for (let i = 1; i <= lessonMax; i++) {
+    const lessonKey = `${level}-${i}`;
+    (data[lessonKey] || []).forEach(entry => {
+      const key = `${lessonKey}-${entry.word}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        words.push({ key, lessonKey, lessonNum: i, level, ...entry });
+      }
+    });
+  }
+  return words;
+}
+
+function progressKey(avatarId) { return `english-progress-${avatarId}`; }
+
+function loadProgress(avatarId) {
+  try { return JSON.parse(localStorage.getItem(progressKey(avatarId)) || '{}'); }
+  catch { return {}; }
+}
+
+function saveProgress(avatarId, progress) {
+  try { localStorage.setItem(progressKey(avatarId), JSON.stringify(progress)); }
+  catch {}
+}
+
+function freshRecord() {
+  return { correct: 0, wrong: 0, totalTimeMs: 0, attempts: 0, interval: 1, easeFactor: 2.5, dueDate: todayStr(), lastTested: null };
+}
+
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+
+function updateRecord(rec, correct, timeMs) {
+  rec = { ...rec };
+  rec.attempts++;
+  rec.lastTested = todayStr();
+  rec.totalTimeMs += timeMs;
+  if (correct) {
+    rec.correct++;
+    const s = timeMs / 1000;
+    if (s < 5)       { rec.interval = Math.round(rec.interval * rec.easeFactor); }
+    else if (s < 10) { rec.interval = Math.round(rec.interval * 2.0); rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.05); }
+    else             { rec.interval = Math.round(rec.interval * 1.3); rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.10); }
+    rec.interval = Math.max(1, rec.interval);
+  } else {
+    rec.wrong++;
+    rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.15);
+    rec.interval = 1;
+  }
+  const due = new Date();
+  due.setDate(due.getDate() + rec.interval);
+  rec.dueDate = due.toISOString().slice(0, 10);
+  return rec;
+}
+
+function buildQueue(pool, progress, targetCards) {
+  const today = todayStr();
+  const isDue  = k => { const r = progress[k]; return r && r.attempts > 0 && (!r.dueDate || r.dueDate <= today); };
+  const isNew  = k => !progress[k] || progress[k].attempts === 0;
+  const isWeak = k => { const r = progress[k]; return r && r.attempts > 0 && !isDue(k); };
+
+  const due  = pool.filter(w => isDue(w.key)).sort((a, b) => (progress[a.key].dueDate||'') < (progress[b.key].dueDate||'') ? -1 : 1);
+  const nw   = pool.filter(w => isNew(w.key));
+  const weak = pool.filter(w => isWeak(w.key)).sort((a, b) => (progress[b.key]?.wrong||0) - (progress[a.key]?.wrong||0));
+
+  const q = [...due];
+  for (const w of nw)   { if (q.length >= targetCards) break; q.push(w); }
+  for (const w of weak) { if (q.length >= targetCards) break; q.push(w); }
+  return q.slice(0, targetCards);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickWords(pool, exclude, count) {
+  const seen = new Set(exclude);
+  const candidates = shuffle(pool.filter(w => !seen.has(w.word)));
+  const result = [];
+  for (const w of candidates) {
+    if (result.length >= count) break;
+    if (!seen.has(w.word)) { result.push(w.word); seen.add(w.word); }
+  }
+  return result;
+}
+
+function makeFillBlank(word, pool) {
+  const sentence = word.example;
+  const wordToBlank = word.word;
+  const idx = sentence.toLowerCase().indexOf(wordToBlank.toLowerCase());
+  if (idx === -1) return null;
+
+  const prompt = sentence.slice(0, idx) + '_'.repeat(wordToBlank.length) + sentence.slice(idx + wordToBlank.length);
+  const distractors = pickWords(pool, [word.word], 3);
+
+  return {
+    type: 'fill-blank',
+    prompt,
+    answer: word.word,
+    options: shuffle([word.word, ...distractors.slice(0,3)]),
+    word
+  };
+}
+
+function makeDefinition(word, pool) {
+  const w = word.word;
+  const firstLetter = w[0].toUpperCase();
+  const blank = '_'.repeat(w.length - 1);
+
+  return {
+    type: 'definition',
+    definition: word.meaning,
+    answerDisplay: firstLetter + blank,
+    answer: w.toLowerCase(),
+    word
+  };
+}
+
+function makeCard(word, pool, mode) {
+  if (mode === 'mix') mode = Math.random() > 0.5 ? 'fill-blank' : 'definition';
+  if (mode === 'fill-blank') return makeFillBlank(word, pool);
+  return makeDefinition(word, pool);
+}
+
+const S = {
+  level: 'p1',
+  lessonMax: 19,
+  mode: 'fill-blank',
+  cards: [],
+  cardIndex: 0,
+  results: [],
+  sessionStart: 0,
+  cardStart: 0,
+  timerInterval: null,
+  timeLimitReached: false,
+  timeLimitMs: 0,
+  avatarId: null,
+  progress: {},
+  wordPool: [],
+  statsAvatarId: null,
+  statsLevel: 'p1',
+  statsPrev: 'setup',
+  userInput: '',
+};
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+let toastTimer = null;
+function showToast(msg, ms = 2500) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), ms);
+}
+
+function initSetup() {
+  const avatar = window.__avatarGetActive ? window.__avatarGetActive() : null;
+  const chip = document.getElementById('setup-avatar-chip');
+  const warn = document.getElementById('setup-no-avatar');
+  const startBtn = document.getElementById('setup-start');
+
+  if (avatar) {
+    S.avatarId = avatar.id;
+    S.progress = loadProgress(avatar.id);
+    chip.style.display = 'flex';
+    warn.style.display = 'none';
+    document.getElementById('setup-avatar-svg').innerHTML = window.__avatarRender ? window.__avatarRender(avatar, '40') : '👤';
+    document.getElementById('setup-avatar-name').textContent = avatar.nickname;
+    startBtn.disabled = false;
+  } else {
+    chip.style.display = 'none';
+    warn.style.display = 'block';
+    startBtn.disabled = true;
+    S.avatarId = null;
+  }
+  showScreen('screen-setup');
+}
+
+function bindTabs(containerId, onSelect) {
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      onSelect(tab);
+    });
+  });
+}
+
+bindTabs('setup-mode-tabs',   tab => { S.mode = tab.dataset.mode; });
+
+document.getElementById('setup-stats-btn').addEventListener('click', () => {
+  S.statsPrev = 'setup';
+  openStats();
+});
+
+document.getElementById('setup-start').addEventListener('click', startSession);
+
+async function startSession() {
+  await dataPromise;
+  if (!DATA[S.level]) { showToast('Failed to load word data'); return; }
+
+  S.wordPool = getWordPool(S.level, S.lessonMax);
+  if (S.wordPool.length === 0) { showToast('No words found'); return; }
+
+  const cfg = SESSION_CONFIG[S.level];
+  S.timeLimitMs = cfg.minutes * 60 * 1000;
+  const targetCards = cfg.cards;
+
+  S.progress = loadProgress(S.avatarId);
+  const queue = buildQueue(S.wordPool, S.progress, targetCards);
+  if (queue.length === 0) { showToast('No words to review'); return; }
+
+  S.cards = queue.map(w => makeCard(w, S.wordPool, S.mode)).filter(c => c !== null);
+  if (S.cards.length === 0) { showToast('No valid cards for this mode'); return; }
+  S.cardIndex = 0;
+  S.results = [];
+  S.timeLimitReached = false;
+  S.sessionStart = Date.now();
+
+  showScreen('screen-game');
+  startTimer();
+  renderCard();
+}
+
+function startTimer() {
+  clearInterval(S.timerInterval);
+  S.timerInterval = setInterval(() => {
+    const elapsed = Date.now() - S.sessionStart;
+    const remaining = Math.max(0, S.timeLimitMs - elapsed);
+    const mins = Math.floor(remaining / 60000);
+    const el = document.getElementById('hud-timer');
+    if (remaining <= 0)  el.textContent = '0 min';
+    else if (mins < 1)   el.textContent = '< 1 min';
+    else                 el.textContent = `${mins} min`;
+    el.className = 'hud-val';
+    if (remaining / S.timeLimitMs < 0.15) el.classList.add('danger');
+    else if (remaining / S.timeLimitMs < 0.35) el.classList.add('warn');
+    if (remaining <= 0 && !S.timeLimitReached) {
+      S.timeLimitReached = true;
+      showToast("Time's up — finish this card", 3000);
+    }
+  }, 500);
+}
+
+function stopTimer() { clearInterval(S.timerInterval); }
+
+function renderCard() {
+  const card = S.cards[S.cardIndex];
+  const total = S.cards.length;
+
+  document.getElementById('hud-card').textContent = `${S.cardIndex + 1}/${total}`;
+  document.getElementById('progress-fill').style.width = `${(S.cardIndex / total) * 100}%`;
+  document.getElementById('hud-correct').textContent = S.results.filter(r => r.correct).length;
+  document.getElementById('hud-wrong').textContent   = S.results.filter(r => !r.correct).length;
+
+  S.userInput = '';
+
+  if (card.type === 'fill-blank') {
+    renderFillBlankCard(card);
+  } else {
+    renderDefinitionCard(card);
+  }
+
+  S.cardStart = Date.now();
+}
+
+function renderFillBlankCard(card) {
+  const typeLabel = document.getElementById('question-type-label');
+  const qText = document.getElementById('question-text');
+  const qWrap = document.getElementById('question-wrap');
+  const keywordEl = document.createElement('div');
+  keywordEl.className = 'source-key';
+  keywordEl.textContent = card.word.lessonKey;
+
+  const oldKey = qWrap.querySelector('.source-key');
+  if (oldKey) oldKey.remove();
+  qWrap.appendChild(keywordEl);
+
+  typeLabel.textContent = 'Choose the missing word:';
+  qText.textContent = card.prompt;
+  qText.className = 'question-text';
+
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  document.getElementById('keyboard-wrap').style.display = 'none';
+
+  const isPinyinOpt = false;
+  card.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleAnswer(opt, card));
+    grid.appendChild(btn);
+  });
+}
+
+function renderDefinitionCard(card) {
+  const typeLabel = document.getElementById('question-type-label');
+  const qText = document.getElementById('question-text');
+  const qWrap = document.getElementById('question-wrap');
+  const keywordEl = document.createElement('div');
+  keywordEl.className = 'source-key';
+  keywordEl.textContent = card.word.lessonKey;
+
+  const oldKey = qWrap.querySelector('.source-key');
+  if (oldKey) oldKey.remove();
+  qWrap.appendChild(keywordEl);
+
+  typeLabel.textContent = 'Type the word:';
+  qText.innerHTML = `<div class="definition-text">${esc(card.definition)}</div><div class="blank-word" style="margin-top:12px">${card.answerDisplay}</div>`;
+  qText.className = 'question-text';
+
+  document.getElementById('options-grid').innerHTML = '';
+  document.getElementById('keyboard-wrap').style.display = 'block';
+
+  renderKeyboard();
+  updateInputDisplay();
+}
+
+function renderKeyboard() {
+  const rows = [
+    'qwertyuiop'.split(''),
+    'asdfghjkl'.split(''),
+    'zxcvbnm'.split('')
+  ];
+
+  const container = document.getElementById('keyboard-rows');
+  container.innerHTML = '';
+
+  rows.forEach(row => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'keyboard-row';
+    row.forEach(char => {
+      const btn = document.createElement('button');
+      btn.className = 'key-btn';
+      btn.textContent = char.toUpperCase();
+      btn.addEventListener('click', () => addChar(char));
+      rowEl.appendChild(btn);
+    });
+    container.appendChild(rowEl);
+  });
+}
+
+function addChar(char) {
+  S.userInput += char;
+  updateInputDisplay();
+}
+
+function updateInputDisplay() {
+  const display = document.getElementById('input-display');
+  display.textContent = S.userInput.toUpperCase() || '─';
+}
+
+document.getElementById('clear-btn').addEventListener('click', () => {
+  S.userInput = '';
+  updateInputDisplay();
+});
+
+document.getElementById('submit-btn').addEventListener('click', () => {
+  const card = S.cards[S.cardIndex];
+  handleAnswer(S.userInput.toLowerCase(), card);
+});
+
+function handleAnswer(chosen, card) {
+  const timeMs = Date.now() - S.cardStart;
+  const correct = chosen.toLowerCase() === card.answer.toLowerCase();
+
+  if (card.type === 'fill-blank') {
+    document.querySelectorAll('#options-grid .opt-btn').forEach(btn => {
+      if (btn.textContent === card.answer) btn.classList.add(correct ? 'flash-correct' : 'flash-reveal');
+      else if (btn.textContent === chosen && !correct) btn.classList.add('flash-wrong');
+      btn.disabled = true;
+    });
+  } else {
+    const wrapper = document.getElementById('keyboard-wrap');
+    if (correct) {
+      wrapper.style.opacity = '0.5';
+      wrapper.style.pointerEvents = 'none';
+      const display = document.getElementById('input-display');
+      display.style.color = 'var(--ok-lt)';
+    } else {
+      const display = document.getElementById('input-display');
+      display.textContent = card.answer.toUpperCase();
+      display.style.color = 'var(--err-lt)';
+    }
+  }
+
+  let rec = S.progress[card.word.key] || freshRecord();
+  rec = updateRecord(rec, correct, timeMs);
+  S.progress[card.word.key] = rec;
+  saveProgress(S.avatarId, S.progress);
+
+  S.results.push({ word: card.word, correct, timeMs, type: card.type });
+
+  setTimeout(() => {
+    S.cardIndex++;
+    const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
+    if (done) { stopTimer(); showSummary(); }
+    else renderCard();
+  }, 3000);
+}
+
+document.getElementById('game-end-btn').addEventListener('click', () => {
+  stopTimer();
+  showSummary();
+});
+
+function showSummary() {
+  const elapsed = Date.now() - S.sessionStart;
+  const correct = S.results.filter(r => r.correct).length;
+  const wrong   = S.results.length - correct;
+
+  document.getElementById('summary-correct').textContent = correct;
+  document.getElementById('summary-wrong').textContent   = wrong;
+  const m = Math.floor(elapsed / 60000), sec = Math.floor((elapsed % 60000) / 1000);
+  document.getElementById('summary-time').textContent = `${m}:${String(sec).padStart(2,'0')}`;
+
+  const list = document.getElementById('summary-result-list');
+  list.innerHTML = '';
+  S.results.forEach(r => {
+    const item = document.createElement('div');
+    item.className = `result-item ${r.correct ? 'ok' : 'err'}`;
+
+    const wordEl = document.createElement('div');
+    wordEl.className = 'result-word';
+    wordEl.textContent = r.word.word;
+    wordEl.addEventListener('click', () => showWordModal(r.word));
+
+    item.appendChild(wordEl);
+    item.insertAdjacentHTML('beforeend', `
+      <div class="result-info">
+        <div class="result-meaning">${esc(r.word.meaning)}</div>
+      </div>
+      <div class="result-time">${(r.timeMs/1000).toFixed(1)}s ${r.correct ? '✓' : '✗'}</div>`);
+    list.appendChild(item);
+  });
+
+  if (S.results.length && window.__avatarSave) {
+    const pct = Math.round((correct / S.results.length) * 100);
+    window.__avatarSave(`english-${S.level}-accuracy`, pct, false);
+  }
+
+  showScreen('screen-summary');
+}
+
+document.getElementById('summary-again-btn').addEventListener('click', startSession);
+document.getElementById('summary-setup-btn').addEventListener('click', initSetup);
+document.getElementById('summary-stats-btn').addEventListener('click', () => { S.statsPrev = 'summary'; openStats(); });
+
+function openStats() {
+  S.statsAvatarId = S.avatarId;
+  S.statsLevel    = S.level;
+  renderAvatarChips();
+  renderStatsTable();
+  showScreen('screen-stats');
+}
+
+function renderAvatarChips() {
+  const avatars = window.__avatarLoadAvatars ? window.__avatarLoadAvatars() : [];
+  const container = document.getElementById('stats-av-chips');
+  container.innerHTML = '';
+  if (avatars.length === 0) {
+    container.innerHTML = '<span style="color:var(--muted);font-size:0.85rem">No avatars yet</span>';
+    return;
+  }
+  avatars.forEach(av => {
+    const chip = document.createElement('div');
+    chip.className = `av-chip ${av.id === S.statsAvatarId ? 'active' : ''}`;
+    chip.innerHTML = `<div style="flex-shrink:0">${window.__avatarRender ? window.__avatarRender(av, '28') : '👤'}</div>${esc(av.nickname)}`;
+    chip.addEventListener('click', () => { S.statsAvatarId = av.id; renderAvatarChips(); renderStatsTable(); });
+    container.appendChild(chip);
+  });
+}
+
+function renderStatsTable() {
+  const progress = S.statsAvatarId ? loadProgress(S.statsAvatarId) : {};
+  const pool = getWordPool(S.statsLevel, 19);
+
+  let rows = pool
+    .map(w => ({ ...w, rec: progress[w.key] }))
+    .filter(w => w.rec && w.rec.attempts > 0);
+
+  const sort = document.getElementById('stats-sort').value;
+  if (sort === 'wrong')  rows.sort((a,b) => (b.rec.wrong||0) - (a.rec.wrong||0));
+  else if (sort === 'time')   rows.sort((a,b) => avgTime(b.rec) - avgTime(a.rec));
+  else if (sort === 'due')    rows.sort((a,b) => (a.rec.dueDate||'') < (b.rec.dueDate||'') ? -1 : 1);
+  else if (sort === 'lesson') rows.sort((a,b) => a.lessonNum - b.lessonNum);
+
+  document.getElementById('stats-count').textContent = rows.length
+    ? `${rows.length} word${rows.length !== 1 ? 's' : ''} practiced`
+    : '';
+
+  const tbody = document.getElementById('stats-tbody');
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="stats-empty">No practice data yet for this level.<br>Complete a session to see your progress here.</td></tr>`;
+    return;
+  }
+
+  const today = todayStr();
+  tbody.innerHTML = rows.map(w => {
+    const r = w.rec;
+    const avg = r.attempts ? (r.totalTimeMs / r.attempts / 1000).toFixed(1) + 's' : '—';
+    const wrongCls = r.wrong > 0 ? 'err' : 'ok';
+    const correctCls = r.correct > 0 ? 'ok' : '';
+    const dueCls = r.dueDate && r.dueDate <= today ? 'warn' : '';
+    return `<tr data-word-key="${w.key}">
+      <td class="td-word">${w.word}</td>
+      <td class="td-meaning">${esc(w.meaning)}</td>
+      <td class="td-lesson">L${w.lessonNum}</td>
+      <td class="${correctCls}">${r.correct}</td>
+      <td class="${wrongCls}">${r.wrong}</td>
+      <td>${avg}</td>
+      <td class="${dueCls}">${r.dueDate || '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function avgTime(rec) { return rec.attempts ? rec.totalTimeMs / rec.attempts : 0; }
+
+bindTabs('stats-level-tabs', tab => { S.statsLevel = tab.dataset.level; renderStatsTable(); });
+
+document.getElementById('stats-sort').addEventListener('change', renderStatsTable);
+
+document.getElementById('stats-back-btn').addEventListener('click', () => {
+  if (S.statsPrev === 'summary') showScreen('screen-summary');
+  else initSetup();
+});
+
+function showWordModal(word) {
+  document.getElementById('wm-word').textContent = word.word;
+  document.getElementById('wm-meaning').textContent = word.meaning;
+  document.getElementById('wm-example').textContent = word.example;
+  document.getElementById('word-modal').classList.add('open');
+}
+
+document.getElementById('word-modal').addEventListener('click', e => {
+  if (e.target.id === 'word-modal') document.getElementById('word-modal').classList.remove('open');
+});
+document.getElementById('wm-close').addEventListener('click', () => {
+  document.getElementById('word-modal').classList.remove('open');
+});
+
+document.getElementById('stats-tbody').addEventListener('click', e => {
+  const td = e.target.closest('td.td-word');
+  if (!td) return;
+  const key = td.closest('tr').dataset.wordKey;
+  if (!key) return;
+  const pool = getWordPool(S.statsLevel, 19);
+  const word = pool.find(w => w.key === key);
+  if (word) showWordModal(word);
+});
+
+function esc(s) {
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSetup);
+} else {
+  initSetup();
+}
+</script>
+</body>
+</html>
