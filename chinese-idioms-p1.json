@@ -1,0 +1,2138 @@
+[
+  {
+    "character": "衣",
+    "idiom": "衣食住行",
+    "pinyin": "yī shí zhù xíng",
+    "meaning-chinese": "指穿衣、吃饭、住房、出行，泛指日常生活的基本需求。",
+    "meaning-english": "The four basic necessities of life: clothing, food, shelter, and transportation.",
+    "example-sentence": "衣食住行是每个人生活的基本需求。"
+  },
+  {
+    "character": "鱼",
+    "idiom": "如鱼得水",
+    "pinyin": "rú yú dé shuǐ",
+    "meaning-chinese": "比喻得到适合自己的环境或得到能帮助自己的人。",
+    "meaning-english": "Like a fish in water; to be in one's element.",
+    "example-sentence": "他在这个新工作中如鱼得水，发挥得很好。"
+  },
+  {
+    "character": "雨",
+    "idiom": "风雨无阻",
+    "pinyin": "fēng yǔ wú zǔ",
+    "meaning-chinese": "不管刮风下雨，也不阻挡；形容意志坚定，不畏困难。",
+    "meaning-english": "Undaunted by wind and rain; regardless of any obstacle.",
+    "example-sentence": "他坚持每天晨跑，风雨无阻。"
+  },
+  {
+    "character": "一",
+    "idiom": "一石二鸟",
+    "pinyin": "yī shí èr niǎo",
+    "meaning-chinese": "比喻做一件事同时达到两个目的。",
+    "meaning-english": "Kill two birds with one stone; to achieve two goals with one action.",
+    "example-sentence": "这个计划一石二鸟，既省时又省力。"
+  },
+  {
+    "character": "二",
+    "idiom": "不二法门",
+    "pinyin": "bù èr fǎ mén",
+    "meaning-chinese": "原指直接入道的方法；比喻最好的或唯一的方法。",
+    "meaning-english": "The one and only approach; the best and only method.",
+    "example-sentence": "勤奋是成功的不二法门。"
+  },
+  {
+    "character": "五",
+    "idiom": "五花八门",
+    "pinyin": "wǔ huā bā mén",
+    "meaning-chinese": "形容花样繁多，变化多端。",
+    "meaning-english": "Of all kinds; a great variety; all sorts.",
+    "example-sentence": "市场上的商品五花八门，令人眼花缭乱。"
+  },
+  {
+    "character": "耳",
+    "idiom": "耳目一新",
+    "pinyin": "ěr mù yī xīn",
+    "meaning-chinese": "听到的、看到的都换了样子，感到很新鲜。",
+    "meaning-english": "To find everything fresh and new; a refreshing experience.",
+    "example-sentence": "这次展览让人耳目一新。"
+  },
+  {
+    "character": "牙",
+    "idiom": "以牙还牙",
+    "pinyin": "yǐ yá huán yá",
+    "meaning-chinese": "用同样的方式来回击对方，针锋相对。",
+    "meaning-english": "An eye for an eye, a tooth for a tooth; to return like for like.",
+    "example-sentence": "他决定以牙还牙，用同样的方式反击。"
+  },
+  {
+    "character": "口",
+    "idiom": "口是心非",
+    "pinyin": "kǒu shì xīn fēi",
+    "meaning-chinese": "嘴上说的和心里想的不一样；形容人虚伪。",
+    "meaning-english": "To say one thing and mean another; hypocritical.",
+    "example-sentence": "他口是心非，表面同意实际上并不赞成。"
+  },
+  {
+    "character": "人",
+    "idiom": "人山人海",
+    "pinyin": "rén shān rén hǎi",
+    "meaning-chinese": "形容聚集的人极多。",
+    "meaning-english": "Seas of people; a huge crowd.",
+    "example-sentence": "春节期间，广场上人山人海。"
+  },
+  {
+    "character": "木",
+    "idiom": "木已成舟",
+    "pinyin": "mù yǐ chéng zhōu",
+    "meaning-chinese": "木头已经做成了船，比喻事已成定局，不可改变。",
+    "meaning-english": "The wood is already made into a boat; what's done is done.",
+    "example-sentence": "木已成舟，后悔也没用了。"
+  },
+  {
+    "character": "土",
+    "idiom": "土生土长",
+    "pinyin": "tǔ shēng tǔ zhǎng",
+    "meaning-chinese": "在某地出生并长大，形容是当地人。",
+    "meaning-english": "Born and raised locally; a native.",
+    "example-sentence": "他是土生土长的北京人。"
+  },
+  {
+    "character": "马",
+    "idiom": "马到成功",
+    "pinyin": "mǎ dào chéng gōng",
+    "meaning-chinese": "形容工作刚开始就取得了成功。",
+    "meaning-english": "Immediate success; to succeed at first attempt.",
+    "example-sentence": "祝你马到成功！"
+  },
+  {
+    "character": "八",
+    "idiom": "八仙过海",
+    "pinyin": "bā xiān guò hǎi",
+    "meaning-chinese": "比喻各有一套办法，各显神通。",
+    "meaning-english": "The Eight Immortals crossing the sea, each showing their special skill; each using their own method.",
+    "example-sentence": "在这个项目中，大家八仙过海，各显神通。"
+  },
+  {
+    "character": "我",
+    "idiom": "我行我素",
+    "pinyin": "wǒ xíng wǒ sù",
+    "meaning-chinese": "不管别人怎么说，仍按自己的习惯行事。",
+    "meaning-english": "To act in one's own way regardless of others.",
+    "example-sentence": "他向来我行我素，不在乎别人的看法。"
+  },
+  {
+    "character": "他",
+    "idiom": "他山之石",
+    "pinyin": "tā shān zhī shí",
+    "meaning-chinese": "比喻借助外力来弥补自己的不足。",
+    "meaning-english": "Stones from other mountains can be used to polish jade; learning from others' experience.",
+    "example-sentence": "我们要善用他山之石，学习别人的长处。"
+  },
+  {
+    "character": "弟",
+    "idiom": "称兄道弟",
+    "pinyin": "chēng xiōng dào dì",
+    "meaning-chinese": "形容彼此以兄弟相称，关系亲密。",
+    "meaning-english": "To address each other as brothers; to be on very familiar terms.",
+    "example-sentence": "他们两人称兄道弟，感情很好。"
+  },
+  {
+    "character": "不",
+    "idiom": "不屈不挠",
+    "pinyin": "bù qū bù náo",
+    "meaning-chinese": "形容在困难或压力面前不低头，顽强抵抗。",
+    "meaning-english": "Unyielding and persevering; tenacious.",
+    "example-sentence": "他不屈不挠地坚持下去，终于取得了成功。"
+  },
+  {
+    "character": "父",
+    "idiom": "父慈子孝",
+    "pinyin": "fù cí zǐ xiào",
+    "meaning-chinese": "父亲慈爱，儿子孝顺，形容家庭和睦。",
+    "meaning-english": "A kind father and a filial son; a harmonious family relationship.",
+    "example-sentence": "这个家庭父慈子孝，令邻居羡慕。"
+  },
+  {
+    "character": "母",
+    "idiom": "衣食父母",
+    "pinyin": "yī shí fù mǔ",
+    "meaning-chinese": "指赖以生存的人，泛指养育自己的人。",
+    "meaning-english": "Those who provide one's livelihood; the ones who sustain you.",
+    "example-sentence": "老师是学生的衣食父母，给予他们知识。"
+  },
+  {
+    "character": "女",
+    "idiom": "女中豪杰",
+    "pinyin": "nǚ zhōng háo jié",
+    "meaning-chinese": "指才能出众的女性，巾帼英雄。",
+    "meaning-english": "A heroine; an outstanding woman of great courage and talent.",
+    "example-sentence": "她勇敢地完成了任务，真是女中豪杰。"
+  },
+  {
+    "character": "儿",
+    "idiom": "儿女情长",
+    "pinyin": "ér nǚ qíng cháng",
+    "meaning-chinese": "指男女之间深厚的感情，有时含有儿女私情羁绊之意。",
+    "meaning-english": "Deep romantic feelings; absorbed in love.",
+    "example-sentence": "英雄儿女情长，但仍以大局为重。"
+  },
+  {
+    "character": "力",
+    "idiom": "力挽狂澜",
+    "pinyin": "lì wǎn kuáng lán",
+    "meaning-chinese": "比喻尽力挽救危险的局势。",
+    "meaning-english": "To stem a raging tide; to save a desperate situation.",
+    "example-sentence": "在公司最困难的时候，他力挽狂澜，转危为安。"
+  },
+  {
+    "character": "河",
+    "idiom": "河清海晏",
+    "pinyin": "hé qīng hǎi yàn",
+    "meaning-chinese": "形容天下太平，人民安居乐业。",
+    "meaning-english": "Clear rivers and calm seas; peace and prosperity.",
+    "example-sentence": "经过多年努力，国家终于河清海晏，百姓安居。"
+  },
+  {
+    "character": "立",
+    "idiom": "立竿见影",
+    "pinyin": "lì gān jiàn yǐng",
+    "meaning-chinese": "比喻行事收效迅速。",
+    "meaning-english": "Set up a pole and see its shadow; immediate results.",
+    "example-sentence": "这个方法立竿见影，问题很快得到了解决。"
+  },
+  {
+    "character": "米",
+    "idiom": "米珠薪桂",
+    "pinyin": "mǐ zhū xīn guì",
+    "meaning-chinese": "形容物价极贵，生活困难。",
+    "meaning-english": "Rice priced as pearls and firewood as cinnamon; extremely high prices.",
+    "example-sentence": "那时物价飞涨，米珠薪桂，生活十分艰难。"
+  },
+  {
+    "character": "合",
+    "idiom": "合情合理",
+    "pinyin": "hé qíng hé lǐ",
+    "meaning-chinese": "符合情理，十分妥当。",
+    "meaning-english": "Reasonable and fair; perfectly justified.",
+    "example-sentence": "他的要求合情合理，大家都表示同意。"
+  },
+  {
+    "character": "气",
+    "idiom": "气宇轩昂",
+    "pinyin": "qì yǔ xuān áng",
+    "meaning-chinese": "形容人的仪态魁梧，精神饱满，气度不凡。",
+    "meaning-english": "Dignified bearing; impressive and majestic in appearance.",
+    "example-sentence": "他气宇轩昂地走进会场，引人注目。"
+  },
+  {
+    "character": "和",
+    "idiom": "和风细雨",
+    "pinyin": "hé fēng xì yǔ",
+    "meaning-chinese": "比喻方式温和，不粗暴。",
+    "meaning-english": "Gentle breeze and fine drizzle; gentle and patient in approach.",
+    "example-sentence": "老师用和风细雨的方式教育学生。"
+  },
+  {
+    "character": "七",
+    "idiom": "七上八下",
+    "pinyin": "qī shàng bā xià",
+    "meaning-chinese": "形容心里慌乱不安。",
+    "meaning-english": "Seven up eight down; feeling anxious and unsettled.",
+    "example-sentence": "等待消息时，他心里七上八下，十分紧张。"
+  },
+  {
+    "character": "可",
+    "idiom": "可歌可泣",
+    "pinyin": "kě gē kě qì",
+    "meaning-chinese": "形容事迹英勇悲壮，令人感动。",
+    "meaning-english": "Worthy of song and tears; deeply moving and heroic.",
+    "example-sentence": "战士们的事迹可歌可泣，令人敬佩。"
+  },
+  {
+    "character": "以",
+    "idiom": "以一当十",
+    "pinyin": "yǐ yī dāng shí",
+    "meaning-chinese": "一个人抵当十个人，形容勇猛强悍。",
+    "meaning-english": "One against ten; one person worth ten; outstanding capability.",
+    "example-sentence": "战场上，勇士以一当十，勇猛无比。"
+  },
+  {
+    "character": "去",
+    "idiom": "去粗取精",
+    "pinyin": "qù cū qǔ jīng",
+    "meaning-chinese": "去掉粗糙的部分，保留精华。",
+    "meaning-english": "To discard the crude and retain the fine; to extract the essence.",
+    "example-sentence": "我们要去粗取精，学习优秀的经验。"
+  },
+  {
+    "character": "日",
+    "idiom": "日新月异",
+    "pinyin": "rì xīn yuè yì",
+    "meaning-chinese": "形容发展、进步很快，每天每月都有新变化。",
+    "meaning-english": "Change with each passing day; rapid and constant progress.",
+    "example-sentence": "科技的发展日新月异，令人惊叹。"
+  },
+  {
+    "character": "石",
+    "idiom": "石破天惊",
+    "pinyin": "shí pò tiān jīng",
+    "meaning-chinese": "形容事情或文章议论等非常出色，令人震惊。",
+    "meaning-english": "Earth-shattering; amazingly startling.",
+    "example-sentence": "他的发言石破天惊，全场为之震动。"
+  },
+  {
+    "character": "子",
+    "idiom": "浪子回头",
+    "pinyin": "làng zǐ huí tóu",
+    "meaning-chinese": "比喻堕落的人改过自新，重新做好人。",
+    "meaning-english": "The prodigal son returns; to turn over a new leaf.",
+    "example-sentence": "他浪子回头，痛改前非，重新开始了新生活。"
+  },
+  {
+    "character": "字",
+    "idiom": "字里行间",
+    "pinyin": "zì lǐ háng jiān",
+    "meaning-chinese": "指文章的字句之间，比喻言外之意。",
+    "meaning-english": "Reading between the lines; what is implied in the writing.",
+    "example-sentence": "从她的信中，字里行间流露出思念之情。"
+  },
+  {
+    "character": "车",
+    "idiom": "车水马龙",
+    "pinyin": "chē shuǐ mǎ lóng",
+    "meaning-chinese": "形容来往车马很多，连续不断，热闹繁华。",
+    "meaning-english": "A continuous stream of carriages and horses; heavy traffic.",
+    "example-sentence": "节假日里，大街上车水马龙，十分热闹。"
+  },
+  {
+    "character": "四",
+    "idiom": "四面八方",
+    "pinyin": "sì miàn bā fāng",
+    "meaning-chinese": "指各个方向，各个地方。",
+    "meaning-english": "In all directions; from all sides.",
+    "example-sentence": "消息传来，四面八方的朋友都前来祝贺。"
+  },
+  {
+    "character": "十",
+    "idiom": "十全十美",
+    "pinyin": "shí quán shí měi",
+    "meaning-chinese": "各方面都完美，没有任何缺点。",
+    "meaning-english": "Perfect in every way; flawless and complete.",
+    "example-sentence": "没有什么事情能做到十全十美，总有需要改进的地方。"
+  },
+  {
+    "character": "士",
+    "idiom": "士别三日",
+    "pinyin": "shì bié sān rì",
+    "meaning-chinese": "形容一个人进步很快，令人刮目相看。",
+    "meaning-english": "Even a short separation shows a person's growth; to improve greatly in a short time.",
+    "example-sentence": "士别三日，当刮目相看，他进步得真快。"
+  },
+  {
+    "character": "只",
+    "idiom": "只字不提",
+    "pinyin": "zhǐ zì bù tí",
+    "meaning-chinese": "一个字也不说，形容完全不提某件事。",
+    "meaning-english": "Not to mention a single word; to keep completely silent about something.",
+    "example-sentence": "关于那件事，他只字不提。"
+  },
+  {
+    "character": "尺",
+    "idiom": "得寸进尺",
+    "pinyin": "dé cùn jìn chǐ",
+    "meaning-chinese": "得了一寸还想要一尺，比喻贪得无厌。",
+    "meaning-english": "Given an inch, take a mile; insatiably greedy.",
+    "example-sentence": "他得寸进尺，得到帮助后又提出更多要求。"
+  },
+  {
+    "character": "是",
+    "idiom": "是非分明",
+    "pinyin": "shì fēi fēn míng",
+    "meaning-chinese": "正确和错误非常清楚，不混淆。",
+    "meaning-english": "Clear distinction between right and wrong; just and impartial.",
+    "example-sentence": "他做事是非分明，从不含糊。"
+  },
+  {
+    "character": "书",
+    "idiom": "书香门第",
+    "pinyin": "shū xiāng mén dì",
+    "meaning-chinese": "指世代有读书人的家庭，文化底蕴深厚。",
+    "meaning-english": "A family with a long tradition of scholarly pursuits; an educated household.",
+    "example-sentence": "他出身书香门第，从小饱读诗书。"
+  },
+  {
+    "character": "出",
+    "idiom": "出类拔萃",
+    "pinyin": "chū lèi bá cuì",
+    "meaning-chinese": "形容超出同类，高出众人。",
+    "meaning-english": "To stand out among peers; exceptional talent.",
+    "example-sentence": "她的成绩出类拔萃，名列全校第一。"
+  },
+  {
+    "character": "自",
+    "idiom": "自强不息",
+    "pinyin": "zì qiáng bù xī",
+    "meaning-chinese": "自己努力向上，永不停止。",
+    "meaning-english": "To strive constantly for self-improvement; unceasing self-improvement.",
+    "example-sentence": "中华民族自强不息，历经磨难而不倒。"
+  },
+  {
+    "character": "己",
+    "idiom": "知己知彼",
+    "pinyin": "zhī jǐ zhī bǐ",
+    "meaning-chinese": "了解自己，也了解对方，形容掌握情况，百战不殆。",
+    "meaning-english": "Know yourself and know your enemy; to have thorough understanding of both sides.",
+    "example-sentence": "知己知彼，百战不殆，这是兵法的基本原则。"
+  },
+  {
+    "character": "吃",
+    "idiom": "吃苦耐劳",
+    "pinyin": "chī kǔ nài láo",
+    "meaning-chinese": "能够承受艰苦，坚持劳动。",
+    "meaning-english": "To bear hardships and work hard; hardworking and tenacious.",
+    "example-sentence": "农民们吃苦耐劳，辛勤耕耘。"
+  },
+  {
+    "character": "山",
+    "idiom": "山穷水尽",
+    "pinyin": "shān qióng shuǐ jìn",
+    "meaning-chinese": "山和水都到了尽头，比喻走投无路，处于绝境。",
+    "meaning-english": "Mountains and rivers exhausted; at the end of one's rope.",
+    "example-sentence": "他山穷水尽，不知如何是好。"
+  },
+  {
+    "character": "羊",
+    "idiom": "亡羊补牢",
+    "pinyin": "wáng yáng bǔ láo",
+    "meaning-chinese": "羊丢失了再去修补羊圈，比喻出了问题后想办法补救。",
+    "meaning-english": "To mend the sheepfold after the sheep are lost; better late than never.",
+    "example-sentence": "虽然已经亡羊补牢，但及时改正错误仍然有意义。"
+  },
+  {
+    "character": "毛",
+    "idiom": "毛遂自荐",
+    "pinyin": "máo suì zì jiàn",
+    "meaning-chinese": "比喻自我推荐，主动请求担任某项工作。",
+    "meaning-english": "To recommend oneself; to volunteer one's services.",
+    "example-sentence": "他毛遂自荐，主动承担了这个艰难的任务。"
+  },
+  {
+    "character": "草",
+    "idiom": "草木皆兵",
+    "pinyin": "cǎo mù jiē bīng",
+    "meaning-chinese": "形容人在极度恐慌时，神经过敏，疑神疑鬼。",
+    "meaning-english": "Every bush and tree looks like an enemy; extreme nervousness and paranoia.",
+    "example-sentence": "敌军大败后，人心惶惶，草木皆兵。"
+  },
+  {
+    "character": "太",
+    "idiom": "太平盛世",
+    "pinyin": "tài píng shèng shì",
+    "meaning-chinese": "形容社会安定、繁荣昌盛的时代。",
+    "meaning-english": "A prosperous and peaceful era; golden age.",
+    "example-sentence": "人们都希望生活在太平盛世之中。"
+  },
+  {
+    "character": "阳",
+    "idiom": "阳春白雪",
+    "pinyin": "yáng chūn bái xuě",
+    "meaning-chinese": "比喻高深、不通俗的文学艺术作品。",
+    "meaning-english": "Refined and lofty artistic works; highbrow art.",
+    "example-sentence": "这首曲子是阳春白雪，懂欣赏的人不多。"
+  },
+  {
+    "character": "王",
+    "idiom": "称王称霸",
+    "pinyin": "chēng wáng chēng bà",
+    "meaning-chinese": "比喻凭借权势横行一方，欺压别人。",
+    "meaning-english": "To act like a king and hegemon; to dominate and bully others.",
+    "example-sentence": "他在这一带称王称霸，无人敢惹。"
+  },
+  {
+    "character": "三",
+    "idiom": "三心二意",
+    "pinyin": "sān xīn èr yì",
+    "meaning-chinese": "形容意志不坚定，犹豫不决，做事不专心。",
+    "meaning-english": "Half-hearted; lack of resolution; indecisive.",
+    "example-sentence": "做事情不能三心二意，要专心致志。"
+  },
+  {
+    "character": "包",
+    "idiom": "包罗万象",
+    "pinyin": "bāo luó wàn xiàng",
+    "meaning-chinese": "内容丰富，无所不包。",
+    "meaning-english": "To contain everything; all-encompassing.",
+    "example-sentence": "这部百科全书包罗万象，内容十分丰富。"
+  },
+  {
+    "character": "老",
+    "idiom": "老当益壮",
+    "pinyin": "lǎo dāng yì zhuàng",
+    "meaning-chinese": "年纪虽大，但志气豪迈，精力旺盛。",
+    "meaning-english": "Old but vigorous; growing stronger with age.",
+    "example-sentence": "他已七十岁，仍老当益壮，每天坚持锻炼。"
+  },
+  {
+    "character": "师",
+    "idiom": "师出有名",
+    "pinyin": "shī chū yǒu míng",
+    "meaning-chinese": "出兵有正当的理由；比喻做事有充分的理由。",
+    "meaning-english": "To have a just cause; to act with proper justification.",
+    "example-sentence": "我们这次行动师出有名，理由充分。"
+  },
+  {
+    "character": "安",
+    "idiom": "安居乐业",
+    "pinyin": "ān jū lè yè",
+    "meaning-chinese": "安定地生活，快乐地工作。",
+    "meaning-english": "To live in peace and work happily; to enjoy a stable and contented life.",
+    "example-sentence": "改革开放后，人民安居乐业，生活水平提高了。"
+  },
+  {
+    "character": "半",
+    "idiom": "半途而废",
+    "pinyin": "bàn tú ér fèi",
+    "meaning-chinese": "做事情做到一半就放弃了，不能坚持到底。",
+    "meaning-english": "To give up halfway; to leave something unfinished.",
+    "example-sentence": "无论做什么事，都不能半途而废。"
+  },
+  {
+    "character": "鸟",
+    "idiom": "鸟语花香",
+    "pinyin": "niǎo yǔ huā xiāng",
+    "meaning-chinese": "鸟在歌唱，花在飘香，形容春天美好的景色。",
+    "meaning-english": "Singing birds and fragrant flowers; a beautiful natural scene.",
+    "example-sentence": "春天来了，公园里鸟语花香，令人心旷神怡。"
+  },
+  {
+    "character": "竹",
+    "idiom": "胸有成竹",
+    "pinyin": "xiōng yǒu chéng zhú",
+    "meaning-chinese": "比喻做事之前已有完整的计划或成熟的方案。",
+    "meaning-english": "To have a well-thought-out plan; to be fully prepared.",
+    "example-sentence": "他胸有成竹地走上台，沉着应对每个问题。"
+  },
+  {
+    "character": "田",
+    "idiom": "沧海桑田",
+    "pinyin": "cāng hǎi sāng tián",
+    "meaning-chinese": "大海变成了种桑的田，比喻世事变化极大。",
+    "meaning-english": "The blue sea turning into mulberry fields; great changes over time.",
+    "example-sentence": "几十年过去，这里沧海桑田，已面目全非。"
+  },
+  {
+    "character": "象",
+    "idiom": "万象更新",
+    "pinyin": "wàn xiàng gēng xīn",
+    "meaning-chinese": "一切事物都换了新面貌。",
+    "meaning-english": "All things are renewed; everything starts afresh.",
+    "example-sentence": "新年到来，万象更新，大家充满希望。"
+  },
+  {
+    "character": "家",
+    "idiom": "家喻户晓",
+    "pinyin": "jiā yù hù xiǎo",
+    "meaning-chinese": "每家每户都知道，形容十分有名。",
+    "meaning-english": "Known to every household; a household name.",
+    "example-sentence": "这首歌家喻户晓，人人都会唱。"
+  },
+  {
+    "character": "刀",
+    "idiom": "刀山火海",
+    "pinyin": "dāo shān huǒ hǎi",
+    "meaning-chinese": "比喻极其危险的地方或处境。",
+    "meaning-english": "Mountains of knives and seas of fire; facing extreme danger.",
+    "example-sentence": "为了救人，他不惜赴刀山火海。"
+  },
+  {
+    "character": "网",
+    "idiom": "天罗地网",
+    "pinyin": "tiān luó dì wǎng",
+    "meaning-chinese": "形容到处都是罗网，无处可逃。",
+    "meaning-english": "Nets spread across heaven and earth; a tight net with no escape.",
+    "example-sentence": "警察布下天罗地网，罪犯无处可逃。"
+  },
+  {
+    "character": "在",
+    "idiom": "在所不辞",
+    "pinyin": "zài suǒ bù cí",
+    "meaning-chinese": "不管在什么情况下，都不推辞。",
+    "meaning-english": "Will not decline under any circumstances; willing at all costs.",
+    "example-sentence": "为了集体的利益，任何困难他都在所不辞。"
+  },
+  {
+    "character": "里",
+    "idiom": "里应外合",
+    "pinyin": "lǐ yìng wài hé",
+    "meaning-chinese": "外面进攻，里面接应，内外配合。",
+    "meaning-english": "To coordinate attacks from inside and outside; to cooperate from both ends.",
+    "example-sentence": "他们里应外合，很快攻下了城池。"
+  },
+  {
+    "character": "上",
+    "idiom": "蒸蒸日上",
+    "pinyin": "zhēng zhēng rì shàng",
+    "meaning-chinese": "形容事业、生活等一天比一天兴旺。",
+    "meaning-english": "To progress day by day; thriving and prosperous.",
+    "example-sentence": "公司在他的带领下蒸蒸日上。"
+  },
+  {
+    "character": "下",
+    "idiom": "下笔成章",
+    "pinyin": "xià bǐ chéng zhāng",
+    "meaning-chinese": "一落笔就写成文章，形容文思敏捷。",
+    "meaning-english": "To write fluently and effortlessly; a gifted and quick writer.",
+    "example-sentence": "他才思敏捷，下笔成章，令人佩服。"
+  },
+  {
+    "character": "大",
+    "idiom": "大公无私",
+    "pinyin": "dà gōng wú sī",
+    "meaning-chinese": "完全为公，没有私心。",
+    "meaning-english": "Completely selfless; devoted entirely to the public good.",
+    "example-sentence": "他大公无私，把个人利益置于集体之后。"
+  },
+  {
+    "character": "小",
+    "idiom": "小心翼翼",
+    "pinyin": "xiǎo xīn yì yì",
+    "meaning-chinese": "非常谨慎，一点也不敢疏忽。",
+    "meaning-english": "With great care and caution; very careful and meticulous.",
+    "example-sentence": "她小心翼翼地捧着那个珍贵的花瓶。"
+  },
+  {
+    "character": "来",
+    "idiom": "来日方长",
+    "pinyin": "lái rì fāng cháng",
+    "meaning-chinese": "将来的日子还很长，表示以后机会还多。",
+    "meaning-english": "The future is long; there will be plenty of time ahead.",
+    "example-sentence": "你们年轻，来日方长，要好好努力。"
+  },
+  {
+    "character": "哭",
+    "idiom": "哭笑不得",
+    "pinyin": "kū xiào bù dé",
+    "meaning-chinese": "哭也不是，笑也不是，形容处境尴尬，不知如何是好。",
+    "meaning-english": "Not knowing whether to laugh or cry; in an awkward situation.",
+    "example-sentence": "他的话让我哭笑不得，真不知该如何回应。"
+  },
+  {
+    "character": "笑",
+    "idiom": "笑里藏刀",
+    "pinyin": "xiào lǐ cáng dāo",
+    "meaning-chinese": "表面和善，内心险恶；比喻外表友好而内心阴险。",
+    "meaning-english": "A dagger hidden behind a smile; a hypocrite with hidden malice.",
+    "example-sentence": "他笑里藏刀，表面热情，实则处处陷害人。"
+  },
+  {
+    "character": "男",
+    "idiom": "男耕女织",
+    "pinyin": "nán gēng nǚ zhī",
+    "meaning-chinese": "男人耕田，女人织布，形容传统农耕社会的生活方式。",
+    "meaning-english": "Men plow and women weave; a traditional agrarian way of life.",
+    "example-sentence": "古代社会男耕女织，自给自足。"
+  },
+  {
+    "character": "果",
+    "idiom": "自食其果",
+    "pinyin": "zì shí qí guǒ",
+    "meaning-chinese": "自己吃自己种的果子，比喻自作自受，自食恶果。",
+    "meaning-english": "To eat the fruit of one's own actions; to reap what one sows.",
+    "example-sentence": "他害人终害己，现在自食其果。"
+  },
+  {
+    "character": "开",
+    "idiom": "开门见山",
+    "pinyin": "kāi mén jiàn shān",
+    "meaning-chinese": "打开门就能看到山，比喻说话写文章直截了当，不绕弯子。",
+    "meaning-english": "Open the door and see the mountain; to get straight to the point.",
+    "example-sentence": "他开门见山地说明了来意。"
+  },
+  {
+    "character": "瓜",
+    "idiom": "瓜田李下",
+    "pinyin": "guā tián lǐ xià",
+    "meaning-chinese": "在瓜田里弯腰，在李树下整冠，形容容易引起嫌疑的地方或情况。",
+    "meaning-english": "In a melon field or under a plum tree; in a situation that invites suspicion.",
+    "example-sentence": "瓜田李下，我们要注意自己的行为，避免误会。"
+  },
+  {
+    "character": "火",
+    "idiom": "火树银花",
+    "pinyin": "huǒ shù yín huā",
+    "meaning-chinese": "形容张灯结彩，灯光灿烂的景象。",
+    "meaning-english": "A fire tree and silver flowers; magnificent illuminated decorations.",
+    "example-sentence": "元宵节的夜晚，火树银花，美不胜收。"
+  },
+  {
+    "character": "花",
+    "idiom": "花好月圆",
+    "pinyin": "huā hǎo yuè yuán",
+    "meaning-chinese": "花儿盛开，月亮圆满，比喻幸福美满。",
+    "meaning-english": "Blooming flowers and a full moon; happiness and harmony.",
+    "example-sentence": "祝新人花好月圆，白头偕老。"
+  },
+  {
+    "character": "叶",
+    "idiom": "一叶知秋",
+    "pinyin": "yī yè zhī qiū",
+    "meaning-chinese": "从一片落叶可以知道秋天来了，比喻由细小的迹象可以推知全局。",
+    "meaning-english": "One fallen leaf heralds autumn; small signs reveal the overall situation.",
+    "example-sentence": "他一叶知秋，从细节中发现了问题所在。"
+  },
+  {
+    "character": "面",
+    "idiom": "面面俱到",
+    "pinyin": "miàn miàn jù dào",
+    "meaning-chinese": "各方面都照顾到，没有遗漏。",
+    "meaning-english": "To attend to every aspect; thorough and comprehensive.",
+    "example-sentence": "他在报告中面面俱到，考虑周全。"
+  },
+  {
+    "character": "关",
+    "idiom": "过关斩将",
+    "pinyin": "guò guān zhǎn jiàng",
+    "meaning-chinese": "比喻不断克服困难，战胜对手。",
+    "meaning-english": "To pass through checkpoints and slay generals; to overcome obstacles one by one.",
+    "example-sentence": "他一路过关斩将，终于赢得了冠军。"
+  },
+  {
+    "character": "两",
+    "idiom": "两全其美",
+    "pinyin": "liǎng quán qí měi",
+    "meaning-chinese": "两方面都能照顾到，都很美满。",
+    "meaning-english": "To satisfy both sides; the best of both worlds.",
+    "example-sentence": "这个方案两全其美，大家都满意。"
+  },
+  {
+    "character": "片",
+    "idiom": "片甲不留",
+    "pinyin": "piàn jiǎ bù liú",
+    "meaning-chinese": "一块铠甲也没有留下，形容战败后全军覆没。",
+    "meaning-english": "Not a single armor piece remains; completely annihilated.",
+    "example-sentence": "这场战役，敌军片甲不留，彻底溃败。"
+  },
+  {
+    "character": "画",
+    "idiom": "画龙点睛",
+    "pinyin": "huà lóng diǎn jīng",
+    "meaning-chinese": "比喻在关键处加上一笔，使全体更加生动传神。",
+    "meaning-english": "To draw a dragon and dot the eyes; to add the crucial finishing touch.",
+    "example-sentence": "他的建议画龙点睛，使这篇文章更加出色。"
+  },
+  {
+    "character": "笔",
+    "idiom": "笔耕不辍",
+    "pinyin": "bǐ gēng bù chuò",
+    "meaning-chinese": "勤奋写作，从不停止。",
+    "meaning-english": "To write diligently without stopping; persevering in writing.",
+    "example-sentence": "他笔耕不辍，一生写了大量的作品。"
+  },
+  {
+    "character": "长",
+    "idiom": "扬长避短",
+    "pinyin": "yáng cháng bì duǎn",
+    "meaning-chinese": "发挥自己的优势，避开自己的缺点。",
+    "meaning-english": "To highlight strengths and avoid weaknesses; to play to one's strengths.",
+    "example-sentence": "在工作中要懂得扬长避短，发挥优势。"
+  },
+  {
+    "character": "广",
+    "idiom": "广开言路",
+    "pinyin": "guǎng kāi yán lù",
+    "meaning-chinese": "广泛地开辟提意见的渠道，欢迎各方意见。",
+    "meaning-english": "To open wide channels for suggestions; to encourage free speech.",
+    "example-sentence": "领导广开言路，鼓励大家提出意见。"
+  },
+  {
+    "character": "多",
+    "idiom": "多多益善",
+    "pinyin": "duō duō yì shàn",
+    "meaning-chinese": "越多越好，形容多多益善。",
+    "meaning-english": "The more the better; in abundance.",
+    "example-sentence": "这种人才多多益善，我们需要更多。"
+  },
+  {
+    "character": "少",
+    "idiom": "少年老成",
+    "pinyin": "shào nián lǎo chéng",
+    "meaning-chinese": "年纪轻但处事稳重，言行举止像老成年人。",
+    "meaning-english": "Young but mature and composed; wise beyond one's years.",
+    "example-sentence": "他虽年幼，却少年老成，处事十分稳重。"
+  },
+  {
+    "character": "目",
+    "idiom": "目不转睛",
+    "pinyin": "mù bù zhuǎn jīng",
+    "meaning-chinese": "眼睛一直盯着，不转移目光，形容注意力高度集中。",
+    "meaning-english": "Without taking one's eyes off; to stare fixedly.",
+    "example-sentence": "他目不转睛地盯着屏幕，生怕错过任何细节。"
+  },
+  {
+    "character": "舌",
+    "idiom": "舌战群儒",
+    "pinyin": "shé zhàn qún rú",
+    "meaning-chinese": "指一个人与众多人辩论并取胜，形容能言善辩。",
+    "meaning-english": "To debate and triumph over many scholars; to win against all opposition in argument.",
+    "example-sentence": "他在辩论场上舌战群儒，展现出超凡的口才。"
+  },
+  {
+    "character": "手",
+    "idiom": "手忙脚乱",
+    "pinyin": "shǒu máng jiǎo luàn",
+    "meaning-chinese": "形容做事慌张，没有条理。",
+    "meaning-english": "Hands and feet in a flurry; rushed and chaotic.",
+    "example-sentence": "面对突发事件，他有些手忙脚乱，不知所措。"
+  },
+  {
+    "character": "足",
+    "idiom": "足智多谋",
+    "pinyin": "zú zhì duō móu",
+    "meaning-chinese": "智慧充足，谋略很多，形容很有智慧。",
+    "meaning-english": "Rich in wisdom and resourceful; very clever and strategic.",
+    "example-sentence": "诸葛亮足智多谋，是著名的军事谋略家。"
+  },
+  {
+    "character": "本",
+    "idiom": "本末倒置",
+    "pinyin": "běn mò dào zhì",
+    "meaning-chinese": "把主要的和次要的关系搞颠倒了。",
+    "meaning-english": "To put the cart before the horse; to reverse priorities.",
+    "example-sentence": "做事要分清主次，不能本末倒置。"
+  },
+  {
+    "character": "工",
+    "idiom": "鬼斧神工",
+    "pinyin": "guǐ fǔ shén gōng",
+    "meaning-chinese": "形容技艺极其高超，不是人力所能达到的。",
+    "meaning-english": "Work of gods; superb and breathtaking craftsmanship.",
+    "example-sentence": "这座雕塑真是鬼斧神工，令人叹为观止。"
+  },
+  {
+    "character": "走",
+    "idiom": "走马观花",
+    "pinyin": "zǒu mǎ guān huā",
+    "meaning-chinese": "骑马跑过去看花，比喻粗略地观察事物。",
+    "meaning-english": "To look at flowers while on horseback; a cursory and superficial glance.",
+    "example-sentence": "他只是走马观花地看了一遍，没有深入了解。"
+  },
+  {
+    "character": "飞",
+    "idiom": "飞黄腾达",
+    "pinyin": "fēi huáng téng dá",
+    "meaning-chinese": "形容仕途顺利，职位不断提升。",
+    "meaning-english": "To rise rapidly in power and position; to achieve great success and advancement.",
+    "example-sentence": "他经过多年奋斗，终于飞黄腾达。"
+  },
+  {
+    "character": "门",
+    "idiom": "门庭若市",
+    "pinyin": "mén tíng ruò shì",
+    "meaning-chinese": "形容来访的人很多，十分热闹。",
+    "meaning-english": "The courtyard is as busy as a marketplace; very popular and well-visited.",
+    "example-sentence": "他开店后生意兴隆，门庭若市。"
+  },
+  {
+    "character": "看",
+    "idiom": "刮目相看",
+    "pinyin": "guā mù xiāng kàn",
+    "meaning-chinese": "指用新的眼光来看待，表示对人的进步感到惊讶和佩服。",
+    "meaning-english": "To see with new eyes; to look at with fresh respect and surprise.",
+    "example-sentence": "经过这次表现，大家对他刮目相看。"
+  },
+  {
+    "character": "见",
+    "idiom": "见义勇为",
+    "pinyin": "jiàn yì yǒng wéi",
+    "meaning-chinese": "看到正义的事，勇敢地去做。",
+    "meaning-english": "To bravely do what is right; to act courageously for a just cause.",
+    "example-sentence": "他见义勇为，勇敢地制止了街头犯罪。"
+  },
+  {
+    "character": "问",
+    "idiom": "不耻下问",
+    "pinyin": "bù chǐ xià wèn",
+    "meaning-chinese": "不以向比自己学识差的人请教为耻。",
+    "meaning-english": "Not ashamed to ask those below; to humbly seek knowledge from anyone.",
+    "example-sentence": "学习要不耻下问，不懂就要虚心请教。"
+  },
+  {
+    "character": "头",
+    "idiom": "头头是道",
+    "pinyin": "tóu tóu shì dào",
+    "meaning-chinese": "说话或做事很有条理。",
+    "meaning-english": "To speak logically and coherently; to make perfect sense.",
+    "example-sentence": "他分析问题头头是道，条理分明。"
+  },
+  {
+    "character": "身",
+    "idiom": "身体力行",
+    "pinyin": "shēn tǐ lì xíng",
+    "meaning-chinese": "亲身体验，努力实践。",
+    "meaning-english": "To practice what one preaches; to lead by personal example.",
+    "example-sentence": "领导身体力行，带领大家共同奋斗。"
+  },
+  {
+    "character": "体",
+    "idiom": "体贴入微",
+    "pinyin": "tǐ tiē rù wēi",
+    "meaning-chinese": "关心体贴非常细致，无微不至。",
+    "meaning-english": "To be considerate in every detail; thoughtful and caring to the smallest degree.",
+    "example-sentence": "她对父母体贴入微，是个孝顺的孩子。"
+  },
+  {
+    "character": "牛",
+    "idiom": "牛刀小试",
+    "pinyin": "niú dāo xiǎo shì",
+    "meaning-chinese": "比喻有大才能的人在小事情上初露本领。",
+    "meaning-english": "To use a butcher's knife for a chicken; a talented person showing their skills on a minor task.",
+    "example-sentence": "这次比赛对他来说只是牛刀小试。"
+  },
+  {
+    "character": "井",
+    "idiom": "井井有条",
+    "pinyin": "jǐng jǐng yǒu tiáo",
+    "meaning-chinese": "形容做事有条理，整齐有序。",
+    "meaning-english": "In good order; well-organized and systematic.",
+    "example-sentence": "她把房间整理得井井有条。"
+  },
+  {
+    "character": "弓",
+    "idiom": "惊弓之鸟",
+    "pinyin": "jīng gōng zhī niǎo",
+    "meaning-chinese": "被弓箭吓过的鸟，形容受过惊吓后遇事过度害怕。",
+    "meaning-english": "A bird startled by a bowstring; a once-bitten, twice-shy person.",
+    "example-sentence": "经历过那次失败，他成了惊弓之鸟，做事畏首畏尾。"
+  },
+  {
+    "character": "心",
+    "idiom": "心想事成",
+    "pinyin": "xīn xiǎng shì chéng",
+    "meaning-chinese": "心里想的事情都能实现。",
+    "meaning-english": "To have all wishes come true; to achieve one's goals.",
+    "example-sentence": "祝你心想事成，万事如意！"
+  },
+  {
+    "character": "豆",
+    "idiom": "豆蔻年华",
+    "pinyin": "dòu kòu nián huá",
+    "meaning-chinese": "指女子十三四岁的年纪，形容青春少女的美好年华。",
+    "meaning-english": "The cardamom years; the beautiful early teenage years of a girl.",
+    "example-sentence": "她正值豆蔻年华，充满青春活力。"
+  },
+  {
+    "character": "六",
+    "idiom": "六神无主",
+    "pinyin": "liù shén wú zhǔ",
+    "meaning-chinese": "形容心慌意乱，不知怎么办好。",
+    "meaning-english": "All six senses in disorder; extremely flustered and at a loss.",
+    "example-sentence": "听到这个消息，她六神无主，不知如何是好。"
+  },
+  {
+    "character": "支",
+    "idiom": "独木难支",
+    "pinyin": "dú mù nán zhī",
+    "meaning-chinese": "一根木头难以支撑，比喻一个人的力量难以维持大局。",
+    "meaning-english": "A single post cannot hold up a building; one person cannot manage everything alone.",
+    "example-sentence": "这个任务太重了，独木难支，需要大家一起努力。"
+  },
+  {
+    "character": "条",
+    "idiom": "有条不紊",
+    "pinyin": "yǒu tiáo bù wěn",
+    "meaning-chinese": "形容做事有条理，不混乱。",
+    "meaning-english": "In perfect order; systematic and organized without confusion.",
+    "example-sentence": "他处理事务有条不紊，从不慌乱。"
+  },
+  {
+    "character": "九",
+    "idiom": "九牛一毛",
+    "pinyin": "jiǔ niú yī máo",
+    "meaning-chinese": "九头牛身上的一根毛，比喻极小的一部分。",
+    "meaning-english": "One hair from nine oxen; a drop in the bucket; a tiny fraction.",
+    "example-sentence": "这笔钱对他来说只是九牛一毛，毫不在乎。"
+  },
+  {
+    "character": "今",
+    "idiom": "今非昔比",
+    "pinyin": "jīn fēi xī bǐ",
+    "meaning-chinese": "现在的情况和以前大不相同，多指情况好多了。",
+    "meaning-english": "Today is not what it used to be; things have changed greatly for the better.",
+    "example-sentence": "经过多年发展，这里今非昔比，已是一片繁荣。"
+  },
+  {
+    "character": "华",
+    "idiom": "华而不实",
+    "pinyin": "huá ér bù shí",
+    "meaning-chinese": "形容外表好看，但内容空洞，缺乏实际内容。",
+    "meaning-english": "Flowery but lacking substance; superficially attractive but without real value.",
+    "example-sentence": "这篇文章华而不实，缺乏实质内容。"
+  },
+  {
+    "character": "文",
+    "idiom": "文质彬彬",
+    "pinyin": "wén zhì bīn bīn",
+    "meaning-chinese": "形容人举止文雅，言行有礼貌，温文尔雅。",
+    "meaning-english": "Refined and gentle; cultured and courteous in manner.",
+    "example-sentence": "他文质彬彬，举止优雅，深受大家喜爱。"
+  },
+  {
+    "character": "点",
+    "idiom": "点石成金",
+    "pinyin": "diǎn shí chéng jīng",
+    "meaning-chinese": "比喻把普通的事物变为珍贵的事物，也比喻修改文章使其出色。",
+    "meaning-english": "To turn stone into gold; to transform something ordinary into something valuable.",
+    "example-sentence": "好的编辑能点石成金，让文章焕然一新。"
+  },
+  {
+    "character": "说",
+    "idiom": "说一不二",
+    "pinyin": "shuō yī bù èr",
+    "meaning-chinese": "说出的话算数，不会改变，形容说话算话。",
+    "meaning-english": "To mean what one says; decisive and firm in keeping one's word.",
+    "example-sentence": "他向来说一不二，答应的事一定做到。"
+  },
+  {
+    "character": "语",
+    "idiom": "语重心长",
+    "pinyin": "yǔ zhòng xīn cháng",
+    "meaning-chinese": "话语深刻，感情真挚，形容语言真诚且富有教育意义。",
+    "meaning-english": "Words that carry weight and sincerity; earnest and deeply felt advice.",
+    "example-sentence": "老师语重心长地嘱咐我们要努力学习。"
+  },
+  {
+    "character": "月",
+    "idiom": "岁月如梭",
+    "pinyin": "suì yuè rú suō",
+    "meaning-chinese": "形容时间过得很快，像织布的梭子来回穿梭一样。",
+    "meaning-english": "Time flies like a shuttle; time passes swiftly.",
+    "example-sentence": "岁月如梭，转眼间孩子都长大成人了。"
+  },
+  {
+    "character": "天",
+    "idiom": "天长地久",
+    "pinyin": "tiān cháng dì jiǔ",
+    "meaning-chinese": "形容时间极长，永久不变。",
+    "meaning-english": "As long as heaven and earth endure; lasting forever.",
+    "example-sentence": "他们的友谊天长地久，始终如一。"
+  },
+  {
+    "character": "地",
+    "idiom": "地大物博",
+    "pinyin": "dì dà wù bó",
+    "meaning-chinese": "形容国家疆土广大，物产丰富。",
+    "meaning-english": "Vast territory and abundant resources; a great and rich land.",
+    "example-sentence": "中国地大物博，自然资源十分丰富。"
+  },
+  {
+    "character": "风",
+    "idiom": "风和日丽",
+    "pinyin": "fēng hé rì lì",
+    "meaning-chinese": "形容天气晴朗温和。",
+    "meaning-english": "A gentle breeze and sunny weather; fine and pleasant weather.",
+    "example-sentence": "春天里风和日丽，是出游的好时机。"
+  },
+  {
+    "character": "雷",
+    "idiom": "雷厉风行",
+    "pinyin": "léi lì fēng xíng",
+    "meaning-chinese": "像雷声那样猛烈，像风那样迅速，形容做事迅速有力。",
+    "meaning-english": "As swift as thunder and wind; to act vigorously and decisively.",
+    "example-sentence": "他雷厉风行，下达命令后立刻执行。"
+  },
+  {
+    "character": "电",
+    "idiom": "电光石火",
+    "pinyin": "diàn guāng shí huǒ",
+    "meaning-chinese": "形容时间极短，一瞬即逝。",
+    "meaning-english": "Lightning and a spark from flint; in the blink of an eye; instantaneous.",
+    "example-sentence": "那一刻犹如电光石火，转瞬即逝。"
+  },
+  {
+    "character": "水",
+    "idiom": "水到渠成",
+    "pinyin": "shuǐ dào qú chéng",
+    "meaning-chinese": "水来了，自然会形成水渠，比喻条件具备了，事情自然成功。",
+    "meaning-english": "When water flows, a channel forms; things will naturally fall into place when conditions are right.",
+    "example-sentence": "只要努力学习，成功水到渠成。"
+  },
+  {
+    "character": "寸",
+    "idiom": "寸步不离",
+    "pinyin": "cùn bù bù lí",
+    "meaning-chinese": "一步也不离开，形容跟随得很紧，或非常专注。",
+    "meaning-english": "Not to move an inch from; to stay very close to someone.",
+    "example-sentence": "她寸步不离地守护在病床旁。"
+  },
+  {
+    "character": "方",
+    "idiom": "方兴未艾",
+    "pinyin": "fāng xīng wèi ài",
+    "meaning-chinese": "事物正在兴起，没有停止的迹象，形容势头旺盛。",
+    "meaning-english": "Growing vigorously with no signs of slowing; in full swing.",
+    "example-sentence": "这个行业方兴未艾，前景十分光明。"
+  },
+  {
+    "character": "正",
+    "idiom": "正人君子",
+    "pinyin": "zhèng rén jūn zǐ",
+    "meaning-chinese": "品德高尚、行为正直的人。",
+    "meaning-english": "An upright gentleman; a man of integrity and virtue.",
+    "example-sentence": "他是个正人君子，从不做违背良心的事。"
+  },
+  {
+    "character": "反",
+    "idiom": "反客为主",
+    "pinyin": "fǎn kè wéi zhǔ",
+    "meaning-chinese": "客人变成主人，比喻变被动为主动。",
+    "meaning-english": "The guest becomes the host; to turn from a passive to an active role.",
+    "example-sentence": "经过努力，他反客为主，掌握了主动权。"
+  },
+  {
+    "character": "白",
+    "idiom": "白手起家",
+    "pinyin": "bái shǒu qǐ jiā",
+    "meaning-chinese": "形容原来什么都没有，靠自己的努力建立事业。",
+    "meaning-english": "To start from scratch; to build from nothing through one's own effort.",
+    "example-sentence": "他白手起家，从零开始创建了这家大公司。"
+  },
+  {
+    "character": "好",
+    "idiom": "好学不倦",
+    "pinyin": "hào xué bù juàn",
+    "meaning-chinese": "非常喜欢学习，学而不厌。",
+    "meaning-english": "To love learning without tiring; diligent and tireless in studying.",
+    "example-sentence": "他好学不倦，坚持每天读书。"
+  },
+  {
+    "character": "对",
+    "idiom": "对症下药",
+    "pinyin": "duì zhèng xià yào",
+    "meaning-chinese": "比喻针对具体情况采取相应措施，解决问题。",
+    "meaning-english": "To prescribe medicine for a specific illness; to address the specific problem.",
+    "example-sentence": "解决问题要对症下药，找准原因才能有效解决。"
+  },
+  {
+    "character": "古",
+    "idiom": "古色古香",
+    "pinyin": "gǔ sè gǔ xiāng",
+    "meaning-chinese": "形容器物、建筑等具有古朴典雅的风格或气息。",
+    "meaning-english": "Of classical and antique appeal; full of charm and history.",
+    "example-sentence": "这座古镇古色古香，吸引了许多游客。"
+  },
+  {
+    "character": "旧",
+    "idiom": "喜新厌旧",
+    "pinyin": "xǐ xīn yàn jiù",
+    "meaning-chinese": "喜欢新的，厌弃旧的，形容对旧事物不珍惜，容易喜新厌旧。",
+    "meaning-english": "To love the new and loathe the old; fickleness.",
+    "example-sentence": "做人不能喜新厌旧，要懂得珍惜已有的。"
+  },
+  {
+    "character": "有",
+    "idiom": "有备无患",
+    "pinyin": "yǒu bèi wú huàn",
+    "meaning-chinese": "事先做好准备，就不会有忧患。",
+    "meaning-english": "To be prepared avoids calamity; preparedness prevents troubles.",
+    "example-sentence": "有备无患，我们要提前做好应急预案。"
+  },
+  {
+    "character": "云",
+    "idiom": "云消雾散",
+    "pinyin": "yún xiāo wù sàn",
+    "meaning-chinese": "形容疑虑、误会等消除，事情明朗化。",
+    "meaning-english": "Clouds and mist disperse; troubles or confusion clear away.",
+    "example-sentence": "经过一番解释，误会云消雾散。"
+  },
+  {
+    "character": "甲",
+    "idiom": "坚甲利兵",
+    "pinyin": "jiān jiǎ lì bīng",
+    "meaning-chinese": "坚固的铠甲，锋利的兵器，形容装备精良，实力强大。",
+    "meaning-english": "Strong armor and sharp weapons; a well-equipped and powerful military force.",
+    "example-sentence": "他们坚甲利兵，做好了战斗准备。"
+  },
+  {
+    "character": "丁",
+    "idiom": "目不识丁",
+    "pinyin": "mù bù shí dīng",
+    "meaning-chinese": "形容一个字都不认识，完全不识字。",
+    "meaning-english": "Not to recognize even the character 丁; completely illiterate.",
+    "example-sentence": "他从小没有机会读书，目不识丁。"
+  },
+  {
+    "character": "前",
+    "idiom": "前途无量",
+    "pinyin": "qián tú wú liàng",
+    "meaning-chinese": "形容前途非常广阔，发展潜力很大。",
+    "meaning-english": "Boundless prospects; a very bright future.",
+    "example-sentence": "这个年轻人才华出众，前途无量。"
+  },
+  {
+    "character": "后",
+    "idiom": "后来居上",
+    "pinyin": "hòu lái jū shàng",
+    "meaning-chinese": "后来的人或事物超过了先来的，形容进步迅速。",
+    "meaning-english": "The latecomer surpasses the old-timer; to overtake predecessors.",
+    "example-sentence": "他努力学习，终于后来居上，成绩名列前茅。"
+  },
+  {
+    "character": "左",
+    "idiom": "左右逢源",
+    "pinyin": "zuǒ yòu féng yuán",
+    "meaning-chinese": "比喻做事得心应手，各方面都能顺利进行。",
+    "meaning-english": "To find a spring on both left and right; to achieve success easily from all sides.",
+    "example-sentence": "他能言善道，处事灵活，做任何事都左右逢源。"
+  },
+  {
+    "character": "右",
+    "idiom": "无出其右",
+    "pinyin": "wú chū qí yòu",
+    "meaning-chinese": "没有超过它的，是最好的。",
+    "meaning-english": "None surpasses it; the very best.",
+    "example-sentence": "他的书法造诣之深，无出其右。"
+  },
+  {
+    "character": "中",
+    "idiom": "中流砥柱",
+    "pinyin": "zhōng liú dǐ zhù",
+    "meaning-chinese": "比喻在艰难环境中坚强有力地起支柱作用的人或集体。",
+    "meaning-english": "A pillar in the middle of a stream; a backbone or stabilizing force in difficult times.",
+    "example-sentence": "他是公司的中流砥柱，大家都依赖他。"
+  },
+  {
+    "character": "间",
+    "idiom": "间不容发",
+    "pinyin": "jiān bù róng fà",
+    "meaning-chinese": "形容中间没有一点空隙，非常紧迫或危急。",
+    "meaning-english": "Not even a hair can fit in between; extremely tight, urgent, or critical.",
+    "example-sentence": "两辆车之间间不容发，险些相撞。"
+  },
+  {
+    "character": "边",
+    "idiom": "无边无际",
+    "pinyin": "wú biān wú jì",
+    "meaning-chinese": "形容范围极广，没有边界。",
+    "meaning-english": "Boundless and limitless; endless.",
+    "example-sentence": "大海无边无际，令人心旷神怡。"
+  },
+  {
+    "character": "同",
+    "idiom": "同甘共苦",
+    "pinyin": "tóng gān gòng kǔ",
+    "meaning-chinese": "一起享受快乐，共同承担苦难，形容共同经历一切。",
+    "meaning-english": "To share joys and sorrows together; through thick and thin.",
+    "example-sentence": "夫妻应该同甘共苦，携手面对生活中的一切。"
+  },
+  {
+    "character": "学",
+    "idiom": "学无止境",
+    "pinyin": "xué wú zhǐ jìng",
+    "meaning-chinese": "知识是无穷无尽的，学习永远没有尽头。",
+    "meaning-english": "Learning has no end; there is always more to learn.",
+    "example-sentence": "学无止境，我们应该不断追求进步。"
+  },
+  {
+    "character": "朋",
+    "idiom": "酒肉朋友",
+    "pinyin": "jiǔ ròu péng yǒu",
+    "meaning-chinese": "只在吃喝上交往的朋友，形容交情不深、不真实的朋友。",
+    "meaning-english": "A fair-weather friend who only comes for food and drink; an insincere friend.",
+    "example-sentence": "他结交了许多酒肉朋友，真正危难时却无人相助。"
+  },
+  {
+    "character": "友",
+    "idiom": "良师益友",
+    "pinyin": "liáng shī yì yǒu",
+    "meaning-chinese": "好的老师和有益的朋友，形容对自己帮助很大的人。",
+    "meaning-english": "A good teacher and helpful friend; a beneficial mentor and companion.",
+    "example-sentence": "他是我的良师益友，对我的成长帮助很大。"
+  },
+  {
+    "character": "坐",
+    "idiom": "坐井观天",
+    "pinyin": "zuò jǐng guān tiān",
+    "meaning-chinese": "坐在井里看天，比喻眼界狭小，所见有限。",
+    "meaning-english": "To sit in a well and look at the sky; to have a narrow, limited view.",
+    "example-sentence": "不要坐井观天，要多出去看看外面的世界。"
+  },
+  {
+    "character": "高",
+    "idiom": "高瞻远瞩",
+    "pinyin": "gāo zhān yuǎn zhǔ",
+    "meaning-chinese": "站得高，看得远，比喻有远大的目光和战略眼光。",
+    "meaning-english": "To stand high and see far; visionary and far-sighted.",
+    "example-sentence": "领导者要高瞻远瞩，为未来制定长远规划。"
+  },
+  {
+    "character": "发",
+    "idiom": "发愤图强",
+    "pinyin": "fā fèn tú qiáng",
+    "meaning-chinese": "下定决心，努力奋斗，谋求强大。",
+    "meaning-english": "To work hard with determination to achieve strength; to strive with great resolve.",
+    "example-sentence": "他发愤图强，经过多年努力终于成功。"
+  },
+  {
+    "character": "直",
+    "idiom": "直言不讳",
+    "pinyin": "zhí yán bù huì",
+    "meaning-chinese": "说话直截了当，不隐讳，毫无保留地说出真实想法。",
+    "meaning-english": "To speak frankly without hesitation; to speak one's mind openly.",
+    "example-sentence": "他直言不讳地指出了问题所在。"
+  },
+  {
+    "character": "起",
+    "idiom": "起死回生",
+    "pinyin": "qǐ sǐ huí shēng",
+    "meaning-chinese": "把快死的人救活，比喻使处于绝境的事物重新振兴。",
+    "meaning-english": "To bring the dead back to life; to revive a hopeless situation.",
+    "example-sentence": "经过医生的全力抢救，病人起死回生。"
+  },
+  {
+    "character": "回",
+    "idiom": "妙手回春",
+    "pinyin": "miào shǒu huí chūn",
+    "meaning-chinese": "称赞医生医术高明，能治愈疑难病症。",
+    "meaning-english": "A skillful hand brings spring back; to effect a miraculous cure.",
+    "example-sentence": "这位老中医妙手回春，治好了许多疑难杂症。"
+  },
+  {
+    "character": "周",
+    "idiom": "周而复始",
+    "pinyin": "zhōu ér fù shǐ",
+    "meaning-chinese": "一圈又一圈地循环往复，不断重复。",
+    "meaning-english": "To go around and start again; cycle after cycle without end.",
+    "example-sentence": "四季周而复始，循环交替。"
+  },
+  {
+    "character": "末",
+    "idiom": "细枝末节",
+    "pinyin": "xì zhī mò jié",
+    "meaning-chinese": "比喻事物无关紧要的部分，或细小的环节。",
+    "meaning-english": "Minor details; trivial and unimportant matters.",
+    "example-sentence": "不要在细枝末节上浪费时间，要抓住重点。"
+  },
+  {
+    "character": "鸡",
+    "idiom": "闻鸡起舞",
+    "pinyin": "wén jī qǐ wǔ",
+    "meaning-chinese": "听到鸡鸣就起床练武，形容勤奋努力，不懈奋斗。",
+    "meaning-english": "To hear the cock crow and rise to practice; to work diligently without wasting time.",
+    "example-sentence": "他闻鸡起舞，每天早起练习，终于学有所成。"
+  },
+  {
+    "character": "饭",
+    "idiom": "家常便饭",
+    "pinyin": "jiā cháng biàn fàn",
+    "meaning-chinese": "家里日常吃的普通饭菜，比喻经常发生的平常事。",
+    "meaning-english": "Ordinary home cooking; a common and everyday occurrence.",
+    "example-sentence": "对他来说，加班已经是家常便饭了。"
+  },
+  {
+    "character": "元",
+    "idiom": "一元复始",
+    "pinyin": "yī yuán fù shǐ",
+    "meaning-chinese": "新的一年开始，万物更新，常用于新年祝词。",
+    "meaning-english": "The new year begins; everything starts anew at the new year.",
+    "example-sentence": "一元复始，万象更新，祝大家新年快乐！"
+  },
+  {
+    "character": "饱",
+    "idiom": "饱经风霜",
+    "pinyin": "bǎo jīng fēng shuāng",
+    "meaning-chinese": "经历了很多艰难困苦，饱尝风霜。",
+    "meaning-english": "Seasoned by wind and frost; experienced through many hardships.",
+    "example-sentence": "这位老人饱经风霜，一生历尽艰辛。"
+  },
+  {
+    "character": "饼",
+    "idiom": "画饼充饥",
+    "pinyin": "huà bǐng chōng jī",
+    "meaning-chinese": "画一个饼来充饥，比喻用空想来安慰自己。",
+    "meaning-english": "To draw a cake to satisfy hunger; to comfort oneself with illusions.",
+    "example-sentence": "空谈理想，没有行动，无异于画饼充饥。"
+  },
+  {
+    "character": "干",
+    "idiom": "干柴烈火",
+    "pinyin": "gān chái liè huǒ",
+    "meaning-chinese": "干燥的柴遇上猛烈的火，比喻双方情绪激烈或感情极为炽热。",
+    "meaning-english": "Dry wood and fierce fire; intensely passionate or fiery.",
+    "example-sentence": "两人性格相似，相遇如干柴烈火，一拍即合。"
+  },
+  {
+    "character": "狗",
+    "idiom": "狗急跳墙",
+    "pinyin": "gǒu jí tiào qiáng",
+    "meaning-chinese": "狗被逼急了会跳墙，比喻坏人走投无路时会铤而走险。",
+    "meaning-english": "A desperate dog will jump over a wall; a desperate person will resort to extreme measures.",
+    "example-sentence": "不要把人逼得太急，狗急跳墙，后果难以预料。"
+  },
+  {
+    "character": "喜",
+    "idiom": "喜出望外",
+    "pinyin": "xǐ chū wàng wài",
+    "meaning-chinese": "遇到的好事超出了预料，形容非常高兴，出乎意料地高兴。",
+    "meaning-english": "To be pleasantly surprised; to be overjoyed beyond expectation.",
+    "example-sentence": "收到录取通知书，他喜出望外。"
+  },
+  {
+    "character": "欢",
+    "idiom": "欢天喜地",
+    "pinyin": "huān tiān xǐ dì",
+    "meaning-chinese": "形容非常高兴，欢喜极了。",
+    "meaning-english": "With great joy; extremely happy and delighted.",
+    "example-sentence": "过年时，孩子们欢天喜地，快乐无比。"
+  },
+  {
+    "character": "肉",
+    "idiom": "弱肉强食",
+    "pinyin": "ruò ròu qiáng shí",
+    "meaning-chinese": "弱者被强者吃掉，比喻弱者被强者欺凌吞并。",
+    "meaning-english": "The weak are prey to the strong; survival of the fittest; the law of the jungle.",
+    "example-sentence": "自然界弱肉强食，竞争十分激烈。"
+  },
+  {
+    "character": "采",
+    "idiom": "神采飞扬",
+    "pinyin": "shén cǎi fēi yáng",
+    "meaning-chinese": "形容精神饱满，容光焕发。",
+    "meaning-english": "Radiant and spirited; full of energy and vitality.",
+    "example-sentence": "他神采飞扬地走上台，充满自信。"
+  },
+  {
+    "character": "歌",
+    "idiom": "载歌载舞",
+    "pinyin": "zài gē zài wǔ",
+    "meaning-chinese": "边唱歌边跳舞，形容欢乐热闹的场面。",
+    "meaning-english": "Singing and dancing together; in a festive and joyful atmosphere.",
+    "example-sentence": "节日里，人们载歌载舞，庆祝丰收。"
+  },
+  {
+    "character": "唱",
+    "idiom": "一唱一和",
+    "pinyin": "yī chàng yī hè",
+    "meaning-chinese": "一个唱，另一个应和，比喻两人互相配合，相互呼应。",
+    "meaning-english": "One sings and another echoes; to support and echo each other.",
+    "example-sentence": "他们俩一唱一和，配合得天衣无缝。"
+  },
+  {
+    "character": "青",
+    "idiom": "青出于蓝",
+    "pinyin": "qīng chū yú lán",
+    "meaning-chinese": "青色是从蓝草中提取的，却比蓝草更蓝，比喻学生超过了老师。",
+    "meaning-english": "Blue comes from indigo but is bluer; students surpass their teachers.",
+    "example-sentence": "这位学生青出于蓝，成就远超其师。"
+  },
+  {
+    "character": "汤",
+    "idiom": "赴汤蹈火",
+    "pinyin": "fù tāng dǎo huǒ",
+    "meaning-chinese": "形容不怕任何艰险，奋勇向前。",
+    "meaning-english": "To plunge into boiling water and tread on fire; to brave any danger without fear.",
+    "example-sentence": "为了朋友，他愿意赴汤蹈火，在所不辞。"
+  },
+  {
+    "character": "香",
+    "idiom": "天香国色",
+    "pinyin": "tiān xiāng guó sè",
+    "meaning-chinese": "形容花卉或美女极其美丽，超凡出众。",
+    "meaning-english": "Heavenly fragrance and national beauty; exceptionally beautiful beyond compare.",
+    "example-sentence": "这朵牡丹天香国色，令人惊艳。"
+  },
+  {
+    "character": "用",
+    "idiom": "物尽其用",
+    "pinyin": "wù jìn qí yòng",
+    "meaning-chinese": "让每一样东西都发挥它应有的作用，充分利用。",
+    "meaning-english": "To make full use of everything; to put all things to their best use.",
+    "example-sentence": "我们要物尽其用，不浪费任何资源。"
+  },
+  {
+    "character": "巾",
+    "idiom": "巾帼英雄",
+    "pinyin": "jīn guó yīng xióng",
+    "meaning-chinese": "指女性中的英雄人物，女英雄。",
+    "meaning-english": "A female hero; a woman of great courage and achievement.",
+    "example-sentence": "花木兰是中国历史上著名的巾帼英雄。"
+  },
+  {
+    "character": "洗",
+    "idiom": "洗心革面",
+    "pinyin": "xǐ xīn gé miàn",
+    "meaning-chinese": "洗涤心灵，改变面目，比喻彻底改正错误，重新做人。",
+    "meaning-english": "To wash one's heart and turn over a new face; to make a fresh start and reform.",
+    "example-sentence": "他痛改前非，洗心革面，决心重新做人。"
+  },
+  {
+    "character": "要",
+    "idiom": "要言不烦",
+    "pinyin": "yào yán bù fán",
+    "meaning-chinese": "说话简洁，切中要点，不啰嗦。",
+    "meaning-english": "Brief and to the point; concise and essential without unnecessary words.",
+    "example-sentence": "他发言要言不烦，言简意赅，大家听得明白。"
+  },
+  {
+    "character": "放",
+    "idiom": "放虎归山",
+    "pinyin": "fàng hǔ guī shān",
+    "meaning-chinese": "把老虎放回山中，比喻放走敌人，后患无穷。",
+    "meaning-english": "To let a tiger return to the mountains; to let a dangerous enemy escape.",
+    "example-sentence": "放虎归山，必留后患，处置要谨慎。"
+  },
+  {
+    "character": "冲",
+    "idiom": "首当其冲",
+    "pinyin": "shǒu dāng qí chōng",
+    "meaning-chinese": "比喻最先受到攻击或首先受到损害。",
+    "meaning-english": "To be the first to bear the brunt; to be most directly affected.",
+    "example-sentence": "地震发生后，沿海地区首当其冲，受灾最重。"
+  },
+  {
+    "character": "东",
+    "idiom": "东山再起",
+    "pinyin": "dōng shān zài qǐ",
+    "meaning-chinese": "比喻失败后重新振作，东山再起。",
+    "meaning-english": "To rise again from the east mountain; to stage a comeback.",
+    "example-sentence": "他失败后没有气馁，重整旗鼓，东山再起。"
+  },
+  {
+    "character": "西",
+    "idiom": "东奔西走",
+    "pinyin": "dōng bēn xī zǒu",
+    "meaning-chinese": "形容四处奔忙，到处跑动。",
+    "meaning-english": "To run east and west; to rush about in all directions; to be very busy.",
+    "example-sentence": "为了生计，他东奔西走，十分辛苦。"
+  },
+  {
+    "character": "到",
+    "idiom": "说到做到",
+    "pinyin": "shuō dào zuò dào",
+    "meaning-chinese": "说了就做，言出必行，形容说话算数。",
+    "meaning-english": "To do what one says; to match words with deeds.",
+    "example-sentence": "他是个说到做到的人，从不食言。"
+  },
+  {
+    "character": "先",
+    "idiom": "先发制人",
+    "pinyin": "xiān fā zhì rén",
+    "meaning-chinese": "先采取行动来控制对方，取得主动权。",
+    "meaning-english": "To strike first to gain mastery; to preemptively take control.",
+    "example-sentence": "比赛中，他先发制人，率先进攻。"
+  },
+  {
+    "character": "请",
+    "idiom": "请君入瓮",
+    "pinyin": "qǐng jūn rù wèng",
+    "meaning-chinese": "用别人对付自己的办法来对付别人。",
+    "meaning-english": "To invite someone into the vat; to turn someone's own trap against them.",
+    "example-sentence": "他将计就计，请君入瓮，让对手自食其果。"
+  },
+  {
+    "character": "变",
+    "idiom": "变幻莫测",
+    "pinyin": "biàn huàn mò cè",
+    "meaning-chinese": "形容变化多端，难以预测。",
+    "meaning-english": "Unpredictable and ever-changing; beyond prediction.",
+    "example-sentence": "天气变幻莫测，出门要带好雨具。"
+  },
+  {
+    "character": "双",
+    "idiom": "双管齐下",
+    "pinyin": "shuāng guǎn qí xià",
+    "meaning-chinese": "两支笔同时画，比喻同时使用两种方法。",
+    "meaning-english": "To use two brushes simultaneously; to work on two fronts at the same time.",
+    "example-sentence": "我们要双管齐下，同时从两个方面解决问题。"
+  },
+  {
+    "character": "皮",
+    "idiom": "皮开肉绽",
+    "pinyin": "pí kāi ròu zhàn",
+    "meaning-chinese": "皮肉都裂开了，形容被打得很重，伤势严重。",
+    "meaning-english": "Skin torn and flesh gaping; severely beaten.",
+    "example-sentence": "他被打得皮开肉绽，伤痕累累。"
+  },
+  {
+    "character": "服",
+    "idiom": "心服口服",
+    "pinyin": "xīn fú kǒu fú",
+    "meaning-chinese": "心里和口头都表示服气，完全信服。",
+    "meaning-english": "Convinced in heart and mouth; to sincerely and completely submit.",
+    "example-sentence": "他的分析有理有据，令人心服口服。"
+  },
+  {
+    "character": "色",
+    "idiom": "声色俱厉",
+    "pinyin": "shēng sè jù lì",
+    "meaning-chinese": "说话时声音和面色都很严厉。",
+    "meaning-english": "Stern in both voice and countenance; very severe and solemn.",
+    "example-sentence": "老师声色俱厉地批评了犯错的学生。"
+  },
+  {
+    "character": "红",
+    "idiom": "万紫千红",
+    "pinyin": "wàn zǐ qiān hóng",
+    "meaning-chinese": "形容百花盛开，色彩艳丽。",
+    "meaning-english": "Thousands of purples and reds; a riot of color; vibrant and colorful.",
+    "example-sentence": "春天到了，公园里万紫千红，百花争艳。"
+  },
+  {
+    "character": "动",
+    "idiom": "动人心弦",
+    "pinyin": "dòng rén xīn xián",
+    "meaning-chinese": "形容使人感动，触动人的心灵。",
+    "meaning-english": "To touch the heartstrings; deeply moving and touching.",
+    "example-sentence": "这首歌动人心弦，令许多人流下了眼泪。"
+  },
+  {
+    "character": "作",
+    "idiom": "作茧自缚",
+    "pinyin": "zuò jiǎn zì fù",
+    "meaning-chinese": "蚕作茧把自己包住，比喻自己给自己带来麻烦或束缚。",
+    "meaning-english": "To spin a cocoon around oneself; to be trapped by one's own doing.",
+    "example-sentence": "他作茧自缚，因为自己的错误决定而陷入困境。"
+  },
+  {
+    "character": "快",
+    "idiom": "快马加鞭",
+    "pinyin": "kuài mǎ jiā biān",
+    "meaning-chinese": "跑得快的马再加鞭，比喻进一步加快速度。",
+    "meaning-english": "To whip a fast horse; to accelerate even further.",
+    "example-sentence": "工程进展顺利，我们要快马加鞭，争取提前完成。"
+  },
+  {
+    "character": "拾",
+    "idiom": "拾人牙慧",
+    "pinyin": "shí rén yá huì",
+    "meaning-chinese": "比喻拾取别人的言论见解，当作自己的来发表。",
+    "meaning-english": "To pick up others' leftover wisdom; to plagiarize others' ideas.",
+    "example-sentence": "写作要有独到见解，不能只是拾人牙慧。"
+  },
+  {
+    "character": "穿",
+    "idiom": "穿针引线",
+    "pinyin": "chuān zhēn yǐn xiàn",
+    "meaning-chinese": "比喻为双方牵线搭桥，做中间人。",
+    "meaning-english": "To thread a needle; to act as a go-between or matchmaker.",
+    "example-sentence": "她在两人之间穿针引线，促成了这次合作。"
+  },
+  {
+    "character": "事",
+    "idiom": "事半功倍",
+    "pinyin": "shì bàn gōng bèi",
+    "meaning-chinese": "做事只用一半的力气，却取得双倍的效果。",
+    "meaning-english": "Half the effort, double the result; very efficient.",
+    "example-sentence": "掌握正确的学习方法，可以事半功倍。"
+  },
+  {
+    "character": "做",
+    "idiom": "做贼心虚",
+    "pinyin": "zuò zéi xīn xū",
+    "meaning-chinese": "做了坏事的人，心里总是忐忑不安，怕被发现。",
+    "meaning-english": "A thief has a guilty conscience; to feel nervous because of one's wrongdoing.",
+    "example-sentence": "他做贼心虚，看到警察就慌张起来。"
+  },
+  {
+    "character": "甜",
+    "idiom": "甜言蜜语",
+    "pinyin": "tián yán mì yǔ",
+    "meaning-chinese": "形容说话甜美，多为奉承或讨好别人的话。",
+    "meaning-english": "Sweet words and honeyed phrases; flattery and honeyed words.",
+    "example-sentence": "他用甜言蜜语哄骗了很多人。"
+  },
+  {
+    "character": "苦",
+    "idiom": "苦尽甘来",
+    "pinyin": "kǔ jìn gān lái",
+    "meaning-chinese": "苦难结束了，幸福生活来临，形容艰难之后有好的结果。",
+    "meaning-english": "Bitterness ends and sweetness comes; after hardship comes happiness.",
+    "example-sentence": "坚持下去，苦尽甘来，一切都会好的。"
+  },
+  {
+    "character": "臭",
+    "idiom": "臭名昭著",
+    "pinyin": "chòu míng zhāo zhù",
+    "meaning-chinese": "坏名声人人皆知，形容名声极差。",
+    "meaning-english": "Notorious; of very bad reputation known to all.",
+    "example-sentence": "这个骗子臭名昭著，人人都知道他的劣行。"
+  },
+  {
+    "character": "生",
+    "idiom": "生龙活虎",
+    "pinyin": "shēng lóng huó hǔ",
+    "meaning-chinese": "形容活泼矫健，富有生气。",
+    "meaning-english": "Like a lively dragon and vivid tiger; full of energy and vigor.",
+    "example-sentence": "孩子们生龙活虎，在操场上尽情玩耍。"
+  },
+  {
+    "character": "重",
+    "idiom": "重于泰山",
+    "pinyin": "zhòng yú tài shān",
+    "meaning-chinese": "比泰山还重，形容意义极大或价值极高。",
+    "meaning-english": "Heavier than Mount Tai; of the utmost importance.",
+    "example-sentence": "为人民服务而死，重于泰山。"
+  },
+  {
+    "character": "喝",
+    "idiom": "喝西北风",
+    "pinyin": "hē xī běi fēng",
+    "meaning-chinese": "比喻没有东西吃，挨饿受冻。",
+    "meaning-english": "To drink the northwest wind; to go hungry; to have nothing to eat.",
+    "example-sentence": "没有工作就只能喝西北风，要努力找生计。"
+  },
+  {
+    "character": "甘",
+    "idiom": "甘拜下风",
+    "pinyin": "gān bài xià fēng",
+    "meaning-chinese": "真心地承认不如别人，表示佩服。",
+    "meaning-english": "To willingly admit defeat; to sincerely acknowledge one's inferiority.",
+    "example-sentence": "面对如此出色的表现，我甘拜下风，佩服得五体投地。"
+  },
+  {
+    "character": "买",
+    "idiom": "买椟还珠",
+    "pinyin": "mǎi dú huán zhū",
+    "meaning-chinese": "买了装珍珠的盒子却把珍珠退回去，比喻舍本逐末，取舍不当。",
+    "meaning-english": "To buy the casket and return the pearls; to miss the substance for the form.",
+    "example-sentence": "他只注重包装而忽视内容，真是买椟还珠。"
+  },
+  {
+    "character": "斤",
+    "idiom": "斤斤计较",
+    "pinyin": "jīn jīn jì jiào",
+    "meaning-chinese": "过分计较细微的得失，形容小气，不大方。",
+    "meaning-english": "To be excessively calculating over small gains and losses; to haggle over every detail.",
+    "example-sentence": "做人不要斤斤计较，要有大局观。"
+  },
+  {
+    "character": "抱",
+    "idiom": "抱残守缺",
+    "pinyin": "bào cán shǔ quē",
+    "meaning-chinese": "抱着残缺不全的东西不放，比喻守旧，不愿接受新事物。",
+    "meaning-english": "To cling to the outmoded; conservative and resistant to change.",
+    "example-sentence": "时代在进步，不能抱残守缺，要与时俱进。"
+  },
+  {
+    "character": "拿",
+    "idiom": "拿手好戏",
+    "pinyin": "ná shǒu hǎo xì",
+    "meaning-chinese": "最擅长的技艺或本领，形容自己最擅长的东西。",
+    "meaning-english": "One's best performance; a specialty or strong suit.",
+    "example-sentence": "做蛋糕是她的拿手好戏，每次都大受好评。"
+  },
+  {
+    "character": "法",
+    "idiom": "法网恢恢",
+    "pinyin": "fǎ wǎng huī huī",
+    "meaning-chinese": "法律的网很宽广，没有人能逃脱法律的制裁。",
+    "meaning-english": "The net of the law is vast; justice is all-encompassing and no wrongdoer escapes.",
+    "example-sentence": "法网恢恢，疏而不漏，犯罪者终将受到制裁。"
+  },
+  {
+    "character": "圆",
+    "idiom": "珠圆玉润",
+    "pinyin": "zhū yuán yù rùn",
+    "meaning-chinese": "形容文字、声音等圆润优美。",
+    "meaning-english": "Round as pearls and smooth as jade; melodious, smooth, and beautiful.",
+    "example-sentence": "她的歌声珠圆玉润，令人如痴如醉。"
+  },
+  {
+    "character": "切",
+    "idiom": "切中要害",
+    "pinyin": "qiē zhòng yào hài",
+    "meaning-chinese": "说话或做事抓住了关键问题，正中要害。",
+    "meaning-english": "To hit the vital point; to pinpoint the key issue accurately.",
+    "example-sentence": "他的分析切中要害，一语道破了问题的本质。"
+  },
+  {
+    "character": "扫",
+    "idiom": "一扫而光",
+    "pinyin": "yī sǎo ér guāng",
+    "meaning-chinese": "一下子全部清除干净，形容彻底消除。",
+    "meaning-english": "To sweep away completely; to finish everything clean.",
+    "example-sentence": "他一扫而光，把桌上的食物全部吃完了。"
+  },
+  {
+    "character": "户",
+    "idiom": "千家万户",
+    "pinyin": "qiān jiā wàn hù",
+    "meaning-chinese": "形容很多家庭，家家户户。",
+    "meaning-english": "Thousands of households; every family everywhere.",
+    "example-sentence": "这个消息传遍了千家万户。"
+  },
+  {
+    "character": "兄",
+    "idiom": "难兄难弟",
+    "pinyin": "nán xiōng nán dì",
+    "meaning-chinese": "处境相同的人，一起遭遇困难，形容同病相怜。",
+    "meaning-english": "Brothers in distress; two people in the same difficult predicament.",
+    "example-sentence": "他们两人都失业了，真是难兄难弟。"
+  },
+  {
+    "character": "会",
+    "idiom": "心领神会",
+    "pinyin": "xīn lǐng shén huì",
+    "meaning-chinese": "不需要言语就能理解对方的意思。",
+    "meaning-english": "To understand without being told; to comprehend tacitly.",
+    "example-sentence": "他们多年默契，一个眼神便心领神会。"
+  },
+  {
+    "character": "完",
+    "idiom": "完璧归赵",
+    "pinyin": "wán bì guī zhào",
+    "meaning-chinese": "把璧玉完整地归还给赵国，比喻把借来的东西完好地归还给原主。",
+    "meaning-english": "To return the jade intact; to return something safely and completely.",
+    "example-sentence": "借来的书我会完璧归赵，请放心。"
+  },
+  {
+    "character": "业",
+    "idiom": "业精于勤",
+    "pinyin": "yè jīng yú qín",
+    "meaning-chinese": "学业的精深来自于勤奋，形容勤奋是成功的关键。",
+    "meaning-english": "Mastery comes from diligence; expertise is achieved through hard work.",
+    "example-sentence": "业精于勤，荒于嬉，要想成功就必须勤奋。"
+  },
+  {
+    "character": "进",
+    "idiom": "突飞猛进",
+    "pinyin": "tū fēi měng jìn",
+    "meaning-chinese": "形容进步得很快，发展很迅速。",
+    "meaning-english": "To advance by leaps and bounds; rapid and dramatic progress.",
+    "example-sentence": "近年来，科学技术突飞猛进，日新月异。"
+  },
+  {
+    "character": "打",
+    "idiom": "打草惊蛇",
+    "pinyin": "dǎ cǎo jīng shé",
+    "meaning-chinese": "打草时惊动了蛇，比喻行事不慎而使对方有了警觉。",
+    "meaning-english": "To beat the grass and startle the snake; to alert the enemy unintentionally.",
+    "example-sentence": "行动要谨慎，不要打草惊蛇，让对方有所防备。"
+  },
+  {
+    "character": "听",
+    "idiom": "听天由命",
+    "pinyin": "tīng tiān yóu mìng",
+    "meaning-chinese": "任凭命运的安排，不再努力挣扎。",
+    "meaning-english": "To resign oneself to fate; to leave everything to heaven.",
+    "example-sentence": "努力之后，剩下的就听天由命吧。"
+  },
+  {
+    "character": "声",
+    "idiom": "声东击西",
+    "pinyin": "shēng dōng jī xī",
+    "meaning-chinese": "形容迷惑对方，在东面制造声势，实际上在西面进攻。",
+    "meaning-english": "To shout east and strike west; a diversionary tactic or feint.",
+    "example-sentence": "他声东击西，成功地迷惑了对手。"
+  },
+  {
+    "character": "晚",
+    "idiom": "相见恨晚",
+    "pinyin": "xiāng jiàn hèn wǎn",
+    "meaning-chinese": "形容相识太晚，遗憾没有早点认识。",
+    "meaning-english": "To regret not having met sooner; wishing to have known someone earlier.",
+    "example-sentence": "两人一见如故，相见恨晚，很快成为好友。"
+  },
+  {
+    "character": "星",
+    "idiom": "星火燎原",
+    "pinyin": "xīng huǒ liáo yuán",
+    "meaning-chinese": "一点小小的火星可以把整个原野烧掉，比喻小事可以演变成大事。",
+    "meaning-english": "A single spark can start a prairie fire; a small beginning can lead to something great.",
+    "example-sentence": "星火燎原，这个小小的团队最终发展成了大公司。"
+  },
+  {
+    "character": "明",
+    "idiom": "明察秋毫",
+    "pinyin": "míng chá qiū háo",
+    "meaning-chinese": "形容看事情非常仔细，能看清楚极细小的事物。",
+    "meaning-english": "To see the finest detail; extremely sharp-eyed and perceptive.",
+    "example-sentence": "他明察秋毫，任何细节都逃不过他的眼睛。"
+  },
+  {
+    "character": "庆",
+    "idiom": "普天同庆",
+    "pinyin": "pǔ tiān tóng qìng",
+    "meaning-chinese": "普天下都在庆祝，形容普天同欢的喜庆场面。",
+    "meaning-english": "The whole world celebrates together; universal rejoicing.",
+    "example-sentence": "节日到来，普天同庆，举国欢腾。"
+  },
+  {
+    "character": "节",
+    "idiom": "节衣缩食",
+    "pinyin": "jié yī suō shí",
+    "meaning-chinese": "节省衣物和饮食，形容生活很节俭。",
+    "meaning-english": "To economize on clothing and food; to live very frugally.",
+    "example-sentence": "他节衣缩食，省下钱来供孩子上学。"
+  },
+  {
+    "character": "爱",
+    "idiom": "爱屋及乌",
+    "pinyin": "ài wū jí wū",
+    "meaning-chinese": "因为爱一个人，连带着也喜欢他屋顶上的乌鸦，比喻爱及相关的一切。",
+    "meaning-english": "Love the house and its crow; to love everything connected to someone you love.",
+    "example-sentence": "他爱屋及乌，连女友的小狗也宠爱有加。"
+  },
+  {
+    "character": "国",
+    "idiom": "国泰民安",
+    "pinyin": "guó tài mín ān",
+    "meaning-chinese": "国家太平，人民安居乐业。",
+    "meaning-english": "The country is prosperous and the people are at peace; national peace and prosperity.",
+    "example-sentence": "我们期望国泰民安，社会和谐。"
+  },
+  {
+    "character": "乐",
+    "idiom": "乐不思蜀",
+    "pinyin": "lè bù sī shǔ",
+    "meaning-chinese": "形容快乐得忘记了故乡或本分，流连忘返。",
+    "meaning-english": "So happy as to forget the state of Shu; too content in a place to think of going home.",
+    "example-sentence": "他在异乡生活得太舒适，乐不思蜀，不想回家了。"
+  },
+  {
+    "character": "故",
+    "idiom": "温故知新",
+    "pinyin": "wēn gù zhī xīn",
+    "meaning-chinese": "温习旧知识，从中得到新的体会和发现。",
+    "meaning-english": "To review the old and know the new; to gain new insights by reviewing past knowledge.",
+    "example-sentence": "学习要温故知新，不断巩固和深化知识。"
+  },
+  {
+    "character": "童",
+    "idiom": "童言无忌",
+    "pinyin": "tóng yán wú jì",
+    "meaning-chinese": "小孩子说话不受拘束，无所顾忌。",
+    "meaning-english": "Children's words are without taboo; children speak freely and without restraint.",
+    "example-sentence": "童言无忌，小孩子说的话不必当真。"
+  },
+  {
+    "character": "因",
+    "idiom": "因地制宜",
+    "pinyin": "yīn dì zhì yí",
+    "meaning-chinese": "根据各地的具体情况，采取适当的措施。",
+    "meaning-english": "To adapt to local conditions; to suit measures to specific circumstances.",
+    "example-sentence": "种植作物要因地制宜，选择适合当地气候的品种。"
+  },
+  {
+    "character": "为",
+    "idiom": "为所欲为",
+    "pinyin": "wéi suǒ yù wéi",
+    "meaning-chinese": "想干什么就干什么，任意妄为，不受约束。",
+    "meaning-english": "To do whatever one pleases; to act willfully without restraint.",
+    "example-sentence": "法律的存在就是为了防止人们为所欲为。"
+  },
+  {
+    "character": "兔",
+    "idiom": "守株待兔",
+    "pinyin": "shǒu zhū dài tù",
+    "meaning-chinese": "守着树桩等待兔子撞上来，比喻不努力而妄想坐享其成。",
+    "meaning-english": "To guard a tree stump waiting for rabbits; to wait for gains without putting in effort.",
+    "example-sentence": "不能守株待兔，要主动出击才能成功。"
+  },
+  {
+    "character": "尾",
+    "idiom": "尾大不掉",
+    "pinyin": "wěi dà bù diào",
+    "meaning-chinese": "尾巴太大，不容易甩动，比喻部下势力太强，难以控制。",
+    "meaning-english": "When the tail is too big to wag; when subordinates become too powerful to control.",
+    "example-sentence": "公司机构臃肿，尾大不掉，改革十分困难。"
+  },
+  {
+    "character": "短",
+    "idiom": "取长补短",
+    "pinyin": "qǔ cháng bǔ duǎn",
+    "meaning-chinese": "吸取对方的长处来弥补自己的不足。",
+    "meaning-english": "To learn from others' strong points to compensate for one's weaknesses.",
+    "example-sentence": "我们要互相学习，取长补短，共同进步。"
+  },
+  {
+    "character": "眼",
+    "idiom": "眼疾手快",
+    "pinyin": "yǎn jí shǒu kuài",
+    "meaning-chinese": "眼睛看得快，手也动得快，形容反应敏捷，动作迅速。",
+    "meaning-english": "Sharp-eyed and quick-handed; agile and responsive.",
+    "example-sentence": "他眼疾手快，迅速抓住了逃跑的小偷。"
+  },
+  {
+    "character": "睛",
+    "idiom": "火眼金睛",
+    "pinyin": "huǒ yǎn jīn jīng",
+    "meaning-chinese": "形容人的眼睛锐利，能洞察一切，看穿假象。",
+    "meaning-english": "Fiery eyes and golden pupils; extremely sharp eyes that can see through any deception.",
+    "example-sentence": "他有一双火眼金睛，骗不了他。"
+  },
+  {
+    "character": "爪",
+    "idiom": "一鳞半爪",
+    "pinyin": "yī lín bàn zhǎo",
+    "meaning-chinese": "龙身上的一片鳞一只爪，形容看到的片面或不完整。",
+    "meaning-english": "One scale and half a claw; fragmentary and incomplete information.",
+    "example-sentence": "他对这件事只了解到一鳞半爪，并不知道全貌。"
+  },
+  {
+    "character": "物",
+    "idiom": "物以类聚",
+    "pinyin": "wù yǐ lèi jù",
+    "meaning-chinese": "同类的事物自然会聚集在一起。",
+    "meaning-english": "Like attracts like; birds of a feather flock together.",
+    "example-sentence": "物以类聚，他们有共同爱好，自然走到了一起。"
+  },
+  {
+    "character": "虎",
+    "idiom": "如虎添翼",
+    "pinyin": "rú hǔ tiān yì",
+    "meaning-chinese": "老虎增添了翅膀，形容强者更加强大，如虎添翼。",
+    "meaning-english": "Like a tiger with wings; to become even more powerful and formidable.",
+    "example-sentence": "有了这项新技术，公司如虎添翼，竞争力大增。"
+  },
+  {
+    "character": "狮",
+    "idiom": "狮子大开口",
+    "pinyin": "shī zi dà kāi kǒu",
+    "meaning-chinese": "比喻提出过高的要求或索价太高。",
+    "meaning-english": "Like a lion opening its big mouth; to ask for an exorbitant price or unreasonable demands.",
+    "example-sentence": "他狮子大开口，要价太高，让人难以接受。"
+  },
+  {
+    "character": "园",
+    "idiom": "满园春色",
+    "pinyin": "mǎn yuán chūn sè",
+    "meaning-chinese": "整个园子都是春天的景色，形容一片生机勃勃的景象。",
+    "meaning-english": "Spring colors fill the whole garden; a scene of vitality and prosperity.",
+    "example-sentence": "改革开放后，满园春色，处处充满生机。"
+  },
+  {
+    "character": "期",
+    "idiom": "不期而遇",
+    "pinyin": "bù qī ér yù",
+    "meaning-chinese": "没有约定而偶然相遇，指意外的相遇。",
+    "meaning-english": "To meet unexpectedly; a chance encounter without prior arrangement.",
+    "example-sentence": "在异乡不期而遇老友，真是缘分。"
+  },
+  {
+    "character": "带",
+    "idiom": "一衣带水",
+    "pinyin": "yī yī dài shuǐ",
+    "meaning-chinese": "一条衣带那样狭窄的水，形容两地之间相隔不远，只有一水之隔。",
+    "meaning-english": "Separated only by a narrow strip of water; very close geographically.",
+    "example-sentence": "中日两国一衣带水，自古往来密切。"
+  },
+  {
+    "character": "黑",
+    "idiom": "黑白分明",
+    "pinyin": "hēi bái fēn míng",
+    "meaning-chinese": "黑色和白色界限分明，形容是非界限十分清楚。",
+    "meaning-english": "Black and white are clearly distinct; a clear distinction between right and wrong.",
+    "example-sentence": "他做事黑白分明，从不含糊是非。"
+  },
+  {
+    "character": "叫",
+    "idiom": "叫苦连天",
+    "pinyin": "jiào kǔ lián tiān",
+    "meaning-chinese": "不停地诉说苦处，形容十分痛苦或抱怨不断。",
+    "meaning-english": "To complain bitterly to the skies; to cry out incessantly in pain or grievance.",
+    "example-sentence": "工作繁重，大家叫苦连天，十分疲惫。"
+  },
+  {
+    "character": "认",
+    "idiom": "认贼作父",
+    "pinyin": "rèn zéi zuò fù",
+    "meaning-chinese": "把敌人或坏人当成自己的父亲，形容认敌为友，甘心受骗。",
+    "meaning-english": "To acknowledge the thief as one's father; to side with one's enemy.",
+    "example-sentence": "他认贼作父，把骗子当成了恩人。"
+  },
+  {
+    "character": "话",
+    "idiom": "话不投机",
+    "pinyin": "huà bù tóu jī",
+    "meaning-chinese": "说话时互相不合拍，没有共同语言，形容彼此意见不合。",
+    "meaning-english": "The conversation is out of tune; unable to agree or find common ground.",
+    "example-sentence": "两人话不投机，谈了几句便不欢而散。"
+  },
+  {
+    "character": "再",
+    "idiom": "再接再厉",
+    "pinyin": "zài jiē zài lì",
+    "meaning-chinese": "形容继续努力，不断奋斗，坚持不懈。",
+    "meaning-english": "To continue to exert oneself; to make persistent and increasing efforts.",
+    "example-sentence": "失败了不要气馁，要再接再厉，争取下次成功。"
+  },
+  {
+    "character": "屋",
+    "idiom": "金屋藏娇",
+    "pinyin": "jīn wū cáng jiāo",
+    "meaning-chinese": "比喻建造华美的房屋供所爱的人居住，形容极度宠爱。",
+    "meaning-english": "To keep a beloved one in a golden house; to pamper one's favorite.",
+    "example-sentence": "他为心爱的人金屋藏娇，极尽宠爱。"
+  },
+  {
+    "character": "公",
+    "idiom": "公而忘私",
+    "pinyin": "gōng ér wàng sī",
+    "meaning-chinese": "为公家的利益而忘掉个人的私利。",
+    "meaning-english": "To put public interests before private ones; selflessly devoted to the public good.",
+    "example-sentence": "他公而忘私，把全部精力都投入到工作中。"
+  },
+  {
+    "character": "扶",
+    "idiom": "扶危济困",
+    "pinyin": "fú wēi jì kùn",
+    "meaning-chinese": "扶助危难中的人，接济贫困的人。",
+    "meaning-english": "To help those in danger and aid those in need; to assist the vulnerable and poor.",
+    "example-sentence": "慈善机构致力于扶危济困，帮助弱势群体。"
+  },
+  {
+    "character": "常",
+    "idiom": "习以为常",
+    "pinyin": "xí yǐ wéi cháng",
+    "meaning-chinese": "经过长期的习惯，认为是平常的事。",
+    "meaning-english": "To be accustomed to; to take something for granted as normal.",
+    "example-sentence": "加班对他来说已经习以为常，习惯了。"
+  },
+  {
+    "character": "步",
+    "idiom": "步步为营",
+    "pinyin": "bù bù wéi yíng",
+    "meaning-chinese": "每走一步都设立营寨，形容做事谨慎，稳步推进。",
+    "meaning-english": "To consolidate at every step; to advance steadily and cautiously.",
+    "example-sentence": "他做事步步为营，稳健地推进计划。"
+  },
+  {
+    "character": "图",
+    "idiom": "图穷匕见",
+    "pinyin": "tú qióng bǐ jiàn",
+    "meaning-chinese": "地图展开到尽头，匕首露了出来，比喻事情发展到最后，真相或阴谋暴露。",
+    "meaning-english": "When the map is unrolled, the dagger is revealed; the truth or plot is finally exposed.",
+    "example-sentence": "经过长时间调查，终于图穷匕见，真相大白。"
+  },
+  {
+    "character": "游",
+    "idiom": "游手好闲",
+    "pinyin": "yóu shǒu hào xián",
+    "meaning-chinese": "游荡不做事，形容整天无所事事，懒惰散漫。",
+    "meaning-english": "To idle about with nothing to do; lazy and loafing around.",
+    "example-sentence": "他整天游手好闲，不务正业。"
+  },
+  {
+    "character": "拍",
+    "idiom": "拍案叫绝",
+    "pinyin": "pāi àn jiào jué",
+    "meaning-chinese": "拍着桌子叫好，形容非常赞赏，称赞到了极点。",
+    "meaning-english": "To slap the table in admiration; to be full of admiration and praise.",
+    "example-sentence": "看完这部电影，观众无不拍案叫绝。"
+  },
+  {
+    "character": "兴",
+    "idiom": "兴高采烈",
+    "pinyin": "xīng gāo cǎi liè",
+    "meaning-chinese": "形容兴致很高，精神饱满，十分快乐。",
+    "meaning-english": "In high spirits and jubilant; extremely happy and excited.",
+    "example-sentence": "孩子们兴高采烈地去游乐园玩耍。"
+  },
+  {
+    "character": "戏",
+    "idiom": "逢场作戏",
+    "pinyin": "féng chǎng zuò xì",
+    "meaning-chinese": "遇到场合就配合演戏，形容随机应变，见机行事。",
+    "meaning-english": "To act according to the occasion; to play along as the situation demands.",
+    "example-sentence": "他逢场作戏，随机应变，在各种场合都能应对自如。"
+  }
+]
