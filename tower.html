@@ -171,7 +171,7 @@ let viewX = 0;
 let viewY = 0;  // positive = scrolled up (seeing higher floors)
 
 // Hover / interaction state
-let hoverCol = -1, hoverFloor = -1, mouseInCanvas = false;
+let hoverCol = -1, hoverFloor = -999, mouseInCanvas = false;
 let mouseDown = false, dragging = false;
 let dragStartX = 0, dragStartY = 0, dragViewX = 0, dragViewY = 0;
 
@@ -331,7 +331,7 @@ function draw() {
   for (const room of building.rooms) drawRoom(room);
 
   // Ghost preview
-  if (tool !== 'destroy' && mouseInCanvas && hoverFloor >= -1) {
+  if (tool !== 'destroy' && mouseInCanvas && hoverFloor >= -100) {
     const def = ROOM_DEFS[tool];
     if (def) {
       const valid = canPlace(tool, hoverCol, hoverFloor);
@@ -499,7 +499,7 @@ canvas.addEventListener('touchstart', e => {
 
   if (e.touches.length >= 2) {
     wasPanning = true;
-    hoverFloor = -1;
+    hoverFloor = -999;
   } else if (e.touches.length === 1) {
     wasPanning = false;
     const t = e.touches[0];
@@ -524,7 +524,7 @@ canvas.addEventListener('touchmove', e => {
     viewX = clampViewX(viewX - dx);
     viewY = clampViewY(viewY + dy);
     lastTouchMidX = mx; lastTouchMidY = my;
-    hoverFloor = -1;
+    hoverFloor = -999;
     draw();
   } else if (e.touches.length === 1) {
     const t = e.touches[0];
@@ -549,7 +549,7 @@ canvas.addEventListener('touchend', e => {
   }
   
   if (e.touches.length === 0) {
-    hoverFloor = -1;
+    hoverFloor = -999;
     mouseInCanvas = false;
   }
   draw();
