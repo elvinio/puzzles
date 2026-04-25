@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hangman</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #13111c;
+      --surface: #1c1730;
+      --brd:     #4c1d95;
+      --p:       #6d28d9;
+      --p-lt:    #7c3aed;
+      --p-xl:    #a78bfa;
+      --p-text:  #e2d9f3;
+      --muted:   #7c6fa0;
+      --ok:      #16a34a;
+      --ok-lt:   #22c55e;
+      --err:     #dc2626;
+      --err-lt:  #ef4444;
+    }
+
+    body {
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .topbar {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--brd);
+    }
+
+    .back-link {
+      color: var(--p-xl);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .topbar h1 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--p-xl);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .screen { display: none; width: 100%; max-width: 600px; padding: 20px 16px; }
+    .screen.active { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+
+    /* ── Setup ── */
+    .avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 12px;
+      padding: 14px 18px;
+      width: 100%;
+    }
+
+    .avatar-icon { font-size: 0; line-height: 0; }
+
+    .avatar-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--p-text);
+    }
+
+    .avatar-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 24px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .btn:active { transform: scale(0.96); }
+    .btn-primary { background: var(--p-lt); color: #fff; }
+    .btn-outline { background: transparent; border: 2px solid var(--brd); color: var(--p-xl); }
+    .btn-sm { padding: 8px 16px; font-size: 0.85rem; }
+
+    /* ── Hangman SVG ── */
+    .hangman-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hangman-wrap svg { width: 180px; height: 200px; }
+
+    /* ── Wrong count ── */
+    .wrong-counter {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .wrong-counter span {
+      color: var(--err-lt);
+      font-size: 1rem;
+    }
+
+    /* ── Word blanks ── */
+    .word-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .letter-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .letter-char {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--p-text);
+      min-width: 28px;
+      text-align: center;
+      min-height: 1.8rem;
+      line-height: 1;
+    }
+
+    .letter-line {
+      width: 28px;
+      height: 3px;
+      background: var(--p-xl);
+      border-radius: 2px;
+    }
+
+    /* ── Hint ── */
+    .hint-area {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: none;
+    }
+
+    .hint-area.visible { display: block; }
+
+    .hint-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .hint-text {
+      font-size: 0.95rem;
+      color: var(--p-text);
+      line-height: 1.4;
+    }
+
+    /* ── Keyboard ── */
+    .keyboard {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .key {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 2px solid var(--brd);
+      background: var(--surface);
+      color: var(--p-text);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.1s, border-color 0.1s, opacity 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .key:hover:not(:disabled) { background: #2a1f50; border-color: var(--p-lt); }
+    .key.correct { background: var(--ok); border-color: var(--ok-lt); color: #fff; opacity: 0.7; }
+    .key.wrong   { background: #3a1010; border-color: var(--err); color: var(--err-lt); opacity: 0.5; }
+    .key:disabled { cursor: default; }
+
+    /* ── Result screen ── */
+    .result-banner {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .result-banner.win  { color: var(--ok-lt); }
+    .result-banner.lose { color: var(--err-lt); }
+
+    .result-word {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.12em;
+    }
+
+    .result-word.wrong-word { color: var(--err-lt); }
+
+    .result-meaning {
+      font-size: 0.95rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+      max-width: 400px;
+    }
+
+    .result-example {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-style: italic;
+      text-align: center;
+      line-height: 1.5;
+      max-width: 400px;
+    }
+
+    .score-row {
+      display: flex;
+      gap: 24px;
+    }
+
+    .score-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 10px;
+      padding: 12px 20px;
+    }
+
+    .score-num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--p-xl);
+    }
+
+    .score-lbl {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a class="back-link" href="index.html">← Games</a>
+    <h1>Hangman</h1>
+    <div class="topbar-right" id="topbar-avatar"></div>
+  </div>
+
+  <!-- Setup Screen -->
+  <div id="screen-setup" class="screen active">
+    <div class="avatar-row" id="setup-avatar-row">
+      <div class="avatar-icon" id="setup-avatar-icon">🧑</div>
+      <div>
+        <div class="avatar-name" id="setup-avatar-name">Loading…</div>
+        <div class="avatar-sub">Active player</div>
+      </div>
+    </div>
+
+    <p style="color:var(--muted);font-size:0.9rem;text-align:center;line-height:1.5;">
+      Guess the hidden word one letter at a time.<br>6 wrong guesses and the game is over!
+    </p>
+
+    <button class="btn btn-primary" id="btn-start" style="width:100%;max-width:280px;" disabled>
+      Loading words…
+    </button>
+
+    <a class="back-link" href="avatar.html" style="font-size:0.82rem;color:var(--muted);">Switch avatar →</a>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="screen-game" class="screen">
+
+    <!-- Hangman figure -->
+    <div class="hangman-wrap">
+      <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Gallows (always visible) -->
+        <line x1="20" y1="190" x2="160" y2="190" stroke="#4c1d95" stroke-width="5" stroke-linecap="round"/>
+        <line x1="60" y1="190" x2="60"  y2="10"  stroke="#4c1d95" stroke-width="5" stroke-linecap="round"/>
+        <line x1="60" y1="10"  x2="120" y2="10"  stroke="#4c1d95" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="10" x2="120" y2="30"  stroke="#4c1d95" stroke-width="5" stroke-linecap="round"/>
+        <!-- Body parts (hidden until wrong guesses) -->
+        <circle id="hm-head" cx="120" cy="46" r="16" stroke="#a78bfa" stroke-width="4" display="none"/>
+        <line   id="hm-body" x1="120" y1="62" x2="120" y2="110" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+        <line   id="hm-larm" x1="120" y1="75" x2="96"  y2="98"  stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+        <line   id="hm-rarm" x1="120" y1="75" x2="144" y2="98"  stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+        <line   id="hm-lleg" x1="120" y1="110" x2="96"  y2="138" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+        <line   id="hm-rleg" x1="120" y1="110" x2="144" y2="138" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+      </svg>
+    </div>
+
+    <div class="wrong-counter" id="wrong-counter">Wrong: <span>0</span> / 6</div>
+
+    <div class="word-display" id="word-display"></div>
+
+    <div class="hint-area" id="hint-area">
+      <div class="hint-label">Hint</div>
+      <div class="hint-text" id="hint-text"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline btn-sm" id="btn-hint">💡 Hint</button>
+    </div>
+
+    <div class="keyboard" id="keyboard"></div>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="screen-result" class="screen">
+    <div class="result-banner" id="result-banner"></div>
+    <div class="result-word" id="result-word"></div>
+    <div class="result-meaning" id="result-meaning"></div>
+    <div class="result-example" id="result-example"></div>
+
+    <div class="score-row">
+      <div class="score-item">
+        <div class="score-num" id="score-wins">0</div>
+        <div class="score-lbl">Wins</div>
+      </div>
+      <div class="score-item">
+        <div class="score-num" id="score-streak">0</div>
+        <div class="score-lbl">Streak</div>
+      </div>
+      <div class="score-item">
+        <div class="score-num" id="score-played">0</div>
+        <div class="score-lbl">Played</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-again">Play Again</button>
+      <a class="btn btn-outline" href="index.html">← Home</a>
+    </div>
+  </div>
+
+  <script src="avatar.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const BODY_PARTS = ['hm-head','hm-body','hm-larm','hm-rarm','hm-lleg','hm-rleg'];
+    const MAX_WRONG = 6;
+
+    const S = {
+      words:    [],
+      wordIdx:  0,
+      entry:    null,   // { word, meaning, example }
+      guessed:  new Set(),
+      wrongs:   0,
+      hintUsed: false,
+      wins:     0,
+      streak:   0,
+      played:   0,
+      avatar:   null,
+    };
+
+    // ── Helpers ──────────────────────────────────────────────────────
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // ── Avatar ───────────────────────────────────────────────────────
+
+    function loadAvatar() {
+      if (!window.__avatarGetActive) return;
+      S.avatar = window.__avatarGetActive();
+      if (!S.avatar) return;
+
+      const svg = window.__avatarRender(S.avatar, '44');
+
+      ['setup-avatar-icon', 'topbar-avatar'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = svg;
+        el.style.fontSize = '0';
+      });
+
+      const nameEl = document.getElementById('setup-avatar-name');
+      if (nameEl) nameEl.textContent = S.avatar.nickname || 'Player';
+    }
+
+    // ── Word loading ─────────────────────────────────────────────────
+
+    async function loadWords() {
+      try {
+        const res = await fetch('english-p3.json');
+        const data = await res.json();
+        S.words = shuffle(data.filter(e => e.word && e.word.length >= 3));
+        S.wordIdx = 0;
+        const btn = document.getElementById('btn-start');
+        btn.textContent = 'Start Game';
+        btn.disabled = false;
+      } catch (e) {
+        const btn = document.getElementById('btn-start');
+        btn.textContent = 'Failed to load words';
+      }
+    }
+
+    // ── Game start ───────────────────────────────────────────────────
+
+    function startGame() {
+      if (!S.words.length) return;
+
+      // Cycle through words
+      if (S.wordIdx >= S.words.length) {
+        S.wordIdx = 0;
+        shuffle(S.words);
+      }
+      S.entry    = S.words[S.wordIdx++];
+      S.guessed  = new Set();
+      S.wrongs   = 0;
+      S.hintUsed = false;
+
+      // Reset SVG body parts
+      BODY_PARTS.forEach(id => {
+        document.getElementById(id).setAttribute('display', 'none');
+      });
+
+      // Reset wrong counter
+      updateWrongCounter();
+
+      // Reset hint
+      document.getElementById('hint-text').textContent = S.entry.meaning;
+      document.getElementById('hint-area').classList.remove('visible');
+      document.getElementById('btn-hint').disabled = false;
+
+      // Build word display
+      renderWord();
+
+      // Build keyboard
+      buildKeyboard();
+
+      showScreen('screen-game');
+    }
+
+    // ── Rendering ────────────────────────────────────────────────────
+
+    function renderWord() {
+      const word = S.entry.word.toLowerCase();
+      const container = document.getElementById('word-display');
+      container.innerHTML = '';
+      for (const ch of word) {
+        const slot = document.createElement('div');
+        slot.className = 'letter-slot';
+
+        const char = document.createElement('div');
+        char.className = 'letter-char';
+        char.textContent = S.guessed.has(ch) ? ch.toUpperCase() : '';
+
+        const line = document.createElement('div');
+        line.className = 'letter-line';
+
+        slot.appendChild(char);
+        slot.appendChild(line);
+        container.appendChild(slot);
+      }
+    }
+
+    function buildKeyboard() {
+      const kb = document.getElementById('keyboard');
+      kb.innerHTML = '';
+      for (const letter of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+        const btn = document.createElement('button');
+        btn.className = 'key';
+        btn.textContent = letter;
+        btn.dataset.letter = letter.toLowerCase();
+        btn.addEventListener('click', onKey);
+        kb.appendChild(btn);
+      }
+    }
+
+    function updateWrongCounter() {
+      const el = document.getElementById('wrong-counter');
+      el.innerHTML = `Wrong: <span>${S.wrongs}</span> / ${MAX_WRONG}`;
+    }
+
+    // ── Guess logic ──────────────────────────────────────────────────
+
+    function onKey(e) {
+      const letter = e.currentTarget.dataset.letter;
+      if (S.guessed.has(letter)) return;
+      S.guessed.add(letter);
+      e.currentTarget.disabled = true;
+
+      const word = S.entry.word.toLowerCase();
+      if (word.includes(letter)) {
+        e.currentTarget.classList.add('correct');
+        renderWord();
+        if (isWordComplete()) endGame(true);
+      } else {
+        e.currentTarget.classList.add('wrong');
+        S.wrongs++;
+        updateWrongCounter();
+        document.getElementById(BODY_PARTS[S.wrongs - 1]).setAttribute('display', 'inline');
+        if (S.wrongs >= MAX_WRONG) endGame(false);
+      }
+    }
+
+    function isWordComplete() {
+      const word = S.entry.word.toLowerCase();
+      return [...word].every(ch => S.guessed.has(ch));
+    }
+
+    // ── Hint ─────────────────────────────────────────────────────────
+
+    document.getElementById('btn-hint').addEventListener('click', () => {
+      if (S.hintUsed) return;
+      S.hintUsed = true;
+      document.getElementById('hint-area').classList.add('visible');
+      document.getElementById('btn-hint').disabled = true;
+    });
+
+    // ── End game ─────────────────────────────────────────────────────
+
+    function endGame(won) {
+      S.played++;
+      if (won) {
+        S.wins++;
+        S.streak++;
+      } else {
+        S.streak = 0;
+      }
+
+      // Save score
+      if (window.__avatarSave) {
+        window.__avatarSave('hangman-wins', S.wins);
+      }
+
+      // Result screen
+      const banner = document.getElementById('result-banner');
+      banner.textContent = won ? '🎉 You got it!' : '💀 Game over';
+      banner.className = 'result-banner ' + (won ? 'win' : 'lose');
+
+      const wordEl = document.getElementById('result-word');
+      wordEl.textContent = S.entry.word.toUpperCase();
+      wordEl.className = 'result-word' + (won ? '' : ' wrong-word');
+
+      document.getElementById('result-meaning').textContent = S.entry.meaning;
+      document.getElementById('result-example').textContent = '"' + S.entry.example + '"';
+
+      document.getElementById('score-wins').textContent    = S.wins;
+      document.getElementById('score-streak').textContent  = S.streak;
+      document.getElementById('score-played').textContent  = S.played;
+
+      showScreen('screen-result');
+    }
+
+    // ── Keyboard input ───────────────────────────────────────────────
+
+    document.addEventListener('keydown', e => {
+      const screen = document.querySelector('.screen.active');
+      if (!screen || screen.id !== 'screen-game') return;
+      const letter = e.key.toLowerCase();
+      if (!/^[a-z]$/.test(letter)) return;
+      const btn = document.querySelector(`.key[data-letter="${letter}"]`);
+      if (btn && !btn.disabled) btn.click();
+    });
+
+    // ── Button wiring ────────────────────────────────────────────────
+
+    document.getElementById('btn-start').addEventListener('click', startGame);
+    document.getElementById('btn-again').addEventListener('click', startGame);
+
+    // ── Init ─────────────────────────────────────────────────────────
+
+    loadAvatar();
+    loadWords();
+
+  })();
+  </script>
+</body>
+</html>
