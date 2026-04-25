@@ -1,0 +1,2007 @@
+[
+  {
+    "word": "adventure",
+    "meaning": "An exciting or unusual experience",
+    "example": "Reading a good book can be a great adventure."
+  },
+  {
+    "word": "beautiful",
+    "meaning": "Very pleasing to look at",
+    "example": "She drew a beautiful picture of a sunset."
+  },
+  {
+    "word": "careful",
+    "meaning": "Making sure to avoid danger or mistakes",
+    "example": "Please be careful when crossing the busy road."
+  },
+  {
+    "word": "dangerous",
+    "meaning": "Able to cause harm or injury",
+    "example": "It is dangerous to play with fire."
+  },
+  {
+    "word": "explore",
+    "meaning": "To travel through a new place to learn about it",
+    "example": "We want to explore the new park this weekend."
+  },
+  {
+    "word": "frightened",
+    "meaning": "Feeling fear or being scared",
+    "example": "The loud thunder made the little puppy frightened."
+  },
+  {
+    "word": "generous",
+    "meaning": "Happy to give and share with others",
+    "example": "It was very generous of him to share his snacks."
+  },
+  {
+    "word": "handsome",
+    "meaning": "Good-looking, usually used for a man or boy",
+    "example": "The prince in the story was very handsome."
+  },
+  {
+    "word": "important",
+    "meaning": "Having great value or significance",
+    "example": "It is important to drink enough water every day."
+  },
+  {
+    "word": "jealous",
+    "meaning": "Feeling unhappy because you want what someone else has",
+    "example": "She felt a little jealous of her friend's new toy."
+  },
+  {
+    "word": "kind",
+    "meaning": "Friendly, helpful, and caring",
+    "example": "The kind teacher helped the pupil tie his shoelaces."
+  },
+  {
+    "word": "lonely",
+    "meaning": "Sad because one has no friends or company",
+    "example": "The new pupil felt lonely on his first day of school."
+  },
+  {
+    "word": "mysterious",
+    "meaning": "Difficult or impossible to understand or explain",
+    "example": "We heard a mysterious sound coming from the dark room."
+  },
+  {
+    "word": "nervous",
+    "meaning": "Easily worried or frightened",
+    "example": "I always feel nervous before a spelling test."
+  },
+  {
+    "word": "obedient",
+    "meaning": "Doing what one is told to do",
+    "example": "The obedient dog sat quietly when its owner commanded."
+  },
+  {
+    "word": "patient",
+    "meaning": "Able to wait calmly without getting angry",
+    "example": "You need to be patient while waiting for your turn."
+  },
+  {
+    "word": "quiet",
+    "meaning": "Making very little or no noise",
+    "example": "The library is a quiet place for reading."
+  },
+  {
+    "word": "responsible",
+    "meaning": "Able to be trusted to do what is right",
+    "example": "As a monitor, he is responsible for keeping the class orderly."
+  },
+  {
+    "word": "serious",
+    "meaning": "Not joking or funny; needing careful thought",
+    "example": "The doctor had a serious look on his face."
+  },
+  {
+    "word": "thoughtful",
+    "meaning": "Showing care and consideration for others",
+    "example": "It was thoughtful of her to bring an umbrella for me."
+  },
+  {
+    "word": "unique",
+    "meaning": "Being the only one of its kind",
+    "example": "Every person's fingerprint is unique."
+  },
+  {
+    "word": "valuable",
+    "meaning": "Worth a lot of money or very important",
+    "example": "My grandmother gave me a valuable gold necklace."
+  },
+  {
+    "word": "wonderful",
+    "meaning": "Extremely good or excellent",
+    "example": "We had a wonderful time at the zoo yesterday."
+  },
+  {
+    "word": "excited",
+    "meaning": "Feeling very happy and eager",
+    "example": "I am so excited about our family trip to Japan!"
+  },
+  {
+    "word": "curious",
+    "meaning": "Eager to know or learn something",
+    "example": "The curious kitten sniffed at the strange box."
+  },
+  {
+    "word": "angry",
+    "meaning": "Feeling strong annoyance or displeasure",
+    "example": "Mother was angry when we broke the vase."
+  },
+  {
+    "word": "brave",
+    "meaning": "Ready to face and endure danger or pain",
+    "example": "The brave firefighter rescued the cat from the tree."
+  },
+  {
+    "word": "clever",
+    "meaning": "Quick to understand and learn",
+    "example": "The clever boy solved the math puzzle easily."
+  },
+  {
+    "word": "difficult",
+    "meaning": "Needing much effort or skill to do or understand",
+    "example": "The last question on the test was very difficult."
+  },
+  {
+    "word": "eager",
+    "meaning": "Wanting to do or have something very much",
+    "example": "He was eager to open his birthday presents."
+  },
+  {
+    "word": "famous",
+    "meaning": "Known by many people",
+    "example": "The famous singer waved to her fans."
+  },
+  {
+    "word": "gentle",
+    "meaning": "Mild and kind; not harsh or rough",
+    "example": "She gave the baby a gentle hug."
+  },
+  {
+    "word": "happy",
+    "meaning": "Feeling or showing pleasure",
+    "example": "I feel happy when I play with my friends."
+  },
+  {
+    "word": "intelligent",
+    "meaning": "Having a high level of mental ability",
+    "example": "Dolphins are known to be highly intelligent animals."
+  },
+  {
+    "word": "jolly",
+    "meaning": "Happy and cheerful",
+    "example": "Santa Claus is often described as a jolly old man."
+  },
+  {
+    "word": "keen",
+    "meaning": "Very interested or enthusiastic",
+    "example": "She is a keen reader who visits the library often."
+  },
+  {
+    "word": "lazy",
+    "meaning": "Unwilling to work or use energy",
+    "example": "The lazy cat slept in the sun all afternoon."
+  },
+  {
+    "word": "magnificent",
+    "meaning": "Extremely beautiful or impressive",
+    "example": "The fireworks display on National Day was magnificent."
+  },
+  {
+    "word": "naughty",
+    "meaning": "Badly behaved",
+    "example": "The naughty boy pulled his sister's hair."
+  },
+  {
+    "word": "proud",
+    "meaning": "Feeling deep pleasure or satisfaction",
+    "example": "My parents were proud of my good grades."
+  },
+  {
+    "word": "quick",
+    "meaning": "Moving fast or doing something in a short time",
+    "example": "We need to be quick if we want to catch the bus."
+  },
+  {
+    "word": "rough",
+    "meaning": "Having an uneven or irregular surface; not smooth",
+    "example": "The bark of the old tree felt very rough."
+  },
+  {
+    "word": "smooth",
+    "meaning": "Having an even and regular surface",
+    "example": "The pebble from the river was very smooth."
+  },
+  {
+    "word": "tired",
+    "meaning": "In need of sleep or rest",
+    "example": "I feel tired after running around the field."
+  },
+  {
+    "word": "upset",
+    "meaning": "Unhappy, disappointed, or worried",
+    "example": "She was upset when she lost her favourite pencil."
+  },
+  {
+    "word": "victorious",
+    "meaning": "Having won a victory or a competition",
+    "example": "The victorious team cheered loudly after the match."
+  },
+  {
+    "word": "worried",
+    "meaning": "Anxious or troubled about actual or potential problems",
+    "example": "Mum was worried when I came home late."
+  },
+  {
+    "word": "young",
+    "meaning": "Having lived or existed for only a short time",
+    "example": "A young puppy needs a lot of care and attention."
+  },
+  {
+    "word": "zany",
+    "meaning": "Amusingly unconventional and idiosyncratic",
+    "example": "The clown performed a zany dance that made everyone laugh."
+  },
+  {
+    "word": "active",
+    "meaning": "Engaging in action; moving around a lot",
+    "example": "It is good to be active and play sports."
+  },
+  {
+    "word": "brilliant",
+    "meaning": "Exceptionally clever or talented; very bright",
+    "example": "She had a brilliant idea for the science project."
+  },
+  {
+    "word": "calm",
+    "meaning": "Not showing or feeling nervousness or anger",
+    "example": "He took a deep breath to stay calm."
+  },
+  {
+    "word": "delightful",
+    "meaning": "Causing great pleasure",
+    "example": "We had a delightful picnic by the beach."
+  },
+  {
+    "word": "energetic",
+    "meaning": "Showing or involving great activity or vitality",
+    "example": "The energetic children played tag all afternoon."
+  },
+  {
+    "word": "friendly",
+    "meaning": "Kind and pleasant",
+    "example": "Our new neighbour gave us a friendly wave."
+  },
+  {
+    "word": "grateful",
+    "meaning": "Feeling or showing an appreciation of kindness",
+    "example": "I am grateful for all the help you have given me."
+  },
+  {
+    "word": "helpful",
+    "meaning": "Giving or ready to give help",
+    "example": "The helpful girl carried the heavy books for her teacher."
+  },
+  {
+    "word": "innocent",
+    "meaning": "Not guilty of a crime or offense; simple and pure",
+    "example": "The innocent baby smiled at everyone."
+  },
+  {
+    "word": "joyful",
+    "meaning": "Feeling, expressing, or causing great pleasure and happiness",
+    "example": "It was a joyful occasion when the family reunited."
+  },
+  {
+    "word": "lucky",
+    "meaning": "Having, bringing, or resulting from good luck",
+    "example": "I felt lucky to find a dollar coin on the floor."
+  },
+  {
+    "word": "merry",
+    "meaning": "Cheerful and lively",
+    "example": "We wish you a Merry Christmas!"
+  },
+  {
+    "word": "neat",
+    "meaning": "Arranged in a tidy way; in good order",
+    "example": "Please keep your desk neat and clean."
+  },
+  {
+    "word": "polite",
+    "meaning": "Having or showing behaviour that is respectful",
+    "example": "It is polite to say 'please' and 'thank you'."
+  },
+  {
+    "word": "ready",
+    "meaning": "Fully prepared",
+    "example": "Are you ready to go to school?"
+  },
+  {
+    "word": "silly",
+    "meaning": "Having or showing a lack of common sense or judgment",
+    "example": "We laughed at his silly jokes."
+  },
+  {
+    "word": "thankful",
+    "meaning": "Pleased and relieved",
+    "example": "I am thankful that it stopped raining before our walk."
+  },
+  {
+    "word": "useful",
+    "meaning": "Able to be used for a practical purpose",
+    "example": "A dictionary is a useful tool for learning new words."
+  },
+  {
+    "word": "warm",
+    "meaning": "Of or at a fairly or comfortably high temperature",
+    "example": "She wore a warm jacket because the weather was cold."
+  },
+  {
+    "word": "alert",
+    "meaning": "Quick to notice any unusual and potentially dangerous circumstances",
+    "example": "The alert guard dog barked at the stranger."
+  },
+  {
+    "word": "busy",
+    "meaning": "Having a great deal to do",
+    "example": "The busy bee buzzed from flower to flower."
+  },
+  {
+    "word": "cheerful",
+    "meaning": "Noticeably happy and optimistic",
+    "example": "He has a cheerful smile that brightens the room."
+  },
+  {
+    "word": "dizzy",
+    "meaning": "Having a sensation of spinning around and losing one's balance",
+    "example": "I felt dizzy after spinning in circles."
+  },
+  {
+    "word": "fair",
+    "meaning": "Treating people equally without favouritism",
+    "example": "The referee must be fair to both teams."
+  },
+  {
+    "word": "glad",
+    "meaning": "Pleased; delighted",
+    "example": "I am glad to see you again."
+  },
+  {
+    "word": "healthy",
+    "meaning": "In a good physical or mental condition",
+    "example": "Eating fruits and vegetables keeps you healthy."
+  },
+  {
+    "word": "interesting",
+    "meaning": "Arousing curiosity or interest",
+    "example": "The book was so interesting that I could not put it down."
+  },
+  {
+    "word": "loyal",
+    "meaning": "Giving or showing firm and constant support",
+    "example": "The loyal dog stayed by its master's side."
+  },
+  {
+    "word": "modern",
+    "meaning": "Relating to the present or recent times",
+    "example": "Singapore is a very modern city with tall buildings."
+  },
+  {
+    "word": "nice",
+    "meaning": "Pleasant; agreeable; satisfactory",
+    "example": "We had a nice time at the park yesterday."
+  },
+  {
+    "word": "open",
+    "meaning": "Allowing access, passage, or a view through an empty space",
+    "example": "Please leave the window open to let some fresh air in."
+  },
+  {
+    "word": "perfect",
+    "meaning": "Having all the required or desirable elements",
+    "example": "It was a perfect day for a picnic."
+  },
+  {
+    "word": "real",
+    "meaning": "Actually existing as a thing or occurring in fact",
+    "example": "Is that story real or just a fairy tale?"
+  },
+  {
+    "word": "safe",
+    "meaning": "Protected from or not exposed to danger or risk",
+    "example": "Make sure you keep your money in a safe place."
+  },
+  {
+    "word": "true",
+    "meaning": "In accordance with fact or reality",
+    "example": "The story he told us was true."
+  },
+  {
+    "word": "wild",
+    "meaning": "Living or growing in the natural environment",
+    "example": "Lions and tigers are wild animals."
+  },
+  {
+    "word": "awake",
+    "meaning": "Not asleep",
+    "example": "I was awake all night because of the loud thunder."
+  },
+  {
+    "word": "bold",
+    "meaning": "Showing an ability to take risks; confident and courageous",
+    "example": "The bold knight rode into the dragon's cave."
+  },
+  {
+    "word": "clear",
+    "meaning": "Easy to perceive, understand, or interpret",
+    "example": "The water in the swimming pool is very clear."
+  },
+  {
+    "word": "deep",
+    "meaning": "Extending far down from the top or surface",
+    "example": "Be careful, the water at this end of the pool is deep."
+  },
+  {
+    "word": "early",
+    "meaning": "Happening or done before the usual or expected time",
+    "example": "We woke up early to catch the morning train."
+  },
+  {
+    "word": "fresh",
+    "meaning": "Recently made or obtained; not canned, frozen, or otherwise preserved",
+    "example": "I like to eat fresh fruits for breakfast."
+  },
+  {
+    "word": "great",
+    "meaning": "Of an extent, amount, or intensity considerably above the normal",
+    "example": "We had a great time at the birthday party."
+  },
+  {
+    "word": "heavy",
+    "meaning": "Of great weight; difficult to lift or move",
+    "example": "The box of books was too heavy for me to carry."
+  },
+  {
+    "word": "light",
+    "meaning": "Having little weight; not heavy",
+    "example": "The feather was so light that it floated in the air."
+  },
+  {
+    "word": "mighty",
+    "meaning": "Possessing great and impressive power or strength",
+    "example": "The mighty elephant lifted the log with its trunk."
+  },
+  {
+    "word": "plain",
+    "meaning": "Not decorated or elaborate; simple",
+    "example": "She wore a plain white dress to the party."
+  },
+  {
+    "word": "rich",
+    "meaning": "Having a great deal of money or assets",
+    "example": "The rich man donated a lot of money to charity."
+  },
+  {
+    "word": "strong",
+    "meaning": "Having the power to move heavy weights or perform other physically demanding tasks",
+    "example": "He is strong enough to lift the heavy box."
+  },
+  {
+    "word": "thick",
+    "meaning": "With opposite sides or surfaces that are a great or relatively great distance apart",
+    "example": "She wore a thick sweater to keep warm."
+  },
+  {
+    "word": "wide",
+    "meaning": "Of great or more than average width",
+    "example": "The river was too wide for us to swim across."
+  },
+  {
+    "word": "accept",
+    "meaning": "Consent to receive a thing offered",
+    "example": "She was happy to accept the birthday gift."
+  },
+  {
+    "word": "borrow",
+    "meaning": "Take and use something that belongs to someone else with the intention of returning it",
+    "example": "May I borrow your eraser, please?"
+  },
+  {
+    "word": "celebrate",
+    "meaning": "Acknowledge a significant or happy day or event with a social gathering",
+    "example": "We will celebrate National Day on the 9th of August."
+  },
+  {
+    "word": "discover",
+    "meaning": "Find something or someone unexpectedly or in the course of a search",
+    "example": "The scientists hope to discover a new type of insect."
+  },
+  {
+    "word": "encourage",
+    "meaning": "Give support, confidence, or hope to someone",
+    "example": "The teacher always encourages us to do our best."
+  },
+  {
+    "word": "forgive",
+    "meaning": "Stop feeling angry or resentful towards someone for an offense",
+    "example": "I hope you can forgive me for breaking your pen."
+  },
+  {
+    "word": "gather",
+    "meaning": "Come together; assemble or accumulate",
+    "example": "We will gather at the hall for assembly."
+  },
+  {
+    "word": "imagine",
+    "meaning": "Form a mental image or concept of",
+    "example": "Imagine you are an astronaut flying to the moon!"
+  },
+  {
+    "word": "join",
+    "meaning": "Link or connect",
+    "example": "Would you like to join us for a game of football?"
+  },
+  {
+    "word": "knock",
+    "meaning": "Strike a surface noisily to attract attention",
+    "example": "Please knock on the door before entering."
+  },
+  {
+    "word": "listen",
+    "meaning": "Give one's attention to a sound",
+    "example": "You must listen to the teacher during lessons."
+  },
+  {
+    "word": "manage",
+    "meaning": "Be in charge of; succeed in surviving or in achieving something despite difficult circumstances",
+    "example": "Did you manage to finish your homework on time?"
+  },
+  {
+    "word": "notice",
+    "meaning": "Become aware of",
+    "example": "Did you notice the new poster on the wall?"
+  },
+  {
+    "word": "offer",
+    "meaning": "Present or proffer something for someone to accept or reject as so desired",
+    "example": "He offered to carry the bags for the old lady."
+  },
+  {
+    "word": "promise",
+    "meaning": "Assure someone that one will definitely do, give, or arrange something",
+    "example": "I promise to return your book tomorrow."
+  },
+  {
+    "word": "question",
+    "meaning": "A sentence worded or expressed so as to elicit information",
+    "example": "Please raise your hand if you have a question."
+  },
+  {
+    "word": "receive",
+    "meaning": "Be given, presented with, or paid something",
+    "example": "I received a beautiful card on my birthday."
+  },
+  {
+    "word": "share",
+    "meaning": "Have a portion of something with another or others",
+    "example": "It is good to share your toys with your friends."
+  },
+  {
+    "word": "travel",
+    "meaning": "Make a journey, typically of some length",
+    "example": "My family loves to travel to different countries."
+  },
+  {
+    "word": "understand",
+    "meaning": "Perceive the intended meaning of words, a language, or a speaker",
+    "example": "Do you understand the math problem?"
+  },
+  {
+    "word": "visit",
+    "meaning": "Go to see and spend time with someone socially",
+    "example": "We will visit our grandparents this weekend."
+  },
+  {
+    "word": "whisper",
+    "meaning": "Speak very softly using one's breath without one's vocal cords",
+    "example": "They had to whisper so they wouldn't wake the baby."
+  },
+  {
+    "word": "yell",
+    "meaning": "A loud, sharp cry, especially of pain, surprise, or delight",
+    "example": "Please do not yell in the library."
+  },
+  {
+    "word": "animal",
+    "meaning": "A living organism that feeds on organic matter",
+    "example": "The lion is a wild animal."
+  },
+  {
+    "word": "building",
+    "meaning": "A structure with a roof and walls, such as a house or factory",
+    "example": "That tall building is a block of flats."
+  },
+  {
+    "word": "country",
+    "meaning": "A nation with its own government, occupying a particular territory",
+    "example": "Singapore is a small and beautiful country."
+  },
+  {
+    "word": "distance",
+    "meaning": "An amount of space between two things or people",
+    "example": "The distance between the school and my house is very short."
+  },
+  {
+    "word": "earth",
+    "meaning": "The planet on which we live; the world",
+    "example": "The earth revolves around the sun."
+  },
+  {
+    "word": "family",
+    "meaning": "A group of one or more parents and their children living together as a unit",
+    "example": "I love spending time with my family."
+  },
+  {
+    "word": "garden",
+    "meaning": "A piece of ground, often near a house, used for growing flowers, fruit, or vegetables",
+    "example": "My mother grows roses in her garden."
+  },
+  {
+    "word": "history",
+    "meaning": "The study of past events",
+    "example": "We learned about the history of Singapore in school."
+  },
+  {
+    "word": "island",
+    "meaning": "A piece of land surrounded by water",
+    "example": "We took a ferry to a nearby island."
+  },
+  {
+    "word": "journey",
+    "meaning": "An act of travelling from one place to another",
+    "example": "The train journey took three hours."
+  },
+  {
+    "word": "knowledge",
+    "meaning": "Facts, information, and skills acquired through experience or education",
+    "example": "Reading books helps you gain knowledge."
+  },
+  {
+    "word": "language",
+    "meaning": "The method of human communication, either spoken or written",
+    "example": "English is a very important language to learn."
+  },
+  {
+    "word": "mountain",
+    "meaning": "A large natural elevation of the earth's surface rising abruptly from the surrounding level",
+    "example": "They climbed to the top of the high mountain."
+  },
+  {
+    "word": "nature",
+    "meaning": "The phenomena of the physical world collectively",
+    "example": "We went for a walk in the nature reserve."
+  },
+  {
+    "word": "ocean",
+    "meaning": "A very large expanse of sea, in particular, each of the main areas into which the sea is divided geographically",
+    "example": "The ship sailed across the vast ocean."
+  },
+  {
+    "word": "picture",
+    "meaning": "A painting or drawing",
+    "example": "He drew a picture of his family."
+  },
+  {
+    "word": "reason",
+    "meaning": "A cause, explanation, or justification for an action or event",
+    "example": "What is the reason for you being late?"
+  },
+  {
+    "word": "season",
+    "meaning": "Each of the four divisions of the year (spring, summer, autumn, and winter)",
+    "example": "My favourite season is summer because we can go swimming."
+  },
+  {
+    "word": "trouble",
+    "meaning": "Difficulty or problems",
+    "example": "The boy got into trouble for not doing his homework."
+  },
+  {
+    "word": "umbrella",
+    "meaning": "A device consisting of a circular canopy of cloth on a folding metal frame supported by a central rod, used as protection against rain or sometimes sun",
+    "example": "Remember to bring your umbrella in case it rains."
+  },
+  {
+    "word": "village",
+    "meaning": "A group of houses and associated buildings, larger than a hamlet and smaller than a town, situated in a rural area",
+    "example": "My grandparents live in a quiet village."
+  },
+  {
+    "word": "weather",
+    "meaning": "The state of the atmosphere at a place and time",
+    "example": "The weather is very sunny today."
+  },
+  {
+    "word": "year",
+    "meaning": "The time taken by the earth to make one revolution around the sun",
+    "example": "There are twelve months in a year."
+  },
+  {
+    "word": "accident",
+    "meaning": "An unfortunate incident that happens unexpectedly and unintentionally",
+    "example": "The car got into a bad accident on the highway."
+  },
+  {
+    "word": "blank",
+    "meaning": "Bare, empty, or plain",
+    "example": "Write your name on the blank sheet of paper."
+  },
+  {
+    "word": "crowd",
+    "meaning": "A large number of people gathered together in a disorganized or unruly way",
+    "example": "There was a huge crowd at the shopping mall."
+  },
+  {
+    "word": "hawker",
+    "meaning": "A person who travels about selling goods, typically advertising them by shouting",
+    "example": "We bought some chicken rice from the hawker centre."
+  },
+  {
+    "word": "canteen",
+    "meaning": "A restaurant provided by an organization such as a military camp, college, factory, or company for its soldiers, students, staff, etc.",
+    "example": "I ate a plate of noodles at the school canteen."
+  },
+  {
+    "word": "principal",
+    "meaning": "The head of a school, college, or other educational institution",
+    "example": "Our school principal gave a speech during assembly."
+  },
+  {
+    "word": "recess",
+    "meaning": "A break between school classes",
+    "example": "I played with my friends during recess."
+  },
+  {
+    "word": "assembly",
+    "meaning": "A group of people gathered together in one place for a common purpose",
+    "example": "We sing the national anthem every morning at assembly."
+  },
+  {
+    "word": "prefect",
+    "meaning": "A senior student authorized to enforce discipline",
+    "example": "The prefect made sure everyone lined up quietly."
+  },
+  {
+    "word": "uniform",
+    "meaning": "The distinctive clothing worn by members of the same organization or body",
+    "example": "I put on my clean school uniform."
+  },
+  {
+    "word": "homework",
+    "meaning": "Schoolwork that a student is required to do at home",
+    "example": "I finished my math homework before dinner."
+  },
+  {
+    "word": "textbook",
+    "meaning": "A book used as a standard work for the study of a particular subject",
+    "example": "Please take out your science textbook."
+  },
+  {
+    "word": "dictionary",
+    "meaning": "A book or electronic resource that lists the words of a language and gives their meaning",
+    "example": "If you don't know a word, look it up in the dictionary."
+  },
+  {
+    "word": "alphabet",
+    "meaning": "A standard set of letters used to write one or more languages based upon the general principle that the letters represent the phonemes of the spoken language",
+    "example": "The English alphabet has twenty-six letters."
+  },
+  {
+    "word": "library",
+    "meaning": "A building or room containing collections of books, periodicals, and sometimes films and recorded music for people to read, borrow, or refer to",
+    "example": "I borrowed three new books from the library."
+  },
+  {
+    "word": "corridor",
+    "meaning": "A long passage in a building from which doors lead into rooms",
+    "example": "Do not run along the corridor outside the classrooms."
+  },
+  {
+    "word": "science",
+    "meaning": "The intellectual and practical activity encompassing the systematic study of the structure and behaviour of the physical and natural world through observation and experiment",
+    "example": "We learned about magnets in science class today."
+  },
+  {
+    "word": "mathematics",
+    "meaning": "The abstract science of number, quantity, and space",
+    "example": "Mathematics is my favourite subject because I love numbers."
+  },
+  {
+    "word": "spelling",
+    "meaning": "The process or activity of writing or naming the letters of a word",
+    "example": "I got full marks for my weekly spelling test."
+  },
+  {
+    "word": "vocabulary",
+    "meaning": "The body of words used in a particular language",
+    "example": "Reading more books will help improve your vocabulary."
+  },
+  {
+    "word": "grammar",
+    "meaning": "The whole system and structure of a language or of languages in general",
+    "example": "We learned about past tense verbs in our grammar lesson."
+  },
+  {
+    "word": "sentence",
+    "meaning": "A set of words that is complete in itself, typically containing a subject and predicate",
+    "example": "Remember to start every sentence with a capital letter."
+  },
+  {
+    "word": "paragraph",
+    "meaning": "A distinct section of a piece of writing, usually dealing with a single theme and indicated by a new line, indentation, or numbering",
+    "example": "Write a short paragraph about your favourite hobby."
+  },
+  {
+    "word": "composition",
+    "meaning": "A work of music, literature, or art",
+    "example": "I wrote a composition about my family trip to the zoo."
+  },
+  {
+    "word": "comprehension",
+    "meaning": "The action or capability of understanding something",
+    "example": "Read the passage carefully to answer the comprehension questions."
+  },
+  {
+    "word": "holiday",
+    "meaning": "An extended period of leisure and recreation, especially one spent away from home or in travelling",
+    "example": "We are going to Sentosa for the school holiday."
+  },
+  {
+    "word": "festival",
+    "meaning": "A day or period of celebration, typically for religious reasons",
+    "example": "Chinese New Year is an important festival in Singapore."
+  },
+  {
+    "word": "celebration",
+    "meaning": "The action of celebrating an important day or event",
+    "example": "There was a big celebration for the school's anniversary."
+  },
+  {
+    "word": "neighbour",
+    "meaning": "A person living next door to or very near to the speaker or person referred to",
+    "example": "Our neighbour gave us some delicious cookies."
+  },
+  {
+    "word": "community",
+    "meaning": "A group of people living in the same place or having a particular characteristic in common",
+    "example": "The community gathered at the void deck for a party."
+  },
+  {
+    "word": "environment",
+    "meaning": "The surroundings or conditions in which a person, animal, or plant lives or operates",
+    "example": "We must all do our part to protect the environment."
+  },
+  {
+    "word": "pollution",
+    "meaning": "The presence in or introduction into the environment of a substance which has harmful or poisonous effects",
+    "example": "Throwing rubbish into the river causes water pollution."
+  },
+  {
+    "word": "recycle",
+    "meaning": "Convert (waste) into reusable material",
+    "example": "We should recycle paper and plastic bottles."
+  },
+  {
+    "word": "rubbish",
+    "meaning": "Waste material; refuse or litter",
+    "example": "Please throw your rubbish into the bin."
+  },
+  {
+    "word": "bin",
+    "meaning": "A receptacle for storing a specified substance",
+    "example": "Throw the empty bottle into the recycling bin."
+  },
+  {
+    "word": "plastic",
+    "meaning": "A synthetic material made from a wide range of organic polymers",
+    "example": "Avoid using too many plastic bags when shopping."
+  },
+  {
+    "word": "metal",
+    "meaning": "A solid material which is typically hard, shiny, and features good electrical and thermal conductivity",
+    "example": "The keys are made of metal."
+  },
+  {
+    "word": "paper",
+    "meaning": "Material manufactured in thin sheets from the pulp of wood or other fibrous substances",
+    "example": "I need a piece of paper to write a note."
+  },
+  {
+    "word": "energy",
+    "meaning": "The strength and vitality required for sustained physical or mental activity",
+    "example": "Eating a good breakfast gives you energy for the day."
+  },
+  {
+    "word": "electricity",
+    "meaning": "A form of energy resulting from the existence of charged particles",
+    "example": "Turn off the lights to save electricity."
+  },
+  {
+    "word": "machine",
+    "meaning": "An apparatus using mechanical power and having several parts, each with a definite function and together performing a particular task",
+    "example": "A washing machine helps us wash our clothes easily."
+  },
+  {
+    "word": "computer",
+    "meaning": "An electronic device for storing and processing data",
+    "example": "I use the computer to search for information for my project."
+  },
+  {
+    "word": "internet",
+    "meaning": "A global computer network providing a variety of information and communication facilities",
+    "example": "We can find almost anything on the internet."
+  },
+  {
+    "word": "website",
+    "meaning": "A set of related web pages located under a single domain name",
+    "example": "Our school has a website with photos of recent events."
+  },
+  {
+    "word": "password",
+    "meaning": "A secret word or phrase that must be used to gain admission to a place",
+    "example": "Do not share your computer password with anyone."
+  },
+  {
+    "word": "keyboard",
+    "meaning": "A panel of keys that operate a computer or typewriter",
+    "example": "I typed my name using the computer keyboard."
+  },
+  {
+    "word": "screen",
+    "meaning": "A flat panel or area on an electronic device on which images and data are displayed",
+    "example": "The movie looked great on the big screen."
+  },
+  {
+    "word": "message",
+    "meaning": "A verbal, written, or recorded communication sent to or left for a recipient",
+    "example": "My mother sent a text message to my aunt."
+  },
+  {
+    "word": "envelope",
+    "meaning": "A flat paper container with a sealable flap, used to enclose a letter or document",
+    "example": "I put the letter inside a red envelope."
+  },
+  {
+    "word": "stamp",
+    "meaning": "A small piece of paper attached to mail to indicate that postage has been paid",
+    "example": "You need to paste a stamp on the envelope before mailing it."
+  },
+  {
+    "word": "letter",
+    "meaning": "A written, typed, or printed communication, sent in an envelope by post or messenger",
+    "example": "I wrote a letter to my pen pal in Malaysia."
+  },
+  {
+    "word": "mailbox",
+    "meaning": "A box into which mail is delivered",
+    "example": "I checked the mailbox to see if my parcel had arrived."
+  },
+  {
+    "word": "postman",
+    "meaning": "A person who is employed to deliver or collect letters and parcels",
+    "example": "The postman delivered a package to our house this morning."
+  },
+  {
+    "word": "agree",
+    "meaning": "To have the same opinion as someone else",
+    "example": "I agree with you that the movie was very funny."
+  },
+  {
+    "word": "allow",
+    "meaning": "To give permission for someone to do something",
+    "example": "My mother does not allow me to eat sweets before dinner."
+  },
+  {
+    "word": "announce",
+    "meaning": "To make a public statement about a fact or occurrence",
+    "example": "The principal will announce the winner of the spelling bee today."
+  },
+  {
+    "word": "apologize",
+    "meaning": "To express regret for something that one has done wrong",
+    "example": "You should apologize for breaking her pencil."
+  },
+  {
+    "word": "appear",
+    "meaning": "To come into sight or become visible",
+    "example": "A bright rainbow appeared in the sky after the rain."
+  },
+  {
+    "word": "approach",
+    "meaning": "To come near or nearer to someone or something",
+    "example": "The dog barked as the stranger approached the house."
+  },
+  {
+    "word": "argue",
+    "meaning": "To disagree or exchange angry words with someone",
+    "example": "The two brothers always argue over who gets to play the video game first."
+  },
+  {
+    "word": "arrange",
+    "meaning": "To put things in a neat, attractive, or required order",
+    "example": "Please arrange the books neatly on the shelf."
+  },
+  {
+    "word": "arrive",
+    "meaning": "To reach a place at the end of a journey",
+    "example": "We will arrive at the zoo in ten minutes."
+  },
+  {
+    "word": "attach",
+    "meaning": "To fasten or join one thing to another",
+    "example": "Attach a stamp to the envelope before you mail it."
+  },
+  {
+    "word": "attend",
+    "meaning": "To be present at an event or meeting",
+    "example": "All students must attend the morning assembly."
+  },
+  {
+    "word": "avoid",
+    "meaning": "To keep away from or stop oneself from doing something",
+    "example": "We should avoid eating too much junk food."
+  },
+  {
+    "word": "behave",
+    "meaning": "To act or conduct oneself in a specified way, usually good",
+    "example": "The students behaved very well during the museum tour."
+  },
+  {
+    "word": "bite",
+    "meaning": "To use the teeth to cut into something",
+    "example": "Be careful, that dog might bite if you disturb it."
+  },
+  {
+    "word": "blind",
+    "meaning": "Unable to see",
+    "example": "The blind man used a white cane to walk safely."
+  },
+  {
+    "word": "bounce",
+    "meaning": "To spring back after hitting a surface",
+    "example": "The basketball bounced off the rim and out of bounds."
+  },
+  {
+    "word": "breathe",
+    "meaning": "To take air into the lungs and then expel it",
+    "example": "Take a deep breath and breathe out slowly to calm down."
+  },
+  {
+    "word": "calculate",
+    "meaning": "To determine the amount or number of something mathematically",
+    "example": "We used a calculator to calculate the total cost of the groceries."
+  },
+  {
+    "word": "cancel",
+    "meaning": "To decide that an organized event will not take place",
+    "example": "The football match was cancelled due to heavy rain."
+  },
+  {
+    "word": "carry",
+    "meaning": "To support and move someone or something from one place to another",
+    "example": "He helped the old lady carry her heavy shopping bags."
+  },
+  {
+    "word": "catch",
+    "meaning": "To intercept and hold something which has been thrown",
+    "example": "Try to catch the ball before it hits the ground."
+  },
+  {
+    "word": "chase",
+    "meaning": "To pursue in order to catch or catch up with",
+    "example": "The cat loves to chase the laser pointer around the room."
+  },
+  {
+    "word": "chew",
+    "meaning": "To bite and work food in the mouth with the teeth",
+    "example": "Remember to chew your food properly before swallowing."
+  },
+  {
+    "word": "choose",
+    "meaning": "To pick out someone or something as being the best or most appropriate",
+    "example": "You can choose any book from the library shelf."
+  },
+  {
+    "word": "collect",
+    "meaning": "To bring or gather together",
+    "example": "My brother likes to collect stamps from different countries."
+  },
+  {
+    "word": "compare",
+    "meaning": "To look for the difference between two or more things",
+    "example": "Let's compare our answers to see if they are the same."
+  },
+  {
+    "word": "complain",
+    "meaning": "To express dissatisfaction or annoyance about something",
+    "example": "The customer complained that the soup was too cold."
+  },
+  {
+    "word": "continue",
+    "meaning": "To keep doing something without stopping",
+    "example": "Please continue reading from where you stopped."
+  },
+  {
+    "word": "copy",
+    "meaning": "To make a similar or identical version of something",
+    "example": "The teacher told us to copy the notes from the whiteboard."
+  },
+  {
+    "word": "count",
+    "meaning": "To determine the total number of something",
+    "example": "Count the number of chairs in the classroom."
+  },
+  {
+    "word": "crash",
+    "meaning": "To collide violently with an obstacle or another vehicle",
+    "example": "The car spun out of control and crashed into a tree."
+  },
+  {
+    "word": "crawl",
+    "meaning": "To move forward on the hands and knees or by dragging the body close to the ground",
+    "example": "The baby learned how to crawl before she could walk."
+  },
+  {
+    "word": "cross",
+    "meaning": "To go or extend across or to the other side of",
+    "example": "Always look right and left before you cross the road."
+  },
+  {
+    "word": "crush",
+    "meaning": "To deform, pulverize, or force inwards by compressing forcefully",
+    "example": "He accidentally sat on his hat and crushed it."
+  },
+  {
+    "word": "cry",
+    "meaning": "To shed tears, usually because of pain, sorrow, or other strong emotions",
+    "example": "The little girl started to cry when she dropped her ice cream."
+  },
+  {
+    "word": "damage",
+    "meaning": "Physical harm that impairs the value, usefulness, or normal function of something",
+    "example": "The strong wind caused a lot of damage to the roof."
+  },
+  {
+    "word": "decide",
+    "meaning": "To come to a resolution in the mind as a result of consideration",
+    "example": "I cannot decide which flavour of ice cream to get."
+  },
+  {
+    "word": "deliver",
+    "meaning": "To bring and hand over to the proper recipient or address",
+    "example": "The postman will deliver the parcel to our house today."
+  },
+  {
+    "word": "describe",
+    "meaning": "To give a detailed account in words of",
+    "example": "Can you describe what the lost puppy looks like?"
+  },
+  {
+    "word": "destroy",
+    "meaning": "To put an end to the existence of something by damaging or attacking it",
+    "example": "The fire destroyed the entire wooden shed."
+  },
+  {
+    "word": "direct",
+    "meaning": "To tell or show someone the way",
+    "example": "The police officer directed the traffic at the busy junction."
+  },
+  {
+    "word": "discuss",
+    "meaning": "To talk about something with another person or group of people",
+    "example": "We will discuss the science project in class tomorrow."
+  },
+  {
+    "word": "dive",
+    "meaning": "To plunge head first into water",
+    "example": "The swimmer will dive into the pool when the whistle blows."
+  },
+  {
+    "word": "divide",
+    "meaning": "To separate or be separated into parts",
+    "example": "We will divide the pizza into eight equal slices."
+  },
+  {
+    "word": "drop",
+    "meaning": "To let or make something fall vertically",
+    "example": "Be careful not to drop the fragile glass vase."
+  },
+  {
+    "word": "earn",
+    "meaning": "To obtain money in return for labour or services",
+    "example": "He works hard to earn money for his family."
+  },
+  {
+    "word": "escape",
+    "meaning": "To break free from confinement or control",
+    "example": "The little bird managed to escape from its cage."
+  },
+  {
+    "word": "examine",
+    "meaning": "To inspect someone or something thoroughly in order to determine their nature or condition",
+    "example": "The doctor will examine your throat to see if it is red."
+  },
+  {
+    "word": "explain",
+    "meaning": "To make an idea or situation clear to someone by describing it in more detail",
+    "example": "Can you explain how to solve this difficult math problem?"
+  },
+  {
+    "word": "fail",
+    "meaning": "To be unsuccessful in achieving one's goal",
+    "example": "If you do not study, you might fail the spelling test."
+  },
+  {
+    "word": "fetch",
+    "meaning": "To go for and then bring back someone or something",
+    "example": "The dog ran to fetch the stick that its owner threw."
+  },
+  {
+    "word": "finish",
+    "meaning": "To bring a task or activity to an end",
+    "example": "I want to finish reading this book before I go to sleep."
+  },
+  {
+    "word": "float",
+    "meaning": "To rest or move on or near the surface of a liquid without sinking",
+    "example": "The plastic boat can float on the water."
+  },
+  {
+    "word": "fold",
+    "meaning": "To bend something over on itself so that one part of it covers another",
+    "example": "She taught me how to fold a paper airplane."
+  },
+  {
+    "word": "follow",
+    "meaning": "To go or come after a person or thing proceeding ahead",
+    "example": "The little ducklings follow their mother everywhere."
+  },
+  {
+    "word": "freeze",
+    "meaning": "To be turned into ice or another solid as a result of extreme cold",
+    "example": "Water will freeze if you put it in the freezer."
+  },
+  {
+    "word": "fry",
+    "meaning": "To cook food in hot fat or oil",
+    "example": "My mother will fry some chicken for dinner."
+  },
+  {
+    "word": "greet",
+    "meaning": "To give a polite word of recognition or sign of welcome",
+    "example": "Remember to greet your teachers when you see them in the morning."
+  },
+  {
+    "word": "guess",
+    "meaning": "To estimate or suppose without sufficient information to be sure",
+    "example": "Can you guess how many sweets are in this jar?"
+  },
+  {
+    "word": "handle",
+    "meaning": "To feel or manipulate with the hands",
+    "example": "Please handle the delicate glasses with care."
+  },
+  {
+    "word": "happen",
+    "meaning": "To take place or occur",
+    "example": "What will happen if we mix blue and yellow paint?"
+  },
+  {
+    "word": "heal",
+    "meaning": "To become sound or healthy again",
+    "example": "The cut on my knee took a week to heal."
+  },
+  {
+    "word": "hide",
+    "meaning": "To put or keep out of sight",
+    "example": "The cat likes to hide under the sofa when it rains."
+  },
+  {
+    "word": "hug",
+    "meaning": "To squeeze someone tightly in one's arms, typically to express affection",
+    "example": "She gave her best friend a warm hug."
+  },
+  {
+    "word": "hunt",
+    "meaning": "To pursue and kill a wild animal for sport or food",
+    "example": "The cheetah will hunt for its prey in the long grass."
+  },
+  {
+    "word": "hurry",
+    "meaning": "To move or act with great haste",
+    "example": "We must hurry or we will miss the school bus."
+  },
+  {
+    "word": "injure",
+    "meaning": "To do physical harm or damage to someone",
+    "example": "He fell off his bicycle and managed to injure his knee."
+  },
+  {
+    "word": "invent",
+    "meaning": "To create or design something that has not existed before",
+    "example": "Thomas Edison is famous because he helped invent the lightbulb."
+  },
+  {
+    "word": "invite",
+    "meaning": "To make a polite, formal, or friendly request to someone to go somewhere or to do something",
+    "example": "I want to invite all my classmates to my birthday party."
+  },
+  {
+    "word": "judge",
+    "meaning": "To form an opinion or conclusion about",
+    "example": "We should not judge a book by its cover."
+  },
+  {
+    "word": "laugh",
+    "meaning": "To make the spontaneous sounds and movements of the face and body that express lively amusement",
+    "example": "The funny clown made everyone in the audience laugh."
+  },
+  {
+    "word": "lead",
+    "meaning": "To show someone the way to a destination by going in front of or beside them",
+    "example": "The guide will lead us through the museum."
+  },
+  {
+    "word": "leak",
+    "meaning": "To accidentally lose or admit contents, especially liquid or gas, through a hole or crack",
+    "example": "The bucket has a hole and water is starting to leak out."
+  },
+  {
+    "word": "learn",
+    "meaning": "To gain or acquire knowledge of or skill in something by study, experience, or being taught",
+    "example": "We go to school to learn new things every day."
+  },
+  {
+    "word": "leave",
+    "meaning": "To go away from",
+    "example": "Please do not leave your bags unattended."
+  },
+  {
+    "word": "lick",
+    "meaning": "To pass the tongue over something in order to taste, moisten, or clean it",
+    "example": "The puppy tried to lick my face."
+  },
+  {
+    "word": "lift",
+    "meaning": "To raise to a higher position or level",
+    "example": "He is very strong and can lift heavy weights."
+  },
+  {
+    "word": "lock",
+    "meaning": "To fasten or secure with a lock",
+    "example": "Remember to lock the door before you leave the house."
+  },
+  {
+    "word": "march",
+    "meaning": "To walk in a military manner with a regular measured tread",
+    "example": "The soldiers will march during the National Day Parade."
+  },
+  {
+    "word": "match",
+    "meaning": "To correspond or cause to correspond in some essential respect",
+    "example": "Draw a line to match the word to its correct picture."
+  },
+  {
+    "word": "measure",
+    "meaning": "To ascertain the size, amount, or degree of something",
+    "example": "Use a ruler to measure the length of the string."
+  },
+  {
+    "word": "melt",
+    "meaning": "To make or become liquefied by heat",
+    "example": "The ice cream will melt quickly in the hot sun."
+  },
+  {
+    "word": "mend",
+    "meaning": "To repair something that is broken or damaged",
+    "example": "My grandmother will mend the hole in my sock."
+  },
+  {
+    "word": "mix",
+    "meaning": "To combine or put together to form one substance or mass",
+    "example": "We need to mix the flour and water to make dough."
+  },
+  {
+    "word": "move",
+    "meaning": "To go in a specified direction or manner",
+    "example": "The tortoise can only move very slowly."
+  },
+  {
+    "word": "multiply",
+    "meaning": "To obtain from a number another that contains the first number a specified number of times",
+    "example": "In math class, we learned how to multiply numbers."
+  },
+  {
+    "word": "mutter",
+    "meaning": "To say something in a low or barely audible voice, especially in dissatisfaction or irritation",
+    "example": "He began to mutter to himself when he lost the game."
+  },
+  {
+    "word": "name",
+    "meaning": "To give a name to",
+    "example": "They decided to name their new puppy 'Buddy'."
+  },
+  {
+    "word": "pack",
+    "meaning": "To fill a suitcase or bag with clothes and other items needed for travel",
+    "example": "I need to pack my school bag before I go to bed."
+  },
+  {
+    "word": "paint",
+    "meaning": "To cover the surface of something with paint",
+    "example": "We are going to paint the walls of our classroom light blue."
+  },
+  {
+    "word": "park",
+    "meaning": "To bring a vehicle to a halt and leave it temporarily",
+    "example": "Dad had to park the car in the basement carpark."
+  },
+  {
+    "word": "paste",
+    "meaning": "To coat with paste and stick",
+    "example": "Cut out the pictures and paste them into your scrapbook."
+  },
+  {
+    "word": "pause",
+    "meaning": "To interrupt action or speech briefly",
+    "example": "The teacher paused the video so we could take notes."
+  },
+  {
+    "word": "pay",
+    "meaning": "To give someone money that is due for work done, goods received, or a debt incurred",
+    "example": "I will use my allowance to pay for the chicken rice."
+  },
+  {
+    "word": "peel",
+    "meaning": "To remove the outer covering or skin from a fruit or vegetable",
+    "example": "You need to peel the banana before eating it."
+  },
+  {
+    "word": "pick",
+    "meaning": "To take hold of and remove a flower, fruit, or vegetable from where it is growing",
+    "example": "Please do not pick the flowers in the garden."
+  },
+  {
+    "word": "plan",
+    "meaning": "To decide on and arrange in advance",
+    "example": "We need to plan our route for the treasure hunt."
+  },
+  {
+    "word": "plant",
+    "meaning": "To place a seed, bulb, or plant in the ground so that it can grow",
+    "example": "We will plant some sunflower seeds in the garden today."
+  },
+  {
+    "word": "point",
+    "meaning": "To direct someone's attention towards something by extending one's finger",
+    "example": "It is rude to point your finger at people."
+  },
+  {
+    "word": "pour",
+    "meaning": "To flow rapidly in a steady stream",
+    "example": "Carefully pour the hot water into the cup."
+  },
+  {
+    "word": "practice",
+    "meaning": "To perform an activity or exercise regularly in order to improve or maintain one's proficiency",
+    "example": "You need to practice playing the piano every day."
+  },
+  {
+    "word": "prepare",
+    "meaning": "To make something ready for use or consideration",
+    "example": "Mother is helping to prepare dinner in the kitchen."
+  },
+  {
+    "word": "pretend",
+    "meaning": "To speak and act so as to make it appear that something is the case when in fact it is not",
+    "example": "The children love to pretend they are brave knights."
+  },
+  {
+    "word": "print",
+    "meaning": "To produce books, newspapers, or magazines, especially in large quantities, by a mechanical process involving the transfer of text, images, or designs to paper",
+    "example": "Can you print this worksheet from the computer for me?"
+  },
+  {
+    "word": "pull",
+    "meaning": "To exert force on someone or something so as to cause movement towards oneself",
+    "example": "You have to pull the door hard to open it."
+  },
+  {
+    "word": "punch",
+    "meaning": "To strike with the fist",
+    "example": "The boxer will punch the heavy bag during training."
+  },
+  {
+    "word": "punish",
+    "meaning": "To inflict a penalty or sanction on someone as retribution for an offense",
+    "example": "The teacher had to punish the student for fighting."
+  },
+  {
+    "word": "push",
+    "meaning": "To exert force on someone or something in order to move them away from oneself",
+    "example": "Please do not push your friends when lining up."
+  },
+  {
+    "word": "reach",
+    "meaning": "To stretch out an arm in a specified direction in order to touch or grasp something",
+    "example": "I am too short to reach the books on the top shelf."
+  },
+  {
+    "word": "reply",
+    "meaning": "To say something in response to something someone has said",
+    "example": "Please reply to my question as soon as possible."
+  },
+  {
+    "word": "report",
+    "meaning": "To give a spoken or written account of something that one has observed, heard, done, or investigated",
+    "example": "You must report the lost wallet to the police."
+  },
+  {
+    "word": "rescue",
+    "meaning": "To save someone from a dangerous or distressing situation",
+    "example": "The brave lifeguard swam out to rescue the drowning boy."
+  },
+  {
+    "word": "return",
+    "meaning": "To come or go back to a place or person",
+    "example": "I must return these books to the library by Friday."
+  },
+  {
+    "word": "roar",
+    "meaning": "A full, deep, prolonged cry uttered by a lion or other large wild animal",
+    "example": "We could hear the lion roar loudly from a distance."
+  },
+  {
+    "word": "rub",
+    "meaning": "To apply firm pressure to the surface of something, using a repeated back and forth motion",
+    "example": "Do not rub your eyes if they are itchy."
+  },
+  {
+    "word": "rule",
+    "meaning": "One of a set of explicit or understood regulations or principles governing conduct within a particular activity or sphere",
+    "example": "The most important rule in class is to respect others."
+  },
+  {
+    "word": "rush",
+    "meaning": "To move with urgent haste",
+    "example": "We had to rush to the MRT station so we wouldn't be late."
+  },
+  {
+    "word": "save",
+    "meaning": "To keep safe or rescue from harm or danger",
+    "example": "Superman arrived just in time to save the day."
+  },
+  {
+    "word": "score",
+    "meaning": "To gain a point or points in a competitive game or match",
+    "example": "He managed to score a goal in the final minute of the soccer match."
+  },
+  {
+    "word": "scratch",
+    "meaning": "To score or mark the surface of something with a sharp or pointed object",
+    "example": "Be careful not to scratch the shiny table with your keys."
+  },
+  {
+    "word": "scream",
+    "meaning": "To give a long, loud, piercing cry or cries expressing excitement, great emotion, or pain",
+    "example": "The roller coaster drop made everyone scream in excitement."
+  },
+  {
+    "word": "search",
+    "meaning": "To try to find something by looking or otherwise seeking carefully and thoroughly",
+    "example": "We need to search the whole room to find my lost keys."
+  },
+  {
+    "word": "serve",
+    "meaning": "To present food or drink to someone",
+    "example": "The waiter will serve our food soon."
+  },
+  {
+    "word": "settle",
+    "meaning": "To resolve or reach an agreement about an argument or problem",
+    "example": "They finally managed to settle their differences and become friends again."
+  },
+  {
+    "word": "shake",
+    "meaning": "To move irregularly and quickly up and down or from side to side",
+    "example": "The dog will shake itself dry after a bath."
+  },
+  {
+    "word": "shine",
+    "meaning": "To give out a bright light",
+    "example": "The sun will shine brightly after the rain stops."
+  },
+  {
+    "word": "shock",
+    "meaning": "To cause someone to feel surprised and upset",
+    "example": "The sudden loud noise gave everyone a shock."
+  },
+  {
+    "word": "shoot",
+    "meaning": "To fire a bullet from a gun or discharge an arrow from a bow",
+    "example": "The archer aims carefully before he will shoot the arrow."
+  },
+  {
+    "word": "shout",
+    "meaning": "To utter a loud call or cry",
+    "example": "Do not shout in the library; you must whisper."
+  },
+  {
+    "word": "sign",
+    "meaning": "To write one's name on a letter, card, or document to authorize or confirm it",
+    "example": "Please sign your name at the bottom of the form."
+  },
+  {
+    "word": "slip",
+    "meaning": "To lose one's footing and slide unintentionally for a short distance",
+    "example": "Be careful not to slip on the wet floor."
+  },
+  {
+    "word": "smell",
+    "meaning": "To perceive or detect the odor or scent of something",
+    "example": "I love the smell of freshly baked bread."
+  },
+  {
+    "word": "smile",
+    "meaning": "To form one's features into a pleased, kind, or amused expression",
+    "example": "She gave me a big smile when I gave her the present."
+  },
+  {
+    "word": "sound",
+    "meaning": "Vibrations that travel through the air or another medium and can be heard when they reach a person's or animal's ear",
+    "example": "I heard a strange sound coming from the dark room."
+  },
+  {
+    "word": "spell",
+    "meaning": "To write or name the letters that form a word in correct sequence",
+    "example": "Can you spell the word 'beautiful' correctly?"
+  },
+  {
+    "word": "spill",
+    "meaning": "To cause or allow liquid to flow over the edge of its container, especially unintentionally",
+    "example": "Be careful not to spill your milk on the table."
+  },
+  {
+    "word": "spoil",
+    "meaning": "To diminish or destroy the value or quality of",
+    "example": "Too much rain will spoil our plans for a picnic."
+  },
+  {
+    "word": "spray",
+    "meaning": "To apply liquid to someone or something in the form of a shower of tiny drops",
+    "example": "Mother will spray some water on the plants."
+  },
+  {
+    "word": "squeeze",
+    "meaning": "To firmly press something soft or yielding, typically with one's fingers",
+    "example": "You need to squeeze the lemon to get the juice out."
+  },
+  {
+    "word": "stare",
+    "meaning": "To look fixedly or vacantly at someone or something with one's eyes wide open",
+    "example": "It is rude to stare at people you do not know."
+  },
+  {
+    "word": "start",
+    "meaning": "To begin to do or be",
+    "example": "The race will start when you hear the whistle."
+  },
+  {
+    "word": "stay",
+    "meaning": "To remain in the same place",
+    "example": "Please stay here while I go and buy some drinks."
+  },
+  {
+    "word": "steal",
+    "meaning": "To take another person's property without permission or legal right and without intending to return it",
+    "example": "It is wrong to steal things that do not belong to you."
+  },
+  {
+    "word": "step",
+    "meaning": "To lift and set down one's foot or one foot after the other in order to walk somewhere or move to a new position",
+    "example": "Watch your step when you walk down the stairs."
+  },
+  {
+    "word": "sting",
+    "meaning": "To pierce or wound painfully with a sharp-pointed structure or organ",
+    "example": "If you disturb the bee, it might sting you."
+  },
+  {
+    "word": "stir",
+    "meaning": "To move a spoon or other implement around in a liquid or other substance in order to mix it thoroughly",
+    "example": "Use a spoon to stir the sugar into your tea."
+  },
+  {
+    "word": "stop",
+    "meaning": "To come to an end; to cease to happen",
+    "example": "The bus will stop at the traffic light."
+  },
+  {
+    "word": "stretch",
+    "meaning": "To be made or be capable of being made longer or wider without tearing or breaking",
+    "example": "Remember to stretch your muscles before exercising."
+  },
+  {
+    "word": "strike",
+    "meaning": "To hit forcibly and deliberately with one's hand or a weapon or other implement",
+    "example": "The clock will strike twelve at midnight."
+  },
+  {
+    "word": "struggle",
+    "meaning": "To make forceful or violent efforts to get free of restraint or constriction",
+    "example": "The fly tried to struggle free from the spider's web."
+  },
+  {
+    "word": "study",
+    "meaning": "To devote time and attention to acquiring knowledge on an academic subject, especially by means of books",
+    "example": "I need to study for my science test tomorrow."
+  },
+  {
+    "word": "subtract",
+    "meaning": "To take away a number or amount from another to calculate the difference",
+    "example": "If you subtract two from five, you are left with three."
+  },
+  {
+    "word": "succeed",
+    "meaning": "To achieve the desired aim or result",
+    "example": "If you work hard, you will succeed in your goals."
+  },
+  {
+    "word": "suffer",
+    "meaning": "To experience or be subjected to something bad or unpleasant",
+    "example": "He had to suffer a stomachache after eating too much ice cream."
+  },
+  {
+    "word": "supply",
+    "meaning": "To make something needed or wanted available to someone; provide",
+    "example": "The school will supply all the materials we need for art class."
+  },
+  {
+    "word": "surprise",
+    "meaning": "An unexpected or astonishing event, fact, or thing",
+    "example": "We threw a surprise birthday party for my sister."
+  },
+  {
+    "word": "swallow",
+    "meaning": "To cause or allow something, especially food or drink, to pass down the throat",
+    "example": "Drink some water to help you swallow the pill."
+  },
+  {
+    "word": "sweep",
+    "meaning": "To clean an area by brushing away dirt or litter",
+    "example": "Please sweep the floor after you accidentally drop the biscuits."
+  },
+  {
+    "word": "swell",
+    "meaning": "To become larger or rounder in size, typically as a result of an accumulation of fluid",
+    "example": "His ankle began to swell after he twisted it."
+  },
+  {
+    "word": "swing",
+    "meaning": "To move or cause to move back and forth or from side to side while suspended or on an axis",
+    "example": "The monkey loves to swing from tree to tree."
+  },
+  {
+    "word": "taste",
+    "meaning": "The sensation of flavor perceived in the mouth and throat on contact with a substance",
+    "example": "This soup has a very spicy taste."
+  },
+  {
+    "word": "teach",
+    "meaning": "To show or explain to someone how to do something",
+    "example": "My older brother is going to teach me how to ride a bicycle."
+  },
+  {
+    "word": "tear",
+    "meaning": "To pull or rip something apart or to pieces with force",
+    "example": "Be careful not to tear the thin paper."
+  },
+  {
+    "word": "tease",
+    "meaning": "To make fun of or attempt to provoke a person or animal in a playful way",
+    "example": "It is not nice to tease others about their mistakes."
+  },
+  {
+    "word": "telephone",
+    "meaning": "A system for transmitting voices over a distance using wire or radio, by converting acoustic vibrations to electrical signals",
+    "example": "I will use the telephone to call my grandmother."
+  },
+  {
+    "word": "tell",
+    "meaning": "To communicate information, facts, or news to someone in spoken or written words",
+    "example": "Please tell me the true story of what happened."
+  },
+  {
+    "word": "test",
+    "meaning": "A procedure intended to establish the quality, performance, or reliability of something, especially before it is taken into widespread use",
+    "example": "We have an English spelling test every Friday."
+  },
+  {
+    "word": "thank",
+    "meaning": "To express gratitude to someone, especially by saying 'Thank you'",
+    "example": "Remember to thank your friend for the birthday present."
+  },
+  {
+    "word": "tickle",
+    "meaning": "To lightly touch or prod a person or a part of the body in a way that causes itching and often laughter",
+    "example": "My baby brother laughs when I tickle his tummy."
+  },
+  {
+    "word": "tie",
+    "meaning": "To attach or fasten someone or something with string or similar cord",
+    "example": "I learned how to tie my own shoelaces today."
+  },
+  {
+    "word": "touch",
+    "meaning": "To come so close to an object as to be or come into contact with it",
+    "example": "The sign in the museum said 'Do not touch the exhibits'."
+  },
+  {
+    "word": "trade",
+    "meaning": "The action of buying and selling goods and services",
+    "example": "We used to trade Pokemon cards during recess."
+  },
+  {
+    "word": "train",
+    "meaning": "To teach a person or animal a particular skill or type of behavior through practice and instruction",
+    "example": "We need to train our new dog to sit and stay."
+  },
+  {
+    "word": "treat",
+    "meaning": "To behave towards or deal with in a certain way",
+    "example": "You must treat animals with kindness and respect."
+  },
+  {
+    "word": "trick",
+    "meaning": "A cunning or skillful act or scheme intended to deceive or outwit someone",
+    "example": "The magician showed us a very clever card trick."
+  },
+  {
+    "word": "trip",
+    "meaning": "To catch one's foot on something and stumble or fall",
+    "example": "Be careful not to trip over the loose rug."
+  },
+  {
+    "word": "trust",
+    "meaning": "Firm belief in the reliability, truth, ability, or strength of someone or something",
+    "example": "I trust my best friend with all my secrets."
+  },
+  {
+    "word": "try",
+    "meaning": "To make an attempt or effort to do something",
+    "example": "You must try your best in the upcoming exam."
+  },
+  {
+    "word": "turn",
+    "meaning": "To move or cause to move in a circular direction wholly or partly around an axis or point",
+    "example": "Turn the handle to the right to open the door."
+  },
+  {
+    "word": "twist",
+    "meaning": "To form into a bent, curling, or distorted shape",
+    "example": "Do not twist the wire too much or it will break."
+  },
+  {
+    "word": "type",
+    "meaning": "To write something on a typewriter or computer by pressing the keys",
+    "example": "I learned how to type quickly on the computer keyboard."
+  },
+  {
+    "word": "use",
+    "meaning": "To take, hold, or deploy something as a means of accomplishing a purpose or achieving a result",
+    "example": "May I use your sharpener for a moment?"
+  },
+  {
+    "word": "wait",
+    "meaning": "To stay where one is or delay action until a particular time or until something else happens",
+    "example": "We have to wait for the green man before crossing the road."
+  },
+  {
+    "word": "wake",
+    "meaning": "To emerge or cause to emerge from a state of sleep",
+    "example": "I use an alarm clock to wake me up in the morning."
+  },
+  {
+    "word": "walk",
+    "meaning": "To move at a regular and fairly slow pace by lifting and setting down each foot in turn",
+    "example": "I usually walk to school with my neighbour."
+  },
+  {
+    "word": "wander",
+    "meaning": "To walk or move in a leisurely, casual, or aimless way",
+    "example": "We decided to wander around the shopping mall for an hour."
+  },
+  {
+    "word": "warn",
+    "meaning": "To inform someone in advance of an impending or possible danger, problem, or other unpleasant situation",
+    "example": "The weather forecast warned us about the heavy storm."
+  },
+  {
+    "word": "wash",
+    "meaning": "To clean with water and, typically, soap or detergent",
+    "example": "Please wash your hands with soap before eating."
+  },
+  {
+    "word": "waste",
+    "meaning": "To use or expend carelessly, extravagantly, or to no purpose",
+    "example": "We should not waste food; take only what you can eat."
+  },
+  {
+    "word": "watch",
+    "meaning": "To look at or observe attentively over a period of time",
+    "example": "We sat down to watch a movie on television."
+  },
+  {
+    "word": "wave",
+    "meaning": "To move one's hand to and fro in greeting or as a signal",
+    "example": "I always wave goodbye to my parents when they drop me off."
+  },
+  {
+    "word": "weigh",
+    "meaning": "To find out how heavy someone or something is, typically using scales",
+    "example": "The nurse will weigh you during your health checkup."
+  },
+  {
+    "word": "welcome",
+    "meaning": "An instance or manner of greeting someone",
+    "example": "We gave a warm welcome to the new student in our class."
+  },
+  {
+    "word": "whistle",
+    "meaning": "To emit a clear, high-pitched sound by forcing breath through a small hole between one's lips or teeth",
+    "example": "The PE teacher will blow his whistle to start the race."
+  },
+  {
+    "word": "wipe",
+    "meaning": "To clean or dry something by rubbing its surface with a cloth, a piece of paper, or one's hand",
+    "example": "Please wipe the table with a wet cloth."
+  },
+  {
+    "word": "wish",
+    "meaning": "To feel or express a strong desire or hope for something that is not easily attainable",
+    "example": "Make a wish before you blow out your birthday candles!"
+  },
+  {
+    "word": "wonder",
+    "meaning": "To desire or be curious to know something",
+    "example": "I wonder what we are having for lunch today."
+  },
+  {
+    "word": "work",
+    "meaning": "Activity involving mental or physical effort done in order to achieve a purpose or result",
+    "example": "We have to work together to finish the group project."
+  },
+  {
+    "word": "worry",
+    "meaning": "To give way to anxiety or unease; allow one's mind to dwell on difficulty or troubles",
+    "example": "Do not worry too much about the test; just do your best."
+  },
+  {
+    "word": "wrap",
+    "meaning": "To cover or enclose in paper or soft material",
+    "example": "Mother helped me wrap the birthday present in colourful paper."
+  },
+  {
+    "word": "wreck",
+    "meaning": "To destroy or severely damage a structure, vehicle, or similar",
+    "example": "The storm caused the ship to wreck on the rocks."
+  },
+  {
+    "word": "yawn",
+    "meaning": "To involuntarily open one's mouth wide and inhale deeply due to tiredness or boredom",
+    "example": "He tried to hide his yawn during the long speech."
+  }
+]
