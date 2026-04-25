@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SimTower 2</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow: hidden; background: #000; touch-action: none; font-family: sans-serif; }
+    #game { display: block; }
+    #toolbar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 10px;
+      z-index: 100;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.7);
+      border-top: 1px solid #3a3a3a;
+    }
+    .tool-btn {
+      flex: 1;
+      min-width: 44px;
+      height: 44px;
+      border: 2px solid #555;
+      border-radius: 6px;
+      background: #3a3a3a;
+      color: #ccc;
+      font-size: 9px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tool-btn:hover { background: #4a4a4a; border-color: #888; }
+    .tool-btn.active { border-color: #ffd700; background: #554400; color: #ffd700; }
+    .tool-btn.destroy { border-color: #883333; color: #cc6666; }
+    .tool-btn.destroy:hover { background: #4a1a1a; border-color: #cc4444; }
+    .tool-btn.destroy.active { border-color: #ff6666; background: #551111; color: #ff9999; }
+    .tool-btn.daynight { border-color: #667; color: #aab; flex: 0 0 44px; }
+    .tool-btn.daynight.night { border-color: #446; background: #112244; color: #99aaff; }
+    .tool-icon { font-size: 15px; line-height: 1; }
+    .tool-label { font-size: 8px; line-height: 1; }
+  </style>
+</head>
+<body>
+
+<div id="toolbar">
+  <button class="tool-btn" data-tool="lobby">
+    <span class="tool-icon">🏛</span>
+    <span class="tool-label">Lobby</span>
+  </button>
+  <button class="tool-btn active" data-tool="office">
+    <span class="tool-icon">💼</span>
+    <span class="tool-label">Office</span>
+  </button>
+  <button class="tool-btn" data-tool="condo">
+    <span class="tool-icon">🏠</span>
+    <span class="tool-label">Condo</span>
+  </button>
+  <button class="tool-btn" data-tool="hotel">
+    <span class="tool-icon">🛏</span>
+    <span class="tool-label">Hotel</span>
+  </button>
+  <button class="tool-btn" data-tool="retail">
+    <span class="tool-icon">🛍</span>
+    <span class="tool-label">Retail</span>
+  </button>
+  <button class="tool-btn destroy" data-tool="destroy">
+    <span class="tool-icon">🔨</span>
+    <span class="tool-label">Destroy</span>
+  </button>
+  <button id="daynight-btn" class="tool-btn daynight">
+    <span class="tool-icon" id="daynight-icon">☀️</span>
+    <span class="tool-label" id="daynight-label">Day</span>
+  </button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@8.9.1/dist/pixi.min.js"></script>
+<script>
+// ─── Constants ────────────────────────────────────────────────────────────────
+const FLOOR_H        = 24;
+const CELL_W         = 8;
+const TOOLBAR_H      = 60;
+const GRID_COLS      = 250;
+const MAX_FLOORS     = 100;
+const GROUND_MARGIN  = 80;
+// World-space Y coordinate of the ground line (rooms use Y increasing downward)
+const WORLD_GROUND_Y = MAX_FLOORS * FLOOR_H + 500; // 2900
+
+const ROOM_DEFS = {
+  lobby:  { widthCells: 16, heightFloors: 4, minFloor: 0,    maxFloor: 0,   color: 0x7A6040, label: 'Lobby'  },
+  office: { widthCells:  9, heightFloors: 1, minFloor: -100, maxFloor: 999, color: 0x3A6BC4, label: 'Office' },
+  condo:  { widthCells: 16, heightFloors: 1, minFloor: -100, maxFloor: 999, color: 0x2E8B57, label: 'Condo'  },
+  hotel:  { widthCells:  4, heightFloors: 1, minFloor: -100, maxFloor: 999, color: 0x9B2335, label: 'Hotel'  },
+  retail: { widthCells: 12, heightFloors: 1, minFloor: -100, maxFloor: 999, color: 0xC47A20, label: 'Retail' },
+};
+
+// Sprite sheet atlas coordinates
+const SPRITE_DEFS = {
+  lobby: { sx: 8, sy: 9,  sw: 128, sh: 96 },
+  hotel: { sx: 8, sy: 8,  sw: 32,  sh: 24 },
+};
+
+const RETAIL_COL_SX       = [8, 112, 216, 336, 440, 544];
+const RETAIL_ROW_SY       = [8, 40, 72, 104, 136, 168];
+const RETAIL_FOR_RENT_COL = 3;
+const RETAIL_CLOSED_COL   = 4;
+const RETAIL_SPECIAL_ROW  = 5;
+const RETAIL_TYPE_COUNT   = 5;
+
+const OFFICE_DAY_SX   = [8, 184];
+const OFFICE_NIGHT_SX = [88, 264];
+const OFFICE_ROW_SY   = [8, 40, 72];
+
+const CONDO_ROW_SY = [8, 40, 72];
+const CONDO_COL_SX = [8, 144, 280];
+
+// ─── Game state ───────────────────────────────────────────────────────────────
+const building = { rooms: [], nextId: 1 };
+let tool      = 'office';
+let gameHour  = 9;
+let prevHourInt = 9;
+
+let viewX = 0;
+let viewY = 0;
+
+let hoverCol = -1, hoverFloor = -999, mouseInCanvas = false;
+let mouseDown = false, dragging = false;
+let dragStartX = 0, dragStartY = 0, dragViewX = 0, dragViewY = 0;
+let lastTouchMidX = 0, lastTouchMidY = 0, touchMoved = false, wasPanning = false;
+
+// ─── PixiJS scene objects ─────────────────────────────────────────────────────
+let app;
+let skyGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, ghostGraphics, labelContainer;
+
+const texCache    = {};           // key → PIXI.Texture
+const roomSprites = new Map();    // roomId → PIXI.Sprite
+const labelPool   = [];           // pooled PIXI.Text objects
+
+// ─── App size helpers ─────────────────────────────────────────────────────────
+// With autoDensity:true, renderer.width/height are already in CSS pixels
+function getAppW() { return app.renderer.width; }
+function getAppH() { return app.renderer.height; }
+function screenGroundY() { return getAppH() - GROUND_MARGIN + viewY; }
+
+// ─── Grid math ────────────────────────────────────────────────────────────────
+function screenToGrid(sx, sy) {
+  const gY = screenGroundY();
+  return {
+    col:   Math.floor((sx + viewX) / CELL_W),
+    floor: Math.floor((gY - sy) / FLOOR_H),
+  };
+}
+
+function clampViewX(x) {
+  const maxX = GRID_COLS * CELL_W - getAppW();
+  return Math.max(0, Math.min(Math.max(0, maxX), x));
+}
+
+function clampViewY(y) {
+  const minY = -100 * FLOOR_H;
+  const maxY = MAX_FLOORS * FLOOR_H - (getAppH() - GROUND_MARGIN) + FLOOR_H * 4;
+  return Math.max(minY, Math.min(Math.max(minY, maxY), y));
+}
+
+// Sync worldContainer transform to current viewX/viewY
+function applyView() {
+  worldContainer.x = -viewX;
+  worldContainer.y = (getAppH() - GROUND_MARGIN + viewY) - WORLD_GROUND_Y;
+}
+
+// ─── Room logic ───────────────────────────────────────────────────────────────
+function roomCells(room) {
+  const def = ROOM_DEFS[room.type];
+  const cells = new Set();
+  for (let c = room.col; c < room.col + def.widthCells; c++)
+    for (let f = room.floor; f < room.floor + def.heightFloors; f++)
+      cells.add(`${c},${f}`);
+  return cells;
+}
+
+function occupancySet(excludeId = -1) {
+  const occ = new Set();
+  for (const r of building.rooms) {
+    if (r.id === excludeId) continue;
+    for (const cell of roomCells(r)) occ.add(cell);
+  }
+  return occ;
+}
+
+function canPlace(type, col, floor) {
+  const def = ROOM_DEFS[type];
+  if (!def) return false;
+  if (floor < def.minFloor || floor > def.maxFloor) return false;
+  if (col < 0 || col + def.widthCells > GRID_COLS) return false;
+  const occ = occupancySet();
+  for (let c = col; c < col + def.widthCells; c++)
+    for (let f = floor; f < floor + def.heightFloors; f++)
+      if (occ.has(`${c},${f}`)) return false;
+  return true;
+}
+
+function placeRoom(type, col, floor) {
+  if (!canPlace(type, col, floor)) return false;
+  const room = { id: building.nextId++, type, col, floor };
+  if (type === 'condo')  room.variant = Math.floor(Math.random() * 3);
+  if (type === 'office') { room.colVar = Math.floor(Math.random() * 2); room.rowVar = Math.floor(Math.random() * 3); }
+  if (type === 'retail') { room.retailType = Math.floor(Math.random() * RETAIL_TYPE_COUNT); room.rented = true; }
+  building.rooms.push(room);
+  createRoomSprite(room);
+  return true;
+}
+
+function deleteAt(col, floor) {
+  const idx = building.rooms.findIndex(r => {
+    const def = ROOM_DEFS[r.type];
+    return col >= r.col && col < r.col + def.widthCells &&
+           floor >= r.floor && floor < r.floor + def.heightFloors;
+  });
+  if (idx !== -1) {
+    destroyRoomSprite(building.rooms[idx].id);
+    building.rooms.splice(idx, 1);
+    return true;
+  }
+  return false;
+}
+
+// ─── Texture cache ────────────────────────────────────────────────────────────
+function sliceTexture(base, sx, sy, sw, sh) {
+  return new PIXI.Texture({ source: base.source, frame: new PIXI.Rectangle(sx, sy, sw, sh) });
+}
+
+function buildTextureCache(bases) {
+  texCache['lobby'] = sliceTexture(bases.lobby, SPRITE_DEFS.lobby.sx, SPRITE_DEFS.lobby.sy, SPRITE_DEFS.lobby.sw, SPRITE_DEFS.lobby.sh);
+  texCache['hotel'] = sliceTexture(bases.hotel, SPRITE_DEFS.hotel.sx, SPRITE_DEFS.hotel.sy, SPRITE_DEFS.hotel.sw, SPRITE_DEFS.hotel.sh);
+
+  for (let col = 0; col < 2; col++) {
+    for (let row = 0; row < 3; row++) {
+      texCache[`office_day_${col}_${row}`]   = sliceTexture(bases.office, OFFICE_DAY_SX[col],   OFFICE_ROW_SY[row], 72, 24);
+      texCache[`office_night_${col}_${row}`] = sliceTexture(bases.office, OFFICE_NIGHT_SX[col], OFFICE_ROW_SY[row], 72, 24);
+    }
+  }
+
+  for (let tod = 0; tod < 3; tod++) {
+    for (let v = 0; v < 3; v++) {
+      texCache[`condo_${tod}_${v}`] = sliceTexture(bases.condo, CONDO_COL_SX[tod], CONDO_ROW_SY[v], 128, 24);
+    }
+  }
+
+  for (let col = 0; col < 6; col++) {
+    for (let row = 0; row < 6; row++) {
+      texCache[`retail_${col}_${row}`] = sliceTexture(bases.retail, RETAIL_COL_SX[col], RETAIL_ROW_SY[row], 96, 24);
+    }
+  }
+}
+
+function condoTimeCol() {
+  if (gameHour >= 6  && gameHour < 17) return 0;
+  if (gameHour >= 17 && gameHour < 21) return 1;
+  return 2;
+}
+
+function getRoomTexture(room) {
+  switch (room.type) {
+    case 'lobby':  return texCache['lobby'];
+    case 'hotel':  return texCache['hotel'];
+    case 'office': {
+      const phase = (gameHour >= 6 && gameHour < 21) ? 'day' : 'night';
+      return texCache[`office_${phase}_${room.colVar ?? 0}_${room.rowVar ?? 0}`];
+    }
+    case 'condo':
+      return texCache[`condo_${condoTimeCol()}_${room.variant ?? 0}`];
+    case 'retail': {
+      let col, row;
+      if (!room.rented) {
+        col = RETAIL_FOR_RENT_COL; row = RETAIL_SPECIAL_ROW;
+      } else if (gameHour < 10) {
+        col = RETAIL_CLOSED_COL; row = RETAIL_SPECIAL_ROW;
+      } else {
+        row = room.retailType ?? 0;
+        col = gameHour < 12 ? 0 : gameHour < 18 ? 1 : 2;
+      }
+      return texCache[`retail_${col}_${row}`];
+    }
+  }
+  return PIXI.Texture.EMPTY;
+}
+
+// ─── Room sprite management ───────────────────────────────────────────────────
+function createRoomSprite(room) {
+  const def    = ROOM_DEFS[room.type];
+  const sprite = new PIXI.Sprite(getRoomTexture(room));
+  sprite.x      = room.col * CELL_W;
+  sprite.y      = WORLD_GROUND_Y - (room.floor + def.heightFloors) * FLOOR_H;
+  sprite.width  = def.widthCells  * CELL_W;
+  sprite.height = def.heightFloors * FLOOR_H;
+  roomLayer.addChild(sprite);
+  roomSprites.set(room.id, sprite);
+}
+
+function destroyRoomSprite(roomId) {
+  const sprite = roomSprites.get(roomId);
+  if (sprite) {
+    roomLayer.removeChild(sprite);
+    sprite.destroy();
+    roomSprites.delete(roomId);
+  }
+}
+
+function updateAllRoomTextures() {
+  for (const room of building.rooms) {
+    if (!['office', 'condo', 'retail'].includes(room.type)) continue;
+    const sprite = roomSprites.get(room.id);
+    if (sprite) sprite.texture = getRoomTexture(room);
+  }
+}
+
+// ─── Sky & ground ─────────────────────────────────────────────────────────────
+function drawSky() {
+  const W = getAppW(), H = getAppH();
+  const gY = screenGroundY();
+  const isNight = gameHour < 6 || gameHour >= 21;
+  skyGraphics.clear();
+  try {
+    const grad = new PIXI.FillGradient(0, 0, 0, Math.max(gY, 1));
+    if (isNight) {
+      grad.addColorStop(0,   0x020610);
+      grad.addColorStop(0.5, 0x0A1428);
+      grad.addColorStop(1,   0x1A2444);
+    } else {
+      grad.addColorStop(0,   0x2B6CB0);
+      grad.addColorStop(0.4, 0x4A90D9);
+      grad.addColorStop(0.8, 0x87CEEB);
+      grad.addColorStop(1,   0xC8E8F8);
+    }
+    skyGraphics.rect(0, 0, W, H).fill(grad);
+  } catch (_) {
+    // Fallback if FillGradient is unavailable
+    skyGraphics.rect(0, 0, W, H).fill(isNight ? 0x020610 : 0x2B6CB0);
+  }
+}
+
+function drawGround() {
+  const W  = getAppW(), H = getAppH();
+  const gY = screenGroundY();
+  groundGraphics.clear();
+  if (gY < H) {
+    groundGraphics.rect(0, gY, W, H - gY).fill(0x3A2810);
+    groundGraphics.rect(0, gY, W, 5     ).fill(0x5C4020);
+    groundGraphics.rect(0, gY, W, 2     ).fill(0x7A5530);
+    groundGraphics.moveTo(0, gY).lineTo(W, gY)
+                  .stroke({ width: 2, color: 0xB48C50, alpha: 0.6 });
+  }
+}
+
+// ─── Grid lines (screen-space, redrawn with view) ─────────────────────────────
+function drawGrid() {
+  const W  = getAppW(), H = getAppH();
+  const gY = screenGroundY();
+  gridGraphics.clear();
+
+  // Batch all floor lines under one stroke call
+  for (let f = -100; f <= MAX_FLOORS; f++) {
+    const y = gY - f * FLOOR_H;
+    if (y < -FLOOR_H || y > H) continue;
+    gridGraphics.moveTo(0, y).lineTo(W, y);
+  }
+  gridGraphics.stroke({ width: 1, color: 0xffffff, alpha: 0.08 });
+}
+
+// ─── Floor labels (screen-space) ─────────────────────────────────────────────
+function updateFloorLabels() {
+  const W  = getAppW(), H = getAppH();
+  const gY = screenGroundY();
+
+  for (const lbl of labelPool) lbl.visible = false;
+  let poolIdx = 0;
+
+  for (let f = -100; f <= MAX_FLOORS; f++) {
+    const y = gY - f * FLOOR_H;
+    if (y < -FLOOR_H || y > H + FLOOR_H) continue;
+
+    const text = f === 0 ? 'G' : (f < 0 ? `B${-f}` : `${f}`);
+
+    let lbl = labelPool[poolIdx];
+    if (!lbl) {
+      lbl = new PIXI.Text({ text: '', style: { fontSize: 9, fontFamily: 'monospace', fill: 0xffffff } });
+      lbl.alpha = 0.5;
+      labelContainer.addChild(lbl);
+      labelPool.push(lbl);
+    }
+    lbl.text = text;
+    lbl.x    = W - 4;
+    lbl.y    = y - 11;
+    lbl.anchor.set(1, 0);
+    lbl.visible = true;
+    poolIdx++;
+
+    // Tick mark beside the label
+    gridGraphics.rect(W - 18, y - 0.5, 12, 1).fill({ color: 0xffffff, alpha: 0.5 });
+  }
+}
+
+// ─── Ghost preview (world-space graphics inside worldContainer) ───────────────
+function updateGhost() {
+  ghostGraphics.clear();
+  if (tool === 'destroy' || !mouseInCanvas || hoverFloor < -100 || dragging) return;
+  const def = ROOM_DEFS[tool];
+  if (!def) return;
+  const valid = canPlace(tool, hoverCol, hoverFloor);
+  const wx = hoverCol * CELL_W;
+  const wy = WORLD_GROUND_Y - (hoverFloor + def.heightFloors) * FLOOR_H;
+  const dw = def.widthCells  * CELL_W;
+  const dh = def.heightFloors * FLOOR_H;
+  ghostGraphics.rect(wx, wy, dw, dh)
+               .fill({ color: valid ? def.color : 0xcc2222, alpha: 0.55 });
+  ghostGraphics.rect(wx + 0.5, wy + 0.5, dw - 1, dh - 1)
+               .stroke({ width: 1.5, color: valid ? 0xffffc8 : 0xff5555, alpha: 0.9 });
+}
+
+// ─── Full visual refresh (call when view or sky changes) ──────────────────────
+function refreshVisuals() {
+  applyView();
+  drawSky();
+  drawGround();
+  drawGrid();
+  updateFloorLabels();
+}
+
+// ─── Day/night ────────────────────────────────────────────────────────────────
+const daynightBtn  = document.getElementById('daynight-btn');
+const daynightIcon = document.getElementById('daynight-icon');
+const daynightLbl  = document.getElementById('daynight-label');
+
+function updateDayNightButton() {
+  const isNight = gameHour < 6 || gameHour >= 21;
+  daynightBtn.classList.toggle('night', isNight);
+  daynightIcon.textContent = isNight ? '🌙' : '☀️';
+  daynightLbl.textContent  = isNight ? 'Night' : 'Day';
+}
+
+function toggleDayNight() {
+  const isNight = gameHour < 6 || gameHour >= 21;
+  gameHour = isNight ? 9 : 22;
+  prevHourInt = Math.floor(gameHour);
+  updateAllRoomTextures();
+  updateDayNightButton();
+  drawSky();
+  drawGround();
+}
+
+// ─── Input ────────────────────────────────────────────────────────────────────
+function attachInput() {
+  const canvas = app.canvas;
+
+  canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+  canvas.addEventListener('mousemove', e => {
+    const r  = canvas.getBoundingClientRect();
+    const mx = e.clientX - r.left, my = e.clientY - r.top;
+    mouseInCanvas = true;
+
+    if (mouseDown) {
+      const dx = mx - dragStartX, dy = my - dragStartY;
+      if (!dragging && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) dragging = true;
+      if (dragging) {
+        viewX = clampViewX(dragViewX - dx);
+        viewY = clampViewY(dragViewY - dy);
+        refreshVisuals();
+        return; // skip ghost update while dragging
+      }
+    }
+
+    const g = screenToGrid(mx, my);
+    hoverCol = g.col; hoverFloor = g.floor;
+    updateGhost();
+  });
+
+  canvas.addEventListener('mousedown', e => {
+    const r = canvas.getBoundingClientRect();
+    dragStartX = e.clientX - r.left; dragStartY = e.clientY - r.top;
+    dragViewX = viewX; dragViewY = viewY;
+    mouseDown = true; dragging = false;
+  });
+
+  canvas.addEventListener('mouseup', e => {
+    if (!dragging) {
+      const r  = canvas.getBoundingClientRect();
+      const mx = e.clientX - r.left, my = e.clientY - r.top;
+      const { col, floor } = screenToGrid(mx, my);
+      if (e.button === 2 || tool === 'destroy') deleteAt(col, floor);
+      else placeRoom(tool, col, floor);
+    }
+    mouseDown = false; dragging = false;
+    updateGhost();
+  });
+
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    viewX = clampViewX(viewX + e.deltaX * 0.6);
+    viewY = clampViewY(viewY - e.deltaY * 0.6);
+    refreshVisuals();
+    updateGhost();
+  }, { passive: false });
+
+  canvas.addEventListener('mouseenter', () => { mouseInCanvas = true; });
+  canvas.addEventListener('mouseleave', () => {
+    mouseInCanvas = false; mouseDown = false; dragging = false;
+    ghostGraphics.clear();
+  });
+
+  // ── Touch ──
+  function touchMidpoint(touches) {
+    if (touches.length === 1) return { x: touches[0].clientX, y: touches[0].clientY };
+    return {
+      x: (touches[0].clientX + touches[1].clientX) / 2,
+      y: (touches[0].clientY + touches[1].clientY) / 2,
+    };
+  }
+
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const r = canvas.getBoundingClientRect();
+    const m = touchMidpoint(e.touches);
+    lastTouchMidX = m.x - r.left;
+    lastTouchMidY = m.y - r.top;
+    dragViewX = viewX; dragViewY = viewY;
+    touchMoved = false;
+
+    if (e.touches.length >= 2) {
+      wasPanning = true;
+      hoverFloor = -999;
+      ghostGraphics.clear();
+    } else {
+      wasPanning = false;
+      const t  = e.touches[0];
+      const mx = t.clientX - r.left, my = t.clientY - r.top;
+      const g  = screenToGrid(mx, my);
+      hoverCol = g.col; hoverFloor = g.floor;
+      mouseInCanvas = true;
+      updateGhost();
+    }
+  }, { passive: false });
+
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const r  = canvas.getBoundingClientRect();
+    const m  = touchMidpoint(e.touches);
+    const mx = m.x - r.left, my = m.y - r.top;
+    const dx = mx - lastTouchMidX, dy = my - lastTouchMidY;
+
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) touchMoved = true;
+
+    if (e.touches.length >= 2) {
+      viewX = clampViewX(viewX - dx);
+      viewY = clampViewY(viewY + dy);
+      lastTouchMidX = mx; lastTouchMidY = my;
+      hoverFloor = -999;
+      refreshVisuals();
+      ghostGraphics.clear();
+    } else if (e.touches.length === 1) {
+      const t   = e.touches[0];
+      const tmx = t.clientX - r.left, tmy = t.clientY - r.top;
+      const g   = screenToGrid(tmx, tmy);
+      hoverCol = g.col; hoverFloor = g.floor;
+      mouseInCanvas = true;
+      lastTouchMidX = mx; lastTouchMidY = my;
+      updateGhost();
+    }
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    if (!wasPanning && e.changedTouches.length === 1 && e.touches.length === 0) {
+      const r  = canvas.getBoundingClientRect();
+      const t  = e.changedTouches[0];
+      const mx = t.clientX - r.left, my = t.clientY - r.top;
+      const { col, floor } = screenToGrid(mx, my);
+      if (tool === 'destroy') deleteAt(col, floor);
+      else placeRoom(tool, col, floor);
+    }
+    if (e.touches.length === 0) {
+      hoverFloor = -999;
+      mouseInCanvas = false;
+      ghostGraphics.clear();
+    }
+  }, { passive: false });
+}
+
+// ─── Toolbar ──────────────────────────────────────────────────────────────────
+function attachToolbar() {
+  document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+    const select = () => {
+      tool = btn.dataset.tool;
+      document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateGhost();
+    };
+    btn.addEventListener('click', select);
+    btn.addEventListener('touchend', e => { e.preventDefault(); select(); });
+  });
+
+  daynightBtn.addEventListener('click', toggleDayNight);
+  daynightBtn.addEventListener('touchend', e => { e.preventDefault(); toggleDayNight(); });
+}
+
+// ─── Scene graph ──────────────────────────────────────────────────────────────
+function buildScene() {
+  skyGraphics    = new PIXI.Graphics();
+  groundGraphics = new PIXI.Graphics();
+  worldContainer = new PIXI.Container();
+  gridGraphics   = new PIXI.Graphics();   // screen-space, NOT in worldContainer
+  ghostGraphics  = new PIXI.Graphics();   // world-space, inside worldContainer
+  roomLayer      = new PIXI.Container();
+  labelContainer = new PIXI.Container();  // screen-space
+
+  worldContainer.addChild(roomLayer);
+  worldContainer.addChild(ghostGraphics);
+
+  app.stage.addChild(skyGraphics);
+  app.stage.addChild(groundGraphics);
+  app.stage.addChild(worldContainer);
+  app.stage.addChild(gridGraphics);
+  app.stage.addChild(labelContainer);
+}
+
+// ─── Game loop (ticker) ───────────────────────────────────────────────────────
+function gameLoop(ticker) {
+  // Advance time: 1 real minute = 1 in-game hour
+  gameHour = (gameHour + ticker.deltaMS / 60000) % 24;
+  const hourInt = Math.floor(gameHour);
+  if (hourInt !== prevHourInt) {
+    prevHourInt = hourInt;
+    updateAllRoomTextures();
+    drawSky();     // day/night sky gradient may change at boundaries
+    drawGround();  // ground highlight colour unchanged but keep in sync
+    updateDayNightButton();
+  }
+}
+
+// ─── Async init ───────────────────────────────────────────────────────────────
+(async () => {
+  app = new PIXI.Application();
+  await app.init({
+    width:           window.innerWidth,
+    height:          window.innerHeight - TOOLBAR_H,
+    backgroundColor: 0x020610,
+    antialias:       false,
+    resolution:      window.devicePixelRatio || 1,
+    autoDensity:     true,
+  });
+
+  app.canvas.id = 'game';
+  document.body.insertBefore(app.canvas, document.getElementById('toolbar'));
+
+  // Load all sprite sheets in parallel
+  const [lobbyTex, officeTex, condoTex, hotelTex, retailTex] = await Promise.all([
+    PIXI.Assets.load('tower/Lobby Tiles.png'),
+    PIXI.Assets.load('tower/Office.png'),
+    PIXI.Assets.load('tower/Condos.png'),
+    PIXI.Assets.load('tower/Hotel.png'),
+    PIXI.Assets.load('tower/Retail.png'),
+  ]);
+  buildTextureCache({ lobby: lobbyTex, office: officeTex, condo: condoTex, hotel: hotelTex, retail: retailTex });
+
+  buildScene();
+  refreshVisuals();
+
+  attachInput();
+  attachToolbar();
+
+  app.ticker.add(gameLoop);
+
+  window.addEventListener('resize', () => {
+    app.renderer.resize(window.innerWidth, window.innerHeight - TOOLBAR_H);
+    refreshVisuals();
+  });
+})();
+</script>
+</body>
+</html>
