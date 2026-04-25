@@ -220,6 +220,14 @@
     .key.wrong   { background: #3a1010; border-color: var(--err); color: var(--err-lt); opacity: 0.5; }
     .key:disabled { cursor: default; }
 
+    /* ── Animations ── */
+    @keyframes cut-slash {
+      0%   { opacity: 0; stroke-width: 2; }
+      30%  { opacity: 1; stroke-width: 4; }
+      100% { opacity: 0; stroke-width: 2; }
+    }
+    .cut-flash { animation: cut-slash 0.25s ease-out forwards; }
+
     /* ── Result screen ── */
     .result-banner {
       font-size: 2rem;
@@ -327,19 +335,24 @@
 
     <!-- Hangman figure -->
     <div class="hangman-wrap">
-      <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Gallows (always visible) -->
+      <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" id="hangman-svg">
+        <!-- Gallows (always visible, no rope) -->
         <line x1="20" y1="190" x2="160" y2="190" stroke="#4c1d95" stroke-width="5" stroke-linecap="round"/>
         <line x1="60" y1="190" x2="60"  y2="10"  stroke="#4c1d95" stroke-width="5" stroke-linecap="round"/>
         <line x1="60" y1="10"  x2="120" y2="10"  stroke="#4c1d95" stroke-width="5" stroke-linecap="round"/>
-        <line x1="120" y1="10" x2="120" y2="30"  stroke="#4c1d95" stroke-width="5" stroke-linecap="round"/>
-        <!-- Body parts (hidden until wrong guesses) -->
-        <circle id="hm-head" cx="120" cy="46" r="16" stroke="#a78bfa" stroke-width="4" display="none"/>
-        <line   id="hm-body" x1="120" y1="62" x2="120" y2="110" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
-        <line   id="hm-larm" x1="120" y1="75" x2="96"  y2="98"  stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
-        <line   id="hm-rarm" x1="120" y1="75" x2="144" y2="98"  stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
-        <line   id="hm-lleg" x1="120" y1="110" x2="96"  y2="138" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
-        <line   id="hm-rleg" x1="120" y1="110" x2="144" y2="138" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+        <!-- Rope (separate element so it can be animated) -->
+        <line id="hm-rope-line" x1="120" y1="10" x2="120" y2="30" stroke="#4c1d95" stroke-width="5" stroke-linecap="round"/>
+        <!-- Cut mark (flashes on lose) -->
+        <line id="hm-cut-mark" x1="112" y1="15" x2="128" y2="25" stroke="#ef4444" stroke-width="3" stroke-linecap="round" display="none"/>
+        <!-- Body parts grouped for group transforms -->
+        <g id="hm-figure">
+          <circle id="hm-head" cx="120" cy="46" r="16" stroke="#a78bfa" stroke-width="4" display="none"/>
+          <line   id="hm-body" x1="120" y1="62" x2="120" y2="110" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+          <line   id="hm-larm" x1="120" y1="75" x2="96"  y2="98"  stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+          <line   id="hm-rarm" x1="120" y1="75" x2="144" y2="98"  stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+          <line   id="hm-lleg" x1="120" y1="110" x2="96"  y2="138" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+          <line   id="hm-rleg" x1="120" y1="110" x2="144" y2="138" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" display="none"/>
+        </g>
       </svg>
     </div>
 
@@ -406,7 +419,10 @@
       streak:   0,
       played:   0,
       avatar:   null,
+      animating: false,
     };
+
+    let animVer = 0; // incremented each game to cancel stale animations
 
     // ── Helpers ──────────────────────────────────────────────────────
 
@@ -475,10 +491,23 @@
       S.wrongs   = 0;
       S.hintUsed = false;
 
+      // Cancel any running animation
+      animVer++;
+      S.animating = false;
+
       // Reset SVG body parts
       BODY_PARTS.forEach(id => {
-        document.getElementById(id).setAttribute('display', 'none');
+        const el = document.getElementById(id);
+        el.setAttribute('display', 'none');
+        el.style.opacity = '';
+        el.removeAttribute('transform');
       });
+
+      // Reset figure group and rope
+      document.getElementById('hm-figure').setAttribute('transform', 'translate(0,0)');
+      const rope = document.getElementById('hm-rope-line');
+      rope.style.opacity = '1';
+      document.getElementById('hm-cut-mark').setAttribute('display', 'none');
 
       // Reset wrong counter
       updateWrongCounter();
@@ -541,6 +570,7 @@
     // ── Guess logic ──────────────────────────────────────────────────
 
     function onKey(e) {
+      if (S.animating) return;
       const letter = e.currentTarget.dataset.letter;
       if (S.guessed.has(letter)) return;
       S.guessed.add(letter);
@@ -574,23 +604,22 @@
       document.getElementById('btn-hint').disabled = true;
     });
 
+    // ── Easing helpers ───────────────────────────────────────────────
+
+    function easeIn(t)    { return t * t; }
+    function easeOut(t)   { return t * (2 - t); }
+    function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
     // ── End game ─────────────────────────────────────────────────────
 
     function endGame(won) {
       S.played++;
-      if (won) {
-        S.wins++;
-        S.streak++;
-      } else {
-        S.streak = 0;
-      }
+      if (won) { S.wins++; S.streak++; }
+      else     { S.streak = 0; }
 
-      // Save score
-      if (window.__avatarSave) {
-        window.__avatarSave('hangman-wins', S.wins);
-      }
+      if (window.__avatarSave) window.__avatarSave('hangman-wins', S.wins);
 
-      // Result screen
+      // Pre-fill result screen
       const banner = document.getElementById('result-banner');
       banner.textContent = won ? '🎉 You got it!' : '💀 Game over';
       banner.className = 'result-banner ' + (won ? 'win' : 'lose');
@@ -601,12 +630,180 @@
 
       document.getElementById('result-meaning').textContent = S.entry.meaning;
       document.getElementById('result-example').textContent = '"' + S.entry.example + '"';
-
       document.getElementById('score-wins').textContent    = S.wins;
       document.getElementById('score-streak').textContent  = S.streak;
       document.getElementById('score-played').textContent  = S.played;
 
-      showScreen('screen-result');
+      S.animating = true;
+      const ver = animVer;
+      const done = () => {
+        if (animVer !== ver) return; // new game started, abort
+        S.animating = false;
+        showScreen('screen-result');
+      };
+
+      if (won) animateWin(done);
+      else     animateLose(done);
+    }
+
+    // ── Lose animation: cut rope → fall flat ─────────────────────────
+    // Limb flatten angles to point straight down along body:
+    //   larm +46°, rarm -46° (around shoulder 120,75)
+    //   lleg +40°, rleg -40° (around hip 120,110)
+
+    function animateLose(callback) {
+      const rope = document.getElementById('hm-rope-line');
+      const cut  = document.getElementById('hm-cut-mark');
+      const fig  = document.getElementById('hm-figure');
+      const larm = document.getElementById('hm-larm');
+      const rarm = document.getElementById('hm-rarm');
+      const lleg = document.getElementById('hm-lleg');
+      const rleg = document.getElementById('hm-rleg');
+      const ver  = animVer;
+
+      // 1. Flash cut mark
+      cut.setAttribute('display', 'inline');
+      cut.classList.add('cut-flash');
+      setTimeout(() => {
+        cut.setAttribute('display', 'none');
+        cut.classList.remove('cut-flash');
+      }, 250);
+
+      // 2. Fade rope (0–350ms)
+      const ropeStart = performance.now();
+      const ropeDur = 350;
+      function fadeRope(now) {
+        if (animVer !== ver) return;
+        const t = Math.min((now - ropeStart) / ropeDur, 1);
+        rope.style.opacity = 1 - t;
+        if (t < 1) requestAnimationFrame(fadeRope);
+        else       startFall();
+      }
+      requestAnimationFrame(fadeRope);
+
+      // 3. Fall: drop to ground + tip to horizontal + flatten limbs
+      //    Figure center goes from y=90 to y=190 (ground) = 100px drop.
+      //    Rotation: starts at 30%, reaches 90° (horizontal) at 100%.
+      //    Limb flatten: starts at 50%, completes at 100%.
+      function startFall() {
+        const fallStart = performance.now();
+        const fallDur   = 1000;
+        function fall(now) {
+          if (animVer !== ver) return;
+          const t = Math.min((now - fallStart) / fallDur, 1);
+
+          // Drop (figure center from y=90 to y=190)
+          const dy = easeIn(t) * 100;
+
+          // Tip to horizontal — begins at 30% of fall
+          const tipT  = Math.max(0, (t - 0.3) / 0.7);
+          const angle = easeIn(tipT) * 90;
+
+          // Flatten limbs against body — begins at 50% of fall
+          const flatT = Math.max(0, (t - 0.5) / 0.5);
+          const flat  = flatT * flatT;
+          larm.setAttribute('transform', `rotate(${flat * 46},  120, 75)`);
+          rarm.setAttribute('transform', `rotate(${flat * -46}, 120, 75)`);
+          lleg.setAttribute('transform', `rotate(${flat * 40},  120, 110)`);
+          rleg.setAttribute('transform', `rotate(${flat * -40}, 120, 110)`);
+
+          // Rotate figure around its centre (120,90) then translate down
+          fig.setAttribute('transform', `translate(0,${dy}) rotate(${angle},120,90)`);
+
+          if (t < 1) requestAnimationFrame(fall);
+          else       setTimeout(callback, 500);
+        }
+        requestAnimationFrame(fall);
+      }
+    }
+
+    // ── Win animation: body reforms → descend → walk away ────────────
+
+    function animateWin(callback) {
+      const rope = document.getElementById('hm-rope-line');
+      const fig  = document.getElementById('hm-figure');
+      const ver  = animVer;
+
+      // 1. Fade in any missing body parts sequentially (0–400ms)
+      const missing = BODY_PARTS.filter(id =>
+        document.getElementById(id).getAttribute('display') === 'none'
+      );
+      missing.forEach((id, i) => {
+        setTimeout(() => {
+          if (animVer !== ver) return;
+          const el = document.getElementById(id);
+          el.setAttribute('display', 'inline');
+          el.style.opacity = '0';
+          const start = performance.now();
+          const dur = 180;
+          function fadeIn(now) {
+            if (animVer !== ver) return;
+            const t = Math.min((now - start) / dur, 1);
+            el.style.opacity = t;
+            if (t < 1) requestAnimationFrame(fadeIn);
+          }
+          requestAnimationFrame(fadeIn);
+        }, i * 80);
+      });
+
+      // 2. Fade rope after parts appear (400ms)
+      setTimeout(() => {
+        if (animVer !== ver) return;
+        const ropeStart = performance.now();
+        const ropeDur = 300;
+        function fadeRope(now) {
+          if (animVer !== ver) return;
+          const t = Math.min((now - ropeStart) / ropeDur, 1);
+          rope.style.opacity = 1 - t;
+          if (t < 1) requestAnimationFrame(fadeRope);
+          else       startDescend();
+        }
+        requestAnimationFrame(fadeRope);
+      }, Math.max(400, missing.length * 80 + 100));
+
+      // 3. Descend to ground
+      function startDescend() {
+        const descStart = performance.now();
+        const descDur   = 500;
+        function descend(now) {
+          if (animVer !== ver) return;
+          const t  = Math.min((now - descStart) / descDur, 1);
+          const dy = easeOut(t) * 55;
+          fig.setAttribute('transform', `translate(0,${dy})`);
+          if (t < 1) requestAnimationFrame(descend);
+          else       startWalk();
+        }
+        requestAnimationFrame(descend);
+      }
+
+      // 4. Walk off to the right
+      function startWalk() {
+        const walkStart = performance.now();
+        const walkDur   = 1200;
+        const groundY   = 55;
+        const lleg = document.getElementById('hm-lleg');
+        const rleg = document.getElementById('hm-rleg');
+        const larm = document.getElementById('hm-larm');
+        const rarm = document.getElementById('hm-rarm');
+
+        function walk(now) {
+          if (animVer !== ver) return;
+          const t    = Math.min((now - walkStart) / walkDur, 1);
+          const dx   = easeInOut(t) * 220;
+          const bob  = Math.abs(Math.sin(t * Math.PI * 4)) * 3;
+          const sw   = Math.sin(t * Math.PI * 6) * 24; // leg swing ±24°
+
+          lleg.setAttribute('transform', `rotate(${sw},120,110)`);
+          rleg.setAttribute('transform', `rotate(${-sw},120,110)`);
+          larm.setAttribute('transform', `rotate(${-sw * 0.5},120,75)`);
+          rarm.setAttribute('transform', `rotate(${sw * 0.5},120,75)`);
+
+          fig.setAttribute('transform', `translate(${dx},${groundY - bob})`);
+          if (t < 1) requestAnimationFrame(walk);
+          else       setTimeout(callback, 150);
+        }
+        requestAnimationFrame(walk);
+      }
     }
 
     // ── Keyboard input ───────────────────────────────────────────────
