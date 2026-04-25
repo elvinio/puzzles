@@ -572,58 +572,33 @@
     }
     .hint-close:active { border-color: var(--p-lt); color: var(--p-xl); }
 
-    .hint-color-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .hint-color-swatch {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 3px solid rgba(255,255,255,0.2);
-      flex-shrink: 0;
-    }
-    .hint-color-name {
-      font-size: 1.25rem;
-      font-weight: 900;
-      color: var(--p-text);
-    }
-
-    .hint-reasons {
+    .hint-combos {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      padding-left: 2px;
     }
-    .hint-reason {
-      font-size: 0.84rem;
-      color: var(--p-text);
-      line-height: 1.4;
-      display: flex;
-      gap: 8px;
-    }
-    .hint-reason::before {
-      content: '·';
-      color: var(--p-xl);
-      font-weight: 900;
-      flex-shrink: 0;
-    }
-
-    .hint-uses {
+    .hint-combos-label {
       font-size: 0.75rem;
       color: var(--muted);
-      text-align: right;
       font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .hint-combo-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .hint-combo-peg {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.18);
+      flex-shrink: 0;
     }
 
     .ctrl-btn.hint-btn {
       border-color: #7c3aed;
       color: #c4b5fd;
-    }
-    .ctrl-btn.hint-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
     }
   </style>
 </head>
@@ -683,12 +658,7 @@
         <h2 id="hintTitle">Hint</h2>
         <button class="hint-close" id="hintClose">✕</button>
       </div>
-      <div class="hint-color-row" id="hintColorRow">
-        <div class="hint-color-swatch" id="hintSwatch"></div>
-        <div class="hint-color-name" id="hintColorName"></div>
-      </div>
-      <div class="hint-reasons" id="hintReasons"></div>
-      <div class="hint-uses" id="hintUses"></div>
+      <div class="hint-combos" id="hintCombos"></div>
     </div>
   </div>
 
@@ -750,8 +720,6 @@
     const COLOR_NAMES = ['Red','Orange','Yellow','Green','Blue','Purple'];
     const CODE_LEN    = 4;
     const MAX_ROWS    = 10;
-    const HINT_LIMIT  = 3;
-
     const state = {
       secret:       [],
       guesses:      [],
@@ -760,23 +728,14 @@
       selectedSlot: 0,
       gameOver:     false,
       won:          false,
-      hintsUsed:    0,
     };
 
     // ── Hint analysis ─────────────────────────────────────────
     function getHint() {
       if (state.guesses.length === 0) {
-        return {
-          color: null,
-          title: 'Opening tip',
-          reasons: [
-            'No guesses yet — start with 4 different colors',
-            'Spread colors to maximise information from the first clue',
-          ],
-        };
+        return { title: 'Possible codes', samples: [], consistentCount: 0 };
       }
 
-      // All 1296 possible codes
       const allCodes = [];
       for (let a = 0; a < 6; a++)
         for (let b = 0; b < 6; b++)
@@ -784,7 +743,6 @@
             for (let d = 0; d < 6; d++)
               allCodes.push([a, b, c, d]);
 
-      // Keep only codes consistent with every past guess + feedback
       const consistent = allCodes.filter(code =>
         state.guesses.every((guess, i) => {
           const fb = state.feedbacks[i];
@@ -793,80 +751,37 @@
         })
       );
 
-      if (consistent.length === 1) {
-        const code = consistent[0];
-        return {
-          color: code[0],
-          title: 'Solution found!',
-          reasons: [
-            'Only 1 code is still possible',
-            `Answer: ${code.map(c => COLOR_NAMES[c]).join(' · ')}`,
-          ],
-        };
-      }
+      const shuffled = consistent.slice().sort(() => Math.random() - 0.5);
+      const samples  = shuffled.slice(0, 5);
 
-      // Color frequency: how many consistent codes contain this color (at least once)
-      const colorFreq = new Array(6).fill(0);
-      // Position frequency: for each color × position, how often it appears there
-      const posFreq = Array.from({ length: 6 }, () => new Array(CODE_LEN).fill(0));
-      for (const code of consistent) {
-        const seen = new Set(code);
-        for (const c of seen) colorFreq[c]++;
-        for (let p = 0; p < CODE_LEN; p++) posFreq[code[p]][p]++;
-      }
-
-      // Find the color that appears in the most remaining codes
-      let best = 0;
-      for (let c = 1; c < 6; c++) {
-        if (colorFreq[c] > colorFreq[best]) best = c;
-      }
-
-      const pct     = Math.round((colorFreq[best] / consistent.length) * 100);
-      const bestPos = posFreq[best].indexOf(Math.max(...posFreq[best]));
-      const posPct  = Math.round((posFreq[best][bestPos] / consistent.length) * 100);
-
-      const reasons = [];
-      reasons.push(`${consistent.length} codes still possible`);
-      reasons.push(`${COLOR_NAMES[best]} appears in ${pct}% of remaining codes`);
-      if (posPct >= 25) {
-        reasons.push(`Strongest slot: position ${bestPos + 1} (${posPct}% of remaining codes)`);
-      }
-      const alreadyTried = state.guesses.some(g => g.includes(best));
-      if (!alreadyTried) reasons.push('Not tried yet — high information value');
-
-      return { color: best, title: `Try ${COLOR_NAMES[best]}`, reasons };
+      return { title: 'Possible codes', samples, consistentCount: consistent.length };
     }
 
     function showHint() {
-      if (state.gameOver || state.hintsUsed >= HINT_LIMIT) return;
-      state.hintsUsed++;
+      if (state.gameOver) return;
 
       const hint = getHint();
 
       document.getElementById('hintTitle').textContent = hint.title;
 
-      const swatchEl    = document.getElementById('hintSwatch');
-      const colorNameEl = document.getElementById('hintColorName');
-      const colorRow    = document.getElementById('hintColorRow');
-
-      if (hint.color !== null) {
-        swatchEl.style.background = COLORS[hint.color];
-        colorNameEl.textContent   = COLOR_NAMES[hint.color];
-        colorRow.style.display    = 'flex';
+      const combosEl = document.getElementById('hintCombos');
+      if (hint.samples.length > 0) {
+        const n = hint.consistentCount;
+        const s = hint.samples.length;
+        const label = n === 1
+          ? '1 possible combination:'
+          : `${n} possible — showing ${s}:`;
+        combosEl.innerHTML =
+          `<div class="hint-combos-label">${label}</div>` +
+          hint.samples.map(code =>
+            `<div class="hint-combo-row">${
+              code.map(c => `<div class="hint-combo-peg" style="background:${COLORS[c]}" title="${COLOR_NAMES[c]}"></div>`).join('')
+            }</div>`
+          ).join('');
       } else {
-        colorRow.style.display    = 'none';
+        combosEl.innerHTML = '<div class="hint-combos-label">Make a guess first to see possible combinations.</div>';
       }
 
-      const reasonsEl = document.getElementById('hintReasons');
-      reasonsEl.innerHTML = hint.reasons
-        .map(r => `<div class="hint-reason">${r}</div>`)
-        .join('');
-
-      const remaining = HINT_LIMIT - state.hintsUsed;
-      document.getElementById('hintUses').textContent =
-        remaining > 0 ? `${remaining} hint${remaining === 1 ? '' : 's'} remaining` : 'No hints remaining';
-
-      document.getElementById('hintBtn').disabled = state.hintsUsed >= HINT_LIMIT;
       document.getElementById('hintBackdrop').classList.add('visible');
     }
 
@@ -1097,8 +1012,6 @@
       state.selectedSlot = 0;
       state.gameOver     = false;
       state.won          = false;
-      state.hintsUsed    = 0;
-      document.getElementById('hintBtn').disabled = false;
 
       // Reset secret display
       for (let i = 0; i < CODE_LEN; i++) {
