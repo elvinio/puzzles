@@ -617,6 +617,30 @@
       font-weight: 600;
     }
 
+    .hint-combos {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .hint-combos-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .hint-combo-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .hint-combo-peg {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.18);
+      flex-shrink: 0;
+    }
+
     .ctrl-btn.hint-btn {
       border-color: #7c3aed;
       color: #c4b5fd;
@@ -688,6 +712,7 @@
         <div class="hint-color-name" id="hintColorName"></div>
       </div>
       <div class="hint-reasons" id="hintReasons"></div>
+      <div class="hint-combos" id="hintCombos"></div>
       <div class="hint-uses" id="hintUses"></div>
     </div>
   </div>
@@ -773,6 +798,8 @@
             'No guesses yet — start with 4 different colors',
             'Spread colors to maximise information from the first clue',
           ],
+          samples: [],
+          consistentCount: 0,
         };
       }
 
@@ -802,6 +829,8 @@
             'Only 1 code is still possible',
             `Answer: ${code.map(c => COLOR_NAMES[c]).join(' · ')}`,
           ],
+          samples: [code],
+          consistentCount: 1,
         };
       }
 
@@ -834,7 +863,10 @@
       const alreadyTried = state.guesses.some(g => g.includes(best));
       if (!alreadyTried) reasons.push('Not tried yet — high information value');
 
-      return { color: best, title: `Try ${COLOR_NAMES[best]}`, reasons };
+      const shuffled = consistent.slice().sort(() => Math.random() - 0.5);
+      const samples  = shuffled.slice(0, 5);
+
+      return { color: best, title: `Try ${COLOR_NAMES[best]}`, reasons, samples, consistentCount: consistent.length };
     }
 
     function showHint() {
@@ -861,6 +893,26 @@
       reasonsEl.innerHTML = hint.reasons
         .map(r => `<div class="hint-reason">${r}</div>`)
         .join('');
+
+      const combosEl = document.getElementById('hintCombos');
+      if (hint.samples && hint.samples.length > 0) {
+        const n = hint.consistentCount;
+        const s = hint.samples.length;
+        const label = n === 1
+          ? '1 possible combination:'
+          : `${n} possible — showing ${s}:`;
+        combosEl.innerHTML =
+          `<div class="hint-combos-label">${label}</div>` +
+          hint.samples.map(code =>
+            `<div class="hint-combo-row">${
+              code.map(c => `<div class="hint-combo-peg" style="background:${COLORS[c]}" title="${COLOR_NAMES[c]}"></div>`).join('')
+            }</div>`
+          ).join('');
+        combosEl.style.display = 'flex';
+      } else {
+        combosEl.innerHTML = '';
+        combosEl.style.display = 'none';
+      }
 
       const remaining = HINT_LIMIT - state.hintsUsed;
       document.getElementById('hintUses').textContent =
