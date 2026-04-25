@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>English Idioms</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #13111c;
+      --surface: #1c1730;
+      --brd:     #4c1d95;
+      --p:       #6d28d9;
+      --p-lt:    #7c3aed;
+      --p-xl:    #a78bfa;
+      --p-text:  #e2d9f3;
+      --muted:   #7c6fa0;
+      --ok:      #16a34a;
+      --ok-lt:   #22c55e;
+      --err:     #dc2626;
+      --err-lt:  #ef4444;
+      --warn:    #f59e0b;
+    }
+
+    body {
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      overscroll-behavior: none;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100dvh;
+      padding: 12px 16px 40px;
+      gap: 12px;
+    }
+    .screen.active { display: flex; }
+
+    .topbar {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+    .back-link:hover { color: var(--p-xl); }
+    h1 {
+      font-size: clamp(1.1rem, 4vw, 1.6rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .topbar-right { min-width: 60px; display: flex; justify-content: flex-end; }
+
+    .section-label {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+      align-self: flex-start;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .avatar-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 40px;
+      padding: 6px 18px 6px 6px;
+      max-width: 620px;
+    }
+    .avatar-chip-name { font-size: 0.95rem; font-weight: 700; }
+    .no-avatar-warn {
+      color: var(--err-lt);
+      font-size: 0.85rem;
+      text-align: center;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .best-display {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .best-display strong { color: var(--p-xl); font-size: 1.2rem; }
+
+    .tab-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 620px;
+    }
+    .tab {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--brd);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.15s;
+      touch-action: manipulation;
+    }
+    .tab:hover { border-color: var(--p-lt); color: var(--p-text); }
+    .tab.active { background: var(--p); border-color: var(--p-lt); color: #fff; }
+
+    .btn {
+      padding: 13px 28px;
+      border-radius: 12px;
+      border: none;
+      background: var(--p);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      touch-action: manipulation;
+    }
+    .btn:hover { background: var(--p-lt); }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--brd);
+      color: var(--muted);
+    }
+    .btn-outline:hover { border-color: var(--p-lt); color: var(--p-text); background: transparent; }
+    .btn-sm { padding: 8px 18px; font-size: 0.85rem; border-radius: 10px; }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .divider {
+      width: 100%;
+      max-width: 620px;
+      height: 1px;
+      background: var(--brd);
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+
+    /* ═══ GAME SCREEN */
+    .hud {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      width: 100%;
+      max-width: 620px;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .hud-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .hud-label { font-size: 0.6rem; font-weight: 800; color: var(--muted); letter-spacing: 0.12em; }
+    .hud-val { font-size: 1.35rem; font-weight: 900; color: var(--p-xl); line-height: 1; }
+    .hud-val.warn { color: var(--warn); }
+    .hud-val.danger { color: var(--err-lt); }
+
+    .progress-bar-wrap {
+      width: 100%;
+      max-width: 620px;
+      height: 6px;
+      background: var(--surface);
+      border-radius: 3px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--p-lt);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .question-wrap {
+      width: 100%;
+      max-width: 620px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 120px;
+    }
+    .question-type-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .question-text {
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      font-weight: 700;
+      color: var(--p-text);
+      line-height: 1.4;
+      text-align: center;
+    }
+    .question-idiom {
+      font-size: clamp(1.3rem, 5vw, 2rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+      max-width: 620px;
+      flex-shrink: 0;
+    }
+    .opt-btn {
+      padding: 14px 10px;
+      border-radius: 14px;
+      border: 2px solid var(--brd);
+      background: var(--surface);
+      color: var(--p-text);
+      font-size: clamp(0.78rem, 2.5vw, 0.95rem);
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.12s, background 0.12s, transform 0.1s;
+      touch-action: manipulation;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 72px;
+      line-height: 1.3;
+      text-align: center;
+      word-break: break-word;
+    }
+    .opt-btn:hover { border-color: var(--p-lt); background: #241a45; }
+    .opt-btn:active { transform: scale(0.96); }
+    .opt-btn.flash-correct {
+      border-color: var(--ok-lt);
+      background: #0a2016;
+      color: var(--ok-lt);
+      pointer-events: none;
+    }
+    .opt-btn.flash-wrong {
+      border-color: var(--err-lt);
+      background: #1a0a0a;
+      color: var(--err-lt);
+      pointer-events: none;
+    }
+    .opt-btn.flash-reveal {
+      border-color: var(--ok-lt);
+      background: #0f2d1a;
+      color: var(--ok-lt);
+      pointer-events: none;
+    }
+    .opt-btn[disabled] { pointer-events: none; }
+
+    /* ═══ SUMMARY SCREEN */
+    .summary-stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 620px;
+    }
+    .summary-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      padding: 12px 24px;
+      min-width: 80px;
+      gap: 4px;
+    }
+    .summary-val {
+      font-size: 2.2rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--p-xl);
+    }
+    .summary-val.ok { color: var(--ok-lt); }
+    .summary-val.err { color: var(--err-lt); }
+    .summary-lbl { font-size: 0.62rem; font-weight: 800; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .new-best-banner {
+      display: none;
+      background: linear-gradient(135deg, #0a2016, #0f2d1a);
+      border: 2px solid var(--ok-lt);
+      border-radius: 14px;
+      padding: 12px 24px;
+      color: var(--ok-lt);
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-align: center;
+      width: 100%;
+      max-width: 620px;
+    }
+    .new-best-banner.show { display: block; }
+
+    .result-list {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+      max-height: 280px;
+      flex-shrink: 0;
+    }
+    .result-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 10px 14px;
+      border-left: 4px solid var(--brd);
+      flex-shrink: 0;
+    }
+    .result-item.ok { border-left-color: var(--ok-lt); }
+    .result-item.err { border-left-color: var(--err-lt); }
+    .result-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .result-info { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .result-idiom { font-size: 0.9rem; font-weight: 800; color: var(--p-xl); }
+    .result-meaning { font-size: 0.78rem; color: var(--muted); }
+
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #261c48;
+      border: 1.5px solid var(--p-lt);
+      color: var(--p-text);
+      border-radius: 20px;
+      padding: 9px 22px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 500;
+      white-space: nowrap;
+      max-width: 90vw;
+      text-align: center;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- SCREEN: SETUP -->
+<div id="screen-setup" class="screen active">
+  <div class="topbar">
+    <a class="back-link" href="index.html">← Home</a>
+    <h1>English Idioms</h1>
+    <div class="topbar-right"></div>
+  </div>
+
+  <div class="avatar-chip" id="setup-avatar-chip" style="display:none">
+    <div id="setup-avatar-svg"></div>
+    <span class="avatar-chip-name" id="setup-avatar-name"></span>
+  </div>
+  <div class="no-avatar-warn" id="setup-no-avatar" style="display:none">
+    No avatar selected — <a href="avatar.html" style="color:var(--p-xl)">create one first</a>
+  </div>
+
+  <div class="best-display" id="setup-best-display" style="display:none">
+    Personal best: <strong id="setup-best-score">0</strong> correct
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">Quiz Mode</div>
+  <div class="tab-row" id="setup-mode-tabs">
+    <button class="tab active" data-mode="meaning-to-idiom">Meaning → Idiom</button>
+    <button class="tab" data-mode="fill-blank">Fill Blank</button>
+    <button class="tab" data-mode="idiom-to-meaning">Idiom → Meaning</button>
+    <button class="tab" data-mode="mix">Mix All</button>
+  </div>
+
+  <div class="divider"></div>
+  <button class="btn" id="setup-start" style="width:100%;max-width:620px" disabled>▶ Start Quiz</button>
+</div>
+
+<!-- SCREEN: GAME -->
+<div id="screen-game" class="screen">
+  <div class="topbar">
+    <div style="width:60px"></div>
+    <h1>English Idioms</h1>
+    <div class="topbar-right">
+      <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
+    </div>
+  </div>
+
+  <div class="hud">
+    <div class="hud-cell">
+      <div class="hud-label">TIME</div>
+      <div class="hud-val" id="hud-timer">1:00</div>
+    </div>
+    <div class="hud-cell">
+      <div class="hud-label">QUESTION</div>
+      <div class="hud-val" id="hud-qnum">1</div>
+    </div>
+    <div class="hud-cell">
+      <div class="hud-label">CORRECT</div>
+      <div class="hud-val" style="color:var(--ok-lt)" id="hud-correct">0</div>
+    </div>
+    <div class="hud-cell">
+      <div class="hud-label">WRONG</div>
+      <div class="hud-val" style="color:var(--err-lt)" id="hud-wrong">0</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:100%"></div>
+  </div>
+
+  <div class="question-wrap" id="question-wrap">
+    <div class="question-type-label" id="question-type-label"></div>
+    <div id="question-content"></div>
+  </div>
+
+  <div class="options-grid" id="options-grid"></div>
+</div>
+
+<!-- SCREEN: SUMMARY -->
+<div id="screen-summary" class="screen">
+  <div class="topbar">
+    <div style="width:60px"></div>
+    <h1>Quiz Complete!</h1>
+    <div style="width:60px"></div>
+  </div>
+
+  <div class="new-best-banner" id="new-best-banner">🎉 New Personal Best!</div>
+
+  <div class="summary-stats">
+    <div class="summary-stat">
+      <div class="summary-val ok" id="summary-correct">0</div>
+      <div class="summary-lbl">Correct</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-val err" id="summary-wrong">0</div>
+      <div class="summary-lbl">Wrong</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-val" id="summary-best">0</div>
+      <div class="summary-lbl">Best Ever</div>
+    </div>
+  </div>
+
+  <div class="result-list" id="summary-result-list"></div>
+
+  <div class="btn-row">
+    <button class="btn" id="summary-again-btn">Play Again</button>
+    <button class="btn btn-outline" id="summary-home-btn">← Home</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="avatar.js"></script>
+<script>
+'use strict';
+
+const TIMER_MS = 60000;
+const MODES = ['meaning-to-idiom', 'fill-blank', 'idiom-to-meaning'];
+
+let IDIOMS = [];
+let toastTimer = null;
+
+const S = {
+  mode: 'meaning-to-idiom',
+  score: 0,
+  wrong: 0,
+  qIndex: 0,
+  timeExpired: false,
+  endTime: 0,
+  timerInterval: null,
+  results: [],
+  shuffledPool: [],
+};
+
+// ── Data loading ─────────────────────────────────────────────────────────────
+
+fetch('english-idioms.json')
+  .then(r => r.json())
+  .then(data => {
+    IDIOMS = data;
+    initSetup();
+  })
+  .catch(() => showToast('Failed to load idioms data'));
+
+// ── Avatar / highscore helpers ────────────────────────────────────────────────
+
+function getAvatar() {
+  return window.__avatarGetActive ? window.__avatarGetActive() : null;
+}
+
+function hsKey(id) { return `english-idioms-highscore-${id}`; }
+
+function loadBest(id) {
+  try { return JSON.parse(localStorage.getItem(hsKey(id)) || '{"best":0}').best; }
+  catch { return 0; }
+}
+
+function saveBest(id, score) {
+  try { localStorage.setItem(hsKey(id), JSON.stringify({ best: score })); }
+  catch {}
+}
+
+// ── Setup screen ─────────────────────────────────────────────────────────────
+
+function initSetup() {
+  const avatar = getAvatar();
+  const chip   = document.getElementById('setup-avatar-chip');
+  const warn   = document.getElementById('setup-no-avatar');
+  const bestEl = document.getElementById('setup-best-display');
+  const startBtn = document.getElementById('setup-start');
+
+  if (avatar) {
+    chip.style.display = 'flex';
+    warn.style.display = 'none';
+    const svgEl = document.getElementById('setup-avatar-svg');
+    if (window.__avatarRender) {
+      svgEl.innerHTML = window.__avatarRender(avatar, '36');
+      svgEl.style.fontSize = '0';
+    }
+    document.getElementById('setup-avatar-name').textContent = avatar.name;
+
+    const best = loadBest(avatar.id);
+    bestEl.style.display = best > 0 ? 'flex' : 'none';
+    document.getElementById('setup-best-score').textContent = best;
+    startBtn.disabled = false;
+  } else {
+    chip.style.display = 'none';
+    warn.style.display = 'block';
+    bestEl.style.display = 'none';
+    startBtn.disabled = true;
+  }
+
+  // Mode tabs
+  document.getElementById('setup-mode-tabs').addEventListener('click', e => {
+    const tab = e.target.closest('.tab');
+    if (!tab) return;
+    document.querySelectorAll('#setup-mode-tabs .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    S.mode = tab.dataset.mode;
+  });
+
+  startBtn.addEventListener('click', () => {
+    if (IDIOMS.length === 0) { showToast('Data not loaded yet'); return; }
+    startGame();
+  });
+
+  document.getElementById('game-end-btn').addEventListener('click', () => {
+    stopTimer();
+    showSummary();
+  });
+
+  document.getElementById('summary-again-btn').addEventListener('click', () => {
+    showScreen('screen-setup');
+    initSetup();
+  });
+  document.getElementById('summary-home-btn').addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+}
+
+// ── Game flow ─────────────────────────────────────────────────────────────────
+
+function startGame() {
+  S.score = 0;
+  S.wrong = 0;
+  S.qIndex = 0;
+  S.timeExpired = false;
+  S.results = [];
+  S.shuffledPool = shuffle([...IDIOMS]);
+
+  showScreen('screen-game');
+  updateHUD();
+  showQuestion();
+  startTimer();
+}
+
+function showQuestion() {
+  const pool = S.shuffledPool;
+  const idiom = pool[S.qIndex % pool.length];
+
+  const mode = S.mode === 'mix'
+    ? MODES[Math.floor(Math.random() * MODES.length)]
+    : S.mode;
+
+  const q = buildQuestion(mode, idiom, IDIOMS);
+
+  document.getElementById('question-type-label').textContent = q.typeLabel;
+  document.getElementById('question-content').innerHTML = q.contentHtml;
+
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  const shuffledChoices = shuffle(q.choices);
+  shuffledChoices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = choice.text;
+    btn.addEventListener('click', () => onAnswer(btn, choice.correct, shuffledChoices, grid));
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('hud-qnum').textContent = S.qIndex + 1;
+  updateProgressBar();
+}
+
+function buildQuestion(mode, idiom, pool) {
+  const distractors = shuffle(pool.filter(w => w.word !== idiom.word)).slice(0, 3);
+
+  if (mode === 'meaning-to-idiom') {
+    return {
+      typeLabel: 'SELECT THE IDIOM',
+      contentHtml: `<div class="question-text">${escHtml(idiom.meaning)}</div>`,
+      choices: [
+        { text: idiom.word, correct: true },
+        ...distractors.map(d => ({ text: d.word, correct: false })),
+      ],
+    };
+  }
+
+  if (mode === 'fill-blank') {
+    const sentence = idiom.example.replace(
+      new RegExp(escRegex(idiom.word), 'i'),
+      '_____'
+    );
+    return {
+      typeLabel: 'FILL IN THE BLANK',
+      contentHtml: `<div class="question-text">${escHtml(sentence)}</div>`,
+      choices: [
+        { text: idiom.word, correct: true },
+        ...distractors.map(d => ({ text: d.word, correct: false })),
+      ],
+    };
+  }
+
+  // idiom-to-meaning
+  return {
+    typeLabel: 'SELECT THE MEANING',
+    contentHtml: `<div class="question-idiom">${escHtml(idiom.word)}</div>`,
+    choices: [
+      { text: idiom.meaning, correct: true },
+      ...distractors.map(d => ({ text: d.meaning, correct: false })),
+    ],
+  };
+}
+
+function onAnswer(clickedBtn, correct, choices, grid) {
+  // Disable all buttons immediately
+  grid.querySelectorAll('.opt-btn').forEach(b => b.setAttribute('disabled', ''));
+
+  if (correct) {
+    clickedBtn.classList.add('flash-correct');
+    S.score++;
+  } else {
+    clickedBtn.classList.add('flash-wrong');
+    // Reveal correct answer
+    grid.querySelectorAll('.opt-btn').forEach(b => {
+      const choiceText = b.textContent;
+      const choiceObj = choices.find(c => c.text === choiceText);
+      if (choiceObj && choiceObj.correct) b.classList.add('flash-reveal');
+    });
+    S.wrong++;
+  }
+
+  S.results.push({ idiom: S.shuffledPool[S.qIndex % S.shuffledPool.length], correct });
+  updateHUD();
+
+  setTimeout(() => {
+    S.qIndex++;
+    if (S.timeExpired) {
+      showSummary();
+    } else {
+      showQuestion();
+    }
+  }, 700);
+}
+
+// ── Timer ─────────────────────────────────────────────────────────────────────
+
+function startTimer() {
+  stopTimer();
+  S.endTime = Date.now() + TIMER_MS;
+  S.timerInterval = setInterval(() => {
+    const rem = Math.max(0, S.endTime - Date.now());
+    updateTimerDisplay(rem);
+    if (rem <= 0 && !S.timeExpired) {
+      S.timeExpired = true;
+      showToast("Time's up — finish this question", 3500);
+    }
+  }, 200);
+}
+
+function stopTimer() {
+  clearInterval(S.timerInterval);
+  S.timerInterval = null;
+}
+
+function updateTimerDisplay(rem) {
+  const el = document.getElementById('hud-timer');
+  const secs = Math.ceil(rem / 1000);
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  el.textContent = `${m}:${String(s).padStart(2, '0')}`;
+  el.className = 'hud-val';
+  const frac = rem / TIMER_MS;
+  if (frac < 0.15) el.classList.add('danger');
+  else if (frac < 0.35) el.classList.add('warn');
+}
+
+// ── Summary ───────────────────────────────────────────────────────────────────
+
+function showSummary() {
+  stopTimer();
+
+  const avatar = getAvatar();
+  const prev = avatar ? loadBest(avatar.id) : 0;
+  const isNewBest = avatar && S.score > prev;
+  if (isNewBest) saveBest(avatar.id, S.score);
+
+  document.getElementById('summary-correct').textContent = S.score;
+  document.getElementById('summary-wrong').textContent = S.wrong;
+  document.getElementById('summary-best').textContent = isNewBest ? S.score : prev;
+
+  const banner = document.getElementById('new-best-banner');
+  banner.classList.toggle('show', isNewBest);
+
+  const list = document.getElementById('summary-result-list');
+  list.innerHTML = '';
+  S.results.forEach(r => {
+    const item = document.createElement('div');
+    item.className = `result-item ${r.correct ? 'ok' : 'err'}`;
+    item.innerHTML = `
+      <div class="result-icon">${r.correct ? '✓' : '✗'}</div>
+      <div class="result-info">
+        <div class="result-idiom">${escHtml(r.idiom.word)}</div>
+        <div class="result-meaning">${escHtml(r.idiom.meaning)}</div>
+      </div>`;
+    list.appendChild(item);
+  });
+
+  showScreen('screen-summary');
+}
+
+// ── HUD helpers ───────────────────────────────────────────────────────────────
+
+function updateHUD() {
+  document.getElementById('hud-correct').textContent = S.score;
+  document.getElementById('hud-wrong').textContent   = S.wrong;
+}
+
+function updateProgressBar() {
+  const elapsed = Math.max(0, Date.now() - (S.endTime - TIMER_MS));
+  const pct = Math.max(0, 100 - (elapsed / TIMER_MS) * 100);
+  document.getElementById('progress-fill').style.width = `${pct}%`;
+}
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg, ms = 2500) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), ms);
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function escRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+</script>
+</body>
+</html>
