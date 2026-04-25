@@ -1323,12 +1323,13 @@ function handleAnswer(chosen, card) {
 
   S.results.push({ word: card.word, correct, timeMs, type: card.type });
 
+  const delay = correct ? 800 : 2000;
   setTimeout(() => {
     S.cardIndex++;
     const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
     if (done) { stopTimer(); showSummary(); }
     else renderCard();
-  }, 800);
+  }, delay);
 }
 
 // Game → end session manually

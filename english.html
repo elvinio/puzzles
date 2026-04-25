@@ -1108,14 +1108,18 @@ function renderDefinitionCard(card) {
   qWrap.appendChild(keywordEl);
 
   typeLabel.textContent = 'Type the word:';
-  qText.innerHTML = `<div class="definition-text">${esc(card.definition)}</div><div class="blank-word" style="margin-top:12px">${card.answerDisplay}</div>`;
+  qText.innerHTML = `<div class="definition-text">${esc(card.definition)}</div><div class="blank-word" style="margin-top:12px;color:var(--p-xl)">${card.answerDisplay}</div><div class="correct-answer" style="margin-top:8px;font-size:1.4rem;font-weight:700;display:none"></div>`;
   qText.className = 'question-text';
 
   document.getElementById('options-grid').innerHTML = '';
-  document.getElementById('keyboard-wrap').style.display = 'block';
+  const wrapper = document.getElementById('keyboard-wrap');
+  wrapper.style.display = 'block';
+  wrapper.style.opacity = '1';
+  wrapper.style.pointerEvents = 'auto';
+  document.getElementById('input-display').style.display = 'none';
 
   renderKeyboard();
-  updateInputDisplay();
+  updateBlankWord();
 }
 
 function renderKeyboard() {
@@ -1149,7 +1153,28 @@ function addChar(char) {
 
 function updateInputDisplay() {
   const display = document.getElementById('input-display');
-  display.textContent = S.userInput.toUpperCase() || '─';
+  const card = S.cards[S.cardIndex];
+  if (card && card.type === 'definition') {
+    display.style.display = 'none';
+    updateBlankWord();
+  } else {
+    display.textContent = S.userInput.toUpperCase() || '─';
+  }
+}
+
+function updateBlankWord() {
+  const card = S.cards[S.cardIndex];
+  if (!card || card.type !== 'definition') return;
+
+  const w = card.answer;
+  const firstLetter = w[0].toUpperCase();
+  const blanks = w.length - 1;
+  const filled = Math.min(S.userInput.length, blanks);
+  let display = firstLetter + S.userInput.substring(0, filled).toUpperCase();
+  display += '_'.repeat(Math.max(0, blanks - filled));
+
+  const blankEl = document.querySelector('.blank-word');
+  if (blankEl) blankEl.textContent = display;
 }
 
 document.getElementById('clear-btn').addEventListener('click', () => {
@@ -1162,9 +1187,35 @@ document.getElementById('submit-btn').addEventListener('click', () => {
   handleAnswer(S.userInput.toLowerCase(), card);
 });
 
+document.addEventListener('keydown', (e) => {
+  const card = S.cards[S.cardIndex];
+  if (!card || card.type !== 'definition') return;
+  if (document.getElementById('keyboard-wrap').style.pointerEvents === 'none') return;
+
+  const key = e.key.toLowerCase();
+  if (/^[a-z]$/.test(key)) {
+    e.preventDefault();
+    addChar(key);
+  } else if (key === 'backspace') {
+    e.preventDefault();
+    S.userInput = S.userInput.slice(0, -1);
+    updateInputDisplay();
+  } else if (key === 'enter') {
+    e.preventDefault();
+    document.getElementById('submit-btn').click();
+  }
+});
+
 function handleAnswer(chosen, card) {
   const timeMs = Date.now() - S.cardStart;
-  const correct = chosen.toLowerCase() === card.answer.toLowerCase();
+  let correct;
+  if (card.type === 'definition') {
+    const firstLetter = card.answer[0];
+    const fullAnswer = firstLetter + chosen;
+    correct = fullAnswer.toLowerCase() === card.answer.toLowerCase();
+  } else {
+    correct = chosen.toLowerCase() === card.answer.toLowerCase();
+  }
 
   if (card.type === 'fill-blank') {
     document.querySelectorAll('#options-grid .opt-btn').forEach(btn => {
@@ -1174,15 +1225,20 @@ function handleAnswer(chosen, card) {
     });
   } else {
     const wrapper = document.getElementById('keyboard-wrap');
+    wrapper.style.opacity = '0.5';
+    wrapper.style.pointerEvents = 'none';
+
+    const blankEl = document.querySelector('.blank-word');
+    const correctEl = document.querySelector('.correct-answer');
     if (correct) {
-      wrapper.style.opacity = '0.5';
-      wrapper.style.pointerEvents = 'none';
-      const display = document.getElementById('input-display');
-      display.style.color = 'var(--ok-lt)';
+      if (blankEl) blankEl.style.color = 'var(--ok-lt)';
     } else {
-      const display = document.getElementById('input-display');
-      display.textContent = card.answer.toUpperCase();
-      display.style.color = 'var(--err-lt)';
+      if (blankEl) blankEl.style.color = 'var(--err-lt)';
+      if (correctEl) {
+        correctEl.textContent = card.answer.toUpperCase();
+        correctEl.style.color = 'var(--ok-lt)';
+        correctEl.style.display = 'block';
+      }
     }
   }
 
@@ -1198,7 +1254,7 @@ function handleAnswer(chosen, card) {
     const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
     if (done) { stopTimer(); showSummary(); }
     else renderCard();
-  }, 3000);
+  }, 2000);
 }
 
 document.getElementById('game-end-btn').addEventListener('click', () => {
