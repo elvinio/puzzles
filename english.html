@@ -234,7 +234,6 @@
       color: var(--p-text);
       line-height: 1.3;
       text-align: center;
-      font-style: italic;
     }
     .definition-text {
       font-size: clamp(1rem, 4vw, 1.4rem);
@@ -311,17 +310,17 @@
       flex-wrap: wrap;
     }
     .key-btn {
-      padding: 8px 10px;
+      padding: 12px 16px;
       border-radius: 8px;
       border: 2px solid var(--brd);
       background: var(--surface);
       color: var(--p-text);
-      font-size: 0.9rem;
+      font-size: 1.1rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.1s;
       touch-action: manipulation;
-      min-width: 32px;
+      min-width: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -356,7 +355,11 @@
       max-width: 620px;
       flex-shrink: 0;
     }
-    .submit-row .btn { flex: 1; }
+    .submit-row .btn {
+      flex: 1;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+    }
 
     /* ═══════════════════════════════════════ SUMMARY SCREEN */
     .summary-stats {
@@ -661,7 +664,12 @@
     <div class="submit-row">
       <button class="btn" id="submit-btn">Submit</button>
       <button class="btn btn-outline" id="clear-btn">Clear</button>
+      <button class="btn btn-outline" id="dont-know-btn">I Don't Know</button>
     </div>
+  </div>
+
+  <div class="btn-row" id="continue-row" style="display:none">
+    <button class="btn" id="continue-btn">Continue →</button>
   </div>
 </div>
 
@@ -711,6 +719,7 @@
   <div class="stats-controls">
     <div class="tab-row" id="stats-level-tabs" style="flex:1">
       <button class="tab active" data-level="p1">Primary 1</button>
+      <button class="tab" data-level="p3">Primary 3</button>
     </div>
     <select class="sort-select" id="stats-sort">
       <option value="wrong">Most Wrong</option>
@@ -766,24 +775,45 @@
 
 const SESSION_CONFIG = {
   p1: { cards: 10, minutes: 6 },
+  p3: { cards: 10, minutes: 6 },
 };
 const LESSON_GROUPS = [3, 6, 9, 12, 15, 19];
 
-const DATA = { p1: null };
-const dataPromise = fetch('english-p1.json')
-  .then(r => r.json())
-  .then(words => {
-    const lessons = {};
-    const wordsPerLesson = 12;
-    words.forEach((word, idx) => {
-      const lessonNum = Math.floor(idx / wordsPerLesson) + 1;
-      const lessonKey = `p1-${lessonNum}`;
-      if (!lessons[lessonKey]) lessons[lessonKey] = [];
-      lessons[lessonKey].push({ word: word.word, meaning: word.meaning, example: word.example });
-    });
-    DATA.p1 = lessons;
-  })
-  .catch(() => null);
+const DATA = { p1: null, p3: null };
+const dataPromise = Promise.all([
+  fetch('english-p1.json')
+    .then(r => r.json())
+    .then(words => {
+      const lessons = {};
+      const wordsPerLesson = 20;
+      words.forEach((word, idx) => {
+        const lessonNum = Math.floor(idx / wordsPerLesson) + 1;
+        const lessonKey = `p1-${lessonNum}`;
+        if (!lessons[lessonKey]) lessons[lessonKey] = [];
+        lessons[lessonKey].push({ word: word.word, meaning: word.meaning, example: word.example });
+      });
+      DATA.p1 = lessons;
+    })
+    .catch(() => null),
+  fetch('english-p3.json')
+    .then(r => r.json())
+    .then(words => {
+      const lessons = {};
+      const wordsPerLesson = 20;
+      words.forEach((word, idx) => {
+        const lessonNum = Math.floor(idx / wordsPerLesson) + 1;
+        const lessonKey = `p3-${lessonNum}`;
+        if (!lessons[lessonKey]) lessons[lessonKey] = [];
+        lessons[lessonKey].push({ word: word.word, meaning: word.meaning, example: word.example });
+      });
+      DATA.p3 = lessons;
+    })
+    .catch(() => null)
+]);
+
+function getMaxLessons(level) {
+  return level === 'p3' ? 50 : 12;
+}
 
 function getWordPool(level, lessonMax) {
   const data = DATA[level];
@@ -922,6 +952,7 @@ const S = {
   level: 'p1',
   lessonMax: 19,
   mode: 'fill-blank',
+  getMaxLessons() { return getMaxLessons(this.level); },
   cards: [],
   cardIndex: 0,
   results: [],
@@ -1000,6 +1031,7 @@ async function startSession() {
   await dataPromise;
   if (!DATA[S.level]) { showToast('Failed to load word data'); return; }
 
+  S.lessonMax = getMaxLessons(S.level);
   S.wordPool = getWordPool(S.level, S.lessonMax);
   if (S.wordPool.length === 0) { showToast('No words found'); return; }
 
@@ -1084,13 +1116,14 @@ function renderFillBlankCard(card) {
   const grid = document.getElementById('options-grid');
   grid.innerHTML = '';
   document.getElementById('keyboard-wrap').style.display = 'none';
+  document.getElementById('continue-row').style.display = 'none';
 
   const isPinyinOpt = false;
   card.options.forEach(opt => {
     const btn = document.createElement('button');
     btn.className = 'opt-btn';
     btn.textContent = opt;
-    btn.addEventListener('click', () => handleAnswer(opt, card));
+    btn.addEventListener('click', () => handleAnswer(opt, card, false));
     grid.appendChild(btn);
   });
 }
@@ -1117,6 +1150,7 @@ function renderDefinitionCard(card) {
   wrapper.style.opacity = '1';
   wrapper.style.pointerEvents = 'auto';
   document.getElementById('input-display').style.display = 'none';
+  document.getElementById('continue-row').style.display = 'none';
 
   renderKeyboard();
   updateBlankWord();
@@ -1184,7 +1218,19 @@ document.getElementById('clear-btn').addEventListener('click', () => {
 
 document.getElementById('submit-btn').addEventListener('click', () => {
   const card = S.cards[S.cardIndex];
-  handleAnswer(S.userInput.toLowerCase(), card);
+  handleAnswer(S.userInput.toLowerCase(), card, false);
+});
+
+document.getElementById('dont-know-btn').addEventListener('click', () => {
+  const card = S.cards[S.cardIndex];
+  handleAnswer('', card, true);
+});
+
+document.getElementById('continue-btn').addEventListener('click', () => {
+  S.cardIndex++;
+  const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
+  if (done) { stopTimer(); showSummary(); }
+  else renderCard();
 });
 
 document.addEventListener('keydown', (e) => {
@@ -1206,15 +1252,18 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-function handleAnswer(chosen, card) {
+function handleAnswer(chosen, card, dontKnow = false) {
   const timeMs = Date.now() - S.cardStart;
-  let correct;
-  if (card.type === 'definition') {
-    const firstLetter = card.answer[0];
-    const fullAnswer = firstLetter + chosen;
-    correct = fullAnswer.toLowerCase() === card.answer.toLowerCase();
-  } else {
-    correct = chosen.toLowerCase() === card.answer.toLowerCase();
+  let correct = !dontKnow;
+
+  if (!dontKnow) {
+    if (card.type === 'definition') {
+      const firstLetter = card.answer[0];
+      const fullAnswer = firstLetter + chosen;
+      correct = fullAnswer.toLowerCase() === card.answer.toLowerCase();
+    } else {
+      correct = chosen.toLowerCase() === card.answer.toLowerCase();
+    }
   }
 
   if (card.type === 'fill-blank') {
@@ -1249,12 +1298,16 @@ function handleAnswer(chosen, card) {
 
   S.results.push({ word: card.word, correct, timeMs, type: card.type });
 
-  setTimeout(() => {
-    S.cardIndex++;
-    const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
-    if (done) { stopTimer(); showSummary(); }
-    else renderCard();
-  }, 2000);
+  if (correct) {
+    setTimeout(() => {
+      S.cardIndex++;
+      const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
+      if (done) { stopTimer(); showSummary(); }
+      else renderCard();
+    }, 1500);
+  } else {
+    document.getElementById('continue-row').style.display = 'flex';
+  }
 }
 
 document.getElementById('game-end-btn').addEventListener('click', () => {
@@ -1331,7 +1384,7 @@ function renderAvatarChips() {
 
 function renderStatsTable() {
   const progress = S.statsAvatarId ? loadProgress(S.statsAvatarId) : {};
-  const pool = getWordPool(S.statsLevel, 19);
+  const pool = getWordPool(S.statsLevel, getMaxLessons(S.statsLevel));
 
   let rows = pool
     .map(w => ({ ...w, rec: progress[w.key] }))

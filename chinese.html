@@ -660,6 +660,10 @@
   </div>
 
   <div class="options-grid" id="options-grid"></div>
+
+  <div class="btn-row" id="continue-row" style="display:none">
+    <button class="btn" id="continue-btn">Continue →</button>
+  </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════
@@ -1298,6 +1302,7 @@ function renderCard() {
     grid.appendChild(btn);
   });
 
+  document.getElementById('continue-row').style.display = 'none';
   S.cardStart = Date.now();
 }
 
@@ -1323,19 +1328,30 @@ function handleAnswer(chosen, card) {
 
   S.results.push({ word: card.word, correct, timeMs, type: card.type });
 
-  const delay = correct ? 800 : 2000;
-  setTimeout(() => {
-    S.cardIndex++;
-    const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
-    if (done) { stopTimer(); showSummary(); }
-    else renderCard();
-  }, delay);
+  if (correct) {
+    setTimeout(() => {
+      S.cardIndex++;
+      const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
+      if (done) { stopTimer(); showSummary(); }
+      else renderCard();
+    }, 1500);
+  } else {
+    document.getElementById('continue-row').style.display = 'flex';
+  }
 }
 
 // Game → end session manually
 document.getElementById('game-end-btn').addEventListener('click', () => {
   stopTimer();
   showSummary();
+});
+
+// Game → continue to next card
+document.getElementById('continue-btn').addEventListener('click', () => {
+  S.cardIndex++;
+  const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
+  if (done) { stopTimer(); showSummary(); }
+  else renderCard();
 });
 
 // ═══════════════════════════════════════════════════════════════

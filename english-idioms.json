@@ -98,5 +98,875 @@
     "word": "miss the boat",
     "meaning": "To miss an opportunity",
     "example": "I waited too long to buy the tickets, and now they are sold out. I really missed the boat."
+  },
+  {
+    "word": "actions speak louder than words",
+    "meaning": "What you do is more important than what you say",
+    "example": "He promised to help, but actions speak louder than words, and he never showed up."
+  },
+  {
+    "word": "barking up the wrong tree",
+    "meaning": "Looking in the wrong place or accusing the wrong person",
+    "example": "If you think I broke your phone, you're barking up the wrong tree."
+  },
+  {
+    "word": "beat around the bush",
+    "meaning": "To avoid talking about what is important",
+    "example": "Stop beating around the bush and tell me what happened!"
+  },
+  {
+    "word": "bite off more than you can chew",
+    "meaning": "To take on a task that is way too big",
+    "example": "I think I bit off more than I could chew by joining three different sports teams."
+  },
+  {
+    "word": "burn bridges",
+    "meaning": "To destroy a relationship in a way that it cannot be fixed",
+    "example": "You shouldn't burn bridges with your old friends even if you move away."
+  },
+  {
+    "word": "by the skin of your teeth",
+    "meaning": "To just barely succeed or escape",
+    "example": "I passed the difficult math test by the skin of my teeth."
+  },
+  {
+    "word": "catch someone red-handed",
+    "meaning": "To catch someone doing something wrong",
+    "example": "The teacher caught him red-handed passing notes in class."
+  },
+  {
+    "word": "cold shoulder",
+    "meaning": "To ignore someone on purpose",
+    "example": "I tried to say hello, but she gave me the cold shoulder."
+  },
+  {
+    "word": "couch potato",
+    "meaning": "A lazy person who watches too much television",
+    "example": "Don't be a couch potato; let's go play outside!"
+  },
+  {
+    "word": "cry over spilled milk",
+    "meaning": "To be upset over something that has already happened and cannot be changed",
+    "example": "You lost the game, but there is no use crying over spilled milk. Try again next time."
+  },
+  {
+    "word": "curiosity killed the cat",
+    "meaning": "Being too curious can get you into trouble",
+    "example": "I wouldn't open that box if I were you. Curiosity killed the cat, you know."
+  },
+  {
+    "word": "don't put all your eggs in one basket",
+    "meaning": "Don't risk everything on one single plan or idea",
+    "example": "Apply to several schools; don't put all your eggs in one basket."
+  },
+  {
+    "word": "down to earth",
+    "meaning": "Realistic, practical, and friendly",
+    "example": "Even though she is famous, she is very down to earth."
+  },
+  {
+    "word": "drop in the bucket",
+    "meaning": "A very small or unimportant amount",
+    "example": "The money we raised is just a drop in the bucket compared to what we need."
+  },
+  {
+    "word": "early bird catches the worm",
+    "meaning": "The person who arrives first has the best chance for success",
+    "example": "We should get to the amusement park right when it opens. The early bird catches the worm!"
+  },
+  {
+    "word": "elephant in the room",
+    "meaning": "An obvious problem that no one wants to talk about",
+    "example": "His bad grades were the elephant in the room during dinner."
+  },
+  {
+    "word": "every cloud has a silver lining",
+    "meaning": "There is a positive side to every bad situation",
+    "example": "I failed the test, but every cloud has a silver lining: now I know what to study."
+  },
+  {
+    "word": "face the music",
+    "meaning": "To accept the unpleasant results of your actions",
+    "example": "I broke the window, and now I have to face the music."
+  },
+  {
+    "word": "get cold feet",
+    "meaning": "To become too nervous to do something",
+    "example": "He was supposed to sing on stage, but he got cold feet at the last minute."
+  },
+  {
+    "word": "get out of hand",
+    "meaning": "To become difficult to control",
+    "example": "The party started getting out of hand when people started throwing food."
+  },
+  {
+    "word": "give someone a hand",
+    "meaning": "To help someone",
+    "example": "Can you give me a hand with these heavy bags?"
+  },
+  {
+    "word": "go the extra mile",
+    "meaning": "To do more than what is expected",
+    "example": "My teacher always goes the extra mile to make sure we understand the lesson."
+  },
+  {
+    "word": "good as gold",
+    "meaning": "Very well behaved",
+    "example": "The children were as good as gold for the babysitter."
+  },
+  {
+    "word": "hang in there",
+    "meaning": "Don't give up",
+    "example": "I know the homework is hard, but hang in there, you will finish it soon."
+  },
+  {
+    "word": "head in the clouds",
+    "meaning": "Not paying attention to what is happening around you",
+    "example": "He always has his head in the clouds and never listens to the teacher."
+  },
+  {
+    "word": "hold your horses",
+    "meaning": "Wait a moment; be patient",
+    "example": "Hold your horses! We can't leave until everyone is ready."
+  },
+  {
+    "word": "in the same boat",
+    "meaning": "In the same difficult situation",
+    "example": "None of us understand the math homework, so we are all in the same boat."
+  },
+  {
+    "word": "keep an eye on",
+    "meaning": "To watch someone or something carefully",
+    "example": "Please keep an eye on my bag while I go to the restroom."
+  },
+  {
+    "word": "let sleeping dogs lie",
+    "meaning": "Do not interfere with a situation because it could cause trouble",
+    "example": "I wouldn't bring up the argument again. It's better to let sleeping dogs lie."
+  },
+  {
+    "word": "like two peas in a pod",
+    "meaning": "Very similar, especially in appearance or personality",
+    "example": "The twins are like two peas in a pod; they do everything together."
+  },
+  {
+    "word": "make a long story short",
+    "meaning": "To quickly tell the main points of a story",
+    "example": "To make a long story short, we got lost and missed the movie."
+  },
+  {
+    "word": "no pain, no gain",
+    "meaning": "You have to work hard to achieve something",
+    "example": "My legs hurt from running, but no pain, no gain!"
+  },
+  {
+    "word": "on cloud nine",
+    "meaning": "Extremely happy",
+    "example": "She was on cloud nine when she won the spelling bee."
+  },
+  {
+    "word": "on thin ice",
+    "meaning": "In a risky or dangerous situation",
+    "example": "You are on thin ice if you keep coming to class late."
+  },
+  {
+    "word": "out of the blue",
+    "meaning": "Suddenly and unexpectedly",
+    "example": "Out of the blue, it started raining heavily."
+  },
+  {
+    "word": "play it by ear",
+    "meaning": "To decide how to deal with a situation as it develops",
+    "example": "We don't know what time we will arrive, so let's just play it by ear."
+  },
+  {
+    "word": "pull someone's leg",
+    "meaning": "To joke with someone by telling them something untrue",
+    "example": "I was just pulling your leg; there is no spider on your back."
+  },
+  {
+    "word": "rain on someone's parade",
+    "meaning": "To spoil someone's plans or happiness",
+    "example": "I hate to rain on your parade, but the picnic is cancelled because of the storm."
+  },
+  {
+    "word": "raining cats and dogs",
+    "meaning": "Raining very heavily",
+    "example": "We can't go to the park today because it's raining cats and dogs."
+  },
+  {
+    "word": "rule of thumb",
+    "meaning": "A general rule or guideline",
+    "example": "As a rule of thumb, you should drink 8 glasses of water a day."
+  },
+  {
+    "word": "save for a rainy day",
+    "meaning": "To save money for a time when it might be needed",
+    "example": "I got some money for my birthday, but I'm saving it for a rainy day."
+  },
+  {
+    "word": "sick as a dog",
+    "meaning": "Very sick",
+    "example": "I couldn't go to school yesterday because I was sick as a dog."
+  },
+  {
+    "word": "spill the beans",
+    "meaning": "To reveal a secret",
+    "example": "Come on, spill the beans! What did you get Mom for her birthday?"
+  },
+  {
+    "word": "steal someone's thunder",
+    "meaning": "To take the attention away from someone else",
+    "example": "My sister stole my thunder by announcing her engagement at my graduation party."
+  },
+  {
+    "word": "take a rain check",
+    "meaning": "To decline an invitation but offer to do it at a later time",
+    "example": "I'm busy tonight, but can I take a rain check on that movie?"
+  },
+  {
+    "word": "take it with a grain of salt",
+    "meaning": "To not completely believe something that you are told",
+    "example": "You should take his stories with a grain of salt; he loves to exaggerate."
+  },
+  {
+    "word": "the ball is in your court",
+    "meaning": "It is your turn to make a decision or take action",
+    "example": "I have made my offer, so now the ball is in your court."
+  },
+  {
+    "word": "the best thing since sliced bread",
+    "meaning": "An excellent new invention or idea",
+    "example": "My new smartphone is the best thing since sliced bread."
+  },
+  {
+    "word": "the tip of the iceberg",
+    "meaning": "Only a small part of a much larger problem",
+    "example": "The missing money is just the tip of the iceberg; the whole company is failing."
+  },
+  {
+    "word": "throw in the towel",
+    "meaning": "To give up",
+    "example": "The math problem was so hard that I almost threw in the towel."
+  },
+  {
+    "word": "time flies",
+    "meaning": "Time passes very quickly",
+    "example": "Time flies when you are having fun at the amusement park."
+  },
+  {
+    "word": "under the weather",
+    "meaning": "Feeling slightly ill",
+    "example": "I won't be able to come to work today because I'm feeling a bit under the weather."
+  },
+  {
+    "word": "up in the air",
+    "meaning": "Uncertain or undecided",
+    "example": "Our holiday plans are still up in the air."
+  },
+  {
+    "word": "water under the bridge",
+    "meaning": "Something that happened in the past and is no longer important",
+    "example": "We used to argue a lot, but that is all water under the bridge now."
+  },
+  {
+    "word": "you can say that again",
+    "meaning": "I completely agree with you",
+    "example": "'It is extremely hot today!' 'You can say that again!'"
+  },
+  {
+    "word": "your guess is as good as mine",
+    "meaning": "I have no idea",
+    "example": "'What time will the bus arrive?' 'Your guess is as good as mine.'"
+  },
+  {
+    "word": "a penny for your thoughts",
+    "meaning": "A way of asking someone what they are thinking about",
+    "example": "You have been quiet for a while. A penny for your thoughts?"
+  },
+  {
+    "word": "actions speak louder than words",
+    "meaning": "What someone does is more important than what they say",
+    "example": "He said he would help, but actions speak louder than words."
+  },
+  {
+    "word": "at the drop of a hat",
+    "meaning": "Without any hesitation; instantly",
+    "example": "My dog is always ready to go for a walk at the drop of a hat."
+  },
+  {
+    "word": "back to the drawing board",
+    "meaning": "To start over because a previous attempt failed",
+    "example": "Our science project didn't work, so it's back to the drawing board."
+  },
+  {
+    "word": "barking dogs seldom bite",
+    "meaning": "People who make big threats rarely carry them out",
+    "example": "Don't worry about his angry shouting; barking dogs seldom bite."
+  },
+  {
+    "word": "better late than never",
+    "meaning": "It is better to do something late than not do it at all",
+    "example": "I finally finished my homework. Better late than never!"
+  },
+  {
+    "word": "birds of a feather flock together",
+    "meaning": "People with similar interests or characters usually spend time together",
+    "example": "Those two boys love playing video games, so they became fast friends. Birds of a feather flock together."
+  },
+  {
+    "word": "break the ice",
+    "meaning": "To start a conversation and make people feel more comfortable",
+    "example": "The teacher told a joke to break the ice on the first day of school."
+  },
+  {
+    "word": "call it a night",
+    "meaning": "To stop what you are doing for the rest of the night and go to bed",
+    "example": "It is already midnight; let's call it a night."
+  },
+  {
+    "word": "cat got your tongue?",
+    "meaning": "Why are you not saying anything?",
+    "example": "Why won't you answer my question? Cat got your tongue?"
+  },
+  {
+    "word": "clear as mud",
+    "meaning": "Not clear at all; confusing",
+    "example": "His explanation of the game rules was as clear as mud."
+  },
+  {
+    "word": "come rain or shine",
+    "meaning": "No matter what happens",
+    "example": "I will be at your football match to cheer you on, come rain or shine."
+  },
+  {
+    "word": "cool as a cucumber",
+    "meaning": "Very calm and relaxed",
+    "example": "Even during the difficult test, she remained cool as a cucumber."
+  },
+  {
+    "word": "cross that bridge when you come to it",
+    "meaning": "To deal with a problem only when it arises, not before",
+    "example": "We don't know if it will rain on Saturday, but we will cross that bridge when we come to it."
+  },
+  {
+    "word": "don't count your chickens before they hatch",
+    "meaning": "Don't rely on something happening before it actually happens",
+    "example": "You haven't won the race yet, so don't count your chickens before they hatch!"
+  },
+  {
+    "word": "don't cry over spilled milk",
+    "meaning": "There's no point in being upset over something that has already happened and cannot be changed",
+    "example": "I accidentally dropped my ice cream, but my mom told me not to cry over spilled milk."
+  },
+  {
+    "word": "easy as pie",
+    "meaning": "Very easy",
+    "example": "Learning how to ride a bicycle was as easy as pie."
+  },
+  {
+    "word": "every dog has its day",
+    "meaning": "Everyone will have good luck or success at some point in their lives",
+    "example": "My team finally won a match! Every dog has its day."
+  },
+  {
+    "word": "fit as a fiddle",
+    "meaning": "In very good health",
+    "example": "My grandfather is 80 years old, but he is still fit as a fiddle."
+  },
+  {
+    "word": "go bananas",
+    "meaning": "To become very angry or excited",
+    "example": "The fans went bananas when their favourite singer came on stage."
+  },
+  {
+    "word": "have a sweet tooth",
+    "meaning": "To love eating sweet foods like candy and chocolate",
+    "example": "My little sister has a sweet tooth; she can eat a whole bag of sweets!"
+  },
+  {
+    "word": "hit the books",
+    "meaning": "To study very hard",
+    "example": "I have an important exam tomorrow, so I need to hit the books."
+  },
+  {
+    "word": "in hot water",
+    "meaning": "In trouble",
+    "example": "He found himself in hot water when he broke the neighbour's window."
+  },
+  {
+    "word": "keep your chin up",
+    "meaning": "To stay cheerful and hopeful in a difficult situation",
+    "example": "Keep your chin up; things will get better soon!"
+  },
+  {
+    "word": "know the ropes",
+    "meaning": "To understand how to do a specific job or task",
+    "example": "She has been working here for years, so she really knows the ropes."
+  },
+  {
+    "word": "let sleeping dogs lie",
+    "meaning": "To avoid interfering in a situation that is currently causing no problems",
+    "example": "I didn't bring up the argument again because I prefer to let sleeping dogs lie."
+  },
+  {
+    "word": "like finding a needle in a haystack",
+    "meaning": "Something that is very difficult or impossible to find",
+    "example": "Looking for my lost earring on the beach is like finding a needle in a haystack."
+  },
+  {
+    "word": "make a mountain out of a molehill",
+    "meaning": "To make a small problem seem much larger than it really is",
+    "example": "It's just a tiny scratch; don't make a mountain out of a molehill!"
+  },
+  {
+    "word": "on the ball",
+    "meaning": "Alert and fully aware of what is happening",
+    "example": "The teacher is always on the ball and notices when someone is not paying attention."
+  },
+  {
+    "word": "out of the woods",
+    "meaning": "Out of danger or difficulty",
+    "example": "The patient is feeling much better, but he is not out of the woods yet."
+  },
+  {
+    "word": "piece of cake",
+    "meaning": "Something very easy to do",
+    "example": "That spelling test was a piece of cake!"
+  },
+  {
+    "word": "practice makes perfect",
+    "meaning": "Doing something repeatedly is the only way to become very good at it",
+    "example": "If you want to be a good piano player, remember that practice makes perfect."
+  },
+  {
+    "word": "put your best foot forward",
+    "meaning": "To try your very best",
+    "example": "When you go for the interview, make sure to put your best foot forward."
+  },
+  {
+    "word": "read between the lines",
+    "meaning": "To look for or discover a hidden meaning",
+    "example": "She didn't say she was upset, but reading between the lines, I could tell she was."
+  },
+  {
+    "word": "see eye to eye",
+    "meaning": "To agree with someone",
+    "example": "My friends and I do not always see eye to eye, but we still like each other."
+  },
+  {
+    "word": "sick and tired",
+    "meaning": "Annoyed and frustrated with something that has been happening for a long time",
+    "example": "I am sick and tired of you leaving your messy clothes on the floor."
+  },
+  {
+    "word": "slip of the tongue",
+    "meaning": "A mistake made when speaking",
+    "example": "I meant to say 'hello', but I said 'yellow'. It was a slip of the tongue."
+  },
+  {
+    "word": "slow and steady wins the race",
+    "meaning": "Consistent, effective effort brings success",
+    "example": "Take your time with your homework. Slow and steady wins the race."
+  },
+  {
+    "word": "spill the beans",
+    "meaning": "To reveal a secret",
+    "example": "My brother spilled the beans about my surprise party."
+  },
+  {
+    "word": "straight from the horse's mouth",
+    "meaning": "From the original or most reliable source",
+    "example": "I know it is true because I heard it straight from the horse's mouth."
+  },
+  {
+    "word": "take a break",
+    "meaning": "To stop working or doing something for a short time",
+    "example": "You have been studying for hours. You should take a break."
+  },
+  {
+    "word": "the apple of my eye",
+    "meaning": "Someone who is cherished above all others",
+    "example": "My little daughter is the apple of my eye."
+  },
+  {
+    "word": "the early bird catches the worm",
+    "meaning": "The person who takes action earliest will be the most successful",
+    "example": "We should wake up early to get the best seats. The early bird catches the worm!"
+  },
+  {
+    "word": "throw in the towel",
+    "meaning": "To give up or accept defeat",
+    "example": "The puzzle was so hard that I almost threw in the towel."
+  },
+  {
+    "word": "two heads are better than one",
+    "meaning": "It's easier to solve a problem if two people work together",
+    "example": "Let's work on this project together; two heads are better than one."
+  },
+  {
+    "word": "under the weather",
+    "meaning": "Feeling unwell or sick",
+    "example": "I'm going to stay home today because I am feeling under the weather."
+  },
+  {
+    "word": "when pigs fly",
+    "meaning": "Something that will never happen",
+    "example": "I will eat vegetables for every meal when pigs fly!"
+  },
+  {
+    "word": "a drop in the ocean",
+    "meaning": "A very small amount compared to what is needed",
+    "example": "My one dollar donation is just a drop in the ocean compared to the millions needed."
+  },
+  {
+    "word": "a fish out of water",
+    "meaning": "Someone who is uncomfortable in a specific situation",
+    "example": "I felt like a fish out of water at the new school."
+  },
+  {
+    "word": "apple of discord",
+    "meaning": "The root of an argument or disagreement",
+    "example": "The television remote is always the apple of discord between my brother and me."
+  },
+  {
+    "word": "at the end of your rope",
+    "meaning": "Having no more patience or energy left",
+    "example": "The toddler was crying all day, and the mother was at the end of her rope."
+  },
+  {
+    "word": "back to square one",
+    "meaning": "To start over completely from the beginning",
+    "example": "Our idea failed, so it's back to square one."
+  },
+  {
+    "word": "bite off more than you can chew",
+    "meaning": "To try to do a task that is too difficult",
+    "example": "I think I bit off more than I could chew when I agreed to plan the whole party alone."
+  },
+  {
+    "word": "bite the dust",
+    "meaning": "To break or fall down; to die",
+    "example": "My old computer finally bit the dust."
+  },
+  {
+    "word": "blow your top",
+    "meaning": "To become extremely angry",
+    "example": "My dad blew his top when he saw the broken window."
+  },
+  {
+    "word": "break the bank",
+    "meaning": "To cost a lot of money",
+    "example": "Buying that fancy toy car will definitely break the bank."
+  },
+  {
+    "word": "butterflies in my stomach",
+    "meaning": "A feeling of nervousness",
+    "example": "I always get butterflies in my stomach before I have to speak in front of the class."
+  },
+  {
+    "word": "by the book",
+    "meaning": "To follow the rules exactly",
+    "example": "The referee is very strict and always goes by the book."
+  },
+  {
+    "word": "catch some Zs",
+    "meaning": "To go to sleep",
+    "example": "I am so tired; I need to go catch some Zs."
+  },
+  {
+    "word": "change your tune",
+    "meaning": "To change your opinion or attitude",
+    "example": "He used to hate broccoli, but he changed his tune after trying my mom's recipe."
+  },
+  {
+    "word": "close but no cigar",
+    "meaning": "To be very close to succeeding, but not quite there",
+    "example": "You guessed the answer almost correctly, but close but no cigar."
+  },
+  {
+    "word": "costs an arm and a leg",
+    "meaning": "Very expensive",
+    "example": "I love that jacket, but it costs an arm and a leg."
+  },
+  {
+    "word": "cut the mustard",
+    "meaning": "To meet expectations; to be good enough",
+    "example": "His performance on the team just didn't cut the mustard."
+  },
+  {
+    "word": "dark horse",
+    "meaning": "A competitor who is little known but unexpectedly wins",
+    "example": "The quiet girl in the back of the class turned out to be a dark horse in the debate competition."
+  },
+  {
+    "word": "down in the dumps",
+    "meaning": "Feeling sad or depressed",
+    "example": "She has been feeling down in the dumps since her best friend moved away."
+  },
+  {
+    "word": "draw a blank",
+    "meaning": "To be unable to remember something",
+    "example": "I tried to remember his name, but I drew a blank."
+  },
+  {
+    "word": "drive someone up the wall",
+    "meaning": "To annoy someone greatly",
+    "example": "The loud music next door is driving me up the wall!"
+  },
+  {
+    "word": "eat humble pie",
+    "meaning": "To admit that you were wrong",
+    "example": "He was so sure he would win the race, but he had to eat humble pie when he lost."
+  },
+  {
+    "word": "every trick in the book",
+    "meaning": "Every possible method to achieve something",
+    "example": "We tried every trick in the book to fix the car, but it still won't start."
+  },
+  {
+    "word": "fair-weather friend",
+    "meaning": "A friend who is only there when things are going well",
+    "example": "She only hangs out with me when I have money; she's just a fair-weather friend."
+  },
+  {
+    "word": "fall on deaf ears",
+    "meaning": "To be ignored or not listened to",
+    "example": "My warnings about the danger fell on deaf ears."
+  },
+  {
+    "word": "fish out of water",
+    "meaning": "Someone who is uncomfortable in a certain situation",
+    "example": "I felt like a fish out of water at the formal dinner party."
+  },
+  {
+    "word": "fly off the handle",
+    "meaning": "To lose your temper suddenly and violently",
+    "example": "There is no need to fly off the handle just because I accidentally dropped your pen."
+  },
+  {
+    "word": "foot the bill",
+    "meaning": "To pay for something",
+    "example": "My parents kindly agreed to foot the bill for our holiday."
+  },
+  {
+    "word": "get cold feet",
+    "meaning": "To become too nervous to do something you planned to do",
+    "example": "I was going to try bungee jumping, but I got cold feet."
+  },
+  {
+    "word": "get the ball rolling",
+    "meaning": "To start something",
+    "example": "Let's get the ball rolling on this project so we can finish it early."
+  },
+  {
+    "word": "give it a shot",
+    "meaning": "To try something",
+    "example": "I have never played tennis before, but I will give it a shot."
+  },
+  {
+    "word": "go with the flow",
+    "meaning": "To relax and let things happen naturally",
+    "example": "Instead of planning everything perfectly, sometimes it's best to just go with the flow."
+  },
+  {
+    "word": "green with envy",
+    "meaning": "Very jealous",
+    "example": "I was green with envy when I saw his new bicycle."
+  },
+  {
+    "word": "hard nut to crack",
+    "meaning": "A difficult problem or a person who is hard to understand",
+    "example": "This math puzzle is a hard nut to crack."
+  },
+  {
+    "word": "have a heart of gold",
+    "meaning": "To be very kind and generous",
+    "example": "My grandmother volunteers at the hospital every week; she has a heart of gold."
+  },
+  {
+    "word": "have a whale of a time",
+    "meaning": "To enjoy yourself very much",
+    "example": "We went to the water park and had a whale of a time!"
+  },
+  {
+    "word": "hit the jackpot",
+    "meaning": "To have a big success or gain a lot of money",
+    "example": "We really hit the jackpot finding this great restaurant hidden in the alley."
+  },
+  {
+    "word": "in the blink of an eye",
+    "meaning": "Very quickly",
+    "example": "The magician made the rabbit disappear in the blink of an eye."
+  },
+  {
+    "word": "keep your fingers crossed",
+    "meaning": "To hope for good luck",
+    "example": "I have my final exam tomorrow; keep your fingers crossed for me!"
+  },
+  {
+    "word": "laugh your head off",
+    "meaning": "To laugh very hard",
+    "example": "The clown's silly tricks made the children laugh their heads off."
+  },
+  {
+    "word": "learn the ropes",
+    "meaning": "To learn how to do a new job or task",
+    "example": "It took me a few weeks to learn the ropes at my new school."
+  },
+  {
+    "word": "make ends meet",
+    "meaning": "To earn enough money to pay for basic living expenses",
+    "example": "He had to work two jobs just to make ends meet."
+  },
+  {
+    "word": "neck and neck",
+    "meaning": "Very close in a race or competition",
+    "example": "The two runners were neck and neck right until the finish line."
+  },
+  {
+    "word": "not your cup of tea",
+    "meaning": "Not something you like or are interested in",
+    "example": "I tried reading that science fiction book, but it is just not my cup of tea."
+  },
+  {
+    "word": "off the top of my head",
+    "meaning": "From memory, without checking",
+    "example": "Off the top of my head, I think her birthday is next Tuesday."
+  },
+  {
+    "word": "on cloud nine",
+    "meaning": "Extremely happy",
+    "example": "When he got the new puppy, he was on cloud nine."
+  },
+  {
+    "word": "out of the blue",
+    "meaning": "Unexpectedly and suddenly",
+    "example": "My old friend called me out of the blue yesterday."
+  },
+  {
+    "word": "paint the town red",
+    "meaning": "To go out and have a great time",
+    "example": "After we finish our exams, we are going to paint the town red!"
+  },
+  {
+    "word": "pass with flying colours",
+    "meaning": "To pass a test or exam very easily and with a high score",
+    "example": "She studied very hard and passed her spelling test with flying colours."
+  },
+  {
+    "word": "play it by ear",
+    "meaning": "To deal with a situation as it develops rather than following a plan",
+    "example": "We don't have a schedule for the trip, we'll just play it by ear."
+  },
+  {
+    "word": "pull your weight",
+    "meaning": "To do your fair share of the work",
+    "example": "In a group project, everyone needs to pull their weight."
+  },
+  {
+    "word": "raining cats and dogs",
+    "meaning": "Raining very heavily",
+    "example": "We couldn't play outside because it was raining cats and dogs."
+  },
+  {
+    "word": "rule of thumb",
+    "meaning": "A practical and approximate rule",
+    "example": "As a rule of thumb, you should read for at least twenty minutes a day."
+  },
+  {
+    "word": "saved by the bell",
+    "meaning": "Saved from a difficult situation at the last possible moment",
+    "example": "I didn't know the answer to the teacher's question, but the bell rang, so I was saved by the bell."
+  },
+  {
+    "word": "see eye to eye",
+    "meaning": "To agree entirely",
+    "example": "My sister and I don't always see eye to eye, but we love each other."
+  },
+  {
+    "word": "smell a rat",
+    "meaning": "To suspect that something is wrong or dishonest",
+    "example": "When the man offered to sell the expensive watch for only ten dollars, I smelled a rat."
+  },
+  {
+    "word": "start from scratch",
+    "meaning": "To begin completely from the beginning",
+    "example": "My cake burned in the oven, so I have to start from scratch."
+  },
+  {
+    "word": "sweat blood",
+    "meaning": "To work very hard",
+    "example": "He sweated blood to finish the tough science project on time."
+  },
+  {
+    "word": "take a rain check",
+    "meaning": "To postpone an invitation to a later date",
+    "example": "I cannot come to the park today, can I take a rain check?"
+  },
+  {
+    "word": "the icing on the cake",
+    "meaning": "An extra benefit that makes a good situation even better",
+    "example": "Winning the game was great, but getting a trophy was the icing on the cake."
+  },
+  {
+    "word": "through thick and thin",
+    "meaning": "Through good times and bad times",
+    "example": "Best friends support each other through thick and thin."
+  },
+  {
+    "word": "throw in the towel",
+    "meaning": "To give up on something",
+    "example": "The puzzle was so difficult that I eventually threw in the towel."
+  },
+  {
+    "word": "tie the knot",
+    "meaning": "To get married",
+    "example": "My aunt and uncle are going to tie the knot next month."
+  },
+  {
+    "word": "time flies",
+    "meaning": "Time passes very quickly",
+    "example": "Time flies when you are having fun playing games."
+  },
+  {
+    "word": "under the weather",
+    "meaning": "Feeling sick",
+    "example": "I am feeling a bit under the weather, so I will go to bed early."
+  },
+  {
+    "word": "up in the air",
+    "meaning": "Not yet decided",
+    "example": "Our plans for the school holidays are still up in the air."
+  },
+  {
+    "word": "walk on eggshells",
+    "meaning": "To be very careful about what you say or do to avoid upsetting someone",
+    "example": "My brother is in a bad mood, so I am walking on eggshells around him."
+  },
+  {
+    "word": "water under the bridge",
+    "meaning": "Something that happened in the past and is no longer important",
+    "example": "We used to argue, but that is water under the bridge now."
+  },
+  {
+    "word": "when pigs fly",
+    "meaning": "Something that will never happen",
+    "example": "I will clean up my messy room when pigs fly!"
+  },
+  {
+    "word": "wild goose chase",
+    "meaning": "A hopeless search for something that doesn't exist or can't be found",
+    "example": "Looking for my lost keys in the huge park was a wild goose chase."
+  },
+  {
+    "word": "wolf in sheep's clothing",
+    "meaning": "A person who seems friendly but is actually dangerous or dishonest",
+    "example": "The friendly salesman turned out to be a wolf in sheep's clothing."
+  },
+  {
+    "word": "zip your lip",
+    "meaning": "To be quiet and stop talking",
+    "example": "Zip your lip and listen carefully to the instructions!"
   }
 ]
