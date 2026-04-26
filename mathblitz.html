@@ -323,6 +323,18 @@
       0%   { background-position: 0% 50%; }
       100% { background-position: 300% 50%; }
     }
+
+    /* ── Geometry SVG ── */
+    .question-svg { display: none; width: 100%; max-width: 260px; margin: 0 auto; }
+    .question-svg.visible { display: block; }
+    .geo-shape  { fill: none; stroke: var(--p-xl); stroke-width: 2; stroke-linejoin: round; }
+    .geo-arc    { fill: none; stroke: #facc15; stroke-width: 1.5; }
+    .geo-label  { font-size: 13px; font-weight: 700; font-family: system-ui,sans-serif; fill: var(--p-text); }
+    .geo-unknown { fill: #facc15; }
+    .geo-hint   { font-size: 10px; font-family: system-ui,sans-serif; fill: var(--muted); }
+    .geo-right  { fill: none; stroke: var(--p-xl); stroke-width: 1.5; }
+    .geo-tick   { stroke: var(--p-xl); stroke-width: 1.5; }
+    .geo-sector { fill: rgba(109,40,217,0.2); stroke: var(--p-xl); stroke-width: 2; }
   </style>
 </head>
 <body>
@@ -355,6 +367,7 @@
     <div class="question-card" id="question-card">
       <div class="op-label" id="op-label">multiplication</div>
       <div class="question-text" id="question-text">7 × 8 = ?</div>
+      <svg class="question-svg" id="question-svg" viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
 
@@ -386,6 +399,7 @@
         <button class="seg-btn" data-op="divide">÷ Divide</button>
         <button class="seg-btn" data-op="money">$ Money</button>
         <button class="seg-btn" data-op="random">⚡ Mix</button>
+        <button class="seg-btn" data-op="geometry">📐 Geo</button>
       </div>
       <button class="primary-btn" id="start-btn">Start Game</button>
     </div>
@@ -430,6 +444,7 @@
         <button class="seg-btn" data-op="divide">÷ Divide</button>
         <button class="seg-btn" data-op="money">$ Money</button>
         <button class="seg-btn" data-op="random">⚡ Mix</button>
+        <button class="seg-btn" data-op="geometry">📐 Geo</button>
       </div>
       <button class="primary-btn" id="play-again-btn">Play Again</button>
     </div>
@@ -524,6 +539,17 @@
       subtract: 'subtraction',
       divide:   'division',
       money:    'money',
+      geometry: 'geometry',
+    };
+
+    const GEO_CONFIG = {
+      easy:   { shapes: ['straight-line','angles-at-point','right-triangle','isos-triangle'] },
+      medium: { shapes: ['straight-line','angles-at-point','right-triangle','isos-triangle',
+                         'scalene-triangle','parallelogram','rhombus','vertically-opposite'] },
+      hard:   { shapes: ['scalene-triangle','parallelogram','rhombus','vertically-opposite',
+                         'exterior-angle','circle-sector'] },
+      ultra:  { shapes: ['exterior-angle','circle-sector','parallelogram','rhombus',
+                         'two-step-triangle'] },
     };
 
     // ── State ──────────────────────────────────────────────────────────────────
@@ -550,10 +576,30 @@
     function getBest() { return parseInt(localStorage.getItem(bestKey()) || '0', 10); }
     function saveBest(s) { if (s > getBest()) localStorage.setItem(bestKey(), String(s)); }
 
+    function snap5(n) { return Math.round(n / 5) * 5; }
+
+    // SVG arc path from startDeg to endDeg around (cx,cy) with radius r (SVG y-down coords)
+    function arcPath(cx, cy, r, startDeg, endDeg) {
+      const s = startDeg * Math.PI / 180, e = endDeg * Math.PI / 180;
+      const x1 = cx + r * Math.cos(s), y1 = cy + r * Math.sin(s);
+      const x2 = cx + r * Math.cos(e), y2 = cy + r * Math.sin(e);
+      const large = Math.abs(endDeg - startDeg) > 180 ? 1 : 0;
+      const sweep = endDeg > startDeg ? 1 : 0;
+      return `M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+    }
+
+    // Place a degree label with optional geo-unknown class
+    function geoText(x, y, label, isUnknown = false) {
+      const cls = isUnknown ? 'geo-label geo-unknown' : 'geo-label';
+      return `<text x="${x}" y="${y}" class="${cls}" text-anchor="middle">${label}</text>`;
+    }
+
     // ── Question generation ────────────────────────────────────────────────────
     function generateQuestion() {
       const cfg = DIFF_CONFIG[difficulty];
       let op = opMode === 'random' ? randFrom(['multiply','add','subtract','divide']) : opMode;
+
+      if (op === 'geometry') return generateGeometryQuestion();
 
       let a, b, text, answer;
 
@@ -612,39 +658,52 @@
     }
 
     // ── Answer choices ─────────────────────────────────────────────────────────
-    function buildChoices(answer) {
+    function buildChoices(answer, isAngle = false) {
       const choices = new Set([answer]);
-      const answerOnesDigit = answer % 10;
 
-      // Generate random offset answers (up to 3 wrong answers)
-      let attempts = 0;
-      while (choices.size < 3 && attempts < 100) {
-        attempts++;
-        const offset = rand(1, 3) * (Math.random() < 0.5 ? 1 : -1);
-        const v = answer + offset;
-        if (v > 0 && v !== answer) {
-          choices.add(v);
+      if (isAngle) {
+        const offsets = [5, 10, 15, 20, 25, 30];
+        let attempts = 0;
+        while (choices.size < 4 && attempts < 80) {
+          attempts++;
+          const off = offsets[rand(0, offsets.length - 1)] * (Math.random() < 0.5 ? 1 : -1);
+          const v = answer + off;
+          if (v >= 5 && v <= 355 && v !== answer) choices.add(v);
         }
-      }
-
-      // Add one wrong answer with the same ones digit (to prevent ones-digit-only cheating)
-      let onesDigitOption = answer + 10;
-      if (onesDigitOption === answer || answer >= 10) {
-        onesDigitOption = answer - 10;
-      }
-      if (onesDigitOption > 0 && !choices.has(onesDigitOption)) {
-        choices.add(onesDigitOption);
+        for (const off of [10, 20, 30, 40, 50]) {
+          if (choices.size >= 4) break;
+          const v = answer + off;
+          if (v >= 5 && v <= 355 && !choices.has(v)) choices.add(v);
+        }
       } else {
-        // Fallback: keep adding until we have 4
-        while (choices.size < 4) {
-          const v = answer + (choices.size * 2);
-          if (v > 0 && !choices.has(v)) choices.add(v);
+        // Generate random offset answers (up to 3 wrong answers)
+        let attempts = 0;
+        while (choices.size < 3 && attempts < 100) {
+          attempts++;
+          const offset = rand(1, 3) * (Math.random() < 0.5 ? 1 : -1);
+          const v = answer + offset;
+          if (v > 0 && v !== answer) {
+            choices.add(v);
+          }
         }
-      }
 
-      // Ensure we have exactly 4
-      while (choices.size < 4) {
-        choices.add(answer + choices.size * 3);
+        // Add one wrong answer with the same ones digit (to prevent ones-digit-only cheating)
+        let onesDigitOption = answer + 10;
+        if (onesDigitOption === answer || answer >= 10) {
+          onesDigitOption = answer - 10;
+        }
+        if (onesDigitOption > 0 && !choices.has(onesDigitOption)) {
+          choices.add(onesDigitOption);
+        } else {
+          while (choices.size < 4) {
+            const v = answer + (choices.size * 2);
+            if (v > 0 && !choices.has(v)) choices.add(v);
+          }
+        }
+
+        while (choices.size < 4) {
+          choices.add(answer + choices.size * 3);
+        }
       }
 
       const arr = [...choices].slice(0, 4);
@@ -654,6 +713,328 @@
         [arr[i], arr[j]] = [arr[j], arr[i]];
       }
       return arr;
+    }
+
+    // ── Geometry generators ────────────────────────────────────────────────────
+    function generateGeometryQuestion() {
+      const pool = GEO_CONFIG[difficulty].shapes;
+      const shape = randFrom(pool);
+      switch (shape) {
+        case 'straight-line':       return geoStraightLine();
+        case 'angles-at-point':     return geoAnglesAtPoint();
+        case 'right-triangle':      return geoRightTriangle();
+        case 'isos-triangle':       return geoIsosTriangle();
+        case 'scalene-triangle':    return geoScaleneTriangle();
+        case 'parallelogram':       return geoParallelogram();
+        case 'rhombus':             return geoRhombus();
+        case 'vertically-opposite': return geoVerticallyOpposite();
+        case 'exterior-angle':      return geoExteriorAngle();
+        case 'circle-sector':       return geoCircleSector();
+        case 'two-step-triangle':   return geoTwoStepTriangle();
+        default:                    return geoStraightLine();
+      }
+    }
+
+    function geoStraightLine() {
+      const a = snap5(rand(30, 150));
+      const answer = 180 - a;
+      const cx = 130, cy = 110, len = 95;
+      const rad = (180 - a) * Math.PI / 180; // ray angle in SVG coords (y-down, measured from +x)
+      const tx = cx + len * Math.cos(rad);
+      const ty = cy + len * Math.sin(rad);
+      // arc for known angle (left side, from 180° to 180°-a in SVG)
+      const arcKnown = arcPath(cx, cy, 28, 180, 180 - a);
+      const arcUnk   = arcPath(cx, cy, 22, 180 - a, 0);
+      // label positions: midpoint of each arc sector
+      const midKnown = ((180 + (180 - a)) / 2) * Math.PI / 180;
+      const midUnk   = ((180 - a) / 2) * Math.PI / 180;
+      const lkx = cx + 48 * Math.cos(midKnown), lky = cy + 48 * Math.sin(midKnown);
+      const lux = cx + 44 * Math.cos(midUnk),   luy = cy + 44 * Math.sin(midUnk);
+      const svg = `
+        <line x1="20" y1="${cy}" x2="240" y2="${cy}" class="geo-shape"/>
+        <line x1="${cx}" y1="${cy}" x2="${tx.toFixed(1)}" y2="${ty.toFixed(1)}" class="geo-shape"/>
+        <path d="${arcKnown}" class="geo-arc"/>
+        <path d="${arcUnk}"   class="geo-arc"/>
+        ${geoText(lkx.toFixed(1), lky.toFixed(1), `${a}°`)}
+        ${geoText(lux.toFixed(1), luy.toFixed(1), '?°', true)}
+        <text x="130" y="170" class="geo-hint" text-anchor="middle">angles on a straight line = 180°</text>
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-sl-${a}`, svg };
+    }
+
+    function geoAnglesAtPoint() {
+      let a, b, c;
+      let tries = 0;
+      do {
+        a = snap5(rand(50, 130));
+        b = snap5(rand(50, Math.min(130, 355 - a - 30)));
+        c = 360 - a - b;
+        tries++;
+      } while ((c < 30 || c > 200 || c % 5 !== 0) && tries < 50);
+      if (c % 5 !== 0 || c < 30) { a = 90; b = 100; c = 170; }
+      const answer = c;
+      const cx = 130, cy = 90, len = 80;
+      // three rays at cumulative angles starting from top (-90°)
+      const angles = [-90, -90 + a, -90 + a + b];
+      const rays = angles.map(deg => {
+        const r = deg * Math.PI / 180;
+        return { x: cx + len * Math.cos(r), y: cy + len * Math.sin(r) };
+      });
+      // arc label positions (midpoints between rays)
+      const midA = (-90 + a / 2) * Math.PI / 180;
+      const midB = (-90 + a + b / 2) * Math.PI / 180;
+      const midC = (-90 + a + b + c / 2) * Math.PI / 180;
+      const labelR = 46;
+      const lax = cx + labelR * Math.cos(midA), lay = cy + labelR * Math.sin(midA);
+      const lbx = cx + labelR * Math.cos(midB), lby = cy + labelR * Math.sin(midB);
+      const lcx = cx + labelR * Math.cos(midC), lcy = cy + labelR * Math.sin(midC);
+      const svg = `
+        ${rays.map(r => `<line x1="${cx}" y1="${cy}" x2="${r.x.toFixed(1)}" y2="${r.y.toFixed(1)}" class="geo-shape"/>`).join('')}
+        <circle cx="${cx}" cy="${cy}" r="3" fill="var(--p-xl)"/>
+        ${geoText(lax.toFixed(1), lay.toFixed(1), `${a}°`)}
+        ${geoText(lbx.toFixed(1), lby.toFixed(1), `${b}°`)}
+        ${geoText(lcx.toFixed(1), lcy.toFixed(1), '?°', true)}
+        <text x="130" y="174" class="geo-hint" text-anchor="middle">angles at a point = 360°</text>
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-ap-${a}-${b}`, svg };
+    }
+
+    function geoRightTriangle() {
+      const known = snap5(rand(25, 65));
+      const answer = 90 - known;
+      // vertices: right angle at A(50,145), base to B(210,145), apex at C(50,45)
+      const ax = 50, ay = 145, bx = 210, by = 145, cx2 = 50, cy2 = 45;
+      const sq = 12; // right-angle square size
+      const svg = `
+        <polygon points="${ax},${ay} ${bx},${by} ${cx2},${cy2}" class="geo-shape"/>
+        <polyline points="${ax},${ay - sq} ${ax + sq},${ay - sq} ${ax + sq},${ay}" class="geo-right"/>
+        ${geoText('48', '32', `${known}°`)}
+        ${geoText('148', '158', '?°', true)}
+        ${geoText('30', '100', '90°')}
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-rt-${known}`, svg };
+    }
+
+    function geoIsosTriangle() {
+      let apex, base, answer;
+      const variant = Math.random() < 0.5 ? 'apex' : 'base';
+      let tries = 0;
+      do {
+        if (variant === 'base') {
+          apex = snap5(rand(20, 100));
+          base = snap5((180 - apex) / 2);
+          answer = base;
+        } else {
+          base = snap5(rand(20, 80));
+          apex = 180 - 2 * base;
+          apex = snap5(apex);
+          answer = apex;
+        }
+        tries++;
+      } while ((answer < 5 || answer > 170 || answer % 5 !== 0) && tries < 30);
+
+      // apex at top-center, symmetric base
+      const apxX = 130, apxY = 25, baseHalf = 90, baseY = 155;
+      const lx = apxX - baseHalf, rx = apxX + baseHalf;
+      // tick marks on equal sides (midpoint ± small perp)
+      const mLx = (apxX + lx) / 2, mLy = (apxY + baseY) / 2;
+      const mRx = (apxX + rx) / 2, mRy = (apxY + baseY) / 2;
+      const dxL = lx - apxX, dyL = baseY - apxY, lenL = Math.hypot(dxL, dyL);
+      const tnx = -dyL / lenL * 6, tny = dxL / lenL * 6;
+      const svg = `
+        <polygon points="${apxX},${apxY} ${lx},${baseY} ${rx},${baseY}" class="geo-shape"/>
+        <line x1="${(mLx + tnx).toFixed(1)}" y1="${(mLy + tny).toFixed(1)}" x2="${(mLx - tnx).toFixed(1)}" y2="${(mLy - tny).toFixed(1)}" class="geo-tick"/>
+        <line x1="${(mRx - tnx).toFixed(1)}" y1="${(mRy + tny).toFixed(1)}" x2="${(mRx + tnx).toFixed(1)}" y2="${(mRy - tny).toFixed(1)}" class="geo-tick"/>
+        ${geoText('130', '18', variant === 'base' ? `${apex}°` : '?°', variant !== 'base')}
+        ${geoText('22', '168', variant === 'base' ? '?°' : `${base}°`, variant === 'base')}
+        ${geoText('238', '168', variant === 'base' ? '?°' : `${base}°`, variant === 'base')}
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-isos-${apex}-${variant}`, svg };
+    }
+
+    function geoScaleneTriangle() {
+      let a, b, c, tries = 0;
+      do {
+        a = snap5(rand(35, 95));
+        b = snap5(rand(25, 180 - a - 25));
+        c = 180 - a - b;
+        tries++;
+      } while ((c < 20 || c % 5 !== 0) && tries < 50);
+      if (c < 20 || c % 5 !== 0) { a = 60; b = 70; c = 50; }
+      const answer = c;
+      // base from L(40,150) to R(220,150), apex computed from angle a at L
+      const lx = 40, ly = 150, rx = 220, ry = 150;
+      const base = rx - lx;
+      const aRad = a * Math.PI / 180, bRad = b * Math.PI / 180;
+      const cRad = c * Math.PI / 180;
+      // by law of sines: apex x,y relative to L
+      const apexX = lx + base * Math.sin(bRad) / Math.sin(cRad) * Math.cos(aRad);
+      const apexY = ly - base * Math.sin(bRad) / Math.sin(cRad) * Math.sin(aRad);
+      const svg = `
+        <polygon points="${lx},${ly} ${rx},${ry} ${apexX.toFixed(1)},${apexY.toFixed(1)}" class="geo-shape"/>
+        ${geoText((lx - 8).toString(), (ly + 14).toString(), `${a}°`)}
+        ${geoText((rx + 8).toString(), (ry + 14).toString(), `${b}°`)}
+        ${geoText(apexX.toFixed(1), (apexY - 10).toString(), '?°', true)}
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-sca-${a}-${b}`, svg };
+    }
+
+    function geoParallelogram() {
+      const angleA = snap5(rand(40, 140));
+      const angleB = 180 - angleA;
+      const variant = Math.random() < 0.5 ? 'adjacent' : 'opposite';
+      const answer = variant === 'adjacent' ? angleB : angleA;
+      // vertices: A(40,140) B(170,140) C(210,48) D(80,48)
+      const pts = '40,140 170,140 210,48 80,48';
+      // label positions near corners
+      const svg = `
+        <polygon points="${pts}" class="geo-shape"/>
+        ${geoText('22', '132', `${angleA}°`)}
+        ${geoText('188', '132', variant === 'adjacent' ? '?°' : `${angleA}°`, variant === 'adjacent')}
+        ${geoText('225', '48', variant === 'opposite' ? '?°' : `${angleB}°`, variant === 'opposite')}
+        ${geoText('62', '42', variant === 'adjacent' ? '?°' : `${angleB}°`, variant === 'adjacent' && false)}
+        <text x="130" y="174" class="geo-hint" text-anchor="middle">parallelogram: opp. angles equal, adj. sum 180°</text>
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-para-${angleA}-${variant}`, svg };
+    }
+
+    function geoRhombus() {
+      const angleA = snap5(rand(40, 140));
+      const angleB = 180 - angleA;
+      const variant = Math.random() < 0.5 ? 'adjacent' : 'opposite';
+      const answer = variant === 'adjacent' ? angleB : angleA;
+      // diamond: top(130,22) right(222,95) bottom(130,168) left(38,95)
+      const pts = '130,22 222,95 130,168 38,95';
+      const mTop   = { x: (130 + 222) / 2, y: (22 + 95) / 2 };
+      const mRight = { x: (222 + 130) / 2, y: (95 + 168) / 2 };
+      // tick marks on all sides
+      const sides = [[130,22,222,95],[222,95,130,168],[130,168,38,95],[38,95,130,22]];
+      const ticks = sides.map(([x1,y1,x2,y2]) => {
+        const mx = (x1+x2)/2, my = (y1+y2)/2;
+        const dx = x2-x1, dy = y2-y1, len = Math.hypot(dx,dy);
+        const nx = -dy/len*5, ny = dx/len*5;
+        return `<line x1="${(mx+nx).toFixed(1)}" y1="${(my+ny).toFixed(1)}" x2="${(mx-nx).toFixed(1)}" y2="${(my-ny).toFixed(1)}" class="geo-tick"/>`;
+      }).join('');
+      const svg = `
+        <polygon points="${pts}" class="geo-shape"/>
+        ${ticks}
+        ${geoText('130', '14', `${angleA}°`)}
+        ${geoText('238', '99', variant === 'adjacent' ? '?°' : `${angleB}°`, variant === 'adjacent')}
+        ${geoText('130', '178', variant === 'opposite' ? '?°' : `${angleA}°`, variant === 'opposite')}
+        ${geoText('22', '99', variant === 'adjacent' ? '?°' : `${angleB}°`, variant === 'adjacent' && false)}
+        <text x="130" y="12" class="geo-hint" text-anchor="middle" dy="0"></text>
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-rhom-${angleA}-${variant}`, svg };
+    }
+
+    function geoVerticallyOpposite() {
+      const a = snap5(rand(25, 80));
+      const answer = a;
+      // two crossing lines through center (130,90)
+      const cx2 = 130, cy2 = 90, len = 90;
+      const ang1 = rand(20, 70); // tilt of first line
+      const r1 = ang1 * Math.PI / 180;
+      const r2 = (ang1 + 90) * Math.PI / 180;
+      const pts1 = { x1: cx2 - len*Math.cos(r1), y1: cy2 - len*Math.sin(r1), x2: cx2 + len*Math.cos(r1), y2: cy2 + len*Math.sin(r1) };
+      const pts2 = { x1: cx2 - len*Math.cos(r2), y1: cy2 - len*Math.sin(r2), x2: cx2 + len*Math.cos(r2), y2: cy2 + len*Math.sin(r2) };
+      // angle a is top sector; ? is opposite (bottom sector)
+      const midKnown = (ang1 - 90 - a/2) * Math.PI / 180;
+      const midUnk   = (ang1 + 90 - a/2) * Math.PI / 180;
+      const lr = 44;
+      const lkx = cx2 + lr * Math.cos(midKnown), lky = cy2 + lr * Math.sin(midKnown);
+      const lux = cx2 + lr * Math.cos(midUnk),   luy = cy2 + lr * Math.sin(midUnk);
+      const svg = `
+        <line x1="${pts1.x1.toFixed(1)}" y1="${pts1.y1.toFixed(1)}" x2="${pts1.x2.toFixed(1)}" y2="${pts1.y2.toFixed(1)}" class="geo-shape"/>
+        <line x1="${pts2.x1.toFixed(1)}" y1="${pts2.y1.toFixed(1)}" x2="${pts2.x2.toFixed(1)}" y2="${pts2.y2.toFixed(1)}" class="geo-shape"/>
+        ${geoText(lkx.toFixed(1), lky.toFixed(1), `${a}°`)}
+        ${geoText(lux.toFixed(1), luy.toFixed(1), '?°', true)}
+        <text x="130" y="174" class="geo-hint" text-anchor="middle">vertically opposite angles are equal</text>
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-vo-${a}-${ang1}`, svg };
+    }
+
+    function geoExteriorAngle() {
+      let p, q, ext, tries = 0;
+      do {
+        p = snap5(rand(25, 75));
+        q = snap5(rand(25, 75));
+        ext = p + q;
+        tries++;
+      } while ((ext > 170 || ext % 5 !== 0) && tries < 40);
+      const answer = ext;
+      // triangle: A(50,145) B(195,145) apex C(110,45)
+      // extend AB beyond B to D(240,145) for exterior angle
+      const ax = 50, ay = 145, bx = 195, by = 145, cx3 = 110, cy3 = 45, dx = 240;
+      const svg = `
+        <line x1="${ax}" y1="${ay}" x2="${dx}" y2="${by}" class="geo-shape"/>
+        <line x1="${ax}" y1="${ay}" x2="${cx3}" y2="${cy3}" class="geo-shape"/>
+        <line x1="${cx3}" y1="${cy3}" x2="${bx}" y2="${by}" class="geo-shape"/>
+        <line x1="${bx}" y1="${by}" x2="${dx}" y2="${by}" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 3"/>
+        ${geoText((ax - 12).toString(), (ay + 14).toString(), `${p}°`)}
+        ${geoText((cx3 + 0).toString(), (cy3 - 12).toString(), `${q}°`)}
+        ${geoText((dx - 10).toString(), (by - 14).toString(), '?°', true)}
+        <text x="130" y="174" class="geo-hint" text-anchor="middle">exterior angle = sum of 2 non-adjacent interior angles</text>
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-ext-${p}-${q}`, svg };
+    }
+
+    function geoCircleSector() {
+      const sector = snap5(rand(60, 260));
+      const answer = 360 - sector;
+      const cx4 = 130, cy4 = 88, r = 62;
+      // sector from 12-o'clock (-90°), sweep sector degrees
+      const startDeg = -90;
+      const endDeg   = startDeg + sector;
+      const s = startDeg * Math.PI / 180, e = endDeg * Math.PI / 180;
+      const x1 = cx4 + r * Math.cos(s), y1 = cy4 + r * Math.sin(s);
+      const x2 = cx4 + r * Math.cos(e), y2 = cy4 + r * Math.sin(e);
+      const large = sector > 180 ? 1 : 0;
+      const sectorPath = `M ${cx4} ${cy4} L ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 ${large} 1 ${x2.toFixed(1)} ${y2.toFixed(1)} Z`;
+      // label positions
+      const midSec = (startDeg + sector / 2) * Math.PI / 180;
+      const midRem = (endDeg + answer / 2) * Math.PI / 180;
+      const ll = r * 0.55;
+      const slx = cx4 + ll * Math.cos(midSec), sly = cy4 + ll * Math.sin(midSec);
+      const rlx = cx4 + (r + 18) * Math.cos(midRem), rly = cy4 + (r + 18) * Math.sin(midRem);
+      const svg = `
+        <circle cx="${cx4}" cy="${cy4}" r="${r}" class="geo-shape"/>
+        <path d="${sectorPath}" class="geo-sector"/>
+        <line x1="${cx4}" y1="${cy4}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" class="geo-shape"/>
+        <line x1="${cx4}" y1="${cy4}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" class="geo-shape"/>
+        ${geoText(slx.toFixed(1), sly.toFixed(1), `${sector}°`)}
+        ${geoText(rlx.toFixed(1), rly.toFixed(1), '?°', true)}
+        <text x="130" y="174" class="geo-hint" text-anchor="middle">angles in a full circle = 360°</text>
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-circ-${sector}`, svg };
+    }
+
+    function geoTwoStepTriangle() {
+      // Triangle on a baseline; exterior angle at right base vertex given, one interior given
+      // Step 1: interior base angle = 180 - exteriorBase (straight line)
+      // Step 2: unknown apex = 180 - knownInterior - interiorBase (triangle sum)
+      let knownInterior, exteriorBase, interiorBase, answer, tries = 0;
+      do {
+        knownInterior = snap5(rand(40, 80));
+        exteriorBase  = snap5(rand(30, 70));
+        interiorBase  = 180 - exteriorBase;
+        answer        = snap5(180 - knownInterior - interiorBase);
+        tries++;
+      } while ((answer < 10 || answer > 160 || answer % 5 !== 0) && tries < 50);
+      if (answer < 10 || answer % 5 !== 0) { knownInterior = 50; exteriorBase = 40; interiorBase = 140; answer = -10; }
+      if (answer <= 0) { knownInterior = 50; exteriorBase = 110; interiorBase = 70; answer = 60; }
+
+      const ax2 = 30, ay2 = 145, bx2 = 185, by2 = 145, cx5 = 100, cy5 = 40, dx2 = 240;
+      const svg = `
+        <line x1="${ax2}" y1="${ay2}" x2="${dx2}" y2="${by2}" class="geo-shape"/>
+        <line x1="${ax2}" y1="${ay2}" x2="${cx5}" y2="${cy5}" class="geo-shape"/>
+        <line x1="${cx5}" y1="${cy5}" x2="${bx2}" y2="${by2}" class="geo-shape"/>
+        <line x1="${bx2}" y1="${by2}" x2="${dx2}" y2="${by2}" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 3"/>
+        ${geoText((ax2 - 10).toString(), (ay2 + 14).toString(), `${knownInterior}°`)}
+        ${geoText((cx5).toString(), (cy5 - 12).toString(), '?°', true)}
+        ${geoText((dx2 - 12).toString(), (by2 - 14).toString(), `${exteriorBase}°`)}
+        <text x="130" y="174" class="geo-hint" text-anchor="middle">use straight-line rule, then triangle sum</text>
+      `;
+      return { text: '', answer, op: 'geometry', key: `geo-2step-${knownInterior}-${exteriorBase}`, svg };
     }
 
     // ── UI helpers ─────────────────────────────────────────────────────────────
@@ -719,19 +1100,34 @@
       currentAns = currentQ.answer;
       qStartTime = performance.now();
 
-      const qt = $('question-text');
-      qt.classList.remove('new');
-      void qt.offsetWidth;
-      qt.textContent = currentQ.text;
-      qt.classList.add('new');
+      const qt    = $('question-text');
+      const svgEl = $('question-svg');
+
+      if (currentQ.svg) {
+        qt.style.display = 'none';
+        qt.classList.remove('new');
+        svgEl.innerHTML = currentQ.svg;
+        svgEl.classList.add('visible');
+      } else {
+        svgEl.classList.remove('visible');
+        svgEl.innerHTML = '';
+        qt.style.display = '';
+        qt.classList.remove('new');
+        void qt.offsetWidth;
+        qt.textContent = currentQ.text;
+        qt.classList.add('new');
+      }
 
       setOpLabel(currentQ.op);
 
-      const choices = buildChoices(currentAns);
+      const isGeo  = currentQ.op === 'geometry';
+      const choices = buildChoices(currentAns, isGeo);
       const isMoney = currentQ.op === 'money';
       answerBtns.forEach((btn, i) => {
         btn.dataset.val = choices[i];
-        btn.textContent = isMoney ? '$' + (choices[i] / 10).toFixed(2) : String(choices[i]);
+        btn.textContent = isMoney ? '$' + (choices[i] / 10).toFixed(2)
+                        : isGeo   ? choices[i] + '°'
+                        : String(choices[i]);
         btn.className = 'answer-btn';
         btn.disabled = false;
       });
