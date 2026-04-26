@@ -1,0 +1,1502 @@
+[
+  {
+    "word": "a bad workman always blames his tools",
+    "meaning": "When someone performs a job poorly, they tend to blame their equipment rather than their own lack of skill.",
+    "example": "He blamed the oven for the burnt cake, but a bad workman always blames his tools."
+  },
+  {
+    "word": "a bird in the hand is worth two in the bush",
+    "meaning": "It is better to keep what you have than to risk losing it by trying to get something better.",
+    "example": "I think I'll keep my current job rather than looking for a new one. A bird in the hand is worth two in the bush."
+  },
+  {
+    "word": "absence makes the heart grow fonder",
+    "meaning": "When people are apart, their love for each other increases.",
+    "example": "Since he moved to another city for work, they miss each other terribly. Absence makes the heart grow fonder."
+  },
+  {
+    "word": "a chain is only as strong as its weakest link",
+    "meaning": "A team or organization is only as strong or successful as its weakest or least successful member.",
+    "example": "We need to make sure everyone understands the plan, because a chain is only as strong as its weakest link."
+  },
+  {
+    "word": "a fool and his money are soon parted",
+    "meaning": "Foolish people do not know how to hold on to their money and spend it carelessly.",
+    "example": "He spent all his lottery winnings in a month. A fool and his money are soon parted."
+  },
+  {
+    "word": "a friend in need is a friend indeed",
+    "meaning": "A true friend is one who helps you when you are in a difficult situation.",
+    "example": "When I was sick, Sarah brought me soup every day. A friend in need is a friend indeed."
+  },
+  {
+    "word": "a journey of a thousand miles begins with a single step",
+    "meaning": "Even the longest and most difficult tasks must be started with a small, first step.",
+    "example": "Learning a new language is hard, but a journey of a thousand miles begins with a single step."
+  },
+  {
+    "word": "a leopard cannot change its spots",
+    "meaning": "People cannot change their basic nature or bad habits.",
+    "example": "He promised he wouldn't be late again, but a leopard cannot change its spots."
+  },
+  {
+    "word": "all good things must come to an end",
+    "meaning": "Nothing lasts forever; even pleasant experiences must eventually finish.",
+    "example": "Our holiday was amazing, but all good things must come to an end."
+  },
+  {
+    "word": "all that glitters is not gold",
+    "meaning": "Something that looks attractive or valuable on the outside may not be so on the inside.",
+    "example": "The car looks shiny and new, but the engine is terrible. All that glitters is not gold."
+  },
+  {
+    "word": "all's well that ends well",
+    "meaning": "If the outcome of a situation is happy, then any difficulties along the way do not matter.",
+    "example": "We got lost on the way, but we found a great restaurant. All's well that ends well."
+  },
+  {
+    "word": "an apple a day keeps the doctor away",
+    "meaning": "Eating healthy food helps you stay healthy and avoid getting sick.",
+    "example": "Make sure you eat your fruits! An apple a day keeps the doctor away."
+  },
+  {
+    "word": "an empty vessel makes much noise",
+    "meaning": "People who lack knowledge or intelligence often talk the most and the loudest.",
+    "example": "He boasts a lot about his skills, but an empty vessel makes much noise."
+  },
+  {
+    "word": "an idle brain is the devil's workshop",
+    "meaning": "People who have nothing to do are more likely to get into trouble or do bad things.",
+    "example": "You should find a hobby; an idle brain is the devil's workshop."
+  },
+  {
+    "word": "an ounce of prevention is worth a pound of cure",
+    "meaning": "It is easier and better to stop a problem from happening than to fix it after it has occurred.",
+    "example": "Always wear your seatbelt. An ounce of prevention is worth a pound of cure."
+  },
+  {
+    "word": "a picture is worth a thousand words",
+    "meaning": "A single image can express complex ideas more effectively than a long description.",
+    "example": "I can't explain how beautiful the sunset was, but a picture is worth a thousand words."
+  },
+  {
+    "word": "a rolling stone gathers no moss",
+    "meaning": "A person who constantly moves from place to place never accumulates wealth or lasting relationships.",
+    "example": "He changes jobs every few months. A rolling stone gathers no moss."
+  },
+  {
+    "word": "a stitch in time saves nine",
+    "meaning": "Fixing a small problem immediately will prevent it from becoming a much larger problem later.",
+    "example": "Mend that tear in your shirt now before it gets bigger. A stitch in time saves nine."
+  },
+  {
+    "word": "as you sow, so you shall reap",
+    "meaning": "You will eventually have to face the consequences of your actions.",
+    "example": "He was always rude to others, and now he has no friends. As you sow, so you shall reap."
+  },
+  {
+    "word": "barking dogs seldom bite",
+    "meaning": "People who make a lot of threats rarely carry them out.",
+    "example": "Don't be afraid of his yelling; barking dogs seldom bite."
+  },
+  {
+    "word": "beauty is in the eye of the beholder",
+    "meaning": "Different people have different ideas about what is beautiful.",
+    "example": "I don't like her dress, but beauty is in the eye of the beholder."
+  },
+  {
+    "word": "beauty is only skin deep",
+    "meaning": "A person's character and personality are more important than their physical appearance.",
+    "example": "He is very handsome but unkind. Beauty is only skin deep."
+  },
+  {
+    "word": "beggars can't be choosers",
+    "meaning": "When you rely on the kindness of others, you should accept whatever is offered to you.",
+    "example": "I wanted the blue pen, but they only had black. Oh well, beggars can't be choosers."
+  },
+  {
+    "word": "better late than never",
+    "meaning": "It is better to do something after it was supposed to be done than not to do it at all.",
+    "example": "The train arrived an hour late, but better late than never."
+  },
+  {
+    "word": "better safe than sorry",
+    "meaning": "It is better to be careful now than to take a risk and regret it later.",
+    "example": "I'll take my umbrella even though it's sunny. Better safe than sorry."
+  },
+  {
+    "word": "birds of a feather flock together",
+    "meaning": "People with similar interests or characteristics tend to spend time with each other.",
+    "example": "Those two love playing chess, so they became fast friends. Birds of a feather flock together."
+  },
+  {
+    "word": "blood is thicker than water",
+    "meaning": "Family relationships are stronger and more important than other relationships.",
+    "example": "When he was in trouble, his friends left, but his brother stayed. Blood is thicker than water."
+  },
+  {
+    "word": "cleanliness is next to godliness",
+    "meaning": "Being clean is extremely important and a good habit.",
+    "example": "Wash your hands before dinner. Remember, cleanliness is next to godliness."
+  },
+  {
+    "word": "cowards die many times before their deaths",
+    "meaning": "People who are afraid constantly suffer from fear, whereas brave people only suffer when they actually die.",
+    "example": "Don't be afraid to try out for the play. Cowards die many times before their deaths."
+  },
+  {
+    "word": "cross the stream where it is shallowest",
+    "meaning": "To choose the easiest way to do something.",
+    "example": "Let's start with the easiest homework first. Cross the stream where it is shallowest."
+  },
+  {
+    "word": "curiosity killed the cat",
+    "meaning": "Being too inquisitive can get you into trouble.",
+    "example": "Don't look into that box. Curiosity killed the cat."
+  },
+  {
+    "word": "don't bite the hand that feeds you",
+    "meaning": "Do not treat poorly those who help you or provide for you.",
+    "example": "You shouldn't complain about your parents' rules; don't bite the hand that feeds you."
+  },
+  {
+    "word": "don't count your chickens before they hatch",
+    "meaning": "Do not make plans based on a good event that has not yet happened.",
+    "example": "You haven't won the competition yet, so don't count your chickens before they hatch."
+  },
+  {
+    "word": "don't cry over spilt milk",
+    "meaning": "There is no point in being upset about a mistake or loss that has already happened and cannot be fixed.",
+    "example": "You broke the vase, but don't cry over spilt milk. Let's just clean it up."
+  },
+  {
+    "word": "don't judge a book by its cover",
+    "meaning": "You should not judge the value or character of someone or something just by looking at the outside.",
+    "example": "The restaurant looks shabby, but the food is excellent. Don't judge a book by its cover."
+  },
+  {
+    "word": "don't put all your eggs in one basket",
+    "meaning": "Do not risk everything on a single plan or idea.",
+    "example": "Apply to several schools; don't put all your eggs in one basket."
+  },
+  {
+    "word": "don't put the cart before the horse",
+    "meaning": "Do not do things in the wrong order.",
+    "example": "Let's learn the alphabet before trying to read. Don't put the cart before the horse."
+  },
+  {
+    "word": "early to bed and early to rise, makes a man healthy, wealthy, and wise",
+    "meaning": "Going to sleep early and waking up early brings success and good health.",
+    "example": "I try to sleep by 9 PM because early to bed and early to rise makes a man healthy, wealthy, and wise."
+  },
+  {
+    "word": "easy come, easy go",
+    "meaning": "Things that are acquired easily may be lost just as easily.",
+    "example": "He won money at the casino and spent it all the next day. Easy come, easy go."
+  },
+  {
+    "word": "every cloud has a silver lining",
+    "meaning": "There is a positive aspect to every bad or difficult situation.",
+    "example": "I lost my job, but every cloud has a silver lining: I now have time to start my own business."
+  },
+  {
+    "word": "every dog has its day",
+    "meaning": "Everyone will be successful or lucky at some point in their life.",
+    "example": "He finally got the promotion he deserved. Every dog has its day."
+  },
+  {
+    "word": "familiarity breeds contempt",
+    "meaning": "Knowing someone or something very well can cause you to lose respect for them.",
+    "example": "They used to be best friends, but living together ruined it. Familiarity breeds contempt."
+  },
+  {
+    "word": "fools rush in where angels fear to tread",
+    "meaning": "Foolish people are often reckless and act hastily in situations that wiser people avoid.",
+    "example": "He invested all his money in that risky business without researching. Fools rush in where angels fear to tread."
+  },
+  {
+    "word": "fortune favours the bold",
+    "meaning": "People who take brave risks are often rewarded.",
+    "example": "You should ask for that promotion. Fortune favours the bold."
+  },
+  {
+    "word": "god helps those who help themselves",
+    "meaning": "You should not just wait for good things to happen; you must work hard to achieve them.",
+    "example": "You need to study if you want to pass the test. God helps those who help themselves."
+  },
+  {
+    "word": "good things come to those who wait",
+    "meaning": "Patience is often rewarded.",
+    "example": "I waited in line for hours, but the concert was amazing. Good things come to those who wait."
+  },
+  {
+    "word": "half a loaf is better than none",
+    "meaning": "It is better to get less than what you want than to get nothing at all.",
+    "example": "I didn't get the full raise I asked for, but half a loaf is better than none."
+  },
+  {
+    "word": "haste makes waste",
+    "meaning": "Doing things too quickly often leads to mistakes and poor results.",
+    "example": "Take your time with the painting; haste makes waste."
+  },
+  {
+    "word": "he who laughs last laughs longest",
+    "meaning": "The person who is ultimately successful will have the greatest satisfaction.",
+    "example": "They mocked his invention, but he became a millionaire. He who laughs last laughs longest."
+  },
+  {
+    "word": "honesty is the best policy",
+    "meaning": "It is always better to tell the truth.",
+    "example": "Tell your teacher you lost your homework. Honesty is the best policy."
+  },
+  {
+    "word": "hope for the best, but prepare for the worst",
+    "meaning": "Be optimistic but also make plans in case things go wrong.",
+    "example": "We brought an umbrella just in case. Hope for the best, but prepare for the worst."
+  },
+  {
+    "word": "if it ain't broke, don't fix it",
+    "meaning": "Do not try to change or improve something that is already working well.",
+    "example": "The old washing machine still works perfectly. If it ain't broke, don't fix it."
+  },
+  {
+    "word": "if you can't beat them, join them",
+    "meaning": "If you cannot defeat your opponents, it might be better to cooperate with them.",
+    "example": "Since all my friends are playing that new game, I decided to play it too. If you can't beat them, join them."
+  },
+  {
+    "word": "ignorance is bliss",
+    "meaning": "Not knowing about a problem can sometimes make you happier than knowing about it.",
+    "example": "I didn't know the cake had so many calories until after I ate it. Ignorance is bliss."
+  },
+  {
+    "word": "it takes two to tango",
+    "meaning": "Both parties involved in a situation or argument are equally responsible for it.",
+    "example": "She blamed him for the argument, but it takes two to tango."
+  },
+  {
+    "word": "knowledge is power",
+    "meaning": "The more you know, the more control you have over your life and situations.",
+    "example": "Read as many books as you can, because knowledge is power."
+  },
+  {
+    "word": "laughter is the best medicine",
+    "meaning": "Laughing can help you feel better, both physically and emotionally.",
+    "example": "Watching a funny movie helped him forget his worries. Laughter is the best medicine."
+  },
+  {
+    "word": "let sleeping dogs lie",
+    "meaning": "Avoid interfering in a situation that could cause trouble if disturbed.",
+    "example": "Don't bring up the argument again; it's better to let sleeping dogs lie."
+  },
+  {
+    "word": "lightning never strikes twice in the same place",
+    "meaning": "It is highly unlikely that a rare or unusual event will happen to the same person or in the same place again.",
+    "example": "I got a flat tyre yesterday, but don't worry, lightning never strikes twice in the same place."
+  },
+  {
+    "word": "look before you leap",
+    "meaning": "Think carefully about the possible consequences before you take an action.",
+    "example": "Before you buy that expensive phone, look before you leap."
+  },
+  {
+    "word": "make hay while the sun shines",
+    "meaning": "Take advantage of a good opportunity while it lasts.",
+    "example": "We have a long weekend, so let's get all the cleaning done. Make hay while the sun shines."
+  },
+  {
+    "word": "many hands make light work",
+    "meaning": "When many people help, a difficult task becomes much easier.",
+    "example": "If we all help clean the kitchen, it will take five minutes. Many hands make light work."
+  },
+  {
+    "word": "money doesn't grow on trees",
+    "meaning": "Money is valuable and hard to earn, so it should not be wasted.",
+    "example": "You cannot buy every toy you see; money doesn't grow on trees."
+  },
+  {
+    "word": "necessity is the mother of invention",
+    "meaning": "When you really need to solve a problem, you will find a creative way to do it.",
+    "example": "When we ran out of milk, I used yogurt for the recipe. Necessity is the mother of invention."
+  },
+  {
+    "word": "never look a gift horse in the mouth",
+    "meaning": "When you receive a gift, do not be ungrateful or look for flaws in it.",
+    "example": "I didn't really like the sweater she gave me, but never look a gift horse in the mouth."
+  },
+  {
+    "word": "never put off until tomorrow what you can do today",
+    "meaning": "Do not delay doing tasks that you are able to complete right now.",
+    "example": "Let's finish the project now. Never put off until tomorrow what you can do today."
+  },
+  {
+    "word": "no news is good news",
+    "meaning": "If you have not heard any information, it probably means that nothing bad has happened.",
+    "example": "The doctor hasn't called with the test results yet, but no news is good news."
+  },
+  {
+    "word": "once bitten, twice shy",
+    "meaning": "If you have a bad experience, you will be more cautious in the future.",
+    "example": "Since I fell off that bike, I don't want to ride one again. Once bitten, twice shy."
+  },
+  {
+    "word": "one man's trash is another man's treasure",
+    "meaning": "What one person considers useless, another person might consider valuable.",
+    "example": "I bought this old chair at a garage sale and fixed it up. One man's trash is another man's treasure."
+  },
+  {
+    "word": "out of sight, out of mind",
+    "meaning": "If you do not see someone or something frequently, you will eventually forget about them.",
+    "example": "I haven't thought about my old toys in years. Out of sight, out of mind."
+  },
+  {
+    "word": "patience is a virtue",
+    "meaning": "The ability to wait calmly is a good quality.",
+    "example": "We will have dinner soon, just wait. Patience is a virtue."
+  },
+  {
+    "word": "penny wise and pound foolish",
+    "meaning": "Being careful with small amounts of money but wasteful with large amounts.",
+    "example": "He drives miles to save a few cents on petrol, but buys a new car every year. He is penny wise and pound foolish."
+  },
+  {
+    "word": "people who live in glass houses shouldn't throw stones",
+    "meaning": "You should not criticize others for having the same faults that you have.",
+    "example": "She called him lazy, but she never does her chores. People who live in glass houses shouldn't throw stones."
+  },
+  {
+    "word": "practice makes perfect",
+    "meaning": "Doing something repeatedly is the only way to become very good at it.",
+    "example": "Keep practicing the piano; practice makes perfect."
+  },
+  {
+    "word": "pride goes before a fall",
+    "meaning": "If you are too arrogant or confident, you will eventually make a mistake and fail.",
+    "example": "He boasted that he couldn't lose the match, but then he did. Pride goes before a fall."
+  },
+  {
+    "word": "rome wasn't built in a day",
+    "meaning": "Important and great things take a long time to complete.",
+    "example": "Don't be discouraged that you haven't mastered French yet. Rome wasn't built in a day."
+  },
+  {
+    "word": "silence is golden",
+    "meaning": "It is often better to say nothing at all.",
+    "example": "Sometimes during an argument, silence is golden."
+  },
+  {
+    "word": "slow and steady wins the race",
+    "meaning": "Consistent, effective effort brings success.",
+    "example": "Take your time with your homework. Slow and steady wins the race."
+  },
+  {
+    "word": "still waters run deep",
+    "meaning": "People who are quiet and do not show their feelings often have a complex and interesting personality.",
+    "example": "She doesn't say much in class, but her essays are brilliant. Still waters run deep."
+  },
+  {
+    "word": "strike while the iron is hot",
+    "meaning": "Take advantage of an opportunity immediately, while it is still available.",
+    "example": "The tickets are on sale now, so we should strike while the iron is hot."
+  },
+  {
+    "word": "the early bird catches the worm",
+    "meaning": "The person who takes action earliest will be the most successful.",
+    "example": "We should arrive at the theme park early to avoid the queues. The early bird catches the worm."
+  },
+  {
+    "word": "the end justifies the means",
+    "meaning": "A good outcome is worth whatever wrong actions were taken to achieve it.",
+    "example": "Some believe that using deception to catch a criminal is acceptable because the end justifies the means."
+  },
+  {
+    "word": "the grass is always greener on the other side of the fence",
+    "meaning": "Other people's lives or situations always seem better than your own.",
+    "example": "He wishes he had my job, and I wish I had his. The grass is always greener on the other side of the fence."
+  },
+  {
+    "word": "the pen is mightier than the sword",
+    "meaning": "Writing and ideas are more powerful than physical force or violence.",
+    "example": "The author changed the world with his book. Truly, the pen is mightier than the sword."
+  },
+  {
+    "word": "the squeaky wheel gets the grease",
+    "meaning": "The person who complains or speaks up the most is the one who will get attention and help.",
+    "example": "If you want the broken window fixed, you need to complain to the landlord. The squeaky wheel gets the grease."
+  },
+  {
+    "word": "there's no place like home",
+    "meaning": "Your own home is the most comfortable and best place to be.",
+    "example": "The vacation was great, but there's no place like home."
+  },
+  {
+    "word": "there is no time like the present",
+    "meaning": "Right now is the best time to do something, so do not delay.",
+    "example": "Why wait until tomorrow to start exercising? There is no time like the present."
+  },
+  {
+    "word": "time is money",
+    "meaning": "Time is valuable, so it should not be wasted.",
+    "example": "Please finish the task quickly; time is money."
+  },
+  {
+    "word": "time and tide wait for no man",
+    "meaning": "You cannot stop the passing of time, so you must use it wisely.",
+    "example": "We need to leave now if we want to catch the train. Time and tide wait for no man."
+  },
+  {
+    "word": "too many cooks spoil the broth",
+    "meaning": "If too many people try to manage or work on the same project, it will be ruined.",
+    "example": "Let's just have one person design the poster. Too many cooks spoil the broth."
+  },
+  {
+    "word": "two heads are better than one",
+    "meaning": "It is easier to solve a problem if two people work together.",
+    "example": "Let's study together; two heads are better than one."
+  },
+  {
+    "word": "two wrongs don't make a right",
+    "meaning": "Doing something bad as revenge for someone else doing something bad to you will not fix the situation.",
+    "example": "Just because he pushed you doesn't mean you should push him back. Two wrongs don't make a right."
+  },
+  {
+    "word": "what goes around comes around",
+    "meaning": "The way you treat others will eventually be the way you are treated.",
+    "example": "He was always unkind, and now no one will help him. What goes around comes around."
+  },
+  {
+    "word": "when in Rome, do as the Romans do",
+    "meaning": "When you are visiting a new place, you should follow the local customs and behaviour.",
+    "example": "They eat dinner very late here, so we will too. When in Rome, do as the Romans do."
+  },
+  {
+    "word": "where there's a will, there's a way",
+    "meaning": "If you are determined enough to do something, you will find a way to achieve it.",
+    "example": "It will be hard to climb the mountain, but where there's a will, there's a way."
+  },
+  {
+    "word": "you can lead a horse to water, but you can't make it drink",
+    "meaning": "You can offer someone a good opportunity, but you cannot force them to accept it.",
+    "example": "I gave him the books to study, but he won't open them. You can lead a horse to water, but you can't make it drink."
+  },
+  {
+    "word": "you can't have your cake and eat it too",
+    "meaning": "You cannot have the best of two conflicting options.",
+    "example": "You want to spend all your money but also save for a car. You can't have your cake and eat it too."
+  },
+  {
+    "word": "you can't judge a book by its cover",
+    "meaning": "You should not form an opinion about something based on its outward appearance.",
+    "example": "He looks very tough, but he is actually very gentle. You can't judge a book by its cover."
+  },
+  {
+    "word": "you can't make an omelette without breaking eggs",
+    "meaning": "It is impossible to achieve something important without causing some unpleasant effects.",
+    "example": "We have to tear down the old building to build the new hospital. You can't make an omelette without breaking eggs."
+  },
+  {
+    "word": "you can't teach an old dog new tricks",
+    "meaning": "It is very difficult to teach someone who is set in their ways a new way of doing things.",
+    "example": "My grandfather refuses to learn how to use a smartphone. You can't teach an old dog new tricks."
+  },
+  {
+    "word": "a friend to all is a friend to none",
+    "meaning": "Someone who tries to be everyone's friend is not truly loyal to anyone.",
+    "example": "He agrees with whatever anyone says, but a friend to all is a friend to none."
+  },
+  {
+    "word": "a guilty conscience needs no accuser",
+    "meaning": "If you have done something wrong, you will feel guilty even if no one accuses you.",
+    "example": "He confessed before anyone even suspected him; a guilty conscience needs no accuser."
+  },
+  {
+    "word": "a house divided against itself cannot stand",
+    "meaning": "An organization or family that is fighting internally will fail.",
+    "example": "We must stop arguing and work as a team, because a house divided against itself cannot stand."
+  },
+  {
+    "word": "a penny saved is a penny earned",
+    "meaning": "It is as useful to save money that you already have as it is to earn more money.",
+    "example": "Instead of buying coffee, I bring it from home. A penny saved is a penny earned."
+  },
+  {
+    "word": "a rising tide lifts all boats",
+    "meaning": "When the general economy or situation improves, everyone benefits.",
+    "example": "The new factory brought prosperity to the whole town; a rising tide lifts all boats."
+  },
+  {
+    "word": "all work and no play makes jack a dull boy",
+    "meaning": "Without time off from work, a person becomes bored and boring.",
+    "example": "You need to take a break from studying. All work and no play makes Jack a dull boy."
+  },
+  {
+    "word": "always put your best foot forward",
+    "meaning": "Try to act as well as possible and make a good impression.",
+    "example": "For your job interview, make sure you dress well and always put your best foot forward."
+  },
+  {
+    "word": "an army marches on its stomach",
+    "meaning": "To be effective, people need to be well-fed.",
+    "example": "We must provide plenty of food for the volunteers today; an army marches on its stomach."
+  },
+  {
+    "word": "april showers bring may flowers",
+    "meaning": "Unpleasant things can sometimes lead to good things.",
+    "example": "The heavy rain ruined our picnic, but April showers bring May flowers."
+  },
+  {
+    "word": "bad news travels fast",
+    "meaning": "People are quick to talk about bad things that happen.",
+    "example": "Everyone knew about the accident within minutes because bad news travels fast."
+  },
+  {
+    "word": "blood will tell",
+    "meaning": "A person's background or true character will eventually show itself.",
+    "example": "He tries to hide his temper, but eventually blood will tell."
+  },
+  {
+    "word": "boys will be boys",
+    "meaning": "Used to express the view that mischievous or childish behaviour is typical of boys.",
+    "example": "They came home covered in mud, but boys will be boys."
+  },
+  {
+    "word": "carpe diem",
+    "meaning": "Used to urge someone to make the most of the present time and give little thought to the future.",
+    "example": "Don't worry about tomorrow, carpe diem!"
+  },
+  {
+    "word": "charity begins at home",
+    "meaning": "You should take care of your own family and friends before helping others.",
+    "example": "Before donating to foreign causes, remember that charity begins at home."
+  },
+  {
+    "word": "children should be seen and not heard",
+    "meaning": "Children should behave quietly and politely in the presence of adults.",
+    "example": "In my grandfather's day, they believed children should be seen and not heard."
+  },
+  {
+    "word": "confession is good for the soul",
+    "meaning": "Admitting your mistakes or wrongdoings makes you feel better.",
+    "example": "Tell your teacher you cheated; confession is good for the soul."
+  },
+  {
+    "word": "dead men tell no tales",
+    "meaning": "Someone who is dead cannot reveal secrets.",
+    "example": "The pirates made sure no witnesses survived, because dead men tell no tales."
+  },
+  {
+    "word": "discretion is the better part of valour",
+    "meaning": "It is better to be careful and avoid unnecessary risks than to be needlessly brave.",
+    "example": "He decided not to fight the larger boy, figuring discretion is the better part of valour."
+  },
+  {
+    "word": "don't throw the baby out with the bathwater",
+    "meaning": "Do not get rid of good or valuable things while getting rid of bad ones.",
+    "example": "The new manager changed the terrible rules but kept the good staff. He didn't throw the baby out with the bathwater."
+  },
+  {
+    "word": "east or west, home is best",
+    "meaning": "Home is the best place to be, no matter where else you travel.",
+    "example": "I had a great time in Europe, but East or West, home is best."
+  },
+  {
+    "word": "even a stopped clock is right twice a day",
+    "meaning": "Even someone who is usually wrong can sometimes be right by chance.",
+    "example": "He guessed the answer correctly, but even a stopped clock is right twice a day."
+  },
+  {
+    "word": "every man for himself",
+    "meaning": "Everyone must look after their own interests.",
+    "example": "When the ship started sinking, it was every man for himself."
+  },
+  {
+    "word": "everything comes to him who waits",
+    "meaning": "Patient people will eventually get what they want.",
+    "example": "She finally got the job she wanted after years of trying. Everything comes to him who waits."
+  },
+  {
+    "word": "experience is the best teacher",
+    "meaning": "You learn more from doing things yourself than from being told about them.",
+    "example": "You can read about driving all you want, but experience is the best teacher."
+  },
+  {
+    "word": "fact is stranger than fiction",
+    "meaning": "Real events are sometimes more unusual or surprising than invented stories.",
+    "example": "The story of his life is so incredible, proving that fact is stranger than fiction."
+  },
+  {
+    "word": "fine feathers make fine birds",
+    "meaning": "People are judged by the clothes they wear.",
+    "example": "She bought an expensive suit for the interview because fine feathers make fine birds."
+  },
+  {
+    "word": "first come, first served",
+    "meaning": "Those who arrive first will receive what they want before those who arrive later.",
+    "example": "We can't reserve seats; it's strictly first come, first served."
+  },
+  {
+    "word": "fish and guests smell after three days",
+    "meaning": "Visitors begin to become annoying if they stay too long.",
+    "example": "My cousin has been staying with us for a week now, and fish and guests smell after three days."
+  },
+  {
+    "word": "flattery will get you nowhere",
+    "meaning": "Paying compliments will not help you get what you want.",
+    "example": "Telling me I look nice won't change my mind. Flattery will get you nowhere."
+  },
+  {
+    "word": "forgive and forget",
+    "meaning": "Pardon someone for a wrong and put it out of your mind completely.",
+    "example": "We had a fight, but we decided to forgive and forget."
+  },
+  {
+    "word": "good fences make good neighbours",
+    "meaning": "Respecting each other's privacy and boundaries leads to good relationships.",
+    "example": "We built a wall between our gardens, because good fences make good neighbours."
+  },
+  {
+    "word": "great minds think alike",
+    "meaning": "Intelligent people often have the same ideas at the same time.",
+    "example": "We both bought the same gift for her; great minds think alike."
+  },
+  {
+    "word": "half the truth is often a whole lie",
+    "meaning": "Leaving out important facts can be just as misleading as telling a direct lie.",
+    "example": "He didn't tell us the car had broken down before. Half the truth is often a whole lie."
+  },
+  {
+    "word": "hard cases make bad law",
+    "meaning": "Extreme or unusual cases should not be the basis for general rules or laws.",
+    "example": "The judge shouldn't change the rule for one unusual situation; hard cases make bad law."
+  },
+  {
+    "word": "he who hesitates is lost",
+    "meaning": "If you delay taking action, you will lose your opportunity.",
+    "example": "You need to accept the offer now before someone else does. He who hesitates is lost."
+  },
+  {
+    "word": "history repeats itself",
+    "meaning": "The same kinds of events seem to happen over and over again.",
+    "example": "Another economic crash is happening; it seems history repeats itself."
+  },
+  {
+    "word": "home is where the heart is",
+    "meaning": "Your true home is with the people you love, regardless of where you are.",
+    "example": "We live in a small apartment now, but home is where the heart is."
+  },
+  {
+    "word": "hope springs eternal",
+    "meaning": "People always continue to hope, even in bad situations.",
+    "example": "He buys a lottery ticket every week. Hope springs eternal."
+  },
+  {
+    "word": "hunger is the best sauce",
+    "meaning": "Everything tastes better when you are very hungry.",
+    "example": "After a long hike, even plain bread tastes amazing. Hunger is the best sauce."
+  },
+  {
+    "word": "if the shoe fits, wear it",
+    "meaning": "If a criticism or description applies to you, you should accept it.",
+    "example": "I didn't say you were lazy, but if the shoe fits, wear it."
+  },
+  {
+    "word": "if wishes were horses, beggars would ride",
+    "meaning": "If it were easy to get what you want just by wishing for it, everyone would have everything.",
+    "example": "I wish I were rich, but if wishes were horses, beggars would ride."
+  },
+  {
+    "word": "imitation is the sincerest form of flattery",
+    "meaning": "Copying someone is the highest compliment you can pay them.",
+    "example": "She copied my hairstyle, but I don't mind. Imitation is the sincerest form of flattery."
+  },
+  {
+    "word": "in for a penny, in for a pound",
+    "meaning": "Since you have started something, you should see it through to the end, no matter the cost or effort.",
+    "example": "We've already spent so much time on this project, we might as well finish it. In for a penny, in for a pound."
+  },
+  {
+    "word": "it is always darkest before the dawn",
+    "meaning": "Things often seem their worst just before they start to get better.",
+    "example": "Don't give up on the business yet; it is always darkest before the dawn."
+  },
+  {
+    "word": "it is better to give than to receive",
+    "meaning": "It is more rewarding to give things to others than to get things for yourself.",
+    "example": "Donating to charity made her realise it is better to give than to receive."
+  },
+  {
+    "word": "it never rains but it pours",
+    "meaning": "Bad things often happen at the same time.",
+    "example": "First I lost my keys, then my car broke down. It never rains but it pours."
+  },
+  {
+    "word": "it takes a village to raise a child",
+    "meaning": "Raising a child involves the whole community, not just the parents.",
+    "example": "The neighbours all help look after the kids because it takes a village to raise a child."
+  },
+  {
+    "word": "it takes all sorts to make a world",
+    "meaning": "People are very different from each other, and that is a normal part of life.",
+    "example": "I don't understand his strange hobbies, but it takes all sorts to make a world."
+  },
+  {
+    "word": "jack of all trades, master of none",
+    "meaning": "Someone who is competent in many skills is not outstanding in any single one.",
+    "example": "He can fix a pipe and paint a wall, but he is a Jack of all trades, master of none."
+  },
+  {
+    "word": "keep your friends close, and your enemies closer",
+    "meaning": "You should be more observant of your enemies than of your friends.",
+    "example": "He invited his rival to the party, figuring he should keep his friends close, and his enemies closer."
+  },
+  {
+    "word": "leave well enough alone",
+    "meaning": "Do not try to change something that is already satisfactory, as you might make it worse.",
+    "example": "The essay is good as it is; don't rewrite it. Leave well enough alone."
+  },
+  {
+    "word": "let bygones be bygones",
+    "meaning": "To forgive and forget past disagreements.",
+    "example": "They decided to end their feud and let bygones be bygones."
+  },
+  {
+    "word": "let the buyer beware",
+    "meaning": "The buyer is responsible for checking the quality of goods before purchasing.",
+    "example": "You bought a used car without checking the engine. Let the buyer beware."
+  },
+  {
+    "word": "life is what you make it",
+    "meaning": "Your life will be whatever you choose to shape it into through your actions.",
+    "example": "You have to work hard for your dreams because life is what you make it."
+  },
+  {
+    "word": "like father, like son",
+    "meaning": "Fathers and sons often resemble each other in behaviour or character.",
+    "example": "He loves fixing cars just like his dad; like father, like son."
+  },
+  {
+    "word": "live and let live",
+    "meaning": "You should tolerate the opinions and behaviour of others so they will tolerate yours.",
+    "example": "We disagree on politics, but we live and let live."
+  },
+  {
+    "word": "love is blind",
+    "meaning": "If you love someone, you cannot see any faults in that person.",
+    "example": "She ignores his terrible temper because love is blind."
+  },
+  {
+    "word": "love makes the world go round",
+    "meaning": "Love is the principal force behind human life.",
+    "example": "Seeing them care for each other proves that love makes the world go round."
+  },
+  {
+    "word": "make a virtue of necessity",
+    "meaning": "To make the best of a difficult or unavoidable situation.",
+    "example": "Since it rained, we made a virtue of necessity and had a fun indoor picnic."
+  },
+  {
+    "word": "man does not live by bread alone",
+    "meaning": "People need more than just physical things like food to live a fulfilling life; they need spiritual or mental nourishment too.",
+    "example": "Art and music are important because man does not live by bread alone."
+  },
+  {
+    "word": "manners maketh man",
+    "meaning": "Polite behaviour indicates a person of good character.",
+    "example": "Always say please and thank you; manners maketh man."
+  },
+  {
+    "word": "many a true word is spoken in jest",
+    "meaning": "Things that are said as jokes often contain a lot of truth.",
+    "example": "He joked about quitting, but many a true word is spoken in jest."
+  },
+  {
+    "word": "marry in haste, repent at leisure",
+    "meaning": "If you marry too quickly, you will have a long time to regret it.",
+    "example": "They wed after knowing each other for a week. Marry in haste, repent at leisure."
+  },
+  {
+    "word": "might is right",
+    "meaning": "Those who are powerful can do what they want because no one can stop them.",
+    "example": "The stronger country simply took the territory, proving that might is right."
+  },
+  {
+    "word": "misery loves company",
+    "meaning": "People who are unhappy like to share their troubles with others.",
+    "example": "He complained all day and wanted everyone else to be sad too; misery loves company."
+  },
+  {
+    "word": "money is the root of all evil",
+    "meaning": "The love of money causes people to do bad things.",
+    "example": "People steal and lie to get rich; money is the root of all evil."
+  },
+  {
+    "word": "money talks",
+    "meaning": "Wealth gives power and influence to those who possess it.",
+    "example": "He got the best table in the restaurant with a large tip; money talks."
+  },
+  {
+    "word": "more haste, less speed",
+    "meaning": "If you try to do things too quickly, it will take you longer because you will make mistakes.",
+    "example": "I rushed typing the report and had to redo it. More haste, less speed."
+  },
+  {
+    "word": "needs must when the devil drives",
+    "meaning": "Sometimes people are forced by circumstances to do things they would rather not do.",
+    "example": "I had to take the terrible job to pay my rent; needs must when the devil drives."
+  },
+  {
+    "word": "never judge by appearances",
+    "meaning": "Do not form an opinion based only on how someone or something looks.",
+    "example": "The old car ran perfectly, teaching me to never judge by appearances."
+  },
+  {
+    "word": "never say die",
+    "meaning": "Do not give up hope, even in a difficult situation.",
+    "example": "We are losing the game, but keep trying! Never say die!"
+  },
+  {
+    "word": "no pain, no gain",
+    "meaning": "You must work hard and face difficulties to achieve success.",
+    "example": "My muscles hurt from training, but no pain, no gain."
+  },
+  {
+    "word": "nothing ventured, nothing gained",
+    "meaning": "You cannot achieve anything if you do not take risks.",
+    "example": "I'm nervous about asking her out, but nothing ventured, nothing gained."
+  },
+  {
+    "word": "old habits die hard",
+    "meaning": "It is very difficult to change an established pattern of behaviour.",
+    "example": "He still wakes up at 5 am even though he retired; old habits die hard."
+  },
+  {
+    "word": "once a thief, always a thief",
+    "meaning": "People believe that someone who has committed a crime will never change.",
+    "example": "No one trusted him after he stole the money. Once a thief, always a thief."
+  },
+  {
+    "word": "one good turn deserves another",
+    "meaning": "If someone does you a favour, you should do a favour for them in return.",
+    "example": "You helped me move, so I will buy you dinner. One good turn deserves another."
+  },
+  {
+    "word": "one man's meat is another man's poison",
+    "meaning": "What is good or enjoyable for one person may be distasteful for someone else.",
+    "example": "I love spicy food, but it makes him sick. One man's meat is another man's poison."
+  },
+  {
+    "word": "one swallow does not make a summer",
+    "meaning": "A single positive event does not mean that everything is going to be good.",
+    "example": "We won one match, but we are still at the bottom of the league. One swallow does not make a summer."
+  },
+  {
+    "word": "opposites attract",
+    "meaning": "People who are very different from each other are often attracted to each other.",
+    "example": "He is quiet and she is very loud, but opposites attract."
+  },
+  {
+    "word": "out of the frying pan into the fire",
+    "meaning": "Moving from a bad situation into a much worse one.",
+    "example": "He quit his stressful job only to start one with an even worse boss; out of the frying pan into the fire."
+  },
+  {
+    "word": "pay the piper",
+    "meaning": "Bear the consequences of an action or activity that you have enjoyed.",
+    "example": "We partied all weekend, and now on Monday we must pay the piper."
+  },
+  {
+    "word": "pitchers have ears",
+    "meaning": "Used to warn that people (especially children) may be listening.",
+    "example": "Don't talk about the surprise party now; pitchers have ears."
+  },
+  {
+    "word": "possession is nine-tenths of the law",
+    "meaning": "Having physical control of property is the most important advantage in a dispute over ownership.",
+    "example": "I found the lost watch and I am keeping it; possession is nine-tenths of the law."
+  },
+  {
+    "word": "power corrupts; absolute power corrupts absolutely",
+    "meaning": "When people get power, they tend to behave immorally, and more power makes them worse.",
+    "example": "The dictator became a tyrant once he seized control. Power corrupts; absolute power corrupts absolutely."
+  },
+  {
+    "word": "procrastination is the thief of time",
+    "meaning": "Delaying doing things wastes your valuable time.",
+    "example": "Stop watching TV and start your homework; procrastination is the thief of time."
+  },
+  {
+    "word": "rules are made to be broken",
+    "meaning": "Sometimes it is necessary or acceptable to ignore a rule.",
+    "example": "We aren't supposed to eat in here, but rules are made to be broken."
+  },
+  {
+    "word": "seeing is believing",
+    "meaning": "You need to see something with your own eyes before you can believe it exists or happens.",
+    "example": "I didn't think he could juggle five balls, but seeing is believing."
+  },
+  {
+    "word": "snitches get stitches",
+    "meaning": "People who report others to the authorities will be punished or physically harmed by those they betrayed.",
+    "example": "He refused to tell the police who started the fight, knowing that snitches get stitches."
+  },
+  {
+    "word": "spare the rod and spoil the child",
+    "meaning": "If you do not punish a child when they do wrong, they will become badly behaved.",
+    "example": "His parents never discipline him, and he is a terror. Spare the rod and spoil the child."
+  },
+  {
+    "word": "speak of the devil and he doth appear",
+    "meaning": "Said when a person appears just after being mentioned.",
+    "example": "We were just talking about you! Speak of the devil and he doth appear."
+  },
+  {
+    "word": "sticks and stones may break my bones, but words will never hurt me",
+    "meaning": "Physical attacks can cause real injury, but unkind words cannot cause physical harm.",
+    "example": "Ignore their name-calling; sticks and stones may break my bones, but words will never hurt me."
+  },
+  {
+    "word": "success has many fathers, but failure is an orphan",
+    "meaning": "People are eager to take credit for a success, but no one wants to take responsibility for a failure.",
+    "example": "When the project succeeded everyone claimed they helped, proving success has many fathers, but failure is an orphan."
+  },
+  {
+    "word": "the apple doesn't fall far from the tree",
+    "meaning": "Children often resemble their parents in character and behaviour.",
+    "example": "He is a talented musician just like his mother. The apple doesn't fall far from the tree."
+  },
+  {
+    "word": "the best is yet to come",
+    "meaning": "The most positive or exciting things will happen in the future.",
+    "example": "We had a great year, but the best is yet to come."
+  },
+  {
+    "word": "the bigger they are, the harder they fall",
+    "meaning": "The more powerful or important someone is, the more severely they will suffer when they fail.",
+    "example": "The champion was undefeated until tonight; the bigger they are, the harder they fall."
+  },
+  {
+    "word": "the boy is father to the man",
+    "meaning": "A person's character is formed when they are a child.",
+    "example": "He was always fixing things as a kid and now he is an engineer. The boy is father to the man."
+  },
+  {
+    "word": "there is honor among thieves",
+    "meaning": "Even corrupt or bad people have certain standards of behaviour that they respect.",
+    "example": "The criminals refused to betray each other, showing there is honor among thieves."
+  },
+  {
+    "word": "two's company, three's a crowd",
+    "meaning": "Two people together is a good situation, but a third person ruins it.",
+    "example": "I'll leave you two alone for your date. Two's company, three's a crowd."
+  },
+  {
+    "word": "variety is the spice of life",
+    "meaning": "New and different experiences make life interesting.",
+    "example": "I try a new restaurant every week because variety is the spice of life."
+  },
+  {
+    "word": "you can't make a silk purse out of a sow's ear",
+    "meaning": "You cannot make something good or valuable out of poor-quality materials.",
+    "example": "No matter how much you polish that old bike, you can't make a silk purse out of a sow's ear."
+  },
+  {
+    "word": "a burnt child dreads the fire",
+    "meaning": "Someone who has experienced something bad will be very careful to avoid it in the future.",
+    "example": "He refuses to invest in stocks after losing money last year; a burnt child dreads the fire."
+  },
+  {
+    "word": "a cat may look at a king",
+    "meaning": "An inferior has certain rights, even in the presence of a superior.",
+    "example": "I have every right to attend the public meeting, even if the mayor is there; a cat may look at a king."
+  },
+  {
+    "word": "a closed mouth catches no flies",
+    "meaning": "If you don't speak, you won't say anything foolish or get into trouble.",
+    "example": "He stayed silent during the argument, knowing that a closed mouth catches no flies."
+  },
+  {
+    "word": "a coward dies a thousand times before his death",
+    "meaning": "People who are afraid constantly suffer from fear, whereas brave people only suffer when they actually die.",
+    "example": "Stop worrying about the exam and just take it; a coward dies a thousand times before his death."
+  },
+  {
+    "word": "a drowning man will clutch at a straw",
+    "meaning": "A person in a desperate situation will try anything, no matter how unlikely it is to help.",
+    "example": "The failing company tried a ridiculous marketing stunt, because a drowning man will clutch at a straw."
+  },
+  {
+    "word": "a fault confessed is half redressed",
+    "meaning": "Admitting you did something wrong is the first step towards making things right.",
+    "example": "Tell your mother you broke the vase; a fault confessed is half redressed."
+  },
+  {
+    "word": "a fool's bolt is soon shot",
+    "meaning": "A foolish person acts too quickly and wastes their resources or opportunities.",
+    "example": "He spent all his allowance on the first day of the trip; a fool's bolt is soon shot."
+  },
+  {
+    "word": "a golden key can open any door",
+    "meaning": "Having enough money can solve almost any problem or give you access to anything.",
+    "example": "He managed to get tickets to the sold-out concert because a golden key can open any door."
+  },
+  {
+    "word": "a good beginning makes a good ending",
+    "meaning": "Starting a task well increases the chances of finishing it successfully.",
+    "example": "Make sure you plan your essay carefully first; a good beginning makes a good ending."
+  },
+  {
+    "word": "a good conscience is a soft pillow",
+    "meaning": "You can sleep peacefully if you know you have done nothing wrong.",
+    "example": "I told the truth, and I'll sleep well tonight; a good conscience is a soft pillow."
+  },
+  {
+    "word": "a little knowledge is a dangerous thing",
+    "meaning": "Knowing only a small amount about something can lead you to make bad decisions.",
+    "example": "He tried to fix the wiring himself and caused a power cut. A little knowledge is a dangerous thing."
+  },
+  {
+    "word": "a man is known by the company he keeps",
+    "meaning": "People will judge your character based on the friends you associate with.",
+    "example": "You shouldn't hang out with the troublemakers; a man is known by the company he keeps."
+  },
+  {
+    "word": "a miss is as good as a mile",
+    "meaning": "Failing by a small margin is still a failure, just like failing by a large margin.",
+    "example": "We lost the game by one point, but a miss is as good as a mile."
+  },
+  {
+    "word": "a new broom sweeps clean",
+    "meaning": "A person newly appointed to a position often makes many changes to improve things.",
+    "example": "The new headteacher introduced strict rules immediately; a new broom sweeps clean."
+  },
+  {
+    "word": "a nod is as good as a wink to a blind horse",
+    "meaning": "A subtle hint is completely useless to someone who doesn't understand or isn't paying attention.",
+    "example": "I tried dropping hints about my birthday, but a nod is as good as a wink to a blind horse."
+  },
+  {
+    "word": "a problem shared is a problem halved",
+    "meaning": "Talking about a problem with someone else makes it seem less difficult or overwhelming.",
+    "example": "Tell me what's worrying you; a problem shared is a problem halved."
+  },
+  {
+    "word": "a rotten apple spoils the barrel",
+    "meaning": "One bad person in a group can negatively influence everyone else.",
+    "example": "The team was great until one lazy player joined. A rotten apple spoils the barrel."
+  },
+  {
+    "word": "a smooth sea never made a skilled sailor",
+    "meaning": "Difficult experiences are necessary to build character and learn important skills.",
+    "example": "The tough project taught her a lot; a smooth sea never made a skilled sailor."
+  },
+  {
+    "word": "a word to the wise is sufficient",
+    "meaning": "Intelligent people only need a brief warning or piece of advice to understand what to do.",
+    "example": "I won't say any more about the danger. A word to the wise is sufficient."
+  },
+  {
+    "word": "after a storm comes a calm",
+    "meaning": "Things will eventually get better after a period of difficulty or trouble.",
+    "example": "The argument was fierce, but after a storm comes a calm."
+  },
+  {
+    "word": "age before beauty",
+    "meaning": "A playful phrase used to allow an older person to go first.",
+    "example": "Please, you go through the door first; age before beauty."
+  },
+  {
+    "word": "all roads lead to rome",
+    "meaning": "There are many different ways to achieve the same goal.",
+    "example": "You study in the morning, I study at night, but we both pass; all roads lead to Rome."
+  },
+  {
+    "word": "all's fair in love and war",
+    "meaning": "In certain highly competitive situations, rules of fair play do not apply.",
+    "example": "He sabotaged his rival's date, claiming that all's fair in love and war."
+  },
+  {
+    "word": "any port in a storm",
+    "meaning": "In a difficult situation, any solution or source of help is acceptable.",
+    "example": "I don't love this cheap motel, but it's late and we need sleep; any port in a storm."
+  },
+  {
+    "word": "appearances can be deceptive",
+    "meaning": "Things are not always as they seem on the outside.",
+    "example": "The fierce-looking dog was actually very friendly. Appearances can be deceptive."
+  },
+  {
+    "word": "as you make your bed, so you must lie upon it",
+    "meaning": "You must accept the consequences of your own actions.",
+    "example": "You didn't study for the test, so accept your failing grade. As you make your bed, so you must lie upon it."
+  },
+  {
+    "word": "ask no questions and hear no lies",
+    "meaning": "It is sometimes better not to ask about something if you suspect the answer will be dishonest.",
+    "example": "I didn't ask where he got the money; ask no questions and hear no lies."
+  },
+  {
+    "word": "beware of greeks bearing gifts",
+    "meaning": "Do not trust enemies even when they appear friendly or offer gifts.",
+    "example": "My rival company suddenly offered to help me; beware of Greeks bearing gifts."
+  },
+  {
+    "word": "better the devil you know than the devil you don't",
+    "meaning": "It is better to deal with a difficult person or situation that you know than a new one that might be worse.",
+    "example": "I dislike my boss, but I won't change jobs. Better the devil you know than the devil you don't."
+  },
+  {
+    "word": "beware of a silent dog and still water",
+    "meaning": "People who are quiet or seem calm can sometimes be dangerous or deceptive.",
+    "example": "He never argues, but he plots against us; beware of a silent dog and still water."
+  },
+  {
+    "word": "by learning you will teach, by teaching you will learn",
+    "meaning": "Teaching others helps you to understand the subject better yourself.",
+    "example": "Tutoring younger students improved my own grades; by learning you will teach, by teaching you will learn."
+  },
+  {
+    "word": "call a spade a spade",
+    "meaning": "To speak honestly and directly about something, even if it is unpleasant.",
+    "example": "Let's call a spade a spade; the project failed because we were lazy."
+  },
+  {
+    "word": "catch not at the shadow and lose the substance",
+    "meaning": "Do not pursue something unrealistic and lose what you actually have.",
+    "example": "He quit a good job for a risky startup that failed. Catch not at the shadow and lose the substance."
+  },
+  {
+    "word": "charity covers a multitude of sins",
+    "meaning": "Being kind and generous to others can make up for many of your own faults.",
+    "example": "He can be rude, but he donates so much to the hospital; charity covers a multitude of sins."
+  },
+  {
+    "word": "clothes do not make the man",
+    "meaning": "A person's character cannot be judged by how they dress.",
+    "example": "He was wearing old jeans but was a brilliant scientist. Clothes do not make the man."
+  },
+  {
+    "word": "comparisons are odious",
+    "meaning": "It is unpleasant and unhelpful to compare different people or things.",
+    "example": "Stop comparing your child's grades to others; comparisons are odious."
+  },
+  {
+    "word": "constant dropping wears away a stone",
+    "meaning": "Persistence and continuous effort can achieve great results over time.",
+    "example": "Keep practising your instrument every day; constant dropping wears away a stone."
+  },
+  {
+    "word": "cut your coat according to your cloth",
+    "meaning": "You should limit your plans and spending to what you can afford.",
+    "example": "We can't afford a large wedding right now; we must cut our coat according to our cloth."
+  },
+  {
+    "word": "damned if you do, damned if you don't",
+    "meaning": "A situation where you will be criticized no matter what choice you make.",
+    "example": "If I help, they say I'm interfering; if I don't, they say I don't care. Damned if you do, damned if you don't."
+  },
+  {
+    "word": "do as i say, not as i do",
+    "meaning": "Follow my advice, even if I don't follow it myself.",
+    "example": "The doctor smoked while telling his patient to quit, saying, 'Do as I say, not as I do.'"
+  },
+  {
+    "word": "do not wear out your welcome",
+    "meaning": "Do not visit someone for so long or so often that they become annoyed with you.",
+    "example": "We should go home now; we do not want to wear out our welcome."
+  },
+  {
+    "word": "dogs bark, but the caravan moves on",
+    "meaning": "People may criticize you, but you should continue with your plans regardless.",
+    "example": "Ignore the negative comments on your project; dogs bark, but the caravan moves on."
+  },
+  {
+    "word": "don't change horses in midstream",
+    "meaning": "Do not alter your plans or leadership when you are in the middle of a difficult task.",
+    "example": "We shouldn't switch managers halfway through the project. Don't change horses in midstream."
+  },
+  {
+    "word": "don't cross your bridges before you come to them",
+    "meaning": "Do not worry about future problems until they actually happen.",
+    "example": "We don't know if it will rain next week, so don't cross your bridges before you come to them."
+  },
+  {
+    "word": "don't cut off your nose to spite your face",
+    "meaning": "Do not act out of anger in a way that harms you more than anyone else.",
+    "example": "Refusing to eat dinner just because you're mad at Mom is silly; don't cut off your nose to spite your face."
+  },
+  {
+    "word": "don't put new wine into old bottles",
+    "meaning": "You should not try to force new ideas or methods into old, rigid systems.",
+    "example": "Using modern software on that ancient computer won't work; don't put new wine into old bottles."
+  },
+  {
+    "word": "even a worm will turn",
+    "meaning": "Even the most gentle or timid person will eventually fight back if pushed too far.",
+    "example": "He took the bullying for years, but today he fought back; even a worm will turn."
+  },
+  {
+    "word": "every family has a skeleton in the cupboard",
+    "meaning": "Every family has a shameful secret that they try to keep hidden.",
+    "example": "They seem perfect, but I'm sure they have issues; every family has a skeleton in the cupboard."
+  },
+  {
+    "word": "every man has his price",
+    "meaning": "Everyone can be persuaded to do something bad if they are offered a large enough reward.",
+    "example": "The honest judge finally accepted the massive bribe; every man has his price."
+  },
+  {
+    "word": "every picture tells a story",
+    "meaning": "You can learn a lot about a situation or a person's life by looking at visual evidence.",
+    "example": "The messy room showed how busy she had been; every picture tells a story."
+  },
+  {
+    "word": "failure is the stepping stone to success",
+    "meaning": "Making mistakes and failing helps you learn and eventually succeed.",
+    "example": "Don't be sad about failing the first test; failure is the stepping stone to success."
+  },
+  {
+    "word": "faint heart never won fair lady",
+    "meaning": "You must be bold and take risks if you want to succeed, especially in romance.",
+    "example": "Go ahead and ask her out! Faint heart never won fair lady."
+  },
+  {
+    "word": "finders keepers, losers weepers",
+    "meaning": "A person who finds something gets to keep it, and the person who lost it can only cry.",
+    "example": "I found this coin on the ground, so finders keepers, losers weepers!"
+  },
+  {
+    "word": "fine words butter no parsnips",
+    "meaning": "Saying nice things does not produce practical results or solve problems.",
+    "example": "He promised to help but did nothing; fine words butter no parsnips."
+  },
+  {
+    "word": "first impressions are the most lasting",
+    "meaning": "The initial opinion you form of someone or something is very difficult to change.",
+    "example": "Make sure you smile on your first day of school; first impressions are the most lasting."
+  },
+  {
+    "word": "fool me once, shame on you; fool me twice, shame on me",
+    "meaning": "You should learn from being tricked and not let it happen again.",
+    "example": "I won't lend him money again after he didn't pay me back. Fool me once, shame on you; fool me twice, shame on me."
+  },
+  {
+    "word": "forewarned is forearmed",
+    "meaning": "Knowing about a danger in advance helps you prepare for it.",
+    "example": "The weather forecast said it would snow, so I bought salt; forewarned is forearmed."
+  },
+  {
+    "word": "give a dog a bad name and hang him",
+    "meaning": "Once a person has a bad reputation, it is very hard to get rid of it, and they will be blamed for things.",
+    "example": "Even though he didn't break the window, they blamed him because of his past. Give a dog a bad name and hang him."
+  },
+  {
+    "word": "give a man a fish and you feed him for a day; teach a man to fish and you feed him for a lifetime",
+    "meaning": "It is better to teach someone how to do something themselves than to just do it for them.",
+    "example": "Instead of doing his homework, I showed him how to solve it. Teach a man to fish and you feed him for a lifetime."
+  },
+  {
+    "word": "give credit where credit is due",
+    "meaning": "You should acknowledge and praise someone's good work or ideas.",
+    "example": "I don't like her much, but her presentation was excellent; give credit where credit is due."
+  },
+  {
+    "word": "give him an inch and he'll take a mile",
+    "meaning": "If you allow someone a small concession, they will take advantage of you and demand much more.",
+    "example": "I let him borrow my pen, and he kept it forever. Give him an inch and he'll take a mile."
+  },
+  {
+    "word": "god tempers the wind to the shorn lamb",
+    "meaning": "People who are vulnerable or have suffered are protected from further excessive hardship.",
+    "example": "After she lost her job, she found an unexpectedly cheap apartment. God tempers the wind to the shorn lamb."
+  },
+  {
+    "word": "good things come in small packages",
+    "meaning": "The size of something does not determine its value or quality.",
+    "example": "The diamond ring was tiny but beautiful; good things come in small packages."
+  },
+  {
+    "word": "grasp all, lose all",
+    "meaning": "If you try to get or keep everything, you risk losing everything.",
+    "example": "He tried to hold four cups at once and dropped them all; grasp all, lose all."
+  },
+  {
+    "word": "great oaks from little acorns grow",
+    "meaning": "Great things or successful enterprises often start from very small beginnings.",
+    "example": "Their global company started in a tiny garage; great oaks from little acorns grow."
+  },
+  {
+    "word": "handsome is as handsome does",
+    "meaning": "A person's true worth is defined by their good actions, not their physical appearance.",
+    "example": "He isn't very attractive, but he volunteers every weekend; handsome is as handsome does."
+  },
+  {
+    "word": "he who pays the piper calls the tune",
+    "meaning": "The person who provides the money for something has the right to decide how it is done.",
+    "example": "My dad is paying for the wedding, so he gets to invite his friends. He who pays the piper calls the tune."
+  },
+  {
+    "word": "health is better than wealth",
+    "meaning": "Being healthy is more important and valuable than having a lot of money.",
+    "example": "The billionaire was miserable because he was sick; health is really better than wealth."
+  },
+  {
+    "word": "hindsight is a wonderful thing",
+    "meaning": "It is easy to know what should have been done after an event has already happened.",
+    "example": "I shouldn't have bought that expensive car, but hindsight is a wonderful thing."
+  },
+  {
+    "word": "if at first you don't succeed, try, try again",
+    "meaning": "You should not give up after failing, but keep trying until you succeed.",
+    "example": "He failed his driving test, but if at first you don't succeed, try, try again."
+  },
+  {
+    "word": "if you play with fire, you'll get burned",
+    "meaning": "If you take dangerous risks, you will eventually suffer the consequences.",
+    "example": "He kept driving too fast, and finally crashed. If you play with fire, you'll get burned."
+  },
+  {
+    "word": "if you want a thing done well, do it yourself",
+    "meaning": "You cannot always rely on others to do a good job, so sometimes you must do it.",
+    "example": "The cleaners missed a spot, so I cleaned it. If you want a thing done well, do it yourself."
+  },
+  {
+    "word": "ignorance of the law is no excuse",
+    "meaning": "Not knowing that something is illegal does not prevent you from being punished for doing it.",
+    "example": "I didn't know the speed limit was lower here, but ignorance of the law is no excuse."
+  },
+  {
+    "word": "ill gotten gains never prosper",
+    "meaning": "Money or property acquired dishonestly will not bring true happiness or success.",
+    "example": "The thief was eventually caught and lost everything; ill gotten gains never prosper."
+  },
+  {
+    "word": "it is easy to be wise after the event",
+    "meaning": "It is easy to understand what went wrong after a failure has happened.",
+    "example": "We know now that the bridge was weak, but it is easy to be wise after the event."
+  },
+  {
+    "word": "it's no use locking the stable door after the horse has bolted",
+    "meaning": "Taking preventative measures after the damage has already been done is pointless.",
+    "example": "Installing an alarm after you were robbed is useless; it's no use locking the stable door after the horse has bolted."
+  },
+  {
+    "word": "it takes two to make a quarrel",
+    "meaning": "An argument requires two people, and both are usually to blame.",
+    "example": "Don't just blame your brother for the fight; it takes two to make a quarrel."
+  },
+  {
+    "word": "keep your mouth shut and your eyes open",
+    "meaning": "You will learn more by observing silently than by talking.",
+    "example": "On your first day at the new job, keep your mouth shut and your eyes open."
+  },
+  {
+    "word": "laugh and the world laughs with you, weep and you weep alone",
+    "meaning": "People prefer to be around happy people and tend to avoid those who are sad.",
+    "example": "When I won the lottery everyone wanted to be my friend, but when I was broke no one called. Laugh and the world laughs with you, weep and you weep alone."
+  },
+  {
+    "word": "least said, soonest mended",
+    "meaning": "The less you talk about a problem or argument, the quicker it will be resolved or forgotten.",
+    "example": "I won't bring up the mistake again; least said, soonest mended."
+  },
+  {
+    "word": "let the punishment fit the crime",
+    "meaning": "The severity of a punishment should match the seriousness of the offence.",
+    "example": "Grounding him for a month just for being late seems unfair; let the punishment fit the crime."
+  },
+  {
+    "word": "little strokes fell great oaks",
+    "meaning": "Steady, continuous effort can accomplish a large or difficult task.",
+    "example": "She wrote the novel one page a day; little strokes fell great oaks."
+  },
+  {
+    "word": "lookers-on see most of the game",
+    "meaning": "People who observe a situation from the outside often understand it better than those involved.",
+    "example": "As a consultant, I can spot their mistakes easily; lookers-on see most of the game."
+  },
+  {
+    "word": "man proposes, god disposes",
+    "meaning": "People can make plans, but their success ultimately depends on factors beyond their control.",
+    "example": "We planned an outdoor wedding, but a hurricane hit. Man proposes, God disposes."
+  },
+  {
+    "word": "misfortunes never come singly",
+    "meaning": "Bad things tend to happen at the same time or follow one another quickly.",
+    "example": "First my car broke down, then I lost my job. Misfortunes never come singly."
+  },
+  {
+    "word": "need makes the old wife trot",
+    "meaning": "Necessity forces people to do things they would not normally do or be capable of.",
+    "example": "He hated running, but he sprinted to catch the last train; need makes the old wife trot."
+  },
+  {
+    "word": "never trouble trouble till trouble troubles you",
+    "meaning": "Do not worry about or seek out problems before they actually happen.",
+    "example": "Stop worrying about next year's exams; never trouble trouble till trouble troubles you."
+  },
+  {
+    "word": "no cross, no crown",
+    "meaning": "You cannot achieve success or glory without suffering or hard work.",
+    "example": "The athlete trained for years in pain to win gold; no cross, no crown."
+  },
+  {
+    "word": "nothing succeeds like success",
+    "meaning": "Achieving something successful gives you confidence and resources to achieve even more.",
+    "example": "After his first hit movie, everyone wanted to hire him; nothing succeeds like success."
+  },
+  {
+    "word": "out of debt, out of danger",
+    "meaning": "If you do not owe money, you are safe from financial ruin.",
+    "example": "I finally paid off my loan and feel so relieved; out of debt, out of danger."
+  },
+  {
+    "word": "out of the mouths of babes",
+    "meaning": "Children sometimes say surprisingly wise or perceptive things.",
+    "example": "The five-year-old gave the best advice on being kind; out of the mouths of babes."
+  },
+  {
+    "word": "practice what you preach",
+    "meaning": "You should behave in the way that you advise other people to behave.",
+    "example": "The doctor who told me to diet needs to practice what he preaches."
+  },
+  {
+    "word": "prevention is better than cure",
+    "meaning": "It is better to stop a problem from happening than to try to fix it later.",
+    "example": "Getting a vaccine is smart because prevention is better than cure."
+  },
+  {
+    "word": "put your money where your mouth is",
+    "meaning": "Back up your words or boasts with action or money.",
+    "example": "If you're so sure you will win the race, bet on it! Put your money where your mouth is."
+  },
+  {
+    "word": "saying is one thing and doing is another",
+    "meaning": "It is much easier to talk about doing something than to actually do it.",
+    "example": "He promised to clean the whole house, but saying is one thing and doing is another."
+  },
+  {
+    "word": "so many men, so many opinions",
+    "meaning": "Everyone has their own different point of view.",
+    "example": "We couldn't agree on a restaurant because so many men, so many opinions."
+  },
+  {
+    "word": "step by step goes a long way",
+    "meaning": "Taking small, steady actions will eventually lead to significant progress.",
+    "example": "Saving a few dollars every week added up over the year; step by step goes a long way."
+  },
+  {
+    "word": "the exception proves the rule",
+    "meaning": "The fact that an exception exists demonstrates that a general rule applies in most cases.",
+    "example": "The store is usually closed on Sundays, so seeing it open today is the exception that proves the rule."
+  },
+  {
+    "word": "the proof of the pudding is in the eating",
+    "meaning": "You can only judge the true quality of something by experiencing or testing it.",
+    "example": "The new car looks great, but the proof of the pudding is in the eating."
+  },
+  {
+    "word": "time heals all wounds",
+    "meaning": "Feelings of hurt, grief, or anger will eventually fade as time passes.",
+    "example": "She was devastated by the breakup, but time heals all wounds."
+  }
+]
