@@ -950,7 +950,7 @@ function buildQueue(pool, progress, targetCards) {
   const isWeak = k => { const r = progress[k]; return r && r.attempts > 0 && !isDue(k); };
 
   const due  = pool.filter(w => isDue(w.key)).sort((a, b) => (progress[a.key].dueDate||'') < (progress[b.key].dueDate||'') ? -1 : 1);
-  const nw   = pool.filter(w => isNew(w.key));
+  const nw   = shuffle(pool.filter(w => isNew(w.key)));
   const weak = pool.filter(w => isWeak(w.key)).sort((a, b) => (progress[b.key]?.wrong||0) - (progress[a.key]?.wrong||0));
 
   const q = [...due];

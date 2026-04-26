@@ -170,6 +170,17 @@ function screenToGridRaw(sx, sy) {
   };
 }
 
+// Returns integer col/floor with ghost centered on cursor.
+// For destroy, returns exact cell under cursor (no centering).
+function resolveGridPos(sx, sy, type) {
+  const raw = screenToGridRaw(sx, sy);
+  if (type === 'destroy') return { col: Math.floor(raw.col), floor: Math.floor(raw.floor) };
+  const def = ROOM_DEFS[type];
+  const centCol   = raw.col   - (def ? def.widthCells  / 2 : 0);
+  const centFloor = raw.floor - (def ? def.heightFloors / 2 : 0);
+  return applySnap(centCol, centFloor, type);
+}
+
 function applySnap(rawCol, rawFloor, type) {
   const def = ROOM_DEFS[type];
   if (!def) return { col: Math.floor(rawCol), floor: Math.floor(rawFloor) };
@@ -605,10 +616,7 @@ function attachInput() {
       canvas.style.cursor = handle ? 'ew-resize' : '';
     }
 
-    const gRaw = screenToGridRaw(mx, my);
-    const g    = (tool === 'destroy')
-      ? { col: Math.floor(gRaw.col), floor: Math.floor(gRaw.floor) }
-      : applySnap(gRaw.col, gRaw.floor, tool);
+    const g = resolveGridPos(mx, my, tool);
     hoverCol = g.col; hoverFloor = g.floor;
     updateGhost();
   });
@@ -637,13 +645,11 @@ function attachInput() {
       return;
     }
     if (!dragging) {
-      const r   = canvas.getBoundingClientRect();
-      const mx  = e.clientX - r.left, my = e.clientY - r.top;
-      const gRaw = screenToGridRaw(mx, my);
-      const g    = (e.button === 2 || tool === 'destroy')
-        ? { col: Math.floor(gRaw.col), floor: Math.floor(gRaw.floor) }
-        : applySnap(gRaw.col, gRaw.floor, tool);
-      if (e.button === 2 || tool === 'destroy') deleteAt(g.col, g.floor);
+      const r  = canvas.getBoundingClientRect();
+      const mx = e.clientX - r.left, my = e.clientY - r.top;
+      const effectiveTool = (e.button === 2) ? 'destroy' : tool;
+      const g = resolveGridPos(mx, my, effectiveTool);
+      if (effectiveTool === 'destroy') deleteAt(g.col, g.floor);
       else placeRoom(tool, g.col, g.floor);
     }
     mouseDown = false; dragging = false;
@@ -685,20 +691,31 @@ function attachInput() {
     touchMoved = false;
 
     if (e.touches.length >= 2) {
+      lobbyResizeState = null;
       wasPanning = true;
       hoverFloor = -999;
       ghostGraphics.clear();
     } else {
       wasPanning = false;
-      const t    = e.touches[0];
-      const tmx  = t.clientX - r.left, tmy = t.clientY - r.top;
-      const gRaw = screenToGridRaw(tmx, tmy);
-      const g    = (tool === 'destroy')
-        ? { col: Math.floor(gRaw.col), floor: Math.floor(gRaw.floor) }
-        : applySnap(gRaw.col, gRaw.floor, tool);
-      hoverCol = g.col; hoverFloor = g.floor;
-      mouseInCanvas = true;
-      updateGhost();
+      const t   = e.touches[0];
+      const tmx = t.clientX - r.left, tmy = t.clientY - r.top;
+      // Check lobby edge first — takes priority over normal placement
+      const handle = findLobbyResizeHandle(tmx, tmy);
+      if (handle) {
+        lobbyResizeState = {
+          room: handle.room, end: handle.end,
+          startX: tmx,
+          origCol: handle.room.col,
+          origWidth: handle.room.widthCells ?? 32,
+        };
+        ghostGraphics.clear();
+      } else {
+        lobbyResizeState = null;
+        const g = resolveGridPos(tmx, tmy, tool);
+        hoverCol = g.col; hoverFloor = g.floor;
+        mouseInCanvas = true;
+        updateGhost();
+      }
     }
   }, { passive: false });
 
@@ -711,6 +728,39 @@ function attachInput() {
 
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) touchMoved = true;
 
+    // Lobby resize drag (touch)
+    if (lobbyResizeState && e.touches.length === 1) {
+      const { room, end, startX, origCol, origWidth } = lobbyResizeState;
+      const t   = e.touches[0];
+      const tmx = t.clientX - r.left;
+      const deltaCells = Math.round((tmx - startX) / CELL_W);
+      let newCol = origCol, newWidth = origWidth;
+      if (end === 'right') {
+        newWidth = Math.max(32, Math.round((origWidth + deltaCells) / 16) * 16);
+      } else {
+        const colDelta = Math.round(deltaCells / 16) * 16;
+        newCol   = Math.max(0, origCol + colDelta);
+        newWidth = Math.max(32, Math.round((origWidth - (newCol - origCol)) / 16) * 16);
+        if (newCol + newWidth !== origCol + origWidth) newCol = origCol + origWidth - newWidth;
+        newCol = Math.max(0, newCol);
+      }
+      if (newCol >= 0 && newCol + newWidth <= GRID_COLS) {
+        const occ = occupancySet(room.id);
+        let valid = true;
+        for (let c = newCol; c < newCol + newWidth; c++)
+          if (occ.has(`${c},${room.floor}`)) { valid = false; break; }
+        if (valid) {
+          room.col = newCol; room.widthCells = newWidth;
+          destroyRoomSprite(room.id);
+          const container = buildLobbyContainer(room);
+          roomLayer.addChild(container);
+          roomSprites.set(room.id, container);
+        }
+      }
+      lastTouchMidX = mx; lastTouchMidY = my;
+      return;
+    }
+
     if (e.touches.length >= 2) {
       viewX = clampViewX(viewX - dx);
       viewY = clampViewY(viewY + dy);
@@ -719,12 +769,9 @@ function attachInput() {
       refreshVisuals();
       ghostGraphics.clear();
     } else if (e.touches.length === 1) {
-      const t    = e.touches[0];
-      const tmx  = t.clientX - r.left, tmy = t.clientY - r.top;
-      const gRaw = screenToGridRaw(tmx, tmy);
-      const g    = (tool === 'destroy')
-        ? { col: Math.floor(gRaw.col), floor: Math.floor(gRaw.floor) }
-        : applySnap(gRaw.col, gRaw.floor, tool);
+      const t   = e.touches[0];
+      const tmx = t.clientX - r.left, tmy = t.clientY - r.top;
+      const g   = resolveGridPos(tmx, tmy, tool);
       hoverCol = g.col; hoverFloor = g.floor;
       mouseInCanvas = true;
       lastTouchMidX = mx; lastTouchMidY = my;
@@ -734,14 +781,17 @@ function attachInput() {
 
   canvas.addEventListener('touchend', e => {
     e.preventDefault();
+    if (lobbyResizeState) {
+      lobbyResizeState = null;
+      ghostGraphics.clear();
+      if (e.touches.length === 0) { hoverFloor = -999; mouseInCanvas = false; }
+      return;
+    }
     if (!wasPanning && e.changedTouches.length === 1 && e.touches.length === 0) {
-      const r    = canvas.getBoundingClientRect();
-      const t    = e.changedTouches[0];
-      const mx   = t.clientX - r.left, my = t.clientY - r.top;
-      const gRaw = screenToGridRaw(mx, my);
-      const g    = (tool === 'destroy')
-        ? { col: Math.floor(gRaw.col), floor: Math.floor(gRaw.floor) }
-        : applySnap(gRaw.col, gRaw.floor, tool);
+      const r   = canvas.getBoundingClientRect();
+      const t   = e.changedTouches[0];
+      const mx  = t.clientX - r.left, my = t.clientY - r.top;
+      const g   = resolveGridPos(mx, my, tool);
       if (tool === 'destroy') deleteAt(g.col, g.floor);
       else placeRoom(tool, g.col, g.floor);
     }
