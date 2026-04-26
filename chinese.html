@@ -603,6 +603,7 @@
     <button class="tab" data-max="12">L1–12</button>
     <button class="tab" data-max="15">L1–15</button>
     <button class="tab" data-max="19">L1–19</button>
+    <button class="tab" data-max="test">Test</button>
   </div>
 
   <!-- Test mode -->
@@ -1097,6 +1098,7 @@ function makeCard(word, pool, mode) {
 const S = {
   level: 'p1',
   lessonMax: 3,
+  lessonTest: false,
   mode: 'pinyin-chinese',
   cards: [],
   cardIndex: 0,
@@ -1173,7 +1175,15 @@ function bindTabs(containerId, onSelect) {
 }
 
 bindTabs('setup-level-tabs',  tab => { S.level = tab.dataset.level; });
-bindTabs('setup-lesson-tabs', tab => { S.lessonMax = Number(tab.dataset.max); });
+bindTabs('setup-lesson-tabs', tab => {
+  if (tab.dataset.max === 'test') {
+    S.lessonTest = true;
+    S.lessonMax = 19;
+  } else {
+    S.lessonTest = false;
+    S.lessonMax = Number(tab.dataset.max);
+  }
+});
 bindTabs('setup-mode-tabs',   tab => { S.mode = tab.dataset.mode; });
 
 document.getElementById('setup-stats-btn').addEventListener('click', () => {
@@ -1190,16 +1200,25 @@ async function startSession() {
   await dataPromise;
   if (!DATA[S.level]) { showToast('Failed to load word data'); return; }
 
-  S.wordPool = getWordPool(S.level, S.lessonMax);
+  S.wordPool = getWordPool(S.level, S.lessonTest ? 19 : S.lessonMax);
   if (S.wordPool.length === 0) { showToast('No words found'); return; }
 
   const cfg = SESSION_CONFIG[S.level];
-  S.timeLimitMs = cfg.minutes * 60 * 1000;
-  const targetCards = cfg.cards;
-
   S.progress = loadProgress(S.avatarId);
-  const queue = buildQueue(S.wordPool, S.progress, targetCards);
-  if (queue.length === 0) { showToast('No words to review'); return; }
+
+  let queue;
+  if (S.lessonTest) {
+    S.timeLimitMs = Infinity;
+    const today = todayStr();
+    queue = S.wordPool
+      .filter(w => { const r = S.progress[w.key]; return r && r.attempts > 0 && (!r.dueDate || r.dueDate <= today); })
+      .sort((a, b) => (S.progress[a.key].dueDate || '') < (S.progress[b.key].dueDate || '') ? -1 : 1);
+    if (queue.length === 0) { showToast('No words due for review'); return; }
+  } else {
+    S.timeLimitMs = cfg.minutes * 60 * 1000;
+    queue = buildQueue(S.wordPool, S.progress, cfg.cards);
+    if (queue.length === 0) { showToast('No words to review'); return; }
+  }
 
   S.cards = queue.map(w => makeCard(w, S.wordPool, S.mode)).filter(c => c !== null);
   if (S.cards.length === 0) { showToast('No valid cards for this mode'); return; }
@@ -1223,12 +1242,15 @@ function startTimer() {
     const remaining = Math.max(0, S.timeLimitMs - elapsed);
     const mins = Math.floor(remaining / 60000);
     const el = document.getElementById('hud-timer');
-    if (remaining <= 0)  el.textContent = '0 min';
-    else if (mins < 1)   el.textContent = '< 1 min';
-    else                 el.textContent = `${mins} min`;
+    if (S.timeLimitMs === Infinity) el.textContent = '—';
+    else if (remaining <= 0)        el.textContent = '0 min';
+    else if (mins < 1)              el.textContent = '< 1 min';
+    else                            el.textContent = `${mins} min`;
     el.className = 'hud-val';
-    if (remaining / S.timeLimitMs < 0.15) el.classList.add('danger');
-    else if (remaining / S.timeLimitMs < 0.35) el.classList.add('warn');
+    if (S.timeLimitMs !== Infinity) {
+      if (remaining / S.timeLimitMs < 0.15) el.classList.add('danger');
+      else if (remaining / S.timeLimitMs < 0.35) el.classList.add('warn');
+    }
     if (remaining <= 0 && !S.timeLimitReached) {
       S.timeLimitReached = true;
       showToast("Time's up — finish this card", 3000);
