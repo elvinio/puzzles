@@ -325,7 +325,7 @@
     }
 
     /* ── Geometry SVG ── */
-    .question-svg { display: none; width: 100%; max-width: 260px; margin: 0 auto; }
+    .question-svg { display: none; width: 100%; max-width: 380px; margin: 0 auto; }
     .question-svg.visible { display: block; }
     .geo-shape  { fill: none; stroke: var(--p-xl); stroke-width: 2; stroke-linejoin: round; }
     .geo-arc    { fill: none; stroke: #facc15; stroke-width: 1.5; }
@@ -543,7 +543,7 @@
     };
 
     const GEO_CONFIG = {
-      easy:   { shapes: ['straight-line','angles-at-point','right-triangle','isos-triangle'] },
+      easy:   { shapes: ['straight-line','angles-at-point','isos-triangle'] },
       medium: { shapes: ['straight-line','angles-at-point','right-triangle','isos-triangle',
                          'scalene-triangle','parallelogram','rhombus','vertically-opposite'] },
       hard:   { shapes: ['scalene-triangle','parallelogram','rhombus','vertically-opposite',

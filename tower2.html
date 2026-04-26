@@ -247,10 +247,30 @@ function canPlace(type, col, floor, widthOverride) {
   if (floor < def.minFloor || floor > def.maxFloor) return false;
   const w = widthOverride ?? def.widthCells;
   if (col < 0 || col + w > GRID_COLS) return false;
-  const occ = occupancySet();
+  const existingLobbyId = type === 'lobby' ? (building.rooms.find(r => r.type === 'lobby')?.id ?? -1) : -1;
+  const occ = occupancySet(existingLobbyId);
   for (let c = col; c < col + w; c++)
     for (let f = floor; f < floor + def.heightFloors; f++)
       if (occ.has(`${c},${f}`)) return false;
+  return true;
+}
+
+function tryExtendLobby(newCol) {
+  const existing = building.rooms.find(r => r.type === 'lobby');
+  if (!existing) return false;
+  const newW = ROOM_DEFS.lobby.widthCells;
+  const minCol = Math.min(existing.col, newCol);
+  const maxCol = Math.max(existing.col + existing.widthCells, newCol + newW);
+  const snappedWidth = Math.max(32, Math.round((maxCol - minCol) / 16) * 16);
+  const snappedCol = Math.max(0, minCol);
+  if (snappedCol + snappedWidth > GRID_COLS) return false;
+  const occ = occupancySet(existing.id);
+  for (let c = snappedCol; c < snappedCol + snappedWidth; c++)
+    if (occ.has(`${c},0`)) return false;
+  existing.col = snappedCol;
+  existing.widthCells = snappedWidth;
+  destroyRoomSprite(existing.id);
+  roomLayer.addChild(buildLobbyContainer(existing));
   return true;
 }
 
@@ -650,6 +670,7 @@ function attachInput() {
       const effectiveTool = (e.button === 2) ? 'destroy' : tool;
       const g = resolveGridPos(mx, my, effectiveTool);
       if (effectiveTool === 'destroy') deleteAt(g.col, g.floor);
+      else if (tool === 'lobby' && building.rooms.some(r => r.type === 'lobby')) tryExtendLobby(g.col);
       else placeRoom(tool, g.col, g.floor);
     }
     mouseDown = false; dragging = false;
@@ -793,6 +814,7 @@ function attachInput() {
       const mx  = t.clientX - r.left, my = t.clientY - r.top;
       const g   = resolveGridPos(mx, my, tool);
       if (tool === 'destroy') deleteAt(g.col, g.floor);
+      else if (tool === 'lobby' && building.rooms.some(r => r.type === 'lobby')) tryExtendLobby(g.col);
       else placeRoom(tool, g.col, g.floor);
     }
     if (e.touches.length === 0) {
