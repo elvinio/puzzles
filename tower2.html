@@ -86,6 +86,10 @@
     <span class="tool-icon">☕</span>
     <span class="tool-label">Cafe</span>
   </button>
+  <button class="tool-btn" data-tool="recycling">
+    <span class="tool-icon">♻️</span>
+    <span class="tool-label">Recycling</span>
+  </button>
   <button class="tool-btn" data-tool="retail">
     <span class="tool-icon">🛍</span>
     <span class="tool-label">Retail</span>
@@ -103,7 +107,9 @@
 <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.9.1/dist/pixi.min.js"></script>
 <script>
 // ─── Constants ────────────────────────────────────────────────────────────────
-const FLOOR_H        = 24;
+const FLOOR_H        = 36;   // total floor band: 12px beam + 24px room
+const BEAM_H         = 12;   // structural beam/slab at top of each floor band
+const ROOM_H         = 24;   // usable room height (FLOOR_H - BEAM_H)
 const CELL_W         = 8;
 const TOOLBAR_H      = 60;
 const GRID_COLS      = 250;
@@ -121,7 +127,8 @@ const ROOM_DEFS = {
   twin_hotel:   { widthCells:  6, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xC0503A, label: 'Twin Hotel'   },
   suite_hotel:  { widthCells: 10, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x7B3FA0, label: 'Suite Hotel'  },
   restaurant: { widthCells: 24, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xD4622A, label: 'Restaurant' },
-  cafe:       { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xA0522D, label: 'Cafe'       },
+  cafe:       { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xA0522D, label: 'Cafe'            },
+  recycling:  { widthCells: 25, heightFloors: 2, minFloor: -MAX_BASEMENT, maxFloor: -2,  color: 0x4CAF50, label: 'Recycling Centre' },
   retail: { widthCells: 12, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xC47A20, label: 'Retail' },
 };
 
@@ -135,6 +142,12 @@ const RESTAURANT_ROW_SY = [1, 33, 65, 97, 129];
 
 const CAFE_COL_SX = [0, 136, 272, 408];
 const CAFE_ROW_SY = [0, 32, 64, 96, 128];
+
+// Recycling Centre: 7 conditions split across 2 rows (4 + 3), frame 200×60, gap col=8 row=12
+// Row 0 (conditions 0-3): empty, low, low-medium, medium
+// Row 1 (conditions 4-6): medium-full, full, truck clearing
+const RECYCLING_COL_SX = [0, 208, 416, 624];
+const RECYCLING_ROW_SY = [0, 72];
 
 const RETAIL_COL_SX       = [8, 112, 216, 336, 440, 544];
 const RETAIL_ROW_SY       = [8, 40, 72, 104, 136, 168];
@@ -160,6 +173,25 @@ const SUITE_HOTEL_ROW_SY = [0, 32];
 
 // ─── Game state ───────────────────────────────────────────────────────────────
 const building = { rooms: [], nextId: 1 };
+
+const SAVE_KEY = 'tower2_state';
+
+function saveState() {
+  localStorage.setItem(SAVE_KEY, JSON.stringify({ rooms: building.rooms, nextId: building.nextId }));
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return;
+    const { rooms, nextId } = JSON.parse(raw);
+    building.rooms = rooms;
+    building.nextId = nextId;
+    for (const room of rooms) createRoomSprite(room);
+  } catch (e) {
+    console.warn('tower2: failed to load saved state', e);
+  }
+}
 let tool      = 'office';
 let gameHour  = 9;
 let prevHourInt = 9;
@@ -175,10 +207,12 @@ let lobbyResizeState = null; // { room, end, startX, origCol, origWidth }
 
 // ─── PixiJS scene objects ─────────────────────────────────────────────────────
 let app;
-let skyGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, ghostGraphics, labelContainer;
+let skyGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, beamLayer, ghostGraphics, labelContainer;
 
 const texCache    = {};           // key → PIXI.Texture
 const roomSprites = new Map();    // roomId → PIXI.Sprite
+const beamSprites = new Map();    // roomId → PIXI.TilingSprite
+let   beamTex     = null;
 const labelPool   = [];           // pooled PIXI.Text objects
 
 // ─── App size helpers ─────────────────────────────────────────────────────────
@@ -304,7 +338,11 @@ function tryExtendLobby(newCol) {
   existing.col = snappedCol;
   existing.widthCells = snappedWidth;
   destroyRoomSprite(existing.id);
-  roomLayer.addChild(buildLobbyContainer(existing));
+  const container = buildLobbyContainer(existing);
+  roomLayer.addChild(container);
+  roomSprites.set(existing.id, container);
+  createBeamSprite(existing);
+  saveState();
   return true;
 }
 
@@ -314,6 +352,7 @@ function placeRoom(type, col, floor) {
   if (type === 'lobby')  room.widthCells = 32;
   if (type === 'condo')  room.variant = Math.floor(Math.random() * 3);
   if (type === 'office') { room.colVar = Math.floor(Math.random() * 2); room.rowVar = Math.floor(Math.random() * 3); }
+  if (type === 'recycling')  { room.fillLevel = 0; }
   if (type === 'restaurant') { room.variant = Math.floor(Math.random() * 5); room.open = true; room.crowdLevel = 0; }
   if (type === 'cafe')       { room.variant = Math.floor(Math.random() * 5); room.open = true; room.crowdLevel = 0; }
   if (type === 'retail')     { room.retailType = Math.floor(Math.random() * RETAIL_TYPE_COUNT); room.rented = true; }
@@ -322,6 +361,7 @@ function placeRoom(type, col, floor) {
   if (type === 'suite_hotel')  { room.variant = Math.floor(Math.random() * 2); room.occupied = true; room.dirty = false; room.infested = false; }
   building.rooms.push(room);
   createRoomSprite(room);
+  saveState();
   return true;
 }
 
@@ -334,6 +374,7 @@ function deleteAt(col, floor) {
   if (idx !== -1) {
     destroyRoomSprite(building.rooms[idx].id);
     building.rooms.splice(idx, 1);
+    saveState();
     return true;
   }
   return false;
@@ -396,6 +437,10 @@ function buildTextureCache(bases) {
       texCache[`cafe_${cond}_${variant}`] = sliceTexture(bases.cafe, CAFE_COL_SX[cond], CAFE_ROW_SY[variant], 128, 24);
     }
   }
+
+  // Recycling: row 0 has 4 conditions, row 1 has 3 conditions
+  for (let col = 0; col < 4; col++) texCache[`recycling_${col}`]   = sliceTexture(bases.recycling, RECYCLING_COL_SX[col], RECYCLING_ROW_SY[0], 200, 60);
+  for (let col = 0; col < 3; col++) texCache[`recycling_${col+4}`] = sliceTexture(bases.recycling, RECYCLING_COL_SX[col], RECYCLING_ROW_SY[1], 200, 60);
 }
 
 function condoTimeCol() {
@@ -413,6 +458,8 @@ function getRoomTexture(room) {
     }
     case 'condo':
       return texCache[`condo_${condoTimeCol()}_${room.variant ?? 0}`];
+    case 'recycling':
+      return texCache[`recycling_${room.fillLevel ?? 0}`];
     case 'restaurant':
     case 'cafe': {
       const cond = !room.open ? 3 : room.crowdLevel ?? 0;
@@ -457,7 +504,7 @@ function buildLobbyContainer(room) {
   const container = new PIXI.Container();
   const w = room.widthCells ?? 32;
   const numSegments = w / 16;
-  const H  = FLOOR_H;
+  const H  = FLOOR_H - BEAM_H;
   const SW = 16 * CELL_W;
 
   const left = new PIXI.Sprite(texCache['lobby_left']);
@@ -475,7 +522,7 @@ function buildLobbyContainer(room) {
   container.addChild(right);
 
   container.x = room.col * CELL_W;
-  container.y = WORLD_GROUND_Y - (room.floor + 1) * FLOOR_H;
+  container.y = WORLD_GROUND_Y - (room.floor + 1) * FLOOR_H + BEAM_H;
   return container;
 }
 
@@ -485,16 +532,18 @@ function createRoomSprite(room) {
     const container = buildLobbyContainer(room);
     roomLayer.addChild(container);
     roomSprites.set(room.id, container);
+    createBeamSprite(room);
     return;
   }
   const def    = ROOM_DEFS[room.type];
   const sprite = new PIXI.Sprite(getRoomTexture(room));
   sprite.x      = room.col * CELL_W;
-  sprite.y      = WORLD_GROUND_Y - (room.floor + def.heightFloors) * FLOOR_H;
+  sprite.y      = WORLD_GROUND_Y - (room.floor + def.heightFloors) * FLOOR_H + BEAM_H;
   sprite.width  = def.widthCells  * CELL_W;
-  sprite.height = def.heightFloors * FLOOR_H;
+  sprite.height = def.heightFloors * FLOOR_H - BEAM_H;
   roomLayer.addChild(sprite);
   roomSprites.set(room.id, sprite);
+  createBeamSprite(room);
 }
 
 function destroyRoomSprite(roomId) {
@@ -504,11 +553,12 @@ function destroyRoomSprite(roomId) {
     sprite.destroy();
     roomSprites.delete(roomId);
   }
+  destroyBeamSprite(roomId);
 }
 
 function updateAllRoomTextures() {
   for (const room of building.rooms) {
-    if (!['office', 'condo', 'retail', 'restaurant', 'cafe', 'single_hotel', 'twin_hotel', 'suite_hotel'].includes(room.type)) continue;
+    if (!['office', 'condo', 'retail', 'restaurant', 'cafe', 'recycling', 'single_hotel', 'twin_hotel', 'suite_hotel'].includes(room.type)) continue;
     const sprite = roomSprites.get(room.id);
     if (sprite) sprite.texture = getRoomTexture(room);
   }
@@ -703,6 +753,7 @@ function attachInput() {
           const container = buildLobbyContainer(room);
           roomLayer.addChild(container);
           roomSprites.set(room.id, container);
+          createBeamSprite(room);
         }
       }
       return;
@@ -749,6 +800,7 @@ function attachInput() {
   canvas.addEventListener('mouseup', e => {
     if (lobbyResizeState) {
       lobbyResizeState = null;
+      saveState();
       mouseDown = false; dragging = false;
       updateGhost();
       return;
@@ -865,6 +917,7 @@ function attachInput() {
           const container = buildLobbyContainer(room);
           roomLayer.addChild(container);
           roomSprites.set(room.id, container);
+          createBeamSprite(room);
         }
       }
       lastTouchMidX = mx; lastTouchMidY = my;
@@ -893,6 +946,7 @@ function attachInput() {
     e.preventDefault();
     if (lobbyResizeState) {
       lobbyResizeState = null;
+      saveState();
       ghostGraphics.clear();
       if (e.touches.length === 0) { hoverFloor = -999; mouseInCanvas = false; }
       return;
@@ -941,7 +995,9 @@ function buildScene() {
   roomLayer      = new PIXI.Container();
   labelContainer = new PIXI.Container();  // screen-space
 
+  beamLayer = new PIXI.Container();
   worldContainer.addChild(roomLayer);
+  worldContainer.addChild(beamLayer);
   worldContainer.addChild(ghostGraphics);
 
   app.stage.addChild(skyGraphics);
@@ -949,6 +1005,23 @@ function buildScene() {
   app.stage.addChild(worldContainer);
   app.stage.addChild(gridGraphics);
   app.stage.addChild(labelContainer);
+}
+
+function createBeamSprite(room) {
+  const isLobby = room.type === 'lobby';
+  const def = isLobby ? null : ROOM_DEFS[room.type];
+  const w = (isLobby ? (room.widthCells ?? 32) : def.widthCells) * CELL_W;
+  const heightFloors = isLobby ? 1 : def.heightFloors;
+  const ts = new PIXI.TilingSprite({ texture: beamTex, width: w, height: BEAM_H });
+  ts.x = room.col * CELL_W;
+  ts.y = WORLD_GROUND_Y - (room.floor + heightFloors) * FLOOR_H;
+  beamLayer.addChild(ts);
+  beamSprites.set(room.id, ts);
+}
+
+function destroyBeamSprite(roomId) {
+  const ts = beamSprites.get(roomId);
+  if (ts) { beamLayer.removeChild(ts); ts.destroy(); beamSprites.delete(roomId); }
 }
 
 // ─── Game loop (ticker) ───────────────────────────────────────────────────────
@@ -1000,15 +1073,19 @@ function showError(msg) {
       'tower/hotel_suite.png',
       'tower/restaurant.png',
       'tower/cafe.png',
+      'tower/recycle.png',
+      'tower/beam.png',
     ];
-    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex] =
+    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded] =
       await Promise.all(assetNames.map(name =>
         PIXI.Assets.load(name).catch(e => { throw new Error(`Failed to load "${name}": ${e.message ?? e}`); })
       ));
 
-    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex });
+    beamTex = beamTexLoaded;
+    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex });
 
     buildScene();
+    loadState();
     refreshVisuals();
 
     attachInput();
