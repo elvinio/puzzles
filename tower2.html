@@ -804,43 +804,61 @@ function gameLoop(ticker) {
   }
 }
 
+// ─── Error overlay ────────────────────────────────────────────────────────────
+function showError(msg) {
+  const div = document.createElement('div');
+  div.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#111;color:#f88;font-family:monospace;font-size:13px;padding:20px;white-space:pre-wrap;z-index:999;overflow:auto;';
+  div.textContent = 'SimTower failed to load:\n\n' + msg;
+  document.body.appendChild(div);
+}
+
 // ─── Async init ───────────────────────────────────────────────────────────────
 (async () => {
-  app = new PIXI.Application();
-  await app.init({
-    width:           window.innerWidth,
-    height:          window.innerHeight - TOOLBAR_H,
-    backgroundColor: 0x020610,
-    antialias:       false,
-    resolution:      window.devicePixelRatio || 1,
-    autoDensity:     true,
-  });
+  try {
+    app = new PIXI.Application();
+    await app.init({
+      width:           window.innerWidth,
+      height:          window.innerHeight - TOOLBAR_H,
+      backgroundColor: 0x020610,
+      antialias:       false,
+      resolution:      window.devicePixelRatio || 1,
+      autoDensity:     true,
+    });
 
-  app.canvas.id = 'game';
-  document.body.insertBefore(app.canvas, document.getElementById('toolbar'));
+    app.canvas.id = 'game';
+    document.body.insertBefore(app.canvas, document.getElementById('toolbar'));
 
-  // Load all sprite sheets in parallel
-  const [lobbyGroundTex, officeTex, condoTex, hotelTex, retailTex] = await Promise.all([
-    PIXI.Assets.load('tower/ground_lobby.png'),
-    PIXI.Assets.load('tower/Office.png'),
-    PIXI.Assets.load('tower/Condos.png'),
-    PIXI.Assets.load('tower/Hotel.png'),
-    PIXI.Assets.load('tower/Retail.png'),
-  ]);
-  buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, hotel: hotelTex, retail: retailTex });
+    // Load all sprite sheets — catch individually so we can report which one failed
+    const assetNames = [
+      'tower/ground_lobby.png',
+      'tower/Office.png',
+      'tower/Condos.png',
+      'tower/Hotel.png',
+      'tower/Retail.png',
+    ];
+    const [lobbyGroundTex, officeTex, condoTex, hotelTex, retailTex] =
+      await Promise.all(assetNames.map(name =>
+        PIXI.Assets.load(name).catch(e => { throw new Error(`Failed to load "${name}": ${e.message ?? e}`); })
+      ));
 
-  buildScene();
-  refreshVisuals();
+    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, hotel: hotelTex, retail: retailTex });
 
-  attachInput();
-  attachToolbar();
-
-  app.ticker.add(gameLoop);
-
-  window.addEventListener('resize', () => {
-    app.renderer.resize(window.innerWidth, window.innerHeight - TOOLBAR_H);
+    buildScene();
     refreshVisuals();
-  });
+
+    attachInput();
+    attachToolbar();
+
+    app.ticker.add(gameLoop);
+
+    window.addEventListener('resize', () => {
+      app.renderer.resize(window.innerWidth, window.innerHeight - TOOLBAR_H);
+      refreshVisuals();
+    });
+  } catch (err) {
+    console.error('SimTower init error:', err);
+    showError(String(err?.stack ?? err));
+  }
 })();
 </script>
 </body>
