@@ -66,9 +66,17 @@
     <span class="tool-icon">🏠</span>
     <span class="tool-label">Condo</span>
   </button>
-  <button class="tool-btn" data-tool="hotel">
+  <button class="tool-btn" data-tool="single_hotel">
     <span class="tool-icon">🛏</span>
-    <span class="tool-label">Hotel</span>
+    <span class="tool-label">Single</span>
+  </button>
+  <button class="tool-btn" data-tool="twin_hotel">
+    <span class="tool-icon">🛎</span>
+    <span class="tool-label">Twin</span>
+  </button>
+  <button class="tool-btn" data-tool="suite_hotel">
+    <span class="tool-icon">🌟</span>
+    <span class="tool-label">Suite</span>
   </button>
   <button class="tool-btn" data-tool="retail">
     <span class="tool-icon">🛍</span>
@@ -101,14 +109,15 @@ const ROOM_DEFS = {
   lobby:  { widthCells: 32, heightFloors: 1, minFloor: 0,    maxFloor: 0,   color: 0x7A6040, label: 'Lobby'  },
   office: { widthCells:  9, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x3A6BC4, label: 'Office' },
   condo:  { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x2E8B57, label: 'Condo'  },
-  hotel:  { widthCells:  4, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x9B2335, label: 'Hotel'  },
+  single_hotel: { widthCells:  4, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x9B2335, label: 'Single Hotel' },
+  twin_hotel:   { widthCells:  6, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xC0503A, label: 'Twin Hotel'   },
+  suite_hotel:  { widthCells: 10, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x7B3FA0, label: 'Suite Hotel'  },
   retail: { widthCells: 12, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xC47A20, label: 'Retail' },
 };
 
 // Sprite sheet atlas coordinates
-const SPRITE_DEFS = {
-  hotel: { sx: 8, sy: 8,  sw: 32,  sh: 24 },
-};
+const SINGLE_HOTEL_COL_SX = [0, 40, 80, 120, 160, 200, 240, 280, 320];
+const SINGLE_HOTEL_ROW_SY = [0, 32];
 
 const RETAIL_COL_SX       = [8, 112, 216, 336, 440, 544];
 const RETAIL_ROW_SY       = [8, 40, 72, 104, 136, 168];
@@ -123,6 +132,14 @@ const OFFICE_ROW_SY   = [8, 40, 72];
 
 const CONDO_ROW_SY = [8, 40, 72];
 const CONDO_COL_SX = [8, 144, 280];
+
+// Twin Hotel: 9 conditions (cols) × 4 variants (rows), no padding
+// Conditions: 0=DayOcc 1=EveOcc 2=NightOcc 3=DayUnocc 4=NightUnocc 5=DayDirty 6=NightDirty 7=DayInfested 8=NightInfested
+const TWIN_HOTEL_COL_SX  = [0, 56, 112, 168, 224, 280, 336, 392, 448];
+const TWIN_HOTEL_ROW_SY  = [0, 32, 64, 96];
+
+const SUITE_HOTEL_COL_SX = [0, 88, 176, 264, 352, 440, 528, 616, 704];
+const SUITE_HOTEL_ROW_SY = [0, 32];
 
 // ─── Game state ───────────────────────────────────────────────────────────────
 const building = { rooms: [], nextId: 1 };
@@ -280,7 +297,10 @@ function placeRoom(type, col, floor) {
   if (type === 'lobby')  room.widthCells = 32;
   if (type === 'condo')  room.variant = Math.floor(Math.random() * 3);
   if (type === 'office') { room.colVar = Math.floor(Math.random() * 2); room.rowVar = Math.floor(Math.random() * 3); }
-  if (type === 'retail') { room.retailType = Math.floor(Math.random() * RETAIL_TYPE_COUNT); room.rented = true; }
+  if (type === 'retail')     { room.retailType = Math.floor(Math.random() * RETAIL_TYPE_COUNT); room.rented = true; }
+  if (type === 'single_hotel') { room.variant = Math.floor(Math.random() * 2); room.occupied = true; room.dirty = false; room.infested = false; }
+  if (type === 'twin_hotel')   { room.variant = Math.floor(Math.random() * 4); room.occupied = true; room.dirty = false; room.infested = false; }
+  if (type === 'suite_hotel')  { room.variant = Math.floor(Math.random() * 2); room.occupied = true; room.dirty = false; room.infested = false; }
   building.rooms.push(room);
   createRoomSprite(room);
   return true;
@@ -309,7 +329,11 @@ function buildTextureCache(bases) {
   texCache['lobby_left']  = sliceTexture(bases.lobbyGround, 0,  0, 128, 36);
   texCache['lobby_mid']   = sliceTexture(bases.lobbyGround, 0, 36, 128, 36);
   texCache['lobby_right'] = sliceTexture(bases.lobbyGround, 0, 72, 128, 36);
-  texCache['hotel'] = sliceTexture(bases.hotel, SPRITE_DEFS.hotel.sx, SPRITE_DEFS.hotel.sy, SPRITE_DEFS.hotel.sw, SPRITE_DEFS.hotel.sh);
+  for (let cond = 0; cond < 9; cond++) {
+    for (let variant = 0; variant < 2; variant++) {
+      texCache[`single_hotel_${cond}_${variant}`] = sliceTexture(bases.hotelSingle, SINGLE_HOTEL_COL_SX[cond], SINGLE_HOTEL_ROW_SY[variant], 32, 24);
+    }
+  }
 
   for (let col = 0; col < 2; col++) {
     for (let row = 0; row < 3; row++) {
@@ -329,6 +353,18 @@ function buildTextureCache(bases) {
       texCache[`retail_${col}_${row}`] = sliceTexture(bases.retail, RETAIL_COL_SX[col], RETAIL_ROW_SY[row], 96, 24);
     }
   }
+
+  for (let cond = 0; cond < 9; cond++) {
+    for (let variant = 0; variant < 4; variant++) {
+      texCache[`twin_hotel_${cond}_${variant}`] = sliceTexture(bases.hotelTwin, TWIN_HOTEL_COL_SX[cond], TWIN_HOTEL_ROW_SY[variant], 48, 24);
+    }
+  }
+
+  for (let cond = 0; cond < 9; cond++) {
+    for (let variant = 0; variant < 2; variant++) {
+      texCache[`suite_hotel_${cond}_${variant}`] = sliceTexture(bases.hotelSuite, SUITE_HOTEL_COL_SX[cond], SUITE_HOTEL_ROW_SY[variant], 80, 24);
+    }
+  }
 }
 
 function condoTimeCol() {
@@ -340,7 +376,6 @@ function condoTimeCol() {
 function getRoomTexture(room) {
   switch (room.type) {
     case 'lobby':  return texCache['lobby'];
-    case 'hotel':  return texCache['hotel'];
     case 'office': {
       const phase = (gameHour >= 6 && gameHour < 21) ? 'day' : 'night';
       return texCache[`office_${phase}_${room.colVar ?? 0}_${room.rowVar ?? 0}`];
@@ -358,6 +393,24 @@ function getRoomTexture(room) {
         col = gameHour < 12 ? 0 : gameHour < 18 ? 1 : 2;
       }
       return texCache[`retail_${col}_${row}`];
+    }
+    case 'single_hotel':
+    case 'twin_hotel':
+    case 'suite_hotel': {
+      const isNight   = gameHour < 6 || gameHour >= 21;
+      const isEvening = gameHour >= 17 && gameHour < 21;
+      const variant   = room.variant ?? 0;
+      let cond;
+      if (room.infested) {
+        cond = isNight ? 8 : 7;
+      } else if (room.dirty) {
+        cond = isNight ? 6 : 5;
+      } else if (!room.occupied) {
+        cond = isNight ? 4 : 3;
+      } else {
+        cond = isNight ? 2 : isEvening ? 1 : 0;
+      }
+      return texCache[`${room.type}_${cond}_${variant}`];
     }
   }
   return PIXI.Texture.EMPTY;
@@ -419,7 +472,7 @@ function destroyRoomSprite(roomId) {
 
 function updateAllRoomTextures() {
   for (const room of building.rooms) {
-    if (!['office', 'condo', 'retail'].includes(room.type)) continue;
+    if (!['office', 'condo', 'retail', 'single_hotel', 'twin_hotel', 'suite_hotel'].includes(room.type)) continue;
     const sprite = roomSprites.get(room.id);
     if (sprite) sprite.texture = getRoomTexture(room);
   }
@@ -905,15 +958,17 @@ function showError(msg) {
       'tower/ground_lobby.png',
       'tower/Office.png',
       'tower/Condos.png',
-      'tower/Hotel.png',
       'tower/Retail.png',
+      'tower/hotel_single.png',
+      'tower/hotel_twin.png',
+      'tower/hotel_suite.png',
     ];
-    const [lobbyGroundTex, officeTex, condoTex, hotelTex, retailTex] =
+    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex] =
       await Promise.all(assetNames.map(name =>
         PIXI.Assets.load(name).catch(e => { throw new Error(`Failed to load "${name}": ${e.message ?? e}`); })
       ));
 
-    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, hotel: hotelTex, retail: retailTex });
+    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex });
 
     buildScene();
     refreshVisuals();
