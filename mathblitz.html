@@ -383,6 +383,8 @@
         <button class="seg-btn active" data-op="multiply">× Times</button>
         <button class="seg-btn" data-op="add">+ Add</button>
         <button class="seg-btn" data-op="subtract">− Sub</button>
+        <button class="seg-btn" data-op="divide">÷ Divide</button>
+        <button class="seg-btn" data-op="money">$ Money</button>
         <button class="seg-btn" data-op="random">⚡ Mix</button>
       </div>
       <button class="primary-btn" id="start-btn">Start Game</button>
@@ -425,6 +427,8 @@
         <button class="seg-btn active" data-op="multiply">× Times</button>
         <button class="seg-btn" data-op="add">+ Add</button>
         <button class="seg-btn" data-op="subtract">− Sub</button>
+        <button class="seg-btn" data-op="divide">÷ Divide</button>
+        <button class="seg-btn" data-op="money">$ Money</button>
         <button class="seg-btn" data-op="random">⚡ Mix</button>
       </div>
       <button class="primary-btn" id="play-again-btn">Play Again</button>
@@ -518,6 +522,8 @@
       multiply: 'multiplication',
       add:      'addition',
       subtract: 'subtraction',
+      divide:   'division',
+      money:    'money',
     };
 
     // ── State ──────────────────────────────────────────────────────────────────
@@ -545,7 +551,7 @@
     // ── Question generation ────────────────────────────────────────────────────
     function generateQuestion() {
       const cfg = DIFF_CONFIG[difficulty];
-      let op = opMode === 'random' ? randFrom(['multiply','add','subtract']) : opMode;
+      let op = opMode === 'random' ? randFrom(['multiply','add','subtract','divide']) : opMode;
 
       let a, b, text, answer;
 
@@ -566,7 +572,7 @@
         }
         text   = `${a} + ${b} = ?`;
         answer = a + b;
-      } else { // subtract
+      } else if (op === 'subtract') {
         if (difficulty === 'ultra') {
           const useLarge = Math.random() < 0.5;
           a = useLarge ? rand(100, 200) : rand(10, 50);
@@ -579,6 +585,25 @@
         if (b > a) { [a, b] = [b, a]; }
         text   = `${a} − ${b} = ?`;
         answer = a - b;
+      } else if (op === 'divide') {
+        const ans = rand(cfg.mulB[0], cfg.mulB[1]); // quotient
+        b = rand(cfg.mulA[0], cfg.mulA[1]);          // divisor
+        a = ans * b;                                  // dividend
+        text   = `${a} ÷ ${b} = ?`;
+        answer = ans;
+      } else { // money — work in dimes (1–100) to avoid float issues
+        const toDollars = n => '$' + (n / 10).toFixed(2);
+        a = rand(1, 100);
+        b = rand(1, 100);
+        const addOrSub = Math.random() < 0.5 ? 'add' : 'subtract';
+        if (addOrSub === 'add') {
+          text   = `${toDollars(a)} + ${toDollars(b)} = ?`;
+          answer = a + b;
+        } else {
+          const [big, small] = a >= b ? [a, b] : [b, a];
+          text   = `${toDollars(big)} − ${toDollars(small)} = ?`;
+          answer = big - small;
+        }
       }
 
       return { text, answer, op };
@@ -697,8 +722,10 @@
       setOpLabel(currentQ.op);
 
       const choices = buildChoices(currentAns);
+      const isMoney = currentQ.op === 'money';
       answerBtns.forEach((btn, i) => {
-        btn.textContent = choices[i];
+        btn.dataset.val = choices[i];
+        btn.textContent = isMoney ? '$' + (choices[i] / 10).toFixed(2) : String(choices[i]);
         btn.className = 'answer-btn';
         btn.disabled = false;
       });
@@ -852,7 +879,7 @@
 
     // ── Answer button events ───────────────────────────────────────────────────
     answerBtns.forEach(btn => {
-      btn.addEventListener('click', () => handleAnswer(btn, parseInt(btn.textContent, 10)));
+      btn.addEventListener('click', () => handleAnswer(btn, parseInt(btn.dataset.val, 10)));
     });
 
     $('start-btn').addEventListener('click', startGame);
