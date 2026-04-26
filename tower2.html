@@ -92,21 +92,21 @@ const CELL_W         = 8;
 const TOOLBAR_H      = 60;
 const GRID_COLS      = 250;
 const MAX_FLOORS     = 100;
+const MAX_BASEMENT   = 30;
 const GROUND_MARGIN  = 80;
 // World-space Y coordinate of the ground line (rooms use Y increasing downward)
 const WORLD_GROUND_Y = MAX_FLOORS * FLOOR_H + 500; // 2900
 
 const ROOM_DEFS = {
-  lobby:  { widthCells: 16, heightFloors: 4, minFloor: 0,    maxFloor: 0,   color: 0x7A6040, label: 'Lobby'  },
-  office: { widthCells:  9, heightFloors: 1, minFloor: -100, maxFloor: 999, color: 0x3A6BC4, label: 'Office' },
-  condo:  { widthCells: 16, heightFloors: 1, minFloor: -100, maxFloor: 999, color: 0x2E8B57, label: 'Condo'  },
-  hotel:  { widthCells:  4, heightFloors: 1, minFloor: -100, maxFloor: 999, color: 0x9B2335, label: 'Hotel'  },
-  retail: { widthCells: 12, heightFloors: 1, minFloor: -100, maxFloor: 999, color: 0xC47A20, label: 'Retail' },
+  lobby:  { widthCells: 32, heightFloors: 1, minFloor: 0,    maxFloor: 0,   color: 0x7A6040, label: 'Lobby'  },
+  office: { widthCells:  9, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x3A6BC4, label: 'Office' },
+  condo:  { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x2E8B57, label: 'Condo'  },
+  hotel:  { widthCells:  4, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x9B2335, label: 'Hotel'  },
+  retail: { widthCells: 12, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xC47A20, label: 'Retail' },
 };
 
 // Sprite sheet atlas coordinates
 const SPRITE_DEFS = {
-  lobby: { sx: 8, sy: 9,  sw: 128, sh: 96 },
   hotel: { sx: 8, sy: 8,  sw: 32,  sh: 24 },
 };
 
@@ -137,6 +137,7 @@ let hoverCol = -1, hoverFloor = -999, mouseInCanvas = false;
 let mouseDown = false, dragging = false;
 let dragStartX = 0, dragStartY = 0, dragViewX = 0, dragViewY = 0;
 let lastTouchMidX = 0, lastTouchMidY = 0, touchMoved = false, wasPanning = false;
+let lobbyResizeState = null; // { room, end, startX, origCol, origWidth }
 
 // ─── PixiJS scene objects ─────────────────────────────────────────────────────
 let app;
@@ -161,13 +162,44 @@ function screenToGrid(sx, sy) {
   };
 }
 
+function screenToGridRaw(sx, sy) {
+  const gY = screenGroundY();
+  return {
+    col:   (sx + viewX) / CELL_W,
+    floor: (gY - sy) / FLOOR_H,
+  };
+}
+
+function applySnap(rawCol, rawFloor, type) {
+  const def = ROOM_DEFS[type];
+  if (!def) return { col: Math.floor(rawCol), floor: Math.floor(rawFloor) };
+
+  const SNAP_H = 6 / CELL_W;   // 0.75 cells
+  const SNAP_V = 6 / FLOOR_H;  // 0.25 floors
+
+  let snapCol = rawCol, snapFloor = rawFloor;
+
+  for (const room of building.rooms) {
+    const rDef = ROOM_DEFS[room.type];
+    const rW = room.widthCells ?? rDef.widthCells;
+    const rH = rDef.heightFloors;
+
+    if (Math.abs(rawCol - (room.col + rW)) < SNAP_H)               snapCol   = room.col + rW;
+    if (Math.abs((rawCol + def.widthCells) - room.col) < SNAP_H)   snapCol   = room.col - def.widthCells;
+    if (Math.abs(rawFloor - (room.floor + rH)) < SNAP_V)           snapFloor = room.floor + rH;
+    if (Math.abs((rawFloor + def.heightFloors) - room.floor) < SNAP_V) snapFloor = room.floor - def.heightFloors;
+  }
+
+  return { col: Math.floor(snapCol), floor: Math.floor(snapFloor) };
+}
+
 function clampViewX(x) {
   const maxX = GRID_COLS * CELL_W - getAppW();
   return Math.max(0, Math.min(Math.max(0, maxX), x));
 }
 
 function clampViewY(y) {
-  const minY = -100 * FLOOR_H;
+  const minY = -MAX_BASEMENT * FLOOR_H;
   const maxY = MAX_FLOORS * FLOOR_H - (getAppH() - GROUND_MARGIN) + FLOOR_H * 4;
   return Math.max(minY, Math.min(Math.max(minY, maxY), y));
 }
@@ -181,8 +213,9 @@ function applyView() {
 // ─── Room logic ───────────────────────────────────────────────────────────────
 function roomCells(room) {
   const def = ROOM_DEFS[room.type];
+  const w = room.widthCells ?? def.widthCells;
   const cells = new Set();
-  for (let c = room.col; c < room.col + def.widthCells; c++)
+  for (let c = room.col; c < room.col + w; c++)
     for (let f = room.floor; f < room.floor + def.heightFloors; f++)
       cells.add(`${c},${f}`);
   return cells;
@@ -197,13 +230,14 @@ function occupancySet(excludeId = -1) {
   return occ;
 }
 
-function canPlace(type, col, floor) {
+function canPlace(type, col, floor, widthOverride) {
   const def = ROOM_DEFS[type];
   if (!def) return false;
   if (floor < def.minFloor || floor > def.maxFloor) return false;
-  if (col < 0 || col + def.widthCells > GRID_COLS) return false;
+  const w = widthOverride ?? def.widthCells;
+  if (col < 0 || col + w > GRID_COLS) return false;
   const occ = occupancySet();
-  for (let c = col; c < col + def.widthCells; c++)
+  for (let c = col; c < col + w; c++)
     for (let f = floor; f < floor + def.heightFloors; f++)
       if (occ.has(`${c},${f}`)) return false;
   return true;
@@ -212,6 +246,7 @@ function canPlace(type, col, floor) {
 function placeRoom(type, col, floor) {
   if (!canPlace(type, col, floor)) return false;
   const room = { id: building.nextId++, type, col, floor };
+  if (type === 'lobby')  room.widthCells = 32;
   if (type === 'condo')  room.variant = Math.floor(Math.random() * 3);
   if (type === 'office') { room.colVar = Math.floor(Math.random() * 2); room.rowVar = Math.floor(Math.random() * 3); }
   if (type === 'retail') { room.retailType = Math.floor(Math.random() * RETAIL_TYPE_COUNT); room.rented = true; }
@@ -240,7 +275,9 @@ function sliceTexture(base, sx, sy, sw, sh) {
 }
 
 function buildTextureCache(bases) {
-  texCache['lobby'] = sliceTexture(bases.lobby, SPRITE_DEFS.lobby.sx, SPRITE_DEFS.lobby.sy, SPRITE_DEFS.lobby.sw, SPRITE_DEFS.lobby.sh);
+  texCache['lobby_left']  = sliceTexture(bases.lobbyGround, 0,  0, 128, 36);
+  texCache['lobby_mid']   = sliceTexture(bases.lobbyGround, 0, 36, 128, 36);
+  texCache['lobby_right'] = sliceTexture(bases.lobbyGround, 0, 72, 128, 36);
   texCache['hotel'] = sliceTexture(bases.hotel, SPRITE_DEFS.hotel.sx, SPRITE_DEFS.hotel.sy, SPRITE_DEFS.hotel.sw, SPRITE_DEFS.hotel.sh);
 
   for (let col = 0; col < 2; col++) {
@@ -295,8 +332,41 @@ function getRoomTexture(room) {
   return PIXI.Texture.EMPTY;
 }
 
+// ─── Lobby container assembly ─────────────────────────────────────────────────
+function buildLobbyContainer(room) {
+  const container = new PIXI.Container();
+  const w = room.widthCells ?? 32;
+  const numSegments = w / 16;
+  const H  = FLOOR_H;
+  const SW = 16 * CELL_W;
+
+  const left = new PIXI.Sprite(texCache['lobby_left']);
+  left.width = SW; left.height = H; left.x = 0;
+  container.addChild(left);
+
+  for (let i = 1; i < numSegments - 1; i++) {
+    const mid = new PIXI.Sprite(texCache['lobby_mid']);
+    mid.width = SW; mid.height = H; mid.x = i * SW;
+    container.addChild(mid);
+  }
+
+  const right = new PIXI.Sprite(texCache['lobby_right']);
+  right.width = SW; right.height = H; right.x = (numSegments - 1) * SW;
+  container.addChild(right);
+
+  container.x = room.col * CELL_W;
+  container.y = WORLD_GROUND_Y - (room.floor + 1) * FLOOR_H;
+  return container;
+}
+
 // ─── Room sprite management ───────────────────────────────────────────────────
 function createRoomSprite(room) {
+  if (room.type === 'lobby') {
+    const container = buildLobbyContainer(room);
+    roomLayer.addChild(container);
+    roomSprites.set(room.id, container);
+    return;
+  }
   const def    = ROOM_DEFS[room.type];
   const sprite = new PIXI.Sprite(getRoomTexture(room));
   sprite.x      = room.col * CELL_W;
@@ -369,7 +439,7 @@ function drawGrid() {
   gridGraphics.clear();
 
   // Batch all floor lines under one stroke call
-  for (let f = -100; f <= MAX_FLOORS; f++) {
+  for (let f = -MAX_BASEMENT; f <= MAX_FLOORS; f++) {
     const y = gY - f * FLOOR_H;
     if (y < -FLOOR_H || y > H) continue;
     gridGraphics.moveTo(0, y).lineTo(W, y);
@@ -385,7 +455,7 @@ function updateFloorLabels() {
   for (const lbl of labelPool) lbl.visible = false;
   let poolIdx = 0;
 
-  for (let f = -100; f <= MAX_FLOORS; f++) {
+  for (let f = -MAX_BASEMENT; f <= MAX_FLOORS; f++) {
     const y = gY - f * FLOOR_H;
     if (y < -FLOOR_H || y > H + FLOOR_H) continue;
 
@@ -413,7 +483,7 @@ function updateFloorLabels() {
 // ─── Ghost preview (world-space graphics inside worldContainer) ───────────────
 function updateGhost() {
   ghostGraphics.clear();
-  if (tool === 'destroy' || !mouseInCanvas || hoverFloor < -100 || dragging) return;
+  if (tool === 'destroy' || !mouseInCanvas || hoverFloor < -MAX_BASEMENT || dragging) return;
   const def = ROOM_DEFS[tool];
   if (!def) return;
   const valid = canPlace(tool, hoverCol, hoverFloor);
@@ -458,6 +528,23 @@ function toggleDayNight() {
   drawGround();
 }
 
+// ─── Lobby resize helpers ─────────────────────────────────────────────────────
+function findLobbyResizeHandle(mx, my) {
+  for (const room of building.rooms) {
+    if (room.type !== 'lobby') continue;
+    const w       = room.widthCells ?? 32;
+    const gY      = screenGroundY();
+    const topY    = gY - (room.floor + 1) * FLOOR_H;
+    const bottomY = gY - room.floor * FLOOR_H;
+    const leftX   = room.col * CELL_W - viewX;
+    const rightX  = (room.col + w) * CELL_W - viewX;
+    if (my < topY - 4 || my > bottomY + 4) continue;
+    if (Math.abs(mx - leftX)  <= 8) return { room, end: 'left' };
+    if (Math.abs(mx - rightX) <= 8) return { room, end: 'right' };
+  }
+  return null;
+}
+
 // ─── Input ────────────────────────────────────────────────────────────────────
 function attachInput() {
   const canvas = app.canvas;
@@ -468,6 +555,38 @@ function attachInput() {
     const r  = canvas.getBoundingClientRect();
     const mx = e.clientX - r.left, my = e.clientY - r.top;
     mouseInCanvas = true;
+
+    // Lobby resize drag
+    if (lobbyResizeState) {
+      const { room, end, startX, origCol, origWidth } = lobbyResizeState;
+      const dx = mx - startX;
+      const deltaCells = Math.round(dx / CELL_W);
+      let newCol = origCol, newWidth = origWidth;
+      if (end === 'right') {
+        newWidth = Math.max(32, Math.round((origWidth + deltaCells) / 16) * 16);
+      } else {
+        const colDelta = Math.round(deltaCells / 16) * 16;
+        newCol   = Math.max(0, origCol + colDelta);
+        newWidth = Math.max(32, Math.round((origWidth - (newCol - origCol)) / 16) * 16);
+        if (newCol + newWidth !== origCol + origWidth) newCol = origCol + origWidth - newWidth;
+        newCol = Math.max(0, newCol);
+      }
+      if (newCol >= 0 && newCol + newWidth <= GRID_COLS) {
+        const occ = occupancySet(room.id);
+        let valid = true;
+        for (let c = newCol; c < newCol + newWidth; c++)
+          if (occ.has(`${c},${room.floor}`)) { valid = false; break; }
+        if (valid) {
+          room.col = newCol;
+          room.widthCells = newWidth;
+          destroyRoomSprite(room.id);
+          const container = buildLobbyContainer(room);
+          roomLayer.addChild(container);
+          roomSprites.set(room.id, container);
+        }
+      }
+      return;
+    }
 
     if (mouseDown) {
       const dx = mx - dragStartX, dy = my - dragStartY;
@@ -480,7 +599,16 @@ function attachInput() {
       }
     }
 
-    const g = screenToGrid(mx, my);
+    // Update cursor for lobby resize handles
+    if (!mouseDown) {
+      const handle = findLobbyResizeHandle(mx, my);
+      canvas.style.cursor = handle ? 'ew-resize' : '';
+    }
+
+    const gRaw = screenToGridRaw(mx, my);
+    const g    = (tool === 'destroy')
+      ? { col: Math.floor(gRaw.col), floor: Math.floor(gRaw.floor) }
+      : applySnap(gRaw.col, gRaw.floor, tool);
     hoverCol = g.col; hoverFloor = g.floor;
     updateGhost();
   });
@@ -490,15 +618,33 @@ function attachInput() {
     dragStartX = e.clientX - r.left; dragStartY = e.clientY - r.top;
     dragViewX = viewX; dragViewY = viewY;
     mouseDown = true; dragging = false;
+    const handle = findLobbyResizeHandle(dragStartX, dragStartY);
+    if (handle) {
+      lobbyResizeState = {
+        room: handle.room, end: handle.end,
+        startX: dragStartX,
+        origCol: handle.room.col,
+        origWidth: handle.room.widthCells ?? 32,
+      };
+    }
   });
 
   canvas.addEventListener('mouseup', e => {
+    if (lobbyResizeState) {
+      lobbyResizeState = null;
+      mouseDown = false; dragging = false;
+      updateGhost();
+      return;
+    }
     if (!dragging) {
-      const r  = canvas.getBoundingClientRect();
-      const mx = e.clientX - r.left, my = e.clientY - r.top;
-      const { col, floor } = screenToGrid(mx, my);
-      if (e.button === 2 || tool === 'destroy') deleteAt(col, floor);
-      else placeRoom(tool, col, floor);
+      const r   = canvas.getBoundingClientRect();
+      const mx  = e.clientX - r.left, my = e.clientY - r.top;
+      const gRaw = screenToGridRaw(mx, my);
+      const g    = (e.button === 2 || tool === 'destroy')
+        ? { col: Math.floor(gRaw.col), floor: Math.floor(gRaw.floor) }
+        : applySnap(gRaw.col, gRaw.floor, tool);
+      if (e.button === 2 || tool === 'destroy') deleteAt(g.col, g.floor);
+      else placeRoom(tool, g.col, g.floor);
     }
     mouseDown = false; dragging = false;
     updateGhost();
@@ -515,6 +661,8 @@ function attachInput() {
   canvas.addEventListener('mouseenter', () => { mouseInCanvas = true; });
   canvas.addEventListener('mouseleave', () => {
     mouseInCanvas = false; mouseDown = false; dragging = false;
+    lobbyResizeState = null;
+    canvas.style.cursor = '';
     ghostGraphics.clear();
   });
 
@@ -542,9 +690,12 @@ function attachInput() {
       ghostGraphics.clear();
     } else {
       wasPanning = false;
-      const t  = e.touches[0];
-      const mx = t.clientX - r.left, my = t.clientY - r.top;
-      const g  = screenToGrid(mx, my);
+      const t    = e.touches[0];
+      const tmx  = t.clientX - r.left, tmy = t.clientY - r.top;
+      const gRaw = screenToGridRaw(tmx, tmy);
+      const g    = (tool === 'destroy')
+        ? { col: Math.floor(gRaw.col), floor: Math.floor(gRaw.floor) }
+        : applySnap(gRaw.col, gRaw.floor, tool);
       hoverCol = g.col; hoverFloor = g.floor;
       mouseInCanvas = true;
       updateGhost();
@@ -568,9 +719,12 @@ function attachInput() {
       refreshVisuals();
       ghostGraphics.clear();
     } else if (e.touches.length === 1) {
-      const t   = e.touches[0];
-      const tmx = t.clientX - r.left, tmy = t.clientY - r.top;
-      const g   = screenToGrid(tmx, tmy);
+      const t    = e.touches[0];
+      const tmx  = t.clientX - r.left, tmy = t.clientY - r.top;
+      const gRaw = screenToGridRaw(tmx, tmy);
+      const g    = (tool === 'destroy')
+        ? { col: Math.floor(gRaw.col), floor: Math.floor(gRaw.floor) }
+        : applySnap(gRaw.col, gRaw.floor, tool);
       hoverCol = g.col; hoverFloor = g.floor;
       mouseInCanvas = true;
       lastTouchMidX = mx; lastTouchMidY = my;
@@ -581,12 +735,15 @@ function attachInput() {
   canvas.addEventListener('touchend', e => {
     e.preventDefault();
     if (!wasPanning && e.changedTouches.length === 1 && e.touches.length === 0) {
-      const r  = canvas.getBoundingClientRect();
-      const t  = e.changedTouches[0];
-      const mx = t.clientX - r.left, my = t.clientY - r.top;
-      const { col, floor } = screenToGrid(mx, my);
-      if (tool === 'destroy') deleteAt(col, floor);
-      else placeRoom(tool, col, floor);
+      const r    = canvas.getBoundingClientRect();
+      const t    = e.changedTouches[0];
+      const mx   = t.clientX - r.left, my = t.clientY - r.top;
+      const gRaw = screenToGridRaw(mx, my);
+      const g    = (tool === 'destroy')
+        ? { col: Math.floor(gRaw.col), floor: Math.floor(gRaw.floor) }
+        : applySnap(gRaw.col, gRaw.floor, tool);
+      if (tool === 'destroy') deleteAt(g.col, g.floor);
+      else placeRoom(tool, g.col, g.floor);
     }
     if (e.touches.length === 0) {
       hoverFloor = -999;
@@ -663,14 +820,14 @@ function gameLoop(ticker) {
   document.body.insertBefore(app.canvas, document.getElementById('toolbar'));
 
   // Load all sprite sheets in parallel
-  const [lobbyTex, officeTex, condoTex, hotelTex, retailTex] = await Promise.all([
-    PIXI.Assets.load('tower/Lobby Tiles.png'),
+  const [lobbyGroundTex, officeTex, condoTex, hotelTex, retailTex] = await Promise.all([
+    PIXI.Assets.load('tower/ground_lobby.png'),
     PIXI.Assets.load('tower/Office.png'),
     PIXI.Assets.load('tower/Condos.png'),
     PIXI.Assets.load('tower/Hotel.png'),
     PIXI.Assets.load('tower/Retail.png'),
   ]);
-  buildTextureCache({ lobby: lobbyTex, office: officeTex, condo: condoTex, hotel: hotelTex, retail: retailTex });
+  buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, hotel: hotelTex, retail: retailTex });
 
   buildScene();
   refreshVisuals();
