@@ -527,19 +527,21 @@
     };
 
     // ── State ──────────────────────────────────────────────────────────────────
-    let gameState    = 'idle';
-    let score        = 0;
-    let streak       = 0;
-    let bestStreak   = 0;
-    let answered     = 0;
-    let correct      = 0;
-    let timeLeft     = 60;
-    let qStartTime   = 0;
-    let currentAns   = 0;
-    let timer        = null;
-    let difficulty   = 'easy';
-    let opMode       = 'multiply';
-    let answerLocked = false;
+    let gameState       = 'idle';
+    let score           = 0;
+    let streak          = 0;
+    let bestStreak      = 0;
+    let answered        = 0;
+    let correct         = 0;
+    let timeLeft        = 60;
+    let qStartTime      = 0;
+    let currentAns      = 0;
+    let timer           = null;
+    let difficulty      = 'easy';
+    let opMode          = 'multiply';
+    let answerLocked    = false;
+    let lastQuestionKey = null;
+    let timeUp          = false;
 
     // ── Helpers ────────────────────────────────────────────────────────────────
     function rand(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
@@ -595,7 +597,7 @@
         const toDollars = n => '$' + (n / 10).toFixed(2);
         a = rand(1, 100);
         b = rand(1, 100);
-        const addOrSub = Math.random() < 0.5 ? 'add' : 'subtract';
+        const addOrSub = difficulty === 'easy' ? 'add' : (Math.random() < 0.5 ? 'add' : 'subtract');
         if (addOrSub === 'add') {
           text   = `${toDollars(a)} + ${toDollars(b)} = ?`;
           answer = a + b;
@@ -606,7 +608,7 @@
         }
       }
 
-      return { text, answer, op };
+      return { text, answer, op, key: text };
     }
 
     // ── Answer choices ─────────────────────────────────────────────────────────
@@ -710,6 +712,10 @@
     function showQuestion() {
       answerLocked = false;
       currentQ = generateQuestion();
+      for (let i = 0; i < 5 && currentQ.key === lastQuestionKey; i++) {
+        currentQ = generateQuestion();
+      }
+      lastQuestionKey = currentQ.key;
       currentAns = currentQ.answer;
       qStartTime = performance.now();
 
@@ -772,7 +778,7 @@
         }
         showScoreFloat(pts);
         updateHUD();
-        setTimeout(showQuestion, 320);
+        setTimeout(() => { timeUp ? endGame() : showQuestion(); }, 320);
       } else {
         btn.classList.add('wrong');
         // reveal correct
@@ -789,7 +795,7 @@
         const card = $('question-card');
         card.classList.add('shake');
         card.addEventListener('animationend', () => card.classList.remove('shake'), { once: true });
-        setTimeout(showQuestion, 700);
+        setTimeout(() => { timeUp ? endGame() : showQuestion(); }, 700);
       }
     }
 
@@ -801,20 +807,22 @@
         if (timeLeft <= 0) {
           clearInterval(timer);
           timer = null;
-          endGame();
+          timeUp = true;
         }
       }, 1000);
     }
 
     // ── Game lifecycle ─────────────────────────────────────────────────────────
     function startGame() {
-      score      = 0;
-      streak     = 0;
-      bestStreak = 0;
-      answered   = 0;
-      correct    = 0;
-      timeLeft   = 60;
-      gameState  = 'playing';
+      score           = 0;
+      streak          = 0;
+      bestStreak      = 0;
+      answered        = 0;
+      correct         = 0;
+      timeLeft        = 60;
+      gameState       = 'playing';
+      lastQuestionKey = null;
+      timeUp          = false;
 
       $('start-overlay').classList.add('hidden');
       $('end-overlay').classList.add('hidden');
