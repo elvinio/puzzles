@@ -802,15 +802,23 @@
     function geoRightTriangle() {
       const known = snap5(rand(25, 65));
       const answer = 90 - known;
-      // vertices: right angle at A(50,145), base to B(210,145), apex at C(50,45)
-      const ax = 50, ay = 145, bx = 210, by = 145, cx2 = 50, cy2 = 45;
-      const sq = 12; // right-angle square size
+      let baseAB = 120;
+      let heightAC = baseAB * Math.tan(answer * Math.PI / 180);
+      if (heightAC > 100) {
+        let scale = 100 / heightAC;
+        heightAC *= scale;
+        baseAB *= scale;
+      }
+      const cx = 130, cy = 100;
+      const ax = cx - baseAB/2, ay = cy + heightAC/2;
+      const bx = cx + baseAB/2, by = cy + heightAC/2;
+      const cx2 = ax, cy2 = cy - heightAC/2;
+      const sq = 12;
       const svg = `
-        <polygon points="${ax},${ay} ${bx},${by} ${cx2},${cy2}" class="geo-shape"/>
-        <polyline points="${ax},${ay - sq} ${ax + sq},${ay - sq} ${ax + sq},${ay}" class="geo-right"/>
-        ${geoText('48', '32', `${known}°`)}
-        ${geoText('148', '158', '?°', true)}
-        ${geoText('30', '100', '90°')}
+        <polygon points="${ax.toFixed(1)},${ay.toFixed(1)} ${bx.toFixed(1)},${by.toFixed(1)} ${cx2.toFixed(1)},${cy2.toFixed(1)}" class="geo-shape"/>
+        <polyline points="${ax.toFixed(1)},${(ay - sq).toFixed(1)} ${(ax + sq).toFixed(1)},${(ay - sq).toFixed(1)} ${(ax + sq).toFixed(1)},${ay.toFixed(1)}" class="geo-right"/>
+        ${geoText((cx2 + 15).toFixed(1), (cy2 + 20).toFixed(1), `${known}°`)}
+        ${geoText((bx - 15).toFixed(1), (by - 8).toFixed(1), '?°', true)}
       `;
       return { text: '', answer, op: 'geometry', key: `geo-rt-${known}`, svg };
     }
@@ -833,21 +841,29 @@
         tries++;
       } while ((answer < 5 || answer > 170 || answer % 5 !== 0) && tries < 30);
 
-      // apex at top-center, symmetric base
-      const apxX = 130, apxY = 25, baseHalf = 90, baseY = 155;
-      const lx = apxX - baseHalf, rx = apxX + baseHalf;
-      // tick marks on equal sides (midpoint ± small perp)
+      let w = 140;
+      let h = (w / 2) * Math.tan(base * Math.PI / 180);
+      if (h > 120) {
+        let scale = 120 / h;
+        h *= scale;
+        w *= scale;
+      }
+      const cx = 130, cy = 100;
+      const apxX = cx, apxY = cy - h/2;
+      const lx = cx - w/2, rx = cx + w/2;
+      const baseY = cy + h/2;
+
       const mLx = (apxX + lx) / 2, mLy = (apxY + baseY) / 2;
       const mRx = (apxX + rx) / 2, mRy = (apxY + baseY) / 2;
       const dxL = lx - apxX, dyL = baseY - apxY, lenL = Math.hypot(dxL, dyL);
       const tnx = -dyL / lenL * 6, tny = dxL / lenL * 6;
       const svg = `
-        <polygon points="${apxX},${apxY} ${lx},${baseY} ${rx},${baseY}" class="geo-shape"/>
+        <polygon points="${apxX.toFixed(1)},${apxY.toFixed(1)} ${lx.toFixed(1)},${baseY.toFixed(1)} ${rx.toFixed(1)},${baseY.toFixed(1)}" class="geo-shape"/>
         <line x1="${(mLx + tnx).toFixed(1)}" y1="${(mLy + tny).toFixed(1)}" x2="${(mLx - tnx).toFixed(1)}" y2="${(mLy - tny).toFixed(1)}" class="geo-tick"/>
         <line x1="${(mRx - tnx).toFixed(1)}" y1="${(mRy + tny).toFixed(1)}" x2="${(mRx + tnx).toFixed(1)}" y2="${(mRy - tny).toFixed(1)}" class="geo-tick"/>
-        ${geoText('130', '18', variant === 'base' ? `${apex}°` : '?°', variant !== 'base')}
-        ${geoText('22', '168', variant === 'base' ? '?°' : `${base}°`, variant === 'base')}
-        ${geoText('238', '168', variant === 'base' ? '?°' : `${base}°`, variant === 'base')}
+        ${geoText((apxX).toFixed(1), (apxY + 20).toFixed(1), variant === 'base' ? `${apex}°` : '?°', variant !== 'base')}
+        ${geoText((lx + 20).toFixed(1), (baseY - 5).toFixed(1), variant === 'base' ? '?°' : `${base}°`, variant === 'base')}
+        ${geoText((rx - 20).toFixed(1), (baseY - 5).toFixed(1), variant === 'base' ? '?°' : `${base}°`, variant === 'base')}
       `;
       return { text: '', answer, op: 'geometry', key: `geo-isos-${apex}-${variant}`, svg };
     }
@@ -862,19 +878,27 @@
       } while ((c < 20 || c % 5 !== 0) && tries < 50);
       if (c < 20 || c % 5 !== 0) { a = 60; b = 70; c = 50; }
       const answer = c;
-      // base from L(40,150) to R(220,150), apex computed from angle a at L
-      const lx = 40, ly = 150, rx = 220, ry = 150;
-      const base = rx - lx;
-      const aRad = a * Math.PI / 180, bRad = b * Math.PI / 180;
-      const cRad = c * Math.PI / 180;
-      // by law of sines: apex x,y relative to L
-      const apexX = lx + base * Math.sin(bRad) / Math.sin(cRad) * Math.cos(aRad);
-      const apexY = ly - base * Math.sin(bRad) / Math.sin(cRad) * Math.sin(aRad);
+      const aRad = a * Math.PI / 180, bRad = b * Math.PI / 180, cRad = c * Math.PI / 180;
+      let sideC = 140;
+      let sideB = sideC * Math.sin(bRad) / Math.sin(cRad);
+      let h = sideB * Math.sin(aRad);
+      if (h > 110) {
+        let scale = 110 / h;
+        h *= scale;
+        sideC *= scale;
+        sideB *= scale;
+      }
+      const cx = 130, cy = 100;
+      const lx = cx - sideC/2, ly = cy + h/2;
+      const rx = cx + sideC/2, ry = cy + h/2;
+      const apexX = lx + sideB * Math.cos(aRad);
+      const apexY = ly - sideB * Math.sin(aRad);
+      
       const svg = `
-        <polygon points="${lx},${ly} ${rx},${ry} ${apexX.toFixed(1)},${apexY.toFixed(1)}" class="geo-shape"/>
-        ${geoText((lx - 8).toString(), (ly + 14).toString(), `${a}°`)}
-        ${geoText((rx + 8).toString(), (ry + 14).toString(), `${b}°`)}
-        ${geoText(apexX.toFixed(1), (apexY - 10).toString(), '?°', true)}
+        <polygon points="${lx.toFixed(1)},${ly.toFixed(1)} ${rx.toFixed(1)},${ry.toFixed(1)} ${apexX.toFixed(1)},${apexY.toFixed(1)}" class="geo-shape"/>
+        ${geoText((lx + 20).toFixed(1), (ly - 5).toFixed(1), `${a}°`)}
+        ${geoText((rx - 20).toFixed(1), (ry - 5).toFixed(1), `${b}°`)}
+        ${geoText(apexX.toFixed(1), (apexY + 20).toFixed(1), '?°', true)}
       `;
       return { text: '', answer, op: 'geometry', key: `geo-sca-${a}-${b}`, svg };
     }
@@ -884,15 +908,28 @@
       const angleB = 180 - angleA;
       const variant = Math.random() < 0.5 ? 'adjacent' : 'opposite';
       const answer = variant === 'adjacent' ? angleB : angleA;
-      // vertices: A(40,140) B(170,140) C(210,48) D(80,48)
-      const pts = '40,140 170,140 210,48 80,48';
-      // label positions near corners
+      
+      const aRad = angleA * Math.PI / 180;
+      let base = 120, side = 80;
+      let h = side * Math.sin(aRad);
+      let dx = side * Math.cos(aRad);
+      
+      const cx = 130, cy = 90;
+      const lx = cx - (base + dx)/2;
+      const ly = cy + h/2;
+      
+      const px1 = lx, py1 = ly;
+      const px2 = lx + base, py2 = ly;
+      const px3 = lx + base + dx, py3 = ly - h;
+      const px4 = lx + dx, py4 = ly - h;
+
+      const pts = `${px1.toFixed(1)},${py1.toFixed(1)} ${px2.toFixed(1)},${py2.toFixed(1)} ${px3.toFixed(1)},${py3.toFixed(1)} ${px4.toFixed(1)},${py4.toFixed(1)}`;
+      
       const svg = `
         <polygon points="${pts}" class="geo-shape"/>
-        ${geoText('22', '132', `${angleA}°`)}
-        ${geoText('188', '132', variant === 'adjacent' ? '?°' : `${angleA}°`, variant === 'adjacent')}
-        ${geoText('225', '48', variant === 'opposite' ? '?°' : `${angleB}°`, variant === 'opposite')}
-        ${geoText('62', '42', variant === 'adjacent' ? '?°' : `${angleB}°`, variant === 'adjacent' && false)}
+        ${geoText((px1 + 25).toFixed(1), (py1 - 8).toFixed(1), `${angleA}°`)}
+        ${geoText((px2 - 25).toFixed(1), (py2 - 8).toFixed(1), variant === 'adjacent' ? '?°' : `${angleB}°`, variant === 'adjacent')}
+        ${geoText((px3 - 25).toFixed(1), (py3 + 18).toFixed(1), variant === 'opposite' ? '?°' : `${angleA}°`, variant === 'opposite')}
         <text x="130" y="174" class="geo-hint" text-anchor="middle">parallelogram: opp. angles equal, adj. sum 180°</text>
       `;
       return { text: '', answer, op: 'geometry', key: `geo-para-${angleA}-${variant}`, svg };
@@ -903,26 +940,42 @@
       const angleB = 180 - angleA;
       const variant = Math.random() < 0.5 ? 'adjacent' : 'opposite';
       const answer = variant === 'adjacent' ? angleB : angleA;
-      // diamond: top(130,22) right(222,95) bottom(130,168) left(38,95)
-      const pts = '130,22 222,95 130,168 38,95';
-      const mTop   = { x: (130 + 222) / 2, y: (22 + 95) / 2 };
-      const mRight = { x: (222 + 130) / 2, y: (95 + 168) / 2 };
-      // tick marks on all sides
-      const sides = [[130,22,222,95],[222,95,130,168],[130,168,38,95],[38,95,130,22]];
+      
+      const halfA = (angleA / 2) * Math.PI / 180;
+      let halfW = 70;
+      let halfH = halfW / Math.tan(halfA);
+      if (halfH > 70) {
+        let scale = 70 / halfH;
+        halfH *= scale;
+        halfW *= scale;
+      }
+      const cx = 130, cy = 85;
+      const px1 = cx, py1 = cy - halfH;
+      const px2 = cx + halfW, py2 = cy;
+      const px3 = cx, py3 = cy + halfH;
+      const px4 = cx - halfW, py4 = cy;
+      
+      const pts = `${px1.toFixed(1)},${py1.toFixed(1)} ${px2.toFixed(1)},${py2.toFixed(1)} ${px3.toFixed(1)},${py3.toFixed(1)} ${px4.toFixed(1)},${py4.toFixed(1)}`;
+      
+      const sides = [
+        [px1,py1, px2,py2],
+        [px2,py2, px3,py3],
+        [px3,py3, px4,py4],
+        [px4,py4, px1,py1]
+      ];
       const ticks = sides.map(([x1,y1,x2,y2]) => {
         const mx = (x1+x2)/2, my = (y1+y2)/2;
-        const dx = x2-x1, dy = y2-y1, len = Math.hypot(dx,dy);
-        const nx = -dy/len*5, ny = dx/len*5;
+        const vx = x2-x1, vy = y2-y1, len = Math.hypot(vx,vy);
+        const nx = -vy/len*5, ny = vx/len*5;
         return `<line x1="${(mx+nx).toFixed(1)}" y1="${(my+ny).toFixed(1)}" x2="${(mx-nx).toFixed(1)}" y2="${(my-ny).toFixed(1)}" class="geo-tick"/>`;
       }).join('');
+      
       const svg = `
         <polygon points="${pts}" class="geo-shape"/>
         ${ticks}
-        ${geoText('130', '14', `${angleA}°`)}
-        ${geoText('238', '99', variant === 'adjacent' ? '?°' : `${angleB}°`, variant === 'adjacent')}
-        ${geoText('130', '178', variant === 'opposite' ? '?°' : `${angleA}°`, variant === 'opposite')}
-        ${geoText('22', '99', variant === 'adjacent' ? '?°' : `${angleB}°`, variant === 'adjacent' && false)}
-        <text x="130" y="12" class="geo-hint" text-anchor="middle" dy="0"></text>
+        ${geoText((px1).toFixed(1), (py1 + 22).toFixed(1), `${angleA}°`)}
+        ${geoText((px2 - 25).toFixed(1), (py2 + 5).toFixed(1), variant === 'adjacent' ? '?°' : `${angleB}°`, variant === 'adjacent')}
+        ${geoText((px3).toFixed(1), (py3 - 12).toFixed(1), variant === 'opposite' ? '?°' : `${angleA}°`, variant === 'opposite')}
       `;
       return { text: '', answer, op: 'geometry', key: `geo-rhom-${angleA}-${variant}`, svg };
     }
@@ -930,19 +983,18 @@
     function geoVerticallyOpposite() {
       const a = snap5(rand(25, 80));
       const answer = a;
-      // two crossing lines through center (130,90)
-      const cx2 = 130, cy2 = 90, len = 90;
-      const ang1 = rand(20, 70); // tilt of first line
+      const cx = 130, cy = 90, len = 90;
+      const ang1 = rand(20, 70);
       const r1 = ang1 * Math.PI / 180;
-      const r2 = (ang1 + 90) * Math.PI / 180;
-      const pts1 = { x1: cx2 - len*Math.cos(r1), y1: cy2 - len*Math.sin(r1), x2: cx2 + len*Math.cos(r1), y2: cy2 + len*Math.sin(r1) };
-      const pts2 = { x1: cx2 - len*Math.cos(r2), y1: cy2 - len*Math.sin(r2), x2: cx2 + len*Math.cos(r2), y2: cy2 + len*Math.sin(r2) };
-      // angle a is top sector; ? is opposite (bottom sector)
-      const midKnown = (ang1 - 90 - a/2) * Math.PI / 180;
-      const midUnk   = (ang1 + 90 - a/2) * Math.PI / 180;
+      const r2 = (ang1 + a) * Math.PI / 180;
+      const pts1 = { x1: cx - len*Math.cos(r1), y1: cy - len*Math.sin(r1), x2: cx + len*Math.cos(r1), y2: cy + len*Math.sin(r1) };
+      const pts2 = { x1: cx - len*Math.cos(r2), y1: cy - len*Math.sin(r2), x2: cx + len*Math.cos(r2), y2: cy + len*Math.sin(r2) };
+      
+      const midKnown = (r1 + r2) / 2;
+      const midUnk = midKnown + Math.PI;
       const lr = 44;
-      const lkx = cx2 + lr * Math.cos(midKnown), lky = cy2 + lr * Math.sin(midKnown);
-      const lux = cx2 + lr * Math.cos(midUnk),   luy = cy2 + lr * Math.sin(midUnk);
+      const lkx = cx + lr * Math.cos(midKnown), lky = cy + lr * Math.sin(midKnown);
+      const lux = cx + lr * Math.cos(midUnk),   luy = cy + lr * Math.sin(midUnk);
       const svg = `
         <line x1="${pts1.x1.toFixed(1)}" y1="${pts1.y1.toFixed(1)}" x2="${pts1.x2.toFixed(1)}" y2="${pts1.y2.toFixed(1)}" class="geo-shape"/>
         <line x1="${pts2.x1.toFixed(1)}" y1="${pts2.y1.toFixed(1)}" x2="${pts2.x2.toFixed(1)}" y2="${pts2.y2.toFixed(1)}" class="geo-shape"/>
@@ -962,17 +1014,35 @@
         tries++;
       } while ((ext > 170 || ext % 5 !== 0) && tries < 40);
       const answer = ext;
-      // triangle: A(50,145) B(195,145) apex C(110,45)
-      // extend AB beyond B to D(240,145) for exterior angle
-      const ax = 50, ay = 145, bx = 195, by = 145, cx3 = 110, cy3 = 45, dx = 240;
+      
+      const pRad = p * Math.PI / 180, qRad = q * Math.PI / 180;
+      const r = 180 - p - q;
+      const rRad = r * Math.PI / 180;
+      let sideC = 120;
+      let sideB = sideC * Math.sin(rRad) / Math.sin(qRad);
+      let h = sideB * Math.sin(pRad);
+      if (h > 90) {
+        let scale = 90 / h;
+        h *= scale;
+        sideC *= scale;
+        sideB *= scale;
+      }
+      
+      const cx = 110, cy = 110;
+      const ax = cx - sideC/2, ay = cy + h/2;
+      const bx = cx + sideC/2, by = cy + h/2;
+      const apexX = ax + sideB * Math.cos(pRad);
+      const apexY = ay - sideB * Math.sin(pRad);
+      const dx = bx + 50;
+      
       const svg = `
-        <line x1="${ax}" y1="${ay}" x2="${dx}" y2="${by}" class="geo-shape"/>
-        <line x1="${ax}" y1="${ay}" x2="${cx3}" y2="${cy3}" class="geo-shape"/>
-        <line x1="${cx3}" y1="${cy3}" x2="${bx}" y2="${by}" class="geo-shape"/>
-        <line x1="${bx}" y1="${by}" x2="${dx}" y2="${by}" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 3"/>
-        ${geoText((ax - 12).toString(), (ay + 14).toString(), `${p}°`)}
-        ${geoText((cx3 + 0).toString(), (cy3 - 12).toString(), `${q}°`)}
-        ${geoText((dx - 10).toString(), (by - 14).toString(), '?°', true)}
+        <line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${dx.toFixed(1)}" y2="${by.toFixed(1)}" class="geo-shape"/>
+        <line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${apexX.toFixed(1)}" y2="${apexY.toFixed(1)}" class="geo-shape"/>
+        <line x1="${apexX.toFixed(1)}" y1="${apexY.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" class="geo-shape"/>
+        <line x1="${bx.toFixed(1)}" y1="${by.toFixed(1)}" x2="${dx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 3"/>
+        ${geoText((ax + 20).toFixed(1), (ay - 5).toFixed(1), `${p}°`)}
+        ${geoText((apexX).toFixed(1), (apexY + 20).toFixed(1), `${q}°`)}
+        ${geoText((bx + 20).toFixed(1), (by - 10).toFixed(1), '?°', true)}
         <text x="130" y="174" class="geo-hint" text-anchor="middle">exterior angle = sum of 2 non-adjacent interior angles</text>
       `;
       return { text: '', answer, op: 'geometry', key: `geo-ext-${p}-${q}`, svg };
@@ -1023,15 +1093,33 @@
       if (answer < 10 || answer % 5 !== 0) { knownInterior = 50; exteriorBase = 40; interiorBase = 140; answer = -10; }
       if (answer <= 0) { knownInterior = 50; exteriorBase = 110; interiorBase = 70; answer = 60; }
 
-      const ax2 = 30, ay2 = 145, bx2 = 185, by2 = 145, cx5 = 100, cy5 = 40, dx2 = 240;
+      const aRad = knownInterior * Math.PI / 180;
+      const bRad = interiorBase * Math.PI / 180;
+      const cRad = answer * Math.PI / 180;
+      let sideC = 100;
+      let sideB = sideC * Math.sin(bRad) / Math.sin(cRad);
+      let h = sideB * Math.sin(aRad);
+      if (h > 90) {
+        let scale = 90 / h;
+        h *= scale;
+        sideC *= scale;
+        sideB *= scale;
+      }
+      const cx = 110, cy = 110;
+      const ax = cx - sideC/2, ay = cy + h/2;
+      const bx = cx + sideC/2, by = cy + h/2;
+      const apexX = ax + sideB * Math.cos(aRad);
+      const apexY = ay - sideB * Math.sin(aRad);
+      const dx = bx + 50;
+      
       const svg = `
-        <line x1="${ax2}" y1="${ay2}" x2="${dx2}" y2="${by2}" class="geo-shape"/>
-        <line x1="${ax2}" y1="${ay2}" x2="${cx5}" y2="${cy5}" class="geo-shape"/>
-        <line x1="${cx5}" y1="${cy5}" x2="${bx2}" y2="${by2}" class="geo-shape"/>
-        <line x1="${bx2}" y1="${by2}" x2="${dx2}" y2="${by2}" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 3"/>
-        ${geoText((ax2 - 10).toString(), (ay2 + 14).toString(), `${knownInterior}°`)}
-        ${geoText((cx5).toString(), (cy5 - 12).toString(), '?°', true)}
-        ${geoText((dx2 - 12).toString(), (by2 - 14).toString(), `${exteriorBase}°`)}
+        <line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${dx.toFixed(1)}" y2="${by.toFixed(1)}" class="geo-shape"/>
+        <line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${apexX.toFixed(1)}" y2="${apexY.toFixed(1)}" class="geo-shape"/>
+        <line x1="${apexX.toFixed(1)}" y1="${apexY.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" class="geo-shape"/>
+        <line x1="${bx.toFixed(1)}" y1="${by.toFixed(1)}" x2="${dx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 3"/>
+        ${geoText((ax + 20).toFixed(1), (ay - 5).toFixed(1), `${knownInterior}°`)}
+        ${geoText((apexX).toFixed(1), (apexY + 20).toFixed(1), '?°', true)}
+        ${geoText((bx + 20).toFixed(1), (by - 10).toFixed(1), `${exteriorBase}°`)}
         <text x="130" y="174" class="geo-hint" text-anchor="middle">use straight-line rule, then triangle sum</text>
       `;
       return { text: '', answer, op: 'geometry', key: `geo-2step-${knownInterior}-${exteriorBase}`, svg };
