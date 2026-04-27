@@ -94,6 +94,10 @@
     <span class="tool-icon">🚇</span>
     <span class="tool-label">Subway</span>
   </button>
+  <button class="tool-btn" data-tool="carpark_ramp">
+    <span class="tool-icon">🚗</span>
+    <span class="tool-label">C.Ramp</span>
+  </button>
   <button class="tool-btn" data-tool="housekeeping">
     <span class="tool-icon">🧺</span>
     <span class="tool-label">Housekeep</span>
@@ -144,7 +148,8 @@ const ROOM_DEFS = {
   subway:      { widthCells: 30, heightFloors: 3, minFloor: -MAX_BASEMENT, maxFloor: -1,  color: 0x334466, label: 'Subway' },
   housekeeping:{ widthCells: 15, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x7090A0, label: 'Housekeeping' },
   security:    { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x405030, label: 'Security' },
-  retail: { widthCells: 12, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xC47A20, label: 'Retail' },
+  retail:       { widthCells: 12, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xC47A20, label: 'Retail' },
+  carpark_ramp: { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: -1,  color: 0x667788, label: 'Carpark Ramp' },
 };
 
 // Sprite sheet atlas coordinates
@@ -274,8 +279,8 @@ function applySnap(rawCol, rawFloor, type) {
   const def = ROOM_DEFS[type];
   if (!def) return { col: Math.floor(rawCol), floor: Math.floor(rawFloor) };
 
-  const SNAP_H = 6 / CELL_W;   // 0.75 cells
-  const SNAP_V = 6 / FLOOR_H;  // 0.25 floors
+  const SNAP_H = 8 / CELL_W;   // 1 cell
+  const SNAP_V = 8 / FLOOR_H;
 
   let snapCol = rawCol, snapFloor = rawFloor;
 
@@ -338,6 +343,9 @@ function canPlace(type, col, floor, widthOverride) {
   if (col < 0 || col + w > GRID_COLS) return false;
   // Only one subway allowed
   if (type === 'subway' && building.rooms.some(r => r.type === 'subway')) return false;
+  // Carpark ramp must start at B1 or directly below an existing ramp stack
+  if (type === 'carpark_ramp' && floor !== -1 &&
+      !building.rooms.some(r => r.type === 'carpark_ramp' && r.col === col && r.floor === floor + 1)) return false;
   // Nothing can be placed below an existing subway
   const existingSubway = building.rooms.find(r => r.type === 'subway');
   if (existingSubway && floor < existingSubway.floor) return false;
@@ -388,6 +396,7 @@ function placeRoom(type, col, floor) {
   if (type === 'suite_hotel')  { room.variant = Math.floor(Math.random() * 2); room.occupied = true; room.dirty = false; room.infested = false; }
   building.rooms.push(room);
   createRoomSprite(room);
+  if (type === 'carpark_ramp') refreshCarparkRampNeighbors(col, floor);
   saveState();
   return true;
 }
@@ -406,8 +415,10 @@ function deleteAt(col, floor) {
         subwayLineTilingSprite = null;
       }
     }
+    const { col: rc, floor: rf, type: rt } = room;
     destroyRoomSprite(room.id);
     building.rooms.splice(idx, 1);
+    if (rt === 'carpark_ramp') refreshCarparkRampNeighbors(rc, rf);
     saveState();
     return true;
   }
@@ -483,6 +494,10 @@ function buildTextureCache(bases) {
   texCache['subway_line']  = bases.subwayLine;
   texCache['housekeeping'] = bases.housekeeping;
   texCache['security']     = bases.security;
+  // Carpark ramp: bottom/middle/top frames, each 128×24px with 8px gaps
+  texCache['carpark_ramp_bottom'] = sliceTexture(bases.carparkRamp,   0, 0, 128, 24);
+  texCache['carpark_ramp_middle'] = sliceTexture(bases.carparkRamp, 136, 0, 128, 24);
+  texCache['carpark_ramp_top']    = sliceTexture(bases.carparkRamp, 272, 0, 128, 24);
 }
 
 function createSubwayLine(room) {
@@ -498,6 +513,15 @@ function createSubwayLine(room) {
   sprite.y = y;
   subwayLineLayer.addChild(sprite);
   subwayLineTilingSprite = sprite;
+}
+
+function refreshCarparkRampNeighbors(col, floor) {
+  for (const adjFloor of [floor - 1, floor + 1]) {
+    const r = building.rooms.find(r => r.type === 'carpark_ramp' && r.col === col && r.floor === adjFloor);
+    if (!r) continue;
+    const s = roomSprites.get(r.id);
+    if (s) s.texture = getRoomTexture(r);
+  }
 }
 
 function condoTimeCol() {
@@ -525,6 +549,12 @@ function getRoomTexture(room) {
     }
     case 'housekeeping': return texCache['housekeeping'];
     case 'security':     return texCache['security'];
+    case 'carpark_ramp': {
+      const hasAbove = building.rooms.some(r => r.type === 'carpark_ramp' && r.col === room.col && r.floor === room.floor + 1);
+      const hasBelow = building.rooms.some(r => r.type === 'carpark_ramp' && r.col === room.col && r.floor === room.floor - 1);
+      const variant = (!hasAbove && hasBelow) ? 'top' : (hasAbove && !hasBelow) ? 'bottom' : hasAbove ? 'middle' : 'bottom';
+      return texCache[`carpark_ramp_${variant}`];
+    }
     case 'restaurant':
     case 'cafe': {
       const cond = !room.open ? 3 : room.crowdLevel ?? 0;
@@ -1146,14 +1176,15 @@ function showError(msg) {
       'tower/subway_line.png',
       'tower/housekeeping.png',
       'tower/security.png',
+      'tower/carpark_ramp.png',
     ];
-    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded, subwayTex, subwayLineTex, housekeepingTex, securityTex] =
+    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded, subwayTex, subwayLineTex, housekeepingTex, securityTex, carparkRampTex] =
       await Promise.all(assetNames.map(name =>
         PIXI.Assets.load(name).catch(e => { throw new Error(`Failed to load "${name}": ${e.message ?? e}`); })
       ));
 
     beamTex = beamTexLoaded;
-    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex });
+    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex, carparkRamp: carparkRampTex });
 
     buildScene();
     loadState();
