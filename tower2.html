@@ -90,6 +90,18 @@
     <span class="tool-icon">♻️</span>
     <span class="tool-label">Recycling</span>
   </button>
+  <button class="tool-btn" data-tool="subway">
+    <span class="tool-icon">🚇</span>
+    <span class="tool-label">Subway</span>
+  </button>
+  <button class="tool-btn" data-tool="housekeeping">
+    <span class="tool-icon">🧺</span>
+    <span class="tool-label">Housekeep</span>
+  </button>
+  <button class="tool-btn" data-tool="security">
+    <span class="tool-icon">🔒</span>
+    <span class="tool-label">Security</span>
+  </button>
   <button class="tool-btn" data-tool="retail">
     <span class="tool-icon">🛍</span>
     <span class="tool-label">Retail</span>
@@ -129,6 +141,9 @@ const ROOM_DEFS = {
   restaurant: { widthCells: 24, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xD4622A, label: 'Restaurant' },
   cafe:       { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xA0522D, label: 'Cafe'            },
   recycling:  { widthCells: 25, heightFloors: 2, minFloor: -MAX_BASEMENT, maxFloor: -2,  color: 0x4CAF50, label: 'Recycling Centre' },
+  subway:      { widthCells: 30, heightFloors: 3, minFloor: -MAX_BASEMENT, maxFloor: -1,  color: 0x334466, label: 'Subway' },
+  housekeeping:{ widthCells: 15, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x7090A0, label: 'Housekeeping' },
+  security:    { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x405030, label: 'Security' },
   retail: { widthCells: 12, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xC47A20, label: 'Retail' },
 };
 
@@ -142,6 +157,9 @@ const RESTAURANT_ROW_SY = [1, 33, 65, 97, 129];
 
 const CAFE_COL_SX = [0, 136, 272, 408];
 const CAFE_ROW_SY = [0, 32, 64, 96, 128];
+
+// Subway: 3 conditions in one row, frame 240×96, 8px gap between frames
+const SUBWAY_COL_SX = [0, 248, 496];
 
 // Recycling Centre: 7 conditions split across 2 rows (4 + 3), frame 200×60, gap col=8 row=12
 // Row 0 (conditions 0-3): empty, low, low-medium, medium
@@ -188,6 +206,8 @@ function loadState() {
     building.rooms = rooms;
     building.nextId = nextId;
     for (const room of rooms) createRoomSprite(room);
+    const subwayRoom = building.rooms.find(r => r.type === 'subway');
+    if (subwayRoom) createSubwayLine(subwayRoom);
   } catch (e) {
     console.warn('tower2: failed to load saved state', e);
   }
@@ -207,7 +227,8 @@ let lobbyResizeState = null; // { room, end, startX, origCol, origWidth }
 
 // ─── PixiJS scene objects ─────────────────────────────────────────────────────
 let app;
-let skyGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, beamLayer, ghostGraphics, labelContainer;
+let skyGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, beamLayer, subwayLineLayer, ghostGraphics, labelContainer;
+let subwayLineTilingSprite = null;
 
 const texCache    = {};           // key → PIXI.Texture
 const roomSprites = new Map();    // roomId → PIXI.Sprite
@@ -315,6 +336,11 @@ function canPlace(type, col, floor, widthOverride) {
   if (floor < def.minFloor || floor > def.maxFloor) return false;
   const w = widthOverride ?? def.widthCells;
   if (col < 0 || col + w > GRID_COLS) return false;
+  // Only one subway allowed
+  if (type === 'subway' && building.rooms.some(r => r.type === 'subway')) return false;
+  // Nothing can be placed below an existing subway
+  const existingSubway = building.rooms.find(r => r.type === 'subway');
+  if (existingSubway && floor < existingSubway.floor) return false;
   const existingLobbyId = type === 'lobby' ? (building.rooms.find(r => r.type === 'lobby')?.id ?? -1) : -1;
   const occ = occupancySet(existingLobbyId);
   for (let c = col; c < col + w; c++)
@@ -353,6 +379,7 @@ function placeRoom(type, col, floor) {
   if (type === 'condo')  room.variant = Math.floor(Math.random() * 3);
   if (type === 'office') { room.colVar = Math.floor(Math.random() * 2); room.rowVar = Math.floor(Math.random() * 3); }
   if (type === 'recycling')  { room.fillLevel = 0; }
+  if (type === 'subway')     { room.condition = 0; createSubwayLine(room); }
   if (type === 'restaurant') { room.variant = Math.floor(Math.random() * 5); room.open = true; room.crowdLevel = 0; }
   if (type === 'cafe')       { room.variant = Math.floor(Math.random() * 5); room.open = true; room.crowdLevel = 0; }
   if (type === 'retail')     { room.retailType = Math.floor(Math.random() * RETAIL_TYPE_COUNT); room.rented = true; }
@@ -372,7 +399,14 @@ function deleteAt(col, floor) {
            floor >= r.floor && floor < r.floor + def.heightFloors;
   });
   if (idx !== -1) {
-    destroyRoomSprite(building.rooms[idx].id);
+    const room = building.rooms[idx];
+    if (room.type === 'subway') {
+      if (subwayLineTilingSprite) {
+        subwayLineTilingSprite.destroy();
+        subwayLineTilingSprite = null;
+      }
+    }
+    destroyRoomSprite(room.id);
     building.rooms.splice(idx, 1);
     saveState();
     return true;
@@ -441,6 +475,29 @@ function buildTextureCache(bases) {
   // Recycling: row 0 has 4 conditions, row 1 has 3 conditions
   for (let col = 0; col < 4; col++) texCache[`recycling_${col}`]   = sliceTexture(bases.recycling, RECYCLING_COL_SX[col], RECYCLING_ROW_SY[0], 200, 60);
   for (let col = 0; col < 3; col++) texCache[`recycling_${col+4}`] = sliceTexture(bases.recycling, RECYCLING_COL_SX[col], RECYCLING_ROW_SY[1], 200, 60);
+
+  // Subway: 3 conditions, 240×96px frames
+  for (let cond = 0; cond < 3; cond++) {
+    texCache[`subway_${cond}`] = sliceTexture(bases.subway, SUBWAY_COL_SX[cond], 0, 240, 96);
+  }
+  texCache['subway_line']  = bases.subwayLine;
+  texCache['housekeeping'] = bases.housekeeping;
+  texCache['security']     = bases.security;
+}
+
+function createSubwayLine(room) {
+  if (subwayLineTilingSprite) {
+    subwayLineTilingSprite.destroy();
+    subwayLineTilingSprite = null;
+  }
+  const W = GRID_COLS * CELL_W;
+  const H = FLOOR_H - BEAM_H;
+  const y = WORLD_GROUND_Y - (room.floor + 1) * FLOOR_H + BEAM_H;
+  const sprite = new PIXI.TilingSprite({ texture: texCache['subway_line'], width: W, height: H });
+  sprite.x = 0;
+  sprite.y = y;
+  subwayLineLayer.addChild(sprite);
+  subwayLineTilingSprite = sprite;
 }
 
 function condoTimeCol() {
@@ -460,6 +517,14 @@ function getRoomTexture(room) {
       return texCache[`condo_${condoTimeCol()}_${room.variant ?? 0}`];
     case 'recycling':
       return texCache[`recycling_${room.fillLevel ?? 0}`];
+    case 'subway': {
+      const isPeak = (gameHour >= 7 && gameHour < 9) || (gameHour >= 17 && gameHour < 19);
+      const isNight = gameHour < 6 || gameHour >= 21;
+      const cond = isPeak ? 2 : isNight ? 1 : 0;
+      return texCache[`subway_${cond}`];
+    }
+    case 'housekeeping': return texCache['housekeeping'];
+    case 'security':     return texCache['security'];
     case 'restaurant':
     case 'cafe': {
       const cond = !room.open ? 3 : room.crowdLevel ?? 0;
@@ -558,7 +623,7 @@ function destroyRoomSprite(roomId) {
 
 function updateAllRoomTextures() {
   for (const room of building.rooms) {
-    if (!['office', 'condo', 'retail', 'restaurant', 'cafe', 'recycling', 'single_hotel', 'twin_hotel', 'suite_hotel'].includes(room.type)) continue;
+    if (!['office', 'condo', 'retail', 'restaurant', 'cafe', 'recycling', 'single_hotel', 'twin_hotel', 'suite_hotel', 'subway'].includes(room.type)) continue;
     const sprite = roomSprites.get(room.id);
     if (sprite) sprite.texture = getRoomTexture(room);
   }
@@ -996,6 +1061,8 @@ function buildScene() {
   labelContainer = new PIXI.Container();  // screen-space
 
   beamLayer = new PIXI.Container();
+  subwayLineLayer = new PIXI.Container();
+  worldContainer.addChild(subwayLineLayer);
   worldContainer.addChild(roomLayer);
   worldContainer.addChild(beamLayer);
   worldContainer.addChild(ghostGraphics);
@@ -1075,14 +1142,18 @@ function showError(msg) {
       'tower/cafe.png',
       'tower/recycle.png',
       'tower/beam.png',
+      'tower/subway.png',
+      'tower/subway_line.png',
+      'tower/housekeeping.png',
+      'tower/security.png',
     ];
-    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded] =
+    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded, subwayTex, subwayLineTex, housekeepingTex, securityTex] =
       await Promise.all(assetNames.map(name =>
         PIXI.Assets.load(name).catch(e => { throw new Error(`Failed to load "${name}": ${e.message ?? e}`); })
       ));
 
     beamTex = beamTexLoaded;
-    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex });
+    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex });
 
     buildScene();
     loadState();
