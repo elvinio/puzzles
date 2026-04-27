@@ -491,8 +491,8 @@ function createSubwayLine(room) {
     subwayLineTilingSprite = null;
   }
   const W = GRID_COLS * CELL_W;
-  const H = FLOOR_H - BEAM_H;
-  const y = WORLD_GROUND_Y - (room.floor + 1) * FLOOR_H + BEAM_H;
+  const H = FLOOR_H;
+  const y = WORLD_GROUND_Y - (room.floor + 1) * FLOOR_H;
   const sprite = new PIXI.TilingSprite({ texture: texCache['subway_line'], width: W, height: H });
   sprite.x = 0;
   sprite.y = y;
