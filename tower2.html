@@ -364,12 +364,12 @@ function canPlace(type, col, floor, widthOverride) {
   if (floor < def.minFloor || floor > def.maxFloor) return false;
   const w = widthOverride ?? def.widthCells;
   if (col < 0 || col + w > GRID_COLS) return false;
-  // Elevator: also needs the floor above free (for motor)
+  // Elevator: shaft at floor, spring at floor-1, motor at floor+1
   if (type === 'elevator') {
-    if (floor + 1 > def.maxFloor) return false;
+    if (floor - 1 < def.minFloor || floor + 1 > def.maxFloor) return false;
     const occ = occupancySet();
     for (let c = col; c < col + w; c++)
-      if (occ.has(`${c},${floor}`) || occ.has(`${c},${floor + 1}`)) return false;
+      if (occ.has(`${c},${floor-1}`) || occ.has(`${c},${floor}`) || occ.has(`${c},${floor+1}`)) return false;
     return true;
   }
   // Only one subway allowed
@@ -426,7 +426,7 @@ function placeRoom(type, col, floor) {
   if (type === 'twin_hotel')   { room.variant = Math.floor(Math.random() * 4); room.occupied = true; room.dirty = false; room.infested = false; }
   if (type === 'suite_hotel')  { room.variant = Math.floor(Math.random() * 2); room.occupied = true; room.dirty = false; room.infested = false; }
   if (type === 'carpark_lot')  { room.carVariant = Math.floor(Math.random() * 13) + 2; }
-  if (type === 'elevator')    { room.bottomFloor = floor; room.topFloor = floor; room.carFloor = floor; room.carTarget = floor; room.carPassengers = 0; }
+  if (type === 'elevator')    { room.bottomFloor = floor - 1; room.topFloor = floor; room.floor = floor - 1; room.carFloor = floor - 1; room.carTarget = floor; room.carPassengers = 0; }
   building.rooms.push(room);
   createRoomSprite(room);
   if (type === 'carpark_ramp') { refreshCarparkRampNeighbors(col, floor); refreshCarparkLotsOnFloor(floor); }
@@ -626,24 +626,41 @@ function buildElevatorSprites(room) {
   const container = new PIXI.Container();
   const x = room.col * CELL_W, w = 4 * CELL_W, h = FLOOR_H;
 
+  // Shaft structure at 29% opacity so rooms behind it remain visible
+  const shaftContainer = new PIXI.Container();
+  shaftContainer.alpha = 0.29;
+
   const spring = new PIXI.Sprite(texCache['elevator_6']);
   spring.x = x; spring.y = WORLD_GROUND_Y - (room.bottomFloor + 1) * FLOOR_H;
   spring.width = w; spring.height = h;
-  container.addChild(spring);
+  shaftContainer.addChild(spring);
 
   const shafts = [];
   for (let f = room.bottomFloor + 1; f <= room.topFloor; f++) {
     const s = new PIXI.Sprite(texCache['elevator_7']);
     s.x = x; s.y = WORLD_GROUND_Y - (f + 1) * FLOOR_H;
     s.width = w; s.height = h;
-    container.addChild(s);
+    shaftContainer.addChild(s);
     shafts.push(s);
   }
 
   const motor = new PIXI.Sprite(texCache['elevator_5']);
   motor.x = x; motor.y = WORLD_GROUND_Y - (room.topFloor + 2) * FLOOR_H;
   motor.width = w; motor.height = h;
-  container.addChild(motor);
+  shaftContainer.addChild(motor);
+
+  container.addChild(shaftContainer);
+
+  // Floor number labels — above shaft but below car
+  for (let f = room.bottomFloor; f <= room.topFloor; f++) {
+    const floorText = f === 0 ? 'G' : (f < 0 ? `B${-f}` : `${f}`);
+    const label = new PIXI.Text({ text: floorText, style: { fontSize: 8, fontFamily: 'monospace', fill: 0xffffff } });
+    label.anchor.set(0.5, 0.5);
+    label.x = x + w / 2;
+    label.y = WORLD_GROUND_Y - (f + 1) * FLOOR_H + BEAM_H + ROOM_H / 2;
+    label.alpha = 0.75;
+    container.addChild(label);
+  }
 
   const car = new PIXI.Sprite(getElevatorCarTexture(room));
   car.x = x; car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H;
@@ -929,8 +946,8 @@ function updateGhost() {
   const fillCol   = valid ? def.color : 0xcc2222;
   const strokeCol = valid ? 0xffffc8 : 0xff5555;
   if (tool === 'elevator') {
-    // Draw shaft floor + motor floor above it
-    for (const f of [hoverFloor, hoverFloor + 1]) {
+    // Draw spring below, shaft at hover, motor above
+    for (const f of [hoverFloor - 1, hoverFloor, hoverFloor + 1]) {
       const wx = hoverCol * CELL_W, wy = WORLD_GROUND_Y - (f + 1) * FLOOR_H, dw = 4 * CELL_W;
       ghostGraphics.rect(wx, wy, dw, FLOOR_H).fill({ color: fillCol, alpha: 0.55 });
       ghostGraphics.rect(wx + 0.5, wy + 0.5, dw - 1, FLOOR_H - 1).stroke({ width: 1.5, color: strokeCol, alpha: 0.9 });
