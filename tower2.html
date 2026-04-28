@@ -246,7 +246,7 @@ let lobbyResizeState = null; // { room, end, startX, origCol, origWidth }
 
 // ─── PixiJS scene objects ─────────────────────────────────────────────────────
 let app;
-let skyGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, beamLayer, subwayLineLayer, ghostGraphics, labelContainer;
+let skyGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, beamLayer, elevatorLayer, subwayLineLayer, ghostGraphics, labelContainer;
 let subwayLineTilingSprite = null;
 
 const texCache      = {};           // key → PIXI.Texture
@@ -672,14 +672,14 @@ function buildElevatorSprites(room) {
   car.width = w; car.height = h;
   container.addChild(car);
 
-  roomLayer.addChild(container);
+  elevatorLayer.addChild(container);
   elevatorParts.set(room.id, { container, motor, spring, shafts, car });
 }
 
 function destroyElevatorSprites(roomId) {
   const parts = elevatorParts.get(roomId);
   if (!parts) return;
-  roomLayer.removeChild(parts.container);
+  elevatorLayer.removeChild(parts.container);
   parts.container.destroy({ children: true });
   elevatorParts.delete(roomId);
 }
@@ -1353,6 +1353,7 @@ function buildScene() {
   labelContainer = new PIXI.Container();  // screen-space
 
   beamLayer = new PIXI.Container();
+  elevatorLayer = new PIXI.Container();
   subwayLineLayer = new PIXI.Container();
 
   // Basement background — tiled horizontally, full depth, behind everything
@@ -1368,6 +1369,7 @@ function buildScene() {
   worldContainer.addChild(subwayLineLayer);
   worldContainer.addChild(roomLayer);
   worldContainer.addChild(beamLayer);
+  worldContainer.addChild(elevatorLayer);
   worldContainer.addChild(ghostGraphics);
 
   app.stage.addChild(skyGraphics);
