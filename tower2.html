@@ -353,6 +353,7 @@ function occupancySet(excludeId = -1) {
   const occ = new Set();
   for (const r of building.rooms) {
     if (r.id === excludeId) continue;
+    if (r.type === 'elevator') continue;
     for (const cell of roomCells(r)) occ.add(cell);
   }
   return occ;
