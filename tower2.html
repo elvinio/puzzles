@@ -364,12 +364,16 @@ function canPlace(type, col, floor, widthOverride) {
   if (floor < def.minFloor || floor > def.maxFloor) return false;
   const w = widthOverride ?? def.widthCells;
   if (col < 0 || col + w > GRID_COLS) return false;
-  // Elevator: shaft at floor, spring at floor-1, motor at floor+1
+  // Elevator: shaft at floor, spring at floor-1, motor at floor+1; can coexist with rooms
   if (type === 'elevator') {
     if (floor - 1 < def.minFloor || floor + 1 > def.maxFloor) return false;
-    const occ = occupancySet();
+    const elevOcc = new Set();
+    for (const r of building.rooms) {
+      if (r.type !== 'elevator') continue;
+      for (const cell of roomCells(r)) elevOcc.add(cell);
+    }
     for (let c = col; c < col + w; c++)
-      if (occ.has(`${c},${floor-1}`) || occ.has(`${c},${floor}`) || occ.has(`${c},${floor+1}`)) return false;
+      if (elevOcc.has(`${c},${floor-1}`) || elevOcc.has(`${c},${floor}`) || elevOcc.has(`${c},${floor+1}`)) return false;
     return true;
   }
   // Only one subway allowed
