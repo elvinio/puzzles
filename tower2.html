@@ -706,10 +706,15 @@ function handleElevatorDrag(targetFloor) {
   }
   if (newTop === room.topFloor && newBottom === room.bottomFloor) return;
 
-  const occ = occupancySet(room.id);
+  // Only block on other elevators, not regular rooms
+  const elevOcc = new Set();
+  for (const r of building.rooms) {
+    if (r.type !== 'elevator' || r.id === room.id) continue;
+    for (const cell of roomCells(r)) elevOcc.add(cell);
+  }
   for (let f = newBottom; f <= newTop + 1; f++)
     for (let c = room.col; c < room.col + 4; c++)
-      if (occ.has(`${c},${f}`)) return;
+      if (elevOcc.has(`${c},${f}`)) return;
 
   room.topFloor = newTop;
   room.bottomFloor = newBottom;
