@@ -507,9 +507,9 @@ function buildTextureCache(bases) {
   texCache['carpark_ramp_middle'] = sliceTexture(bases.carparkRamp, 136, 0, 128, 24);
   texCache['carpark_ramp_top']    = sliceTexture(bases.carparkRamp, 272, 0, 128, 24);
   texCache['basement_bg'] = bases.basementBg;
-  // Carpark lot: 15 frames × 32×24px in a single row
+  // Carpark lot: 15 frames × 32×24px with 8px gaps between frames
   for (let i = 0; i < 15; i++) {
-    texCache[`carpark_lot_${i}`] = sliceTexture(bases.carparkLot, i * 32, 0, 32, 24);
+    texCache[`carpark_lot_${i}`] = sliceTexture(bases.carparkLot, i * 40, 0, 32, 24);
   }
 }
 
