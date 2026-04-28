@@ -54,6 +54,10 @@
 <body>
 
 <div id="toolbar">
+  <button class="tool-btn" data-tool="select">
+    <span class="tool-icon">👆</span>
+    <span class="tool-label">Select</span>
+  </button>
   <button class="tool-btn" data-tool="lobby">
     <span class="tool-icon">🏛</span>
     <span class="tool-label">Lobby</span>
@@ -101,6 +105,10 @@
   <button class="tool-btn" data-tool="carpark_lot">
     <span class="tool-icon">🅿️</span>
     <span class="tool-label">C.Lot</span>
+  </button>
+  <button class="tool-btn" data-tool="elevator">
+    <span class="tool-icon">🛗</span>
+    <span class="tool-label">Elevator</span>
   </button>
   <button class="tool-btn" data-tool="housekeeping">
     <span class="tool-icon">🧺</span>
@@ -155,6 +163,7 @@ const ROOM_DEFS = {
   retail:       { widthCells: 12, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xC47A20, label: 'Retail' },
   carpark_ramp: { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: -1,  color: 0x667788, label: 'Carpark Ramp' },
   carpark_lot:  { widthCells:  4, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: -1,  color: 0x778899, label: 'Carpark Lot'  },
+  elevator:     { widthCells:  4, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x886644, label: 'Elevator'     },
 };
 
 // Sprite sheet atlas coordinates
@@ -240,11 +249,14 @@ let app;
 let skyGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, beamLayer, subwayLineLayer, ghostGraphics, labelContainer;
 let subwayLineTilingSprite = null;
 
-const texCache    = {};           // key → PIXI.Texture
-const roomSprites = new Map();    // roomId → PIXI.Sprite
-const beamSprites = new Map();    // roomId → PIXI.TilingSprite
+const texCache      = {};           // key → PIXI.Texture
+const roomSprites   = new Map();    // roomId → PIXI.Sprite
+const beamSprites   = new Map();    // roomId → PIXI.TilingSprite
+const elevatorParts = new Map();    // roomId → { container, car, motor, spring, shafts[] }
 let   beamTex     = null;
 const labelPool   = [];           // pooled PIXI.Text objects
+
+let elevatorDragState = null;     // { room, end:'top'|'bottom' }
 
 // ─── App size helpers ─────────────────────────────────────────────────────────
 // With autoDensity:true, renderer.width/height are already in CSS pixels
@@ -325,6 +337,12 @@ function roomCells(room) {
   const def = ROOM_DEFS[room.type];
   const w = room.widthCells ?? def.widthCells;
   const cells = new Set();
+  if (room.type === 'elevator') {
+    for (let c = room.col; c < room.col + w; c++)
+      for (let f = room.bottomFloor; f <= room.topFloor + 1; f++)
+        cells.add(`${c},${f}`);
+    return cells;
+  }
   for (let c = room.col; c < room.col + w; c++)
     for (let f = room.floor; f < room.floor + def.heightFloors; f++)
       cells.add(`${c},${f}`);
@@ -346,6 +364,14 @@ function canPlace(type, col, floor, widthOverride) {
   if (floor < def.minFloor || floor > def.maxFloor) return false;
   const w = widthOverride ?? def.widthCells;
   if (col < 0 || col + w > GRID_COLS) return false;
+  // Elevator: also needs the floor above free (for motor)
+  if (type === 'elevator') {
+    if (floor + 1 > def.maxFloor) return false;
+    const occ = occupancySet();
+    for (let c = col; c < col + w; c++)
+      if (occ.has(`${c},${floor}`) || occ.has(`${c},${floor + 1}`)) return false;
+    return true;
+  }
   // Only one subway allowed
   if (type === 'subway' && building.rooms.some(r => r.type === 'subway')) return false;
   // Carpark ramp must start at B1 or directly below an existing ramp stack
@@ -400,6 +426,7 @@ function placeRoom(type, col, floor) {
   if (type === 'twin_hotel')   { room.variant = Math.floor(Math.random() * 4); room.occupied = true; room.dirty = false; room.infested = false; }
   if (type === 'suite_hotel')  { room.variant = Math.floor(Math.random() * 2); room.occupied = true; room.dirty = false; room.infested = false; }
   if (type === 'carpark_lot')  { room.carVariant = Math.floor(Math.random() * 13) + 2; }
+  if (type === 'elevator')    { room.bottomFloor = floor; room.topFloor = floor; room.carFloor = floor; room.carTarget = floor; room.carPassengers = 0; }
   building.rooms.push(room);
   createRoomSprite(room);
   if (type === 'carpark_ramp') { refreshCarparkRampNeighbors(col, floor); refreshCarparkLotsOnFloor(floor); }
@@ -411,6 +438,9 @@ function placeRoom(type, col, floor) {
 function deleteAt(col, floor) {
   const idx = building.rooms.findIndex(r => {
     const def = ROOM_DEFS[r.type];
+    if (r.type === 'elevator')
+      return col >= r.col && col < r.col + def.widthCells &&
+             floor >= r.bottomFloor && floor <= r.topFloor + 1;
     return col >= r.col && col < r.col + def.widthCells &&
            floor >= r.floor && floor < r.floor + def.heightFloors;
   });
@@ -511,6 +541,11 @@ function buildTextureCache(bases) {
   for (let i = 0; i < 15; i++) {
     texCache[`carpark_lot_${i}`] = sliceTexture(bases.carparkLot, i * 40, 0, 32, 24);
   }
+  // Elevator: 8 frames × 32×35px, 1px side padding, 8px gaps between frames
+  // Frame layout: 0=empty car, 1-4=car with people, 5=motor, 6=spring, 7=shaft
+  for (let i = 0; i < 8; i++) {
+    texCache[`elevator_${i}`] = sliceTexture(bases.elevator, 1 + i * 40, 0, 32, 35);
+  }
 }
 
 function createSubwayLine(room) {
@@ -572,6 +607,95 @@ function isCarparkLotConnected(room) {
     }
   }
   return false;
+}
+
+// ─── Elevator helpers ─────────────────────────────────────────────────────────
+function getElevatorCarTexture(room) {
+  const p = room.carPassengers ?? 0;
+  if (p === 0)  return texCache['elevator_0'];
+  if (p < 10)   return texCache['elevator_1'];
+  if (p < 20)   return texCache['elevator_2'];
+  if (p < 30)   return texCache['elevator_3'];
+  return texCache['elevator_4'];
+}
+
+function buildElevatorSprites(room) {
+  const old = elevatorParts.get(room.id);
+  if (old) { roomLayer.removeChild(old.container); old.container.destroy({ children: true }); }
+
+  const container = new PIXI.Container();
+  const x = room.col * CELL_W, w = 4 * CELL_W, h = FLOOR_H;
+
+  const spring = new PIXI.Sprite(texCache['elevator_6']);
+  spring.x = x; spring.y = WORLD_GROUND_Y - (room.bottomFloor + 1) * FLOOR_H;
+  spring.width = w; spring.height = h;
+  container.addChild(spring);
+
+  const shafts = [];
+  for (let f = room.bottomFloor + 1; f <= room.topFloor; f++) {
+    const s = new PIXI.Sprite(texCache['elevator_7']);
+    s.x = x; s.y = WORLD_GROUND_Y - (f + 1) * FLOOR_H;
+    s.width = w; s.height = h;
+    container.addChild(s);
+    shafts.push(s);
+  }
+
+  const motor = new PIXI.Sprite(texCache['elevator_5']);
+  motor.x = x; motor.y = WORLD_GROUND_Y - (room.topFloor + 2) * FLOOR_H;
+  motor.width = w; motor.height = h;
+  container.addChild(motor);
+
+  const car = new PIXI.Sprite(getElevatorCarTexture(room));
+  car.x = x; car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H;
+  car.width = w; car.height = h;
+  container.addChild(car);
+
+  roomLayer.addChild(container);
+  elevatorParts.set(room.id, { container, motor, spring, shafts, car });
+}
+
+function destroyElevatorSprites(roomId) {
+  const parts = elevatorParts.get(roomId);
+  if (!parts) return;
+  roomLayer.removeChild(parts.container);
+  parts.container.destroy({ children: true });
+  elevatorParts.delete(roomId);
+}
+
+function findElevatorHandle(mx, my) {
+  const g = screenToGrid(mx, my);
+  for (const room of building.rooms) {
+    if (room.type !== 'elevator') continue;
+    if (g.col < room.col || g.col >= room.col + 4) continue;
+    if (g.floor === room.topFloor + 1) return { room, end: 'top' };
+    if (g.floor === room.bottomFloor)  return { room, end: 'bottom' };
+  }
+  return null;
+}
+
+function handleElevatorDrag(targetFloor) {
+  if (!elevatorDragState) return;
+  const { room, end } = elevatorDragState;
+  let newTop = room.topFloor, newBottom = room.bottomFloor;
+
+  if (end === 'top') {
+    newTop = Math.max(room.bottomFloor, targetFloor - 1);
+  } else {
+    newBottom = Math.min(room.topFloor, targetFloor);
+  }
+  if (newTop === room.topFloor && newBottom === room.bottomFloor) return;
+
+  const occ = occupancySet(room.id);
+  for (let f = newBottom; f <= newTop + 1; f++)
+    for (let c = room.col; c < room.col + 4; c++)
+      if (occ.has(`${c},${f}`)) return;
+
+  room.topFloor = newTop;
+  room.bottomFloor = newBottom;
+  room.floor = newBottom;
+  room.carFloor  = Math.max(newBottom, Math.min(room.carFloor,  newTop));
+  room.carTarget = Math.max(newBottom, Math.min(room.carTarget, newTop));
+  buildElevatorSprites(room);
 }
 
 function condoTimeCol() {
@@ -675,6 +799,10 @@ function buildLobbyContainer(room) {
 
 // ─── Room sprite management ───────────────────────────────────────────────────
 function createRoomSprite(room) {
+  if (room.type === 'elevator') {
+    buildElevatorSprites(room);
+    return;
+  }
   if (room.type === 'lobby') {
     const container = buildLobbyContainer(room);
     roomLayer.addChild(container);
@@ -694,6 +822,7 @@ function createRoomSprite(room) {
 }
 
 function destroyRoomSprite(roomId) {
+  destroyElevatorSprites(roomId);
   const sprite = roomSprites.get(roomId);
   if (sprite) {
     roomLayer.removeChild(sprite);
@@ -793,18 +922,29 @@ function updateFloorLabels() {
 // ─── Ghost preview (world-space graphics inside worldContainer) ───────────────
 function updateGhost() {
   ghostGraphics.clear();
-  if (tool === 'destroy' || !mouseInCanvas || hoverFloor < -MAX_BASEMENT || dragging) return;
+  if (tool === 'destroy' || tool === 'select' || !mouseInCanvas || hoverFloor < -MAX_BASEMENT || dragging) return;
   const def = ROOM_DEFS[tool];
   if (!def) return;
   const valid = canPlace(tool, hoverCol, hoverFloor);
+  const fillCol   = valid ? def.color : 0xcc2222;
+  const strokeCol = valid ? 0xffffc8 : 0xff5555;
+  if (tool === 'elevator') {
+    // Draw shaft floor + motor floor above it
+    for (const f of [hoverFloor, hoverFloor + 1]) {
+      const wx = hoverCol * CELL_W, wy = WORLD_GROUND_Y - (f + 1) * FLOOR_H, dw = 4 * CELL_W;
+      ghostGraphics.rect(wx, wy, dw, FLOOR_H).fill({ color: fillCol, alpha: 0.55 });
+      ghostGraphics.rect(wx + 0.5, wy + 0.5, dw - 1, FLOOR_H - 1).stroke({ width: 1.5, color: strokeCol, alpha: 0.9 });
+    }
+    return;
+  }
   const wx = hoverCol * CELL_W;
   const wy = WORLD_GROUND_Y - (hoverFloor + def.heightFloors) * FLOOR_H;
   const dw = def.widthCells  * CELL_W;
   const dh = def.heightFloors * FLOOR_H;
   ghostGraphics.rect(wx, wy, dw, dh)
-               .fill({ color: valid ? def.color : 0xcc2222, alpha: 0.55 });
+               .fill({ color: fillCol, alpha: 0.55 });
   ghostGraphics.rect(wx + 0.5, wy + 0.5, dw - 1, dh - 1)
-               .stroke({ width: 1.5, color: valid ? 0xffffc8 : 0xff5555, alpha: 0.9 });
+               .stroke({ width: 1.5, color: strokeCol, alpha: 0.9 });
 }
 
 // ─── Full visual refresh (call when view or sky changes) ──────────────────────
@@ -866,6 +1006,14 @@ function attachInput() {
     const mx = e.clientX - r.left, my = e.clientY - r.top;
     mouseInCanvas = true;
 
+    // Elevator drag (select mode)
+    if (elevatorDragState) {
+      const g = screenToGrid(mx, my);
+      handleElevatorDrag(g.floor);
+      dragging = true;
+      return;
+    }
+
     // Lobby resize drag
     if (lobbyResizeState) {
       const { room, end, startX, origCol, origWidth } = lobbyResizeState;
@@ -926,6 +1074,10 @@ function attachInput() {
     dragStartX = e.clientX - r.left; dragStartY = e.clientY - r.top;
     dragViewX = viewX; dragViewY = viewY;
     mouseDown = true; dragging = false;
+    if (tool === 'select') {
+      const elHandle = findElevatorHandle(dragStartX, dragStartY);
+      if (elHandle) { elevatorDragState = { room: elHandle.room, end: elHandle.end }; return; }
+    }
     const handle = findLobbyResizeHandle(dragStartX, dragStartY);
     if (handle) {
       lobbyResizeState = {
@@ -938,6 +1090,13 @@ function attachInput() {
   });
 
   canvas.addEventListener('mouseup', e => {
+    if (elevatorDragState) {
+      elevatorDragState = null;
+      saveState();
+      mouseDown = false; dragging = false;
+      updateGhost();
+      return;
+    }
     if (lobbyResizeState) {
       lobbyResizeState = null;
       saveState();
@@ -951,8 +1110,10 @@ function attachInput() {
       const effectiveTool = (e.button === 2) ? 'destroy' : tool;
       const g = resolveGridPos(mx, my, effectiveTool);
       if (effectiveTool === 'destroy') deleteAt(g.col, g.floor);
-      else if (tool === 'lobby' && building.rooms.some(r => r.type === 'lobby')) tryExtendLobby(g.col);
-      else placeRoom(tool, g.col, g.floor);
+      else if (tool !== 'select') {
+        if (tool === 'lobby' && building.rooms.some(r => r.type === 'lobby')) tryExtendLobby(g.col);
+        else placeRoom(tool, g.col, g.floor);
+      }
     }
     mouseDown = false; dragging = false;
     updateGhost();
@@ -969,7 +1130,7 @@ function attachInput() {
   canvas.addEventListener('mouseenter', () => { mouseInCanvas = true; });
   canvas.addEventListener('mouseleave', () => {
     mouseInCanvas = false; mouseDown = false; dragging = false;
-    lobbyResizeState = null;
+    lobbyResizeState = null; elevatorDragState = null;
     canvas.style.cursor = '';
     ghostGraphics.clear();
   });
@@ -1001,6 +1162,15 @@ function attachInput() {
       wasPanning = false;
       const t   = e.touches[0];
       const tmx = t.clientX - r.left, tmy = t.clientY - r.top;
+      // Elevator handle (select mode)
+      if (tool === 'select') {
+        const elHandle = findElevatorHandle(tmx, tmy);
+        if (elHandle) {
+          elevatorDragState = { room: elHandle.room, end: elHandle.end };
+          ghostGraphics.clear();
+          return;
+        }
+      }
       // Check lobby edge first — takes priority over normal placement
       const handle = findLobbyResizeHandle(tmx, tmy);
       if (handle) {
@@ -1029,6 +1199,17 @@ function attachInput() {
     const dx = mx - lastTouchMidX, dy = my - lastTouchMidY;
 
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) touchMoved = true;
+
+    // Elevator drag (touch)
+    if (elevatorDragState && e.touches.length === 1) {
+      const t   = e.touches[0];
+      const tmx = t.clientX - r.left, tmy = t.clientY - r.top;
+      const g   = screenToGrid(tmx, tmy);
+      handleElevatorDrag(g.floor);
+      touchMoved = true;
+      lastTouchMidX = mx; lastTouchMidY = my;
+      return;
+    }
 
     // Lobby resize drag (touch)
     if (lobbyResizeState && e.touches.length === 1) {
@@ -1084,6 +1265,13 @@ function attachInput() {
 
   canvas.addEventListener('touchend', e => {
     e.preventDefault();
+    if (elevatorDragState) {
+      elevatorDragState = null;
+      saveState();
+      ghostGraphics.clear();
+      if (e.touches.length === 0) { hoverFloor = -999; mouseInCanvas = false; }
+      return;
+    }
     if (lobbyResizeState) {
       lobbyResizeState = null;
       saveState();
@@ -1097,8 +1285,10 @@ function attachInput() {
       const mx  = t.clientX - r.left, my = t.clientY - r.top;
       const g   = resolveGridPos(mx, my, tool);
       if (tool === 'destroy') deleteAt(g.col, g.floor);
-      else if (tool === 'lobby' && building.rooms.some(r => r.type === 'lobby')) tryExtendLobby(g.col);
-      else placeRoom(tool, g.col, g.floor);
+      else if (tool !== 'select') {
+        if (tool === 'lobby' && building.rooms.some(r => r.type === 'lobby')) tryExtendLobby(g.col);
+        else placeRoom(tool, g.col, g.floor);
+      }
     }
     if (e.touches.length === 0) {
       hoverFloor = -999;
@@ -1185,9 +1375,30 @@ function gameLoop(ticker) {
   if (hourInt !== prevHourInt) {
     prevHourInt = hourInt;
     updateAllRoomTextures();
-    drawSky();     // day/night sky gradient may change at boundaries
-    drawGround();  // ground highlight colour unchanged but keep in sync
+    drawSky();
+    drawGround();
     updateDayNightButton();
+  }
+
+  // Animate elevator cars
+  const dt = ticker.deltaMS / 1000;
+  const EL_SPEED = 2; // floors per second
+  for (const room of building.rooms) {
+    if (room.type !== 'elevator') continue;
+    const parts = elevatorParts.get(room.id);
+    if (!parts) continue;
+    const range = room.topFloor - room.bottomFloor;
+    if (range <= 0) continue;
+    const diff = room.carTarget - room.carFloor;
+    if (Math.abs(diff) <= EL_SPEED * dt) {
+      room.carFloor = room.carTarget;
+      room.carTarget = room.carFloor <= room.bottomFloor ? room.topFloor :
+                       room.carFloor >= room.topFloor    ? room.bottomFloor :
+                       (Math.random() < 0.5 ? room.bottomFloor : room.topFloor);
+    } else {
+      room.carFloor += Math.sign(diff) * EL_SPEED * dt;
+    }
+    parts.car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H;
   }
 }
 
@@ -1235,14 +1446,15 @@ function showError(msg) {
       'tower/carpark_ramp.png',
       'tower/basement_bg.png',
       'tower/carpark_lot.png',
+      'tower/elevator.png',
     ];
-    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded, subwayTex, subwayLineTex, housekeepingTex, securityTex, carparkRampTex, basementBgTex, carparkLotTex] =
+    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded, subwayTex, subwayLineTex, housekeepingTex, securityTex, carparkRampTex, basementBgTex, carparkLotTex, elevatorTex] =
       await Promise.all(assetNames.map(name =>
         PIXI.Assets.load(name).catch(e => { throw new Error(`Failed to load "${name}": ${e.message ?? e}`); })
       ));
 
     beamTex = beamTexLoaded;
-    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex, carparkRamp: carparkRampTex, basementBg: basementBgTex, carparkLot: carparkLotTex });
+    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex, carparkRamp: carparkRampTex, basementBg: basementBgTex, carparkLot: carparkLotTex, elevator: elevatorTex });
 
     buildScene();
     loadState();
