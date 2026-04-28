@@ -98,6 +98,10 @@
     <span class="tool-icon">🚗</span>
     <span class="tool-label">C.Ramp</span>
   </button>
+  <button class="tool-btn" data-tool="carpark_lot">
+    <span class="tool-icon">🅿️</span>
+    <span class="tool-label">C.Lot</span>
+  </button>
   <button class="tool-btn" data-tool="housekeeping">
     <span class="tool-icon">🧺</span>
     <span class="tool-label">Housekeep</span>
@@ -150,6 +154,7 @@ const ROOM_DEFS = {
   security:    { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x405030, label: 'Security' },
   retail:       { widthCells: 12, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0xC47A20, label: 'Retail' },
   carpark_ramp: { widthCells: 16, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: -1,  color: 0x667788, label: 'Carpark Ramp' },
+  carpark_lot:  { widthCells:  4, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: -1,  color: 0x778899, label: 'Carpark Lot'  },
 };
 
 // Sprite sheet atlas coordinates
@@ -394,9 +399,11 @@ function placeRoom(type, col, floor) {
   if (type === 'single_hotel') { room.variant = Math.floor(Math.random() * 2); room.occupied = true; room.dirty = false; room.infested = false; }
   if (type === 'twin_hotel')   { room.variant = Math.floor(Math.random() * 4); room.occupied = true; room.dirty = false; room.infested = false; }
   if (type === 'suite_hotel')  { room.variant = Math.floor(Math.random() * 2); room.occupied = true; room.dirty = false; room.infested = false; }
+  if (type === 'carpark_lot')  { room.carVariant = Math.floor(Math.random() * 13) + 2; }
   building.rooms.push(room);
   createRoomSprite(room);
-  if (type === 'carpark_ramp') refreshCarparkRampNeighbors(col, floor);
+  if (type === 'carpark_ramp') { refreshCarparkRampNeighbors(col, floor); refreshCarparkLotsOnFloor(floor); }
+  if (type === 'carpark_lot')  refreshCarparkLotsOnFloor(floor);
   saveState();
   return true;
 }
@@ -418,7 +425,8 @@ function deleteAt(col, floor) {
     const { col: rc, floor: rf, type: rt } = room;
     destroyRoomSprite(room.id);
     building.rooms.splice(idx, 1);
-    if (rt === 'carpark_ramp') refreshCarparkRampNeighbors(rc, rf);
+    if (rt === 'carpark_ramp') { refreshCarparkRampNeighbors(rc, rf); refreshCarparkLotsOnFloor(rf); }
+    if (rt === 'carpark_lot')  refreshCarparkLotsOnFloor(rf);
     saveState();
     return true;
   }
@@ -499,6 +507,10 @@ function buildTextureCache(bases) {
   texCache['carpark_ramp_middle'] = sliceTexture(bases.carparkRamp, 136, 0, 128, 24);
   texCache['carpark_ramp_top']    = sliceTexture(bases.carparkRamp, 272, 0, 128, 24);
   texCache['basement_bg'] = bases.basementBg;
+  // Carpark lot: 15 frames × 32×24px in a single row
+  for (let i = 0; i < 15; i++) {
+    texCache[`carpark_lot_${i}`] = sliceTexture(bases.carparkLot, i * 32, 0, 32, 24);
+  }
 }
 
 function createSubwayLine(room) {
@@ -523,6 +535,43 @@ function refreshCarparkRampNeighbors(col, floor) {
     const s = roomSprites.get(r.id);
     if (s) s.texture = getRoomTexture(r);
   }
+}
+
+function refreshCarparkLotsOnFloor(floor) {
+  for (const r of building.rooms) {
+    if (r.type !== 'carpark_lot' || r.floor !== floor) continue;
+    const s = roomSprites.get(r.id);
+    if (s) s.texture = getRoomTexture(r);
+  }
+}
+
+// BFS from a lot to see if any path of adjacent lots reaches a carpark_ramp
+function isCarparkLotConnected(room) {
+  const floor = room.floor;
+  const lotW  = ROOM_DEFS.carpark_lot.widthCells;
+  const lots  = building.rooms.filter(r => r.type === 'carpark_lot'  && r.floor === floor);
+  const ramps = building.rooms.filter(r => r.type === 'carpark_ramp' && r.floor === floor);
+
+  const visited = new Set([room.id]);
+  const queue   = [room];
+
+  while (queue.length > 0) {
+    const cur = queue.shift();
+    const cL  = cur.col, cR = cur.col + lotW;
+
+    for (const ramp of ramps) {
+      const rampW = ROOM_DEFS.carpark_ramp.widthCells;
+      if (ramp.col + rampW === cL || ramp.col === cR) return true;
+    }
+    for (const lot of lots) {
+      if (visited.has(lot.id)) continue;
+      if (lot.col + lotW === cL || lot.col === cR) {
+        visited.add(lot.id);
+        queue.push(lot);
+      }
+    }
+  }
+  return false;
 }
 
 function condoTimeCol() {
@@ -556,6 +605,8 @@ function getRoomTexture(room) {
       const variant = (!hasAbove && hasBelow) ? 'top' : (hasAbove && !hasBelow) ? 'bottom' : hasAbove ? 'middle' : 'bottom';
       return texCache[`carpark_ramp_${variant}`];
     }
+    case 'carpark_lot':
+      return texCache[isCarparkLotConnected(room) ? `carpark_lot_${room.carVariant ?? 2}` : 'carpark_lot_1'];
     case 'restaurant':
     case 'cafe': {
       const cond = !room.open ? 3 : room.crowdLevel ?? 0;
@@ -1183,14 +1234,15 @@ function showError(msg) {
       'tower/security.png',
       'tower/carpark_ramp.png',
       'tower/basement_bg.png',
+      'tower/carpark_lot.png',
     ];
-    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded, subwayTex, subwayLineTex, housekeepingTex, securityTex, carparkRampTex, basementBgTex] =
+    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded, subwayTex, subwayLineTex, housekeepingTex, securityTex, carparkRampTex, basementBgTex, carparkLotTex] =
       await Promise.all(assetNames.map(name =>
         PIXI.Assets.load(name).catch(e => { throw new Error(`Failed to load "${name}": ${e.message ?? e}`); })
       ));
 
     beamTex = beamTexLoaded;
-    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex, carparkRamp: carparkRampTex, basementBg: basementBgTex });
+    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex, carparkRamp: carparkRampTex, basementBg: basementBgTex, carparkLot: carparkLotTex });
 
     buildScene();
     loadState();
