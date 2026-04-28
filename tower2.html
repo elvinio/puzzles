@@ -130,7 +130,7 @@ const CELL_W         = 8;
 const TOOLBAR_H      = 60;
 const GRID_COLS      = 250;
 const MAX_FLOORS     = 100;
-const MAX_BASEMENT   = 30;
+const MAX_BASEMENT   = 10;
 const GROUND_MARGIN  = 80;
 // World-space Y coordinate of the ground line (rooms use Y increasing downward)
 const WORLD_GROUND_Y = MAX_FLOORS * FLOOR_H + 500; // 2900
@@ -498,6 +498,7 @@ function buildTextureCache(bases) {
   texCache['carpark_ramp_bottom'] = sliceTexture(bases.carparkRamp,   0, 0, 128, 24);
   texCache['carpark_ramp_middle'] = sliceTexture(bases.carparkRamp, 136, 0, 128, 24);
   texCache['carpark_ramp_top']    = sliceTexture(bases.carparkRamp, 272, 0, 128, 24);
+  texCache['basement_bg'] = bases.basementBg;
 }
 
 function createSubwayLine(room) {
@@ -703,13 +704,6 @@ function drawGrid() {
   const gY = screenGroundY();
   gridGraphics.clear();
 
-  // Batch all floor lines under one stroke call
-  for (let f = -MAX_BASEMENT; f <= MAX_FLOORS; f++) {
-    const y = gY - f * FLOOR_H;
-    if (y < -FLOOR_H || y > H) continue;
-    gridGraphics.moveTo(0, y).lineTo(W, y);
-  }
-  gridGraphics.stroke({ width: 1, color: 0xffffff, alpha: 0.08 });
 }
 
 // ─── Floor labels (screen-space) ─────────────────────────────────────────────
@@ -1092,6 +1086,17 @@ function buildScene() {
 
   beamLayer = new PIXI.Container();
   subwayLineLayer = new PIXI.Container();
+
+  // Basement background — tiled horizontally, full depth, behind everything
+  const basementBgSprite = new PIXI.TilingSprite({
+    texture: texCache['basement_bg'],
+    width:   GRID_COLS * CELL_W,
+    height:  MAX_BASEMENT * FLOOR_H,
+  });
+  basementBgSprite.x = 0;
+  basementBgSprite.y = WORLD_GROUND_Y;
+  worldContainer.addChild(basementBgSprite);
+
   worldContainer.addChild(subwayLineLayer);
   worldContainer.addChild(roomLayer);
   worldContainer.addChild(beamLayer);
@@ -1177,14 +1182,15 @@ function showError(msg) {
       'tower/housekeeping.png',
       'tower/security.png',
       'tower/carpark_ramp.png',
+      'tower/basement_bg.png',
     ];
-    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded, subwayTex, subwayLineTex, housekeepingTex, securityTex, carparkRampTex] =
+    const [lobbyGroundTex, officeTex, condoTex, retailTex, hotelSingleTex, hotelTwinTex, hotelSuiteTex, restaurantTex, cafeTex, recyclingTex, beamTexLoaded, subwayTex, subwayLineTex, housekeepingTex, securityTex, carparkRampTex, basementBgTex] =
       await Promise.all(assetNames.map(name =>
         PIXI.Assets.load(name).catch(e => { throw new Error(`Failed to load "${name}": ${e.message ?? e}`); })
       ));
 
     beamTex = beamTexLoaded;
-    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex, carparkRamp: carparkRampTex });
+    buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex, carparkRamp: carparkRampTex, basementBg: basementBgTex });
 
     buildScene();
     loadState();
