@@ -668,8 +668,8 @@ function buildElevatorSprites(room) {
   }
 
   const car = new PIXI.Sprite(getElevatorCarTexture(room));
-  car.x = x; car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H;
-  car.width = w; car.height = h;
+  car.x = x; car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H + BEAM_H;
+  car.width = w; car.height = ROOM_H;
   container.addChild(car);
 
   roomLayer.addChild(container);
@@ -1425,7 +1425,7 @@ function gameLoop(ticker) {
     } else {
       room.carFloor += Math.sign(diff) * EL_SPEED * dt;
     }
-    parts.car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H;
+    parts.car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H + BEAM_H;
   }
 }
 
