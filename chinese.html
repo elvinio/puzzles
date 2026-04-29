@@ -536,6 +536,56 @@
     }
     .char-modal-chip.zh { font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; font-size: 1rem; }
 
+    /* ── Browse Screen ── */
+    .browse-lesson-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 720px;
+    }
+    .browse-lesson-tab {
+      padding: 6px 14px;
+      border-radius: 16px;
+      border: 2px solid var(--brd);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: all 0.15s;
+      touch-action: manipulation;
+    }
+    .browse-lesson-tab:hover { border-color: var(--p-lt); color: var(--p-text); }
+    .browse-lesson-tab.active { background: var(--p); border-color: var(--p-lt); color: #fff; }
+
+    .browse-word-grid {
+      width: 100%;
+      max-width: 720px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 8px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .browse-word-card {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      transition: border-color 0.12s;
+    }
+    .browse-word-card:hover { border-color: var(--p-lt); }
+    .browse-word-char { font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; font-size: 2rem; font-weight: 900; color: var(--p-text); line-height: 1; }
+    .browse-word-pinyin { font-size: 0.8rem; color: var(--p-xl); font-weight: 700; }
+    .browse-word-eng { font-size: 0.73rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .browse-empty { color: var(--muted); font-size: 0.9rem; text-align: center; padding: 40px; width: 100%; max-width: 720px; }
+
     /* ── Toast ── */
     #toast {
       position: fixed;
@@ -571,6 +621,7 @@
     <h1>Chinese Practice</h1>
     <div class="topbar-right" style="display:flex;gap:6px">
       <a class="btn btn-outline btn-sm" href="chinese-cards.html">Cards</a>
+      <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
       <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
     </div>
   </div>
@@ -747,6 +798,29 @@
       <tbody id="stats-tbody"></tbody>
     </table>
   </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN: BROWSE BY LESSON
+════════════════════════════════════════════════ -->
+<div id="screen-browse" class="screen">
+  <div class="topbar">
+    <button class="back-link" id="browse-back-btn">← Back</button>
+    <h1>Browse Words</h1>
+    <div style="width:60px"></div>
+  </div>
+
+  <div class="section-label">Level</div>
+  <div class="tab-row" id="browse-level-tabs">
+    <button class="tab active" data-level="p1">Primary 1</button>
+    <button class="tab" data-level="p2">Primary 2</button>
+    <button class="tab" data-level="p3">Primary 3</button>
+  </div>
+
+  <div class="section-label">Lesson</div>
+  <div class="browse-lesson-tabs" id="browse-lesson-tabs"></div>
+
+  <div class="browse-word-grid" id="browse-word-grid"></div>
 </div>
 
 <!-- Character Card Modal -->
@@ -1562,6 +1636,96 @@ document.getElementById('stats-tbody').addEventListener('click', e => {
 function esc(s) {
   return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+
+// ═══════════════════════════════════════════════════════════════
+// BROWSE SCREEN
+// ═══════════════════════════════════════════════════════════════
+const B = { level: 'p1', lesson: 1, prev: 'setup' };
+
+function getLessonCount(level) {
+  const data = DATA[level];
+  if (!data) return 0;
+  let max = 0;
+  for (const key of Object.keys(data)) {
+    const m = key.match(/^[a-z]\d+-(\d+)$/);
+    if (m) max = Math.max(max, Number(m[1]));
+  }
+  return max;
+}
+
+function openBrowse(prev) {
+  B.prev = prev || 'setup';
+  B.level = S.level;
+  B.lesson = 1;
+  renderBrowseLevelTabs();
+  renderBrowseLessonTabs();
+  renderBrowseWords();
+  showScreen('screen-browse');
+}
+
+function renderBrowseLevelTabs() {
+  document.querySelectorAll('#browse-level-tabs .tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.level === B.level);
+  });
+}
+
+function renderBrowseLessonTabs() {
+  const container = document.getElementById('browse-lesson-tabs');
+  container.innerHTML = '';
+  const count = getLessonCount(B.level);
+  for (let i = 1; i <= count; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'browse-lesson-tab' + (i === B.lesson ? ' active' : '');
+    btn.textContent = `L${i}`;
+    btn.addEventListener('click', () => {
+      B.lesson = i;
+      container.querySelectorAll('.browse-lesson-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderBrowseWords();
+    });
+    container.appendChild(btn);
+  }
+}
+
+function renderBrowseWords() {
+  const grid = document.getElementById('browse-word-grid');
+  grid.innerHTML = '';
+  const data = DATA[B.level];
+  if (!data) { grid.innerHTML = `<div class="browse-empty">Loading…</div>`; return; }
+  const lessonKey = `${B.level}-${B.lesson}`;
+  const words = data[lessonKey] || [];
+  if (words.length === 0) {
+    grid.innerHTML = `<div class="browse-empty">No words for ${lessonKey}</div>`;
+    return;
+  }
+  words.forEach(w => {
+    const card = document.createElement('div');
+    card.className = 'browse-word-card';
+    card.innerHTML = `
+      <div class="browse-word-char">${w.character}</div>
+      <div class="browse-word-pinyin">${w.pinyin}</div>
+      <div class="browse-word-eng">${esc(w.english)}</div>`;
+    card.addEventListener('click', () => showCharModal({ ...w, lessonKey, lessonNum: B.lesson, level: B.level, key: `${lessonKey}-${w.character}` }));
+    grid.appendChild(card);
+  });
+}
+
+bindTabs('browse-level-tabs', tab => {
+  B.level = tab.dataset.level;
+  B.lesson = 1;
+  renderBrowseLessonTabs();
+  renderBrowseWords();
+});
+
+document.getElementById('browse-back-btn').addEventListener('click', () => {
+  if (B.prev === 'stats') showScreen('screen-stats');
+  else initSetup();
+});
+
+document.getElementById('setup-browse-btn').addEventListener('click', async () => {
+  await dataPromise;
+  openBrowse('setup');
+});
 
 // ═══════════════════════════════════════════════════════════════
 // INIT
