@@ -10,20 +10,87 @@
     #game { display: block; }
     #toolbar {
       position: fixed;
-      bottom: 0; left: 0; right: 0;
-      height: 60px;
-      background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
+      top: 0; left: 0; bottom: 0;
+      width: 114px;
+      background: linear-gradient(to right, #1a1a1a, #2a2a2a);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 7px;
+      z-index: 100;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.7);
+      border-right: 1px solid #3a3a3a;
+      overflow-y: auto;
+    }
+    .fund-display {
+      background: #0d2a0d;
+      border: 1px solid #2a5a2a;
+      border-radius: 4px;
+      padding: 5px 4px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .fund-label {
+      font-size: 7px;
+      color: #77aa77;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    #fund-amount {
+      font-size: 10px;
+      color: #44ee44;
+      font-weight: bold;
+      font-family: monospace;
+    }
+    .clock-display {
+      background: #0d0d2a;
+      border: 1px solid #2a2a5a;
+      border-radius: 4px;
+      padding: 5px 4px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    #clock-time {
+      font-size: 18px;
+      color: #aaccff;
+      font-family: monospace;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    #clock-date {
+      font-size: 8px;
+      color: #7788aa;
+      margin: 2px 0 4px;
+    }
+    .clock-controls {
+      display: flex;
+      gap: 3px;
+    }
+    .clock-btn {
+      flex: 1;
+      height: 22px;
+      border: 1px solid #334;
+      border-radius: 3px;
+      background: #1a1a3a;
+      color: #8899cc;
+      font-size: 10px;
+      cursor: pointer;
+      padding: 0;
       display: flex;
       align-items: center;
-      gap: 5px;
-      padding: 8px 10px;
-      z-index: 100;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.7);
-      border-top: 1px solid #3a3a3a;
+      justify-content: center;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .clock-btn:hover { background: #2a2a4a; border-color: #557; }
+    .clock-btn.active { border-color: #ffd700; background: #332200; color: #ffd700; }
+    .tool-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
     }
     .tool-btn {
-      flex: 1;
-      min-width: 44px;
       height: 44px;
       border: 2px solid #555;
       border-radius: 6px;
@@ -39,13 +106,15 @@
       gap: 2px;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      min-width: 0;
+      width: 100%;
     }
     .tool-btn:hover { background: #4a4a4a; border-color: #888; }
     .tool-btn.active { border-color: #ffd700; background: #554400; color: #ffd700; }
     .tool-btn.destroy { border-color: #883333; color: #cc6666; }
     .tool-btn.destroy:hover { background: #4a1a1a; border-color: #cc4444; }
     .tool-btn.destroy.active { border-color: #ff6666; background: #551111; color: #ff9999; }
-    .tool-btn.daynight { border-color: #667; color: #aab; flex: 0 0 44px; }
+    .tool-btn.daynight { border-color: #667; color: #aab; }
     .tool-btn.daynight.night { border-color: #446; background: #112244; color: #99aaff; }
     .tool-icon { font-size: 15px; line-height: 1; }
     .tool-label { font-size: 8px; line-height: 1; }
@@ -54,82 +123,97 @@
 <body>
 
 <div id="toolbar">
-  <button class="tool-btn" data-tool="select">
-    <span class="tool-icon">👆</span>
-    <span class="tool-label">Select</span>
-  </button>
-  <button class="tool-btn" data-tool="lobby">
-    <span class="tool-icon">🏛</span>
-    <span class="tool-label">Lobby</span>
-  </button>
-  <button class="tool-btn active" data-tool="office">
-    <span class="tool-icon">💼</span>
-    <span class="tool-label">Office</span>
-  </button>
-  <button class="tool-btn" data-tool="condo">
-    <span class="tool-icon">🏠</span>
-    <span class="tool-label">Condo</span>
-  </button>
-  <button class="tool-btn" data-tool="single_hotel">
-    <span class="tool-icon">🛏</span>
-    <span class="tool-label">Single</span>
-  </button>
-  <button class="tool-btn" data-tool="twin_hotel">
-    <span class="tool-icon">🛎</span>
-    <span class="tool-label">Twin</span>
-  </button>
-  <button class="tool-btn" data-tool="suite_hotel">
-    <span class="tool-icon">🌟</span>
-    <span class="tool-label">Suite</span>
-  </button>
-  <button class="tool-btn" data-tool="restaurant">
-    <span class="tool-icon">🍽</span>
-    <span class="tool-label">Restaurant</span>
-  </button>
-  <button class="tool-btn" data-tool="cafe">
-    <span class="tool-icon">☕</span>
-    <span class="tool-label">Cafe</span>
-  </button>
-  <button class="tool-btn" data-tool="recycling">
-    <span class="tool-icon">♻️</span>
-    <span class="tool-label">Recycling</span>
-  </button>
-  <button class="tool-btn" data-tool="subway">
-    <span class="tool-icon">🚇</span>
-    <span class="tool-label">Subway</span>
-  </button>
-  <button class="tool-btn" data-tool="carpark_ramp">
-    <span class="tool-icon">🚗</span>
-    <span class="tool-label">C.Ramp</span>
-  </button>
-  <button class="tool-btn" data-tool="carpark_lot">
-    <span class="tool-icon">🅿️</span>
-    <span class="tool-label">C.Lot</span>
-  </button>
-  <button class="tool-btn" data-tool="elevator">
-    <span class="tool-icon">🛗</span>
-    <span class="tool-label">Elevator</span>
-  </button>
-  <button class="tool-btn" data-tool="housekeeping">
-    <span class="tool-icon">🧺</span>
-    <span class="tool-label">Housekeep</span>
-  </button>
-  <button class="tool-btn" data-tool="security">
-    <span class="tool-icon">🔒</span>
-    <span class="tool-label">Security</span>
-  </button>
-  <button class="tool-btn" data-tool="retail">
-    <span class="tool-icon">🛍</span>
-    <span class="tool-label">Retail</span>
-  </button>
-  <button class="tool-btn destroy" data-tool="destroy">
-    <span class="tool-icon">🔨</span>
-    <span class="tool-label">Destroy</span>
-  </button>
-  <button id="daynight-btn" class="tool-btn daynight">
-    <span class="tool-icon" id="daynight-icon">☀️</span>
-    <span class="tool-label" id="daynight-label">Day</span>
-  </button>
+  <div class="fund-display">
+    <div class="fund-label">Tower Fund</div>
+    <div id="fund-amount">$2,000,000</div>
+  </div>
+  <div class="clock-display">
+    <div id="clock-time">09:00</div>
+    <div id="clock-date">Y0 Q1 D1</div>
+    <div class="clock-controls">
+      <button id="btn-stop" class="clock-btn" title="Stop">⏹</button>
+      <button id="btn-play" class="clock-btn active" title="Play">▶</button>
+      <button id="btn-ff" class="clock-btn" title="Fast Forward">⏩</button>
+    </div>
+  </div>
+  <div class="tool-grid">
+    <button class="tool-btn active" data-tool="select">
+      <span class="tool-icon">👆</span>
+      <span class="tool-label">Select</span>
+    </button>
+    <button class="tool-btn" data-tool="lobby">
+      <span class="tool-icon">🏛</span>
+      <span class="tool-label">Lobby</span>
+    </button>
+    <button class="tool-btn" data-tool="office">
+      <span class="tool-icon">💼</span>
+      <span class="tool-label">Office</span>
+    </button>
+    <button class="tool-btn" data-tool="condo">
+      <span class="tool-icon">🏠</span>
+      <span class="tool-label">Condo</span>
+    </button>
+    <button class="tool-btn" data-tool="single_hotel">
+      <span class="tool-icon">🛏</span>
+      <span class="tool-label">Single</span>
+    </button>
+    <button class="tool-btn" data-tool="twin_hotel">
+      <span class="tool-icon">🛎</span>
+      <span class="tool-label">Twin</span>
+    </button>
+    <button class="tool-btn" data-tool="suite_hotel">
+      <span class="tool-icon">🌟</span>
+      <span class="tool-label">Suite</span>
+    </button>
+    <button class="tool-btn" data-tool="restaurant">
+      <span class="tool-icon">🍽</span>
+      <span class="tool-label">Restaurant</span>
+    </button>
+    <button class="tool-btn" data-tool="cafe">
+      <span class="tool-icon">☕</span>
+      <span class="tool-label">Cafe</span>
+    </button>
+    <button class="tool-btn" data-tool="recycling">
+      <span class="tool-icon">♻️</span>
+      <span class="tool-label">Recycling</span>
+    </button>
+    <button class="tool-btn" data-tool="subway">
+      <span class="tool-icon">🚇</span>
+      <span class="tool-label">Subway</span>
+    </button>
+    <button class="tool-btn" data-tool="carpark_ramp">
+      <span class="tool-icon">🚗</span>
+      <span class="tool-label">C.Ramp</span>
+    </button>
+    <button class="tool-btn" data-tool="carpark_lot">
+      <span class="tool-icon">🅿️</span>
+      <span class="tool-label">C.Lot</span>
+    </button>
+    <button class="tool-btn" data-tool="elevator">
+      <span class="tool-icon">🛗</span>
+      <span class="tool-label">Elevator</span>
+    </button>
+    <button class="tool-btn" data-tool="housekeeping">
+      <span class="tool-icon">🧺</span>
+      <span class="tool-label">Housekeep</span>
+    </button>
+    <button class="tool-btn" data-tool="security">
+      <span class="tool-icon">🔒</span>
+      <span class="tool-label">Security</span>
+    </button>
+    <button class="tool-btn" data-tool="retail">
+      <span class="tool-icon">🛍</span>
+      <span class="tool-label">Retail</span>
+    </button>
+    <button class="tool-btn destroy" data-tool="destroy">
+      <span class="tool-icon">🔨</span>
+      <span class="tool-label">Destroy</span>
+    </button>
+    <button id="daynight-btn" class="tool-btn daynight">
+      <span class="tool-icon" id="daynight-icon">☀️</span>
+      <span class="tool-label" id="daynight-label">Day</span>
+    </button>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.9.1/dist/pixi.min.js"></script>
@@ -139,7 +223,7 @@ const FLOOR_H        = 36;   // total floor band: 12px beam + 24px room
 const BEAM_H         = 12;   // structural beam/slab at top of each floor band
 const ROOM_H         = 24;   // usable room height (FLOOR_H - BEAM_H)
 const CELL_W         = 8;
-const TOOLBAR_H      = 60;
+const TOOLBAR_W      = 114;
 const GRID_COLS      = 250;
 const MAX_FLOORS     = 100;
 const MAX_BASEMENT   = 10;
@@ -231,9 +315,12 @@ function loadState() {
     console.warn('tower2: failed to load saved state', e);
   }
 }
-let tool      = 'office';
+let tool      = 'select';
 let gameHour  = 9;
 let prevHourInt = 9;
+let totalGameHours = 9;  // drives gameHour; starts at 9am day 1 year 0
+let clockState = 'play'; // 'stopped' | 'play' | 'fast'
+let towerFund  = 2000000;
 
 let viewX = 0;
 let viewY = 0;
@@ -997,10 +1084,13 @@ function updateDayNightButton() {
 
 function toggleDayNight() {
   const isNight = gameHour < 6 || gameHour >= 21;
-  gameHour = isNight ? 9 : 22;
+  const newHour = isNight ? 9 : 22;
+  totalGameHours = Math.floor(totalGameHours / 24) * 24 + newHour;
+  gameHour = newHour;
   prevHourInt = Math.floor(gameHour);
   updateAllRoomTextures();
   updateDayNightButton();
+  updateClockDisplay();
   drawSky();
   drawGround();
 }
@@ -1340,6 +1430,13 @@ function attachToolbar() {
 
   daynightBtn.addEventListener('click', toggleDayNight);
   daynightBtn.addEventListener('touchend', e => { e.preventDefault(); toggleDayNight(); });
+
+  ['stop', 'play', 'ff'].forEach(id => {
+    const btn = document.getElementById(`btn-${id}`);
+    const handler = () => { clockState = id === 'ff' ? 'fast' : id; updateClockButtons(); };
+    btn.addEventListener('click', handler);
+    btn.addEventListener('touchend', e => { e.preventDefault(); handler(); });
+  });
 }
 
 // ─── Scene graph ──────────────────────────────────────────────────────────────
@@ -1396,10 +1493,42 @@ function destroyBeamSprite(roomId) {
   if (ts) { beamLayer.removeChild(ts); ts.destroy(); beamSprites.delete(roomId); }
 }
 
+// ─── Fund & clock display ─────────────────────────────────────────────────────
+function updateFundDisplay() {
+  document.getElementById('fund-amount').textContent = '$' + towerFund.toLocaleString();
+}
+
+function getTimeInfo() {
+  const hourOfDay     = totalGameHours % 24;
+  const totalDays     = Math.floor(totalGameHours / 24);
+  const dayOfQuarter  = (totalDays % 30) + 1;
+  const totalQuarters = Math.floor(totalDays / 30);
+  const quarter       = (totalQuarters % 4) + 1;
+  const year          = Math.floor(totalQuarters / 4);
+  return { hourOfDay, dayOfQuarter, quarter, year };
+}
+
+function updateClockDisplay() {
+  const { hourOfDay, dayOfQuarter, quarter, year } = getTimeInfo();
+  const h = Math.floor(hourOfDay);
+  document.getElementById('clock-time').textContent = String(h).padStart(2, '0') + ':00';
+  document.getElementById('clock-date').textContent = `Y${year} Q${quarter} D${dayOfQuarter}`;
+}
+
+function updateClockButtons() {
+  document.getElementById('btn-stop').classList.toggle('active', clockState === 'stopped');
+  document.getElementById('btn-play').classList.toggle('active', clockState === 'play');
+  document.getElementById('btn-ff').classList.toggle('active', clockState === 'fast');
+}
+
 // ─── Game loop (ticker) ───────────────────────────────────────────────────────
 function gameLoop(ticker) {
-  // Advance time: 1 real minute = 1 in-game hour
-  gameHour = (gameHour + ticker.deltaMS / 60000) % 24;
+  // Advance time: normal = 1 hr/30s, fast = 1 hr/5s
+  if (clockState !== 'stopped') {
+    const hoursPerMs = clockState === 'fast' ? 1 / 5000 : 1 / 30000;
+    totalGameHours += ticker.deltaMS * hoursPerMs;
+    gameHour = totalGameHours % 24;
+  }
   const hourInt = Math.floor(gameHour);
   if (hourInt !== prevHourInt) {
     prevHourInt = hourInt;
@@ -1407,6 +1536,7 @@ function gameLoop(ticker) {
     drawSky();
     drawGround();
     updateDayNightButton();
+    updateClockDisplay();
   }
 
   // Animate elevator cars
@@ -1444,8 +1574,8 @@ function showError(msg) {
   try {
     app = new PIXI.Application();
     await app.init({
-      width:           window.innerWidth,
-      height:          window.innerHeight - TOOLBAR_H,
+      width:           window.innerWidth - TOOLBAR_W,
+      height:          window.innerHeight,
       backgroundColor: 0x020610,
       antialias:       false,
       resolution:      window.devicePixelRatio || 1,
@@ -1453,6 +1583,9 @@ function showError(msg) {
     });
 
     app.canvas.id = 'game';
+    app.canvas.style.position = 'fixed';
+    app.canvas.style.left = TOOLBAR_W + 'px';
+    app.canvas.style.top = '0';
     document.body.insertBefore(app.canvas, document.getElementById('toolbar'));
 
     // Load all sprite sheets — catch individually so we can report which one failed
@@ -1492,10 +1625,14 @@ function showError(msg) {
     attachInput();
     attachToolbar();
 
+    updateClockDisplay();
+    updateFundDisplay();
+    updateClockButtons();
+
     app.ticker.add(gameLoop);
 
     window.addEventListener('resize', () => {
-      app.renderer.resize(window.innerWidth, window.innerHeight - TOOLBAR_H);
+      app.renderer.resize(window.innerWidth - TOOLBAR_W, window.innerHeight);
       refreshVisuals();
     });
   } catch (err) {
