@@ -2013,8 +2013,8 @@ function showSpellingCreate() {
 function saveSpellingTest() {
   const name = document.getElementById('sp-name-input').value.trim();
   if (!name) { showToast('Please enter a test name'); return; }
-  const writingWords = document.getElementById('sp-writing-input').value.split(',').map(w => w.trim()).filter(Boolean);
-  const pinyinWords  = document.getElementById('sp-pinyin-input').value.split(',').map(w => w.trim()).filter(Boolean);
+  const writingWords = document.getElementById('sp-writing-input').value.split(/[,，]/).map(w => w.trim()).filter(Boolean);
+  const pinyinWords  = document.getElementById('sp-pinyin-input').value.split(/[,，]/).map(w => w.trim()).filter(Boolean);
   if (writingWords.length === 0 && pinyinWords.length === 0) { showToast('Add at least one word to test'); return; }
   const tests = spellingTests();
   tests.push({ id: Date.now().toString(), level: SP.level, name, writingWords, pinyinWords });
