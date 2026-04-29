@@ -331,9 +331,17 @@ let dragStartX = 0, dragStartY = 0, dragViewX = 0, dragViewY = 0;
 let lastTouchMidX = 0, lastTouchMidY = 0, touchMoved = false, wasPanning = false;
 let lobbyResizeState = null; // { room, end, startX, origCol, origWidth }
 
+// ─── Star field data (normalized positions, generated once) ───────────────────
+const STAR_DATA = Array.from({ length: 280 }, () => ({
+  nx: Math.random(),
+  ny: Math.random(),
+  r:  Math.random() < 0.60 ? 0.5 : (Math.random() < 0.75 ? 1.0 : 1.5),
+  a:  0.35 + Math.random() * 0.65,
+}));
+
 // ─── PixiJS scene objects ─────────────────────────────────────────────────────
 let app;
-let skyGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, beamLayer, elevatorLayer, subwayLineLayer, ghostGraphics, labelContainer;
+let skyGraphics, starGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, beamLayer, elevatorLayer, subwayLineLayer, ghostGraphics, labelContainer;
 let subwayLineTilingSprite = null;
 
 const texCache      = {};           // key → PIXI.Texture
@@ -969,14 +977,30 @@ const SKY_KEYS = [
   [ 6,  0x0A0520, 0x1A0840, 0x782858, 0xFF5818],  // sunrise
   [ 7,  0x163060, 0x2A5898, 0x78A8D0, 0xF0A040],  // early morning
   [ 8,  0x205898, 0x3C78C0, 0x7DC0E0, 0xE0D0A0],  // morning clearing
-  [10,  0x1A5AA0, 0x3A80CC, 0x80C2E8, 0xC5E5F5],  // clear day
-  [17,  0x1A5AA0, 0x3A80CC, 0x80C2E8, 0xC5E5F5],  // afternoon
+  [10,  0x4A9ED6, 0x68B8E8, 0xA8DAEF, 0xE8F8FF],  // clear day bright
+  [17,  0x4A9ED6, 0x68B8E8, 0xA8DAEF, 0xE8F8FF],  // afternoon bright
   [18,  0x183878, 0x485890, 0xB07838, 0xF0B848],  // golden hour
   [19,  0x060818, 0x201048, 0xA83828, 0xE86020],  // sunset
   [20,  0x030408, 0x0C0820, 0x482030, 0x882818],  // dusk
   [21,  0x020610, 0x050E22, 0x0A1428, 0x142038],  // night
   [24,  0x020610, 0x050E22, 0x0A1428, 0x142038],  // midnight (wrap)
 ];
+
+function getStarAlpha(h) {
+  const hr = ((h % 24) + 24) % 24;
+  if (hr >= 7 && hr < 19)  return 0;
+  if (hr >= 21 || hr < 5)  return 1;
+  if (hr >= 5  && hr < 7)  return 1 - (hr - 5) / 2;
+  return (hr - 19) / 2;  // 19–21 fade in
+}
+
+function buildStarGraphics() {
+  starGraphics.clear();
+  const W = getAppW(), H = getAppH();
+  for (const s of STAR_DATA) {
+    starGraphics.circle(s.nx * W, s.ny * H, s.r).fill({ color: 0xFFFFFF, alpha: s.a });
+  }
+}
 
 function getSkyColors(hour) {
   const h = ((hour % 24) + 24) % 24;
@@ -1004,6 +1028,7 @@ function drawSky() {
   } catch (_) {
     skyGraphics.rect(0, 0, W, H).fill(getSkyColors(gameHour)[0]);
   }
+  if (starGraphics) starGraphics.alpha = getStarAlpha(gameHour);
 }
 
 function drawGround() {
@@ -1469,6 +1494,7 @@ function attachToolbar() {
 // ─── Scene graph ──────────────────────────────────────────────────────────────
 function buildScene() {
   skyGraphics    = new PIXI.Graphics();
+  starGraphics   = new PIXI.Graphics();
   groundGraphics = new PIXI.Graphics();
   worldContainer = new PIXI.Container();
   gridGraphics   = new PIXI.Graphics();   // screen-space, NOT in worldContainer
@@ -1497,6 +1523,7 @@ function buildScene() {
   worldContainer.addChild(ghostGraphics);
 
   app.stage.addChild(skyGraphics);
+  app.stage.addChild(starGraphics);
   app.stage.addChild(groundGraphics);
   app.stage.addChild(worldContainer);
   app.stage.addChild(gridGraphics);
@@ -1647,6 +1674,7 @@ function showError(msg) {
     buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex, carparkRamp: carparkRampTex, basementBg: basementBgTex, carparkLot: carparkLotTex, elevator: elevatorTex });
 
     buildScene();
+    buildStarGraphics();
     loadState();
     refreshVisuals();
 
@@ -1661,6 +1689,7 @@ function showError(msg) {
 
     window.addEventListener('resize', () => {
       app.renderer.resize(window.innerWidth - TOOLBAR_W, window.innerHeight);
+      buildStarGraphics();
       refreshVisuals();
     });
   } catch (err) {
