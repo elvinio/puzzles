@@ -955,27 +955,54 @@ function updateAllRoomTextures() {
 }
 
 // ─── Sky & ground ─────────────────────────────────────────────────────────────
+function lerpColor(c1, c2, t) {
+  const r1 = (c1 >> 16) & 0xFF, g1 = (c1 >> 8) & 0xFF, b1 = c1 & 0xFF;
+  const r2 = (c2 >> 16) & 0xFF, g2 = (c2 >> 8) & 0xFF, b2 = c2 & 0xFF;
+  return (Math.round(r1 + (r2-r1)*t) << 16) | (Math.round(g1 + (g2-g1)*t) << 8) | Math.round(b1 + (b2-b1)*t);
+}
+
+// Keyframes: [hour, top, upper, lower, horizon]
+const SKY_KEYS = [
+  [ 0,  0x020610, 0x050E22, 0x0A1428, 0x142038],  // midnight
+  [ 4,  0x010408, 0x04080E, 0x08101E, 0x101830],  // deep night
+  [ 5,  0x02050F, 0x060A18, 0x100C28, 0x281830],  // pre-dawn
+  [ 6,  0x0A0520, 0x1A0840, 0x782858, 0xFF5818],  // sunrise
+  [ 7,  0x163060, 0x2A5898, 0x78A8D0, 0xF0A040],  // early morning
+  [ 8,  0x205898, 0x3C78C0, 0x7DC0E0, 0xE0D0A0],  // morning clearing
+  [10,  0x1A5AA0, 0x3A80CC, 0x80C2E8, 0xC5E5F5],  // clear day
+  [17,  0x1A5AA0, 0x3A80CC, 0x80C2E8, 0xC5E5F5],  // afternoon
+  [18,  0x183878, 0x485890, 0xB07838, 0xF0B848],  // golden hour
+  [19,  0x060818, 0x201048, 0xA83828, 0xE86020],  // sunset
+  [20,  0x030408, 0x0C0820, 0x482030, 0x882818],  // dusk
+  [21,  0x020610, 0x050E22, 0x0A1428, 0x142038],  // night
+  [24,  0x020610, 0x050E22, 0x0A1428, 0x142038],  // midnight (wrap)
+];
+
+function getSkyColors(hour) {
+  const h = ((hour % 24) + 24) % 24;
+  let i = SKY_KEYS.length - 2;
+  for (let k = 0; k < SKY_KEYS.length - 1; k++) {
+    if (h >= SKY_KEYS[k][0] && h < SKY_KEYS[k+1][0]) { i = k; break; }
+  }
+  const k0 = SKY_KEYS[i], k1 = SKY_KEYS[i+1];
+  const t = (h - k0[0]) / (k1[0] - k0[0]);
+  return [lerpColor(k0[1],k1[1],t), lerpColor(k0[2],k1[2],t), lerpColor(k0[3],k1[3],t), lerpColor(k0[4],k1[4],t)];
+}
+
 function drawSky() {
   const W = getAppW(), H = getAppH();
   const gY = screenGroundY();
-  const isNight = gameHour < 6 || gameHour >= 21;
   skyGraphics.clear();
   try {
+    const [top, upper, lower, horizon] = getSkyColors(gameHour);
     const grad = new PIXI.FillGradient(0, 0, 0, Math.max(gY, 1));
-    if (isNight) {
-      grad.addColorStop(0,   0x020610);
-      grad.addColorStop(0.5, 0x0A1428);
-      grad.addColorStop(1,   0x1A2444);
-    } else {
-      grad.addColorStop(0,   0x2B6CB0);
-      grad.addColorStop(0.4, 0x4A90D9);
-      grad.addColorStop(0.8, 0x87CEEB);
-      grad.addColorStop(1,   0xC8E8F8);
-    }
+    grad.addColorStop(0,   top);
+    grad.addColorStop(0.3, upper);
+    grad.addColorStop(0.7, lower);
+    grad.addColorStop(1,   horizon);
     skyGraphics.rect(0, 0, W, H).fill(grad);
   } catch (_) {
-    // Fallback if FillGradient is unavailable
-    skyGraphics.rect(0, 0, W, H).fill(isNight ? 0x020610 : 0x2B6CB0);
+    skyGraphics.rect(0, 0, W, H).fill(getSkyColors(gameHour)[0]);
   }
 }
 
@@ -1523,17 +1550,18 @@ function updateClockButtons() {
 
 // ─── Game loop (ticker) ───────────────────────────────────────────────────────
 function gameLoop(ticker) {
-  // Advance time: normal = 1 hr/30s, fast = 1 hr/5s
+  // Advance time: normal = 1 hr/5s, fast = 1 hr/1s
   if (clockState !== 'stopped') {
-    const hoursPerMs = clockState === 'fast' ? 1 / 5000 : 1 / 30000;
+    const hoursPerMs = clockState === 'fast' ? 1 / 1000 : 1 / 5000;
     totalGameHours += ticker.deltaMS * hoursPerMs;
     gameHour = totalGameHours % 24;
   }
+  // Sky redraws every frame for smooth color transitions
+  drawSky();
   const hourInt = Math.floor(gameHour);
   if (hourInt !== prevHourInt) {
     prevHourInt = hourInt;
     updateAllRoomTextures();
-    drawSky();
     drawGround();
     updateDayNightButton();
     updateClockDisplay();
