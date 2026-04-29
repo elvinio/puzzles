@@ -624,6 +624,96 @@
       text-align: center;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ══ Spelling Screen ══ */
+    .sp-subview { display: none; }
+    .sp-subview.sp-active { display: contents; }
+    .sp-test-list { width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 8px; }
+    .sp-test-card {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .sp-test-card-info { flex: 1; cursor: pointer; min-width: 0; }
+    .sp-test-card-info:hover .sp-test-name { color: var(--p-xl); }
+    .sp-test-name { font-size: 1rem; font-weight: 800; color: var(--p-text); transition: color 0.12s; }
+    .sp-test-meta { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
+    .sp-empty { color: var(--muted); font-size: 0.9rem; text-align: center; padding: 40px; width: 100%; max-width: 620px; }
+    .sp-form { width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 14px; }
+    .sp-field { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 620px; }
+    .sp-label { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
+    .sp-input {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 10px;
+      color: var(--p-text);
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+    .sp-input:focus { outline: none; border-color: var(--p-lt); }
+    .sp-input::placeholder { color: var(--muted); opacity: 0.6; }
+    .sp-q-num { font-size: 0.68rem; font-weight: 800; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; width: 100%; max-width: 620px; }
+    .sp-question-card {
+      width: 100%;
+      max-width: 620px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 18px;
+      padding: 28px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+    }
+    .sp-q-audio-row { display: flex; align-items: center; gap: 16px; }
+    .sp-q-speaker {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: var(--p);
+      border: none; color: #fff;
+      font-size: 1.6rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s, transform 0.1s;
+      touch-action: manipulation;
+    }
+    .sp-q-speaker:hover { background: var(--p-lt); }
+    .sp-q-speaker:active { transform: scale(0.93); }
+    .sp-q-hint { font-size: 0.82rem; color: var(--muted); }
+    .sp-q-sentence {
+      font-size: 1.25rem;
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      color: var(--p-text);
+      line-height: 1.8;
+    }
+    .sp-blank { color: var(--p-xl); font-style: normal; font-family: system-ui, -apple-system, sans-serif; }
+    .sp-underline { text-decoration: underline; text-underline-offset: 4px; }
+    .sp-bracket { color: var(--muted); font-family: system-ui, -apple-system, sans-serif; font-size: 1rem; }
+    .sp-results-section { width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 8px; }
+    .sp-answer-item {
+      background: var(--surface);
+      border: 1.5px solid var(--brd);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sp-ans-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .sp-ans-qnum { font-size: 0.72rem; font-weight: 800; color: var(--muted); min-width: 28px; flex-shrink: 0; }
+    .sp-ans-word { font-size: 1.4rem; font-weight: 900; font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; color: var(--p-text); line-height: 1; }
+    .sp-ans-arrow { font-size: 0.8rem; color: var(--muted); }
+    .sp-ans-pinyin { font-size: 0.9rem; color: var(--p-xl); font-weight: 700; }
+    .sp-ans-sentence { font-size: 0.78rem; color: var(--muted); font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -639,6 +729,7 @@
       <a class="btn btn-outline btn-sm" href="chinese-cards.html">Cards</a>
       <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
       <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
+      <button class="btn btn-outline btn-sm" id="setup-spelling-btn">默写</button>
     </div>
   </div>
 
@@ -685,6 +776,86 @@
 
   <div class="divider"></div>
   <button class="btn" id="setup-start" style="width:100%;max-width:620px">▶ Start Practice</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN: SPELLING
+════════════════════════════════════════════════ -->
+<div id="screen-spelling" class="screen">
+
+  <!-- Sub-view: list -->
+  <div id="sp-list-view" class="sp-subview sp-active">
+    <div class="topbar">
+      <button class="back-link" id="sp-back-to-setup">← Back</button>
+      <h1>默写 Spelling</h1>
+      <div class="topbar-right">
+        <button class="btn btn-sm" id="sp-new-btn">＋ New</button>
+      </div>
+    </div>
+    <div id="sp-test-list" class="sp-test-list"></div>
+  </div>
+
+  <!-- Sub-view: create form -->
+  <div id="sp-create-view" class="sp-subview">
+    <div class="topbar">
+      <button class="back-link" id="sp-form-back">← Back</button>
+      <h1>New Test</h1>
+      <div class="topbar-right"></div>
+    </div>
+    <div class="sp-form">
+      <div class="sp-field">
+        <div class="sp-label">Level</div>
+        <div class="tab-row" id="sp-level-tabs">
+          <button class="tab active" data-level="p1">Primary 1</button>
+          <button class="tab" data-level="p2">Primary 2</button>
+          <button class="tab" data-level="p3">Primary 3</button>
+        </div>
+      </div>
+      <div class="sp-field">
+        <label class="sp-label" for="sp-name-input">Test Name</label>
+        <input class="sp-input" id="sp-name-input" type="text" placeholder="e.g. Week 3 Spelling">
+      </div>
+      <div class="sp-field">
+        <label class="sp-label" for="sp-writing-input">Writing Test Words</label>
+        <div style="font-size:0.72rem;color:var(--muted)">Comma-separated — audio plays, user writes the characters</div>
+        <input class="sp-input" id="sp-writing-input" type="text" placeholder="e.g. 天气,月亮,衣服">
+      </div>
+      <div class="sp-field">
+        <label class="sp-label" for="sp-pinyin-input">Pinyin Test Words</label>
+        <div style="font-size:0.72rem;color:var(--muted)">Comma-separated — sentence shown, user writes the pinyin</div>
+        <input class="sp-input" id="sp-pinyin-input" type="text" placeholder="e.g. 衣,鱼,雨">
+      </div>
+      <button class="btn" id="sp-save-btn" style="width:100%">Save Test</button>
+    </div>
+  </div>
+
+  <!-- Sub-view: active test -->
+  <div id="sp-test-view" class="sp-subview">
+    <div class="topbar">
+      <button class="back-link" id="sp-test-end-btn">✕ End</button>
+      <h1 id="sp-test-title">Spelling</h1>
+      <div class="topbar-right"></div>
+    </div>
+    <div class="sp-q-num" id="sp-progress-label"></div>
+    <div class="sp-question-card" id="sp-question-card"></div>
+    <div class="btn-row" style="width:100%;max-width:620px">
+      <button class="btn" id="sp-next-btn" style="width:100%">Next →</button>
+    </div>
+  </div>
+
+  <!-- Sub-view: results -->
+  <div id="sp-results-view" class="sp-subview">
+    <div class="topbar">
+      <div style="width:60px"></div>
+      <h1>Answers</h1>
+      <div style="width:60px"></div>
+    </div>
+    <div id="sp-results-content" style="width:100%;max-width:620px;display:flex;flex-direction:column;gap:16px"></div>
+    <div class="btn-row" style="width:100%;max-width:620px;margin-top:8px">
+      <button class="btn btn-outline" id="sp-results-back-btn" style="width:100%">← Back to Tests</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- ═══════════════════════════════════════════════
@@ -1775,6 +1946,261 @@ document.getElementById('setup-browse-btn').addEventListener('click', async () =
   await dataPromise;
   openBrowse('setup');
 });
+
+// ═══════════════════════════════════════════════════════════════
+// SPELLING MODE
+// ═══════════════════════════════════════════════════════════════
+const SP = { level: 'p1', questions: [], currentIdx: 0, testName: '' };
+
+function spellingTests() {
+  try { return JSON.parse(localStorage.getItem('spelling-tests') || '[]'); } catch { return []; }
+}
+function saveSpellingTests(arr) { localStorage.setItem('spelling-tests', JSON.stringify(arr)); }
+
+function showSpellingSubview(id) {
+  ['sp-list-view','sp-create-view','sp-test-view','sp-results-view'].forEach(sid => {
+    document.getElementById(sid).classList.toggle('sp-active', sid === id);
+  });
+}
+
+function showSpellingScreen() {
+  renderSpellingList();
+  showSpellingSubview('sp-list-view');
+  showScreen('screen-spelling');
+}
+
+function renderSpellingList() {
+  const tests = spellingTests();
+  const container = document.getElementById('sp-test-list');
+  if (tests.length === 0) {
+    container.innerHTML = '<div class="sp-empty">No tests yet. Tap ＋ New to create one.</div>';
+    return;
+  }
+  container.innerHTML = '';
+  tests.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'sp-test-card';
+    const wc = (t.writingWords || []).length;
+    const pc = (t.pinyinWords || []).length;
+    card.innerHTML = `
+      <div class="sp-test-card-info" data-id="${esc(t.id)}">
+        <div class="sp-test-name">${esc(t.name)}</div>
+        <div class="sp-test-meta">${esc(t.level.toUpperCase())} · ${wc} writing · ${pc} pinyin</div>
+      </div>
+      <button class="btn btn-danger btn-sm" data-del="${esc(t.id)}" style="flex-shrink:0">✕</button>`;
+    card.querySelector('.sp-test-card-info').addEventListener('click', () => startSpellingTest(t.id));
+    card.querySelector('[data-del]').addEventListener('click', e => { e.stopPropagation(); deleteSpellingTest(t.id); });
+    container.appendChild(card);
+  });
+}
+
+function deleteSpellingTest(id) {
+  saveSpellingTests(spellingTests().filter(t => t.id !== id));
+  renderSpellingList();
+}
+
+function showSpellingCreate() {
+  SP.level = 'p1';
+  document.getElementById('sp-name-input').value = '';
+  document.getElementById('sp-pinyin-input').value = '';
+  document.getElementById('sp-writing-input').value = '';
+  document.querySelectorAll('#sp-level-tabs .tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.level === 'p1');
+  });
+  showSpellingSubview('sp-create-view');
+}
+
+function saveSpellingTest() {
+  const name = document.getElementById('sp-name-input').value.trim();
+  if (!name) { showToast('Please enter a test name'); return; }
+  const writingWords = document.getElementById('sp-writing-input').value.split(',').map(w => w.trim()).filter(Boolean);
+  const pinyinWords  = document.getElementById('sp-pinyin-input').value.split(',').map(w => w.trim()).filter(Boolean);
+  if (writingWords.length === 0 && pinyinWords.length === 0) { showToast('Add at least one word to test'); return; }
+  const tests = spellingTests();
+  tests.push({ id: Date.now().toString(), level: SP.level, name, writingWords, pinyinWords });
+  saveSpellingTests(tests);
+  renderSpellingList();
+  showSpellingSubview('sp-list-view');
+  showToast('Test saved!');
+}
+
+function findSpellingEntry(level, word) {
+  const data = DATA[level];
+  if (!data) return null;
+  for (const lk of Object.keys(data)) {
+    for (const entry of data[lk]) {
+      if (entry.character === word) return { entry, pinyin: entry.pinyin };
+    }
+  }
+  // Search inside compound words array
+  for (const lk of Object.keys(data)) {
+    for (const entry of data[lk]) {
+      for (const w of (entry.words || [])) {
+        if (w === word || w.startsWith(word + ' ') || w.startsWith(word + '(')) {
+          const m = w.match(/\(([^,)]+)/);
+          return { entry, pinyin: m ? m[1].trim() : entry.pinyin };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function parseSentence(str) {
+  if (!str) return { chinese: '', english: '' };
+  const idx = str.indexOf('(');
+  if (idx === -1) return { chinese: str.trim(), english: '' };
+  return { chinese: str.slice(0, idx).trim(), english: str.slice(idx + 1).replace(/\)$/, '').trim() };
+}
+
+function buildSpellingQuestions(test) {
+  const questions = [];
+  const skipped = [];
+  for (const word of (test.writingWords || [])) {
+    const found = findSpellingEntry(test.level, word);
+    if (!found) { skipped.push(word); continue; }
+    const { chinese } = parseSentence(found.entry.sentence);
+    questions.push({ type: 'writing', word, pinyin: found.pinyin, chinese });
+  }
+  for (const word of (test.pinyinWords || [])) {
+    const found = findSpellingEntry(test.level, word);
+    if (!found) { skipped.push(word); continue; }
+    const { chinese } = parseSentence(found.entry.sentence);
+    questions.push({ type: 'pinyin', word, pinyin: found.pinyin, chinese });
+  }
+  if (skipped.length) setTimeout(() => showToast('Not found, skipped: ' + skipped.join(', ')), 300);
+  return questions;
+}
+
+function startSpellingTest(id) {
+  dataPromise.then(() => {
+    const test = spellingTests().find(t => t.id === id);
+    if (!test) return;
+    SP.questions = buildSpellingQuestions(test);
+    SP.currentIdx = 0;
+    SP.testName = test.name;
+    if (SP.questions.length === 0) { showToast('No valid words found for this test'); return; }
+    document.getElementById('sp-test-title').textContent = test.name;
+    showSpellingSubview('sp-test-view');
+    renderSpellingQuestion(0);
+  });
+}
+
+function renderSpellingQuestion(idx) {
+  const q = SP.questions[idx];
+  const total = SP.questions.length;
+  document.getElementById('sp-progress-label').textContent = `Question ${idx + 1} of ${total}`;
+  document.getElementById('sp-next-btn').textContent = idx < total - 1 ? 'Next →' : 'See Answers';
+
+  const card = document.getElementById('sp-question-card');
+  card.innerHTML = '';
+
+  const numDiv = document.createElement('div');
+  numDiv.className = 'sp-q-num';
+  numDiv.textContent = q.type === 'writing'
+    ? `Q${idx + 1}. — Write the character`
+    : `Q${idx + 1}. — Write the pinyin`;
+  card.appendChild(numDiv);
+
+  if (q.type === 'writing') {
+    const audioRow = document.createElement('div');
+    audioRow.className = 'sp-q-audio-row';
+    const speakerBtn = document.createElement('button');
+    speakerBtn.className = 'sp-q-speaker';
+    speakerBtn.innerHTML = '🔊';
+    speakerBtn.title = 'Listen again';
+    speakerBtn.addEventListener('click', () => speakChinese(q.word));
+    const hint = document.createElement('div');
+    hint.className = 'sp-q-hint';
+    hint.textContent = 'Tap to hear again';
+    audioRow.appendChild(speakerBtn);
+    audioRow.appendChild(hint);
+    card.appendChild(audioRow);
+
+    if (q.chinese) {
+      const sentDiv = document.createElement('div');
+      sentDiv.className = 'sp-q-sentence';
+      const blankHtml = `<span class="sp-blank">___</span><span class="sp-blank" style="font-size:0.85rem"> (${esc(q.pinyin)})</span>`;
+      sentDiv.innerHTML = esc(q.chinese).replace(q.word, blankHtml);
+      card.appendChild(sentDiv);
+    }
+    speakChinese(q.word);
+
+  } else {
+    if (q.chinese) {
+      const sentDiv = document.createElement('div');
+      sentDiv.className = 'sp-q-sentence';
+      const underlineHtml = `<span class="sp-underline">${esc(q.word)}</span><span class="sp-bracket"> [ ]</span>`;
+      sentDiv.innerHTML = esc(q.chinese).replace(q.word, underlineHtml);
+      card.appendChild(sentDiv);
+    }
+    const hint = document.createElement('div');
+    hint.className = 'sp-q-hint';
+    hint.textContent = 'Write the pinyin for the underlined word';
+    card.appendChild(hint);
+  }
+}
+
+function nextSpellingQuestion() {
+  if (SP.currentIdx < SP.questions.length - 1) {
+    SP.currentIdx++;
+    renderSpellingQuestion(SP.currentIdx);
+  } else {
+    showSpellingResults();
+  }
+}
+
+function showSpellingResults() {
+  const container = document.getElementById('sp-results-content');
+  container.innerHTML = '';
+  const writingQs = SP.questions.filter(q => q.type === 'writing');
+  const pinyinQs  = SP.questions.filter(q => q.type === 'pinyin');
+
+  function buildSection(title, qs, startNum) {
+    if (!qs.length) return;
+    const sec = document.createElement('div');
+    sec.className = 'sp-results-section';
+    const hdr = document.createElement('div');
+    hdr.className = 'section-label';
+    hdr.textContent = title;
+    sec.appendChild(hdr);
+    qs.forEach((q, i) => {
+      const item = document.createElement('div');
+      item.className = 'sp-answer-item';
+      const top = document.createElement('div');
+      top.className = 'sp-ans-top';
+      top.innerHTML = `
+        <span class="sp-ans-qnum">Q${startNum + i}.</span>
+        <span class="sp-ans-word">${esc(q.word)}</span>
+        <span class="sp-ans-arrow">→</span>
+        <span class="sp-ans-pinyin">${esc(q.pinyin)}</span>`;
+      item.appendChild(top);
+      if (q.chinese) {
+        const sent = document.createElement('div');
+        sent.className = 'sp-ans-sentence';
+        sent.textContent = q.chinese;
+        item.appendChild(sent);
+      }
+      sec.appendChild(item);
+    });
+    container.appendChild(sec);
+  }
+
+  buildSection('Writing Answers', writingQs, 1);
+  buildSection('Pinyin Answers', pinyinQs, writingQs.length + 1);
+  showSpellingSubview('sp-results-view');
+}
+
+// Spelling event listeners
+document.getElementById('setup-spelling-btn').addEventListener('click', () => showSpellingScreen());
+document.getElementById('sp-back-to-setup').addEventListener('click', () => initSetup());
+document.getElementById('sp-new-btn').addEventListener('click', () => showSpellingCreate());
+document.getElementById('sp-form-back').addEventListener('click', () => showSpellingSubview('sp-list-view'));
+document.getElementById('sp-save-btn').addEventListener('click', () => saveSpellingTest());
+document.getElementById('sp-next-btn').addEventListener('click', () => nextSpellingQuestion());
+document.getElementById('sp-test-end-btn').addEventListener('click', () => showSpellingSubview('sp-list-view'));
+document.getElementById('sp-results-back-btn').addEventListener('click', () => showSpellingSubview('sp-list-view'));
+bindTabs('sp-level-tabs', tab => { SP.level = tab.dataset.level; });
 
 // ═══════════════════════════════════════════════════════════════
 // INIT

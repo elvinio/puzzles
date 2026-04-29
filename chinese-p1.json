@@ -15,7 +15,8 @@
         "衣架 (yī jià, clothes rack)"
       ],
       "definition-english": "Clothing worn on the body; garment or dress",
-      "definition-chinese": "穿在身体上面的东西"
+      "definition-chinese": "穿在身体上面的东西",
+      "sentence": "这件衣服很漂亮。(This piece of clothing is very pretty.)"
     },
     {
       "character": "鱼",
@@ -32,7 +33,8 @@
         "钓鱼 (diào yú, fishing)"
       ],
       "definition-english": "An aquatic vertebrate animal with gills, fins, and scales",
-      "definition-chinese": "生活在水里的脊椎动物,有鳍、鳃和鳞片"
+      "definition-chinese": "生活在水里的脊椎动物,有鳍、鳃和鳞片",
+      "sentence": "水里有很多小鱼。(There are many small fish in the water.)"
     },
     {
       "character": "雨",
@@ -49,7 +51,8 @@
         "雨伞 (yǔ sǎn, umbrella)"
       ],
       "definition-english": "Water falling from clouds in drops",
-      "definition-chinese": "从云里降落下来的水"
+      "definition-chinese": "从云里降落下来的水",
+      "sentence": "外面正在下雨。(It is raining outside.)"
     },
     {
       "character": "一",
@@ -66,7 +69,8 @@
         "一起 (yī qǐ, together)"
       ],
       "definition-english": "The number 1; first",
-      "definition-chinese": "数字1；第一个"
+      "definition-chinese": "数字1；第一个",
+      "sentence": "我们一起去玩吧。(Let's go play together.)"
     },
     {
       "character": "二",
@@ -83,7 +87,8 @@
         "二月 (èr yuè, èr yuè,February)"
       ],
       "definition-english": "The number 2; second",
-      "definition-chinese": "数字2；第二个"
+      "definition-chinese": "数字2；第二个",
+      "sentence": "他在跑步比赛中得了第二名。(He got second place in the running race.)"
     },
     {
       "character": "五",
@@ -99,7 +104,8 @@
         "五月 (wǔ yuè, May)"
       ],
       "definition-english": "The number 5",
-      "definition-chinese": "数字5"
+      "definition-chinese": "数字5",
+      "sentence": "我的爷爷今年五十岁了。(My grandfather is fifty years old this year.)"
     },
     {
       "character": "耳",
@@ -116,7 +122,8 @@
         "耳语 (ěr yǔ, whisper)"
       ],
       "definition-english": "The organ for hearing; ear",
-      "definition-chinese": "听觉器官"
+      "definition-chinese": "听觉器官",
+      "sentence": "大象的耳朵很大。(Elephants have very large ears.)"
     },
     {
       "character": "牙",
@@ -133,7 +140,8 @@
         "牙医 (yá yī, dentist)"
       ],
       "definition-english": "One of the hard white structures in the mouth used for chewing",
-      "definition-chinese": "口腔内用来咀嚼食物的硬白色结构"
+      "definition-chinese": "口腔内用来咀嚼食物的硬白色结构",
+      "sentence": "我们要养成每天用牙刷刷牙的好习惯。(We must develop the good habit of brushing teeth with a toothbrush every day.)"
     },
     {
       "character": "口",
@@ -150,7 +158,8 @@
         "口味 (kǒu wèi, taste)"
       ],
       "definition-english": "The opening in the face through which food enters and sounds come out",
-      "definition-chinese": "脸上进食和发声的开口"
+      "definition-chinese": "脸上进食和发声的开口",
+      "sentence": "新加坡的人口有很多。(The population of Singapore is large.)"
     },
     {
       "character": "人",
@@ -167,7 +176,8 @@
         "家人 (jiā rén, family)"
       ],
       "definition-english": "A human being; people",
-      "definition-chinese": "人类；人"
+      "definition-chinese": "人类；人",
+      "sentence": "我爱我的家人。(I love my family.)"
     }
   ],
   "p1-2": [
@@ -186,7 +196,8 @@
         "木板 (mù bǎn, wooden board)"
       ],
       "definition-english": "The hard fibrous substance of a tree; wood",
-      "definition-chinese": "树的坚硬部分；木材"
+      "definition-chinese": "树的坚硬部分；木材",
+      "sentence": "这块木板很结实。(This wooden board is very sturdy.)"
     },
     {
       "character": "土",
@@ -203,7 +214,8 @@
         "泥土 (ní tǔ, earth)"
       ],
       "definition-english": "The loose material that covers the ground; earth; soil",
-      "definition-chinese": "覆盖地面的松散物质"
+      "definition-chinese": "覆盖地面的松散物质",
+      "sentence": "植物需要泥土才能生长。(Plants need soil to grow.)"
     },
     {
       "character": "马",
@@ -220,7 +232,8 @@
         "马路 (mǎ lù, road)"
       ],
       "definition-english": "A large domesticated animal with hooves and a tail, used for riding",
-      "definition-chinese": "有蹄子和尾巴的大型驯养动物"
+      "definition-chinese": "有蹄子和尾巴的大型驯养动物",
+      "sentence": "过马路要小心。(Be careful when crossing the road.)"
     },
     {
       "character": "八",
@@ -237,7 +250,8 @@
         "八月 (bā yuè, August)"
       ],
       "definition-english": "The number 8",
-      "definition-chinese": "数字8"
+      "definition-chinese": "数字8",
+      "sentence": "八月的天气很热。(The weather in August is very hot.)"
     },
     {
       "character": "巴",
@@ -254,7 +268,8 @@
         "巴掌 (bā zhǎng, palm)"
       ],
       "definition-english": "To cling to; to hope for; to yearn",
-      "definition-chinese": "粘着；期望；渴望"
+      "definition-chinese": "粘着；期望；渴望",
+      "sentence": "我每天坐巴士上学。(I take the bus to school every day.)"
     },
     {
       "character": "你",
@@ -271,7 +286,8 @@
         "你的 (nǐ de, your)"
       ],
       "definition-english": "Second person singular pronoun; you",
-      "definition-chinese": "第二人称代词"
+      "definition-chinese": "第二人称代词",
+      "sentence": "你的书包真好看。(Your schoolbag looks really nice.)"
     },
     {
       "character": "我",
@@ -288,7 +304,8 @@
         "我自己 (wǒ zì jǐ, myself)"
       ],
       "definition-english": "First person singular pronoun; I; me",
-      "definition-chinese": "第一人称代词"
+      "definition-chinese": "第一人称代词",
+      "sentence": "我们是好朋友。(We are good friends.)"
     },
     {
       "character": "也",
@@ -305,7 +322,8 @@
         "也没有 (yě méi yǒu, also don't have)"
       ],
       "definition-english": "Also; too; as well",
-      "definition-chinese": "同样；也"
+      "definition-chinese": "同样；也",
+      "sentence": "他也是我的同学。(He is also my classmate.)"
     },
     {
       "character": "他",
@@ -322,7 +340,8 @@
         "他人 (tā rén, other people)"
       ],
       "definition-english": "Third person masculine singular pronoun; he; him",
-      "definition-chinese": "第三人称男性代词"
+      "definition-chinese": "第三人称男性代词",
+      "sentence": "他的小狗很可爱。(His little dog is very cute.)"
     },
     {
       "character": "弟",
@@ -339,7 +358,8 @@
         "堂弟 (táng dì, cousin)"
       ],
       "definition-english": "A male younger than oneself; younger brother",
-      "definition-chinese": "年纪比自己小的男性；小弟弟"
+      "definition-chinese": "年纪比自己小的男性；小弟弟",
+      "sentence": "我的弟弟喜欢玩玩具。(My younger brother likes playing with toys.)"
     },
     {
       "character": "不",
@@ -356,7 +376,8 @@
         "不要 (bù yào, do not want)"
       ],
       "definition-english": "Negation; not; no",
-      "definition-chinese": "否定词；不"
+      "definition-chinese": "否定词；不",
+      "sentence": "我们不要在课室里跑。(We should not run in the classroom.)"
     },
     {
       "character": "爸",
@@ -372,7 +393,8 @@
         "爸妈 (bà mā, parents)"
       ],
       "definition-english": "Father; dad; papa",
-      "definition-chinese": "父亲；爸爸"
+      "definition-chinese": "父亲；爸爸",
+      "sentence": "爸爸每天开车去上班。(Dad drives to work every day.)"
     },
     {
       "character": "她",
@@ -389,7 +411,8 @@
         "她自己 (tā zì jǐ, herself)"
       ],
       "definition-english": "Third person feminine singular pronoun; she; her",
-      "definition-chinese": "第三人称女性代词"
+      "definition-chinese": "第三人称女性代词",
+      "sentence": "她的头发很长。(Her hair is very long.)"
     },
     {
       "character": "妈",
@@ -405,7 +428,8 @@
         "妈咪 (mā mī, mommy)"
       ],
       "definition-english": "Mother; mom; mama",
-      "definition-chinese": "母亲；妈妈"
+      "definition-chinese": "母亲；妈妈",
+      "sentence": "妈妈做的菜很好吃。(The food mom cooks is very delicious.)"
     },
     {
       "character": "的",
@@ -422,7 +446,8 @@
         "他的 (tā de, his)"
       ],
       "definition-english": "Possessive particle indicating ownership or relationship",
-      "definition-chinese": "表示所有或关系的虚词"
+      "definition-chinese": "表示所有或关系的虚词",
+      "sentence": "这是我的笔。(This is my pen.)"
     },
     {
       "character": "父",
@@ -439,7 +464,8 @@
         "父子 (fù zǐ, father and son)"
       ],
       "definition-english": "Father; male parent",
-      "definition-chinese": "男性父亲"
+      "definition-chinese": "男性父亲",
+      "sentence": "父母很爱我们。(Parents love us very much.)"
     },
     {
       "character": "母",
@@ -456,7 +482,8 @@
         "母子 (mǔ zǐ, mother and child)"
       ],
       "definition-english": "Mother; female parent",
-      "definition-chinese": "女性父亲"
+      "definition-chinese": "女性父亲",
+      "sentence": "母亲节快到了。(Mother's Day is coming soon.)"
     },
     {
       "character": "女",
@@ -473,7 +500,8 @@
         "女孩 (nǚ hái, girl)"
       ],
       "definition-english": "A female human; woman; girl",
-      "definition-chinese": "女性人类；女人；女孩"
+      "definition-chinese": "女性人类；女人；女孩",
+      "sentence": "那个女孩在唱歌。(That girl is singing.)"
     },
     {
       "character": "儿",
@@ -490,7 +518,8 @@
         "儿童 (ér tóng, child)"
       ],
       "definition-english": "Son; child; boy",
-      "definition-chinese": "儿子；小孩；男孩"
+      "definition-chinese": "儿子；小孩；男孩",
+      "sentence": "这是一个儿童公园。(This is a children's park.)"
     }
   ],
   "p1-3": [
@@ -509,7 +538,8 @@
         "有力 (yǒu lì, forceful)"
       ],
       "definition-english": "Power; strength; force; ability",
-      "definition-chinese": "力量；强度；力"
+      "definition-chinese": "力量；强度；力",
+      "sentence": "我们要努力学习。(We must study hard.)"
     },
     {
       "character": "河",
@@ -526,7 +556,8 @@
         "黄河 (huáng hé, Yellow River)"
       ],
       "definition-english": "A large natural stream of water; river",
-      "definition-chinese": "流动的自然水体；河"
+      "definition-chinese": "流动的自然水体；河",
+      "sentence": "河水很清澈。(The river water is very clear.)"
     },
     {
       "character": "禾",
@@ -543,7 +574,8 @@
         "五谷杂粮 (wǔ gǔ zá liáng, five grains)"
       ],
       "definition-english": "Grain; crop; rice plant",
-      "definition-chinese": "谷物；庄稼；水稻"
+      "definition-chinese": "谷物；庄稼；水稻",
+      "sentence": "农夫在田里种禾苗。(The farmer is planting rice seedlings in the field.)"
     },
     {
       "character": "立",
@@ -559,7 +591,8 @@
         "立刻 (lì kè, immediately)"
       ],
       "definition-english": "To stand; to set up; to erect",
-      "definition-chinese": "站起来；建立；竖立"
+      "definition-chinese": "站起来；建立；竖立",
+      "sentence": "听到钟声，我们立刻排队。(Upon hearing the bell, we queue up immediately.)"
     },
     {
       "character": "米",
@@ -576,7 +609,8 @@
         "大米 (dà mǐ, rice)"
       ],
       "definition-english": "Rice; a unit of length (meter)",
-      "definition-chinese": "水稻；米；米（长度单位）"
+      "definition-chinese": "水稻；米；米（长度单位）",
+      "sentence": "我喜欢吃米饭。(I like eating cooked rice.)"
     },
     {
       "character": "合",
@@ -593,7 +627,8 @@
         "合作 (hé zuò, cooperate)"
       ],
       "definition-english": "To fit together; to combine; suitable",
-      "definition-chinese": "适合；结合；配合"
+      "definition-chinese": "适合；结合；配合",
+      "sentence": "这双鞋子很合适。(This pair of shoes is very suitable.)"
     },
     {
       "character": "气",
@@ -610,7 +645,8 @@
         "生气 (shēng qì, angry)"
       ],
       "definition-english": "Air; breath; spirit; manner",
-      "definition-chinese": "空气；呼吸；精神"
+      "definition-chinese": "空气；呼吸；精神",
+      "sentence": "他今天看起来很生气。(He looks very angry today.)"
     },
     {
       "character": "和",
@@ -627,7 +663,8 @@
         "和气 (hé qì, amiable)"
       ],
       "definition-english": "And; with; harmony; peace",
-      "definition-chinese": "和；与；和平"
+      "definition-chinese": "和；与；和平",
+      "sentence": "他对人很和气。(He is very amiable to people.)"
     },
     {
       "character": "哥",
@@ -644,7 +681,8 @@
         "表哥 (biǎo gē, cousin)"
       ],
       "definition-english": "Older brother",
-      "definition-chinese": "年纪比自己大的男性；哥哥"
+      "definition-chinese": "年纪比自己大的男性；哥哥",
+      "sentence": "我的哥哥很高。(My older brother is very tall.)"
     },
     {
       "character": "几",
@@ -660,7 +698,8 @@
         "几岁 (jǐ suì, how old)"
       ],
       "definition-english": "How many; several; a few",
-      "definition-chinese": "多少；若干；几个"
+      "definition-chinese": "多少；若干；几个",
+      "sentence": "你今年几岁了？(How old are you this year?)"
     },
     {
       "character": "七",
@@ -677,7 +716,8 @@
         "七月 (qī yuè, July)"
       ],
       "definition-english": "The number 7",
-      "definition-chinese": "数字7"
+      "definition-chinese": "数字7",
+      "sentence": "七月放假了。(July is a holiday.)"
     },
     {
       "character": "了",
@@ -694,7 +734,8 @@
         "好了 (hǎo le, ok)"
       ],
       "definition-english": "Particle indicating completion of an action",
-      "definition-chinese": "表示动作完成的虚词"
+      "definition-chinese": "表示动作完成的虚词",
+      "sentence": "我做完了功课。(I have finished my homework.)"
     },
     {
       "character": "个",
@@ -711,7 +752,8 @@
         "那个 (nà ge, that)"
       ],
       "definition-english": "Measure word for individual objects",
-      "definition-chinese": "表示单个物品的量词"
+      "definition-chinese": "表示单个物品的量词",
+      "sentence": "这个苹果很甜。(This apple is very sweet.)"
     },
     {
       "character": "句",
@@ -728,7 +770,8 @@
         "造句 (zào jù, make a sentence)"
       ],
       "definition-english": "A sentence; a phrase; a line",
-      "definition-chinese": "句子；短语；句"
+      "definition-chinese": "句子；短语；句",
+      "sentence": "老师叫我们造句。(The teacher asked us to make sentences.)"
     },
     {
       "character": "可",
@@ -745,7 +788,8 @@
         "可是 (kě shì, but)"
       ],
       "definition-english": "Can; may; able to; passable",
-      "definition-chinese": "能够；可能；行"
+      "definition-chinese": "能够；可能；行",
+      "sentence": "我可以去洗手间吗？(Can I go to the washroom?)"
     },
     {
       "character": "以",
@@ -762,7 +806,8 @@
         "以后 (yǐ hòu, after)"
       ],
       "definition-english": "To use; by means of; so as to",
-      "definition-chinese": "用；以；利用"
+      "definition-chinese": "用；以；利用",
+      "sentence": "我以后想当医生。(I want to be a doctor in the future.)"
     },
     {
       "character": "吗",
@@ -779,7 +824,8 @@
         "是吗 (shì ma, really?)"
       ],
       "definition-english": "Particle used to form yes-no questions",
-      "definition-chinese": "表示疑问的虚词"
+      "definition-chinese": "表示疑问的虚词",
+      "sentence": "你今天好吗？(How are you today?)"
     },
     {
       "character": "去",
@@ -796,7 +842,8 @@
         "过去 (guò qù, past)"
       ],
       "definition-english": "To go; to go to; to leave",
-      "definition-chinese": "去；前往；离开"
+      "definition-chinese": "去；前往；离开",
+      "sentence": "哥哥每天走路去学校。(Older brother walks to go to school every day.)"
     }
   ],
   "p1-4": [
@@ -815,7 +862,8 @@
         "生日 (shēng rì, birthday)"
       ],
       "definition-english": "Day; sun; daily",
-      "definition-chinese": "白天；太阳；日子"
+      "definition-chinese": "白天；太阳；日子",
+      "sentence": "今天是我的生日。(Today is my birthday.)"
     },
     {
       "character": "石",
@@ -832,7 +880,8 @@
         "石墙 (shí qiáng, stone wall)"
       ],
       "definition-english": "Stone; rock; mineral",
-      "definition-chinese": "石头；岩石；矿物"
+      "definition-chinese": "石头；岩石；矿物",
+      "sentence": "河边有一块大石头。(There is a big stone by the river.)"
     },
     {
       "character": "子",
@@ -849,7 +898,8 @@
         "女子 (nǚ zǐ, woman)"
       ],
       "definition-english": "Child; son; offspring; young person",
-      "definition-chinese": "孩子；儿子；年轻人"
+      "definition-chinese": "孩子；儿子；年轻人",
+      "sentence": "她有一个可爱的孩子。(She has a cute child.)"
     },
     {
       "character": "字",
@@ -866,7 +916,8 @@
         "笔字 (bǐ zì, handwriting)"
       ],
       "definition-english": "A character; a word; a letter",
-      "definition-chinese": "文字；汉字；字"
+      "definition-chinese": "文字；汉字；字",
+      "sentence": "我用字典查这个词的意思。(I use a dictionary to look up the meaning of this word.)"
     },
     {
       "character": "车",
@@ -883,7 +934,8 @@
         "车轮 (chē lún, wheel)"
       ],
       "definition-english": "Vehicle; car; wheel",
-      "definition-chinese": "车；汽车；车轮"
+      "definition-chinese": "车；汽车；车轮",
+      "sentence": "我们坐火车去北京。(We take the train to Beijing.)"
     },
     {
       "character": "四",
@@ -900,7 +952,8 @@
         "四月 (sì yuè, April)"
       ],
       "definition-english": "The number 4",
-      "definition-chinese": "数字4"
+      "definition-chinese": "数字4",
+      "sentence": "今天是四月十号。(Today is April 10th.)"
     },
     {
       "character": "十",
@@ -917,7 +970,8 @@
         "十月 (shí yuè, October)"
       ],
       "definition-english": "The number 10; ten",
-      "definition-chinese": "数字10"
+      "definition-chinese": "数字10",
+      "sentence": "他今年十岁了。(He is ten years old this year.)"
     },
     {
       "character": "士",
@@ -934,7 +988,8 @@
         "士气 (shì qì, morale)"
       ],
       "definition-english": "Scholar; gentleman; soldier",
-      "definition-chinese": "学者；绅士；士兵"
+      "definition-chinese": "学者；绅士；士兵",
+      "sentence": "士兵们保护着国家。(Soldiers protect the country.)"
     },
     {
       "character": "只",
@@ -951,7 +1006,8 @@
         "一只 (yī zhī, one)"
       ],
       "definition-english": "Only; merely; a measure word for animals",
-      "definition-chinese": "只有；仅仅；量词"
+      "definition-chinese": "只有；仅仅；量词",
+      "sentence": "我只有一个苹果。(I only have one apple.)"
     },
     {
       "character": "把",
@@ -968,7 +1024,8 @@
         "把握 (bǎ wò, grasp)"
       ],
       "definition-english": "To hold; handle; grasp; measure word",
-      "definition-chinese": "握；把手；量词"
+      "definition-chinese": "握；把手；量词",
+      "sentence": "这个杯子的把手断了。(The handle of this cup broke.)"
     },
     {
       "character": "尺",
@@ -985,7 +1042,8 @@
         "尺寸 (chǐ cùn, size)"
       ],
       "definition-english": "Ruler; foot (measurement); scale",
-      "definition-chinese": "尺子；脚（长度单位）；尺度"
+      "definition-chinese": "尺子；脚（长度单位）；尺度",
+      "sentence": "他用直尺画了一条线。(He used a ruler to draw a line.)"
     },
     {
       "character": "是",
@@ -1002,7 +1060,8 @@
         "是否 (shì fǒu, whether)"
       ],
       "definition-english": "To be; is; am; are",
-      "definition-chinese": "是；存在；等于"
+      "definition-chinese": "是；存在；等于",
+      "sentence": "这是我的书包。(This is my schoolbag.)"
     },
     {
       "character": "书",
@@ -1019,7 +1078,8 @@
         "字书 (zì shū, dictionary)"
       ],
       "definition-english": "A book; books; writings",
-      "definition-chinese": "书；书籍；文献"
+      "definition-chinese": "书；书籍；文献",
+      "sentence": "图书馆里有很多书籍。(There are many books in the library.)"
     },
     {
       "character": "出",
@@ -1036,7 +1096,8 @@
         "出发 (chū fā, depart)"
       ],
       "definition-english": "To come out; to go out; to exit",
-      "definition-chinese": "出来；出去；离开"
+      "definition-chinese": "出来；出去；离开",
+      "sentence": "我们明天出发去旅行。(We depart for a trip tomorrow.)"
     },
     {
       "character": "自",
@@ -1053,7 +1114,8 @@
         "自动 (zì dòng, automatic)"
       ],
       "definition-english": "Self; from; since; oneself",
-      "definition-chinese": "自己；从；由于"
+      "definition-chinese": "自己；从；由于",
+      "sentence": "他可以自己完成作业。(He can complete the homework by himself.)"
     },
     {
       "character": "己",
@@ -1070,7 +1132,8 @@
         "各自 (gè zì, each one's own)"
       ],
       "definition-english": "Self; oneself; one's own",
-      "definition-chinese": "自己；本身；个人"
+      "definition-chinese": "自己；本身；个人",
+      "sentence": "要好好爱护自己。(You should take good care of yourself.)"
     },
     {
       "character": "它",
@@ -1087,7 +1150,8 @@
         "除了它 (chú le tā, except it)"
       ],
       "definition-english": "It; that (for non-human objects)",
-      "definition-chinese": "它；那个（非人类物体）"
+      "definition-chinese": "它；那个（非人类物体）",
+      "sentence": "它们住在森林里。(They live in the forest.)"
     },
     {
       "character": "吃",
@@ -1104,7 +1168,8 @@
         "早吃 (zǎo chī, eat early)"
       ],
       "definition-english": "To eat; to consume food",
-      "definition-chinese": "吃；进食"
+      "definition-chinese": "吃；进食",
+      "sentence": "我们一起去吃饭吧。(Let us go eat a meal together.)"
     }
   ],
   "p1-5": [
@@ -1123,7 +1188,8 @@
         "山区 (shān qū, mountainous area)"
       ],
       "definition-english": "Mountain; hill; peak",
-      "definition-chinese": "山；大山；山岭"
+      "definition-chinese": "山；大山；山岭",
+      "sentence": "我们周末去爬山。(We go mountain climbing on the weekend.)"
     },
     {
       "character": "羊",
@@ -1140,7 +1206,8 @@
         "山羊 (shān yáng, goat)"
       ],
       "definition-english": "Sheep; goat",
-      "definition-chinese": "羊；绵羊；山羊"
+      "definition-chinese": "羊；绵羊；山羊",
+      "sentence": "草地上有很多绵羊。(There are many sheep on the grassland.)"
     },
     {
       "character": "毛",
@@ -1157,7 +1224,8 @@
         "毛皮 (máo pí, fur)"
       ],
       "definition-english": "Hair; feather; fur; fine hair",
-      "definition-chinese": "毛发；羽毛；毛皮"
+      "definition-chinese": "毛发；羽毛；毛皮",
+      "sentence": "小鸟身上有美丽的羽毛。(Little birds have beautiful feathers on their bodies.)"
     },
     {
       "character": "草",
@@ -1174,7 +1242,8 @@
         "草药 (cǎo yào, herbal medicine)"
       ],
       "definition-english": "Grass; plant; herb",
-      "definition-chinese": "草；植物；野草"
+      "definition-chinese": "草；植物；野草",
+      "sentence": "公园里有很多花草。(There are many flowers and plants in the park.)"
     },
     {
       "character": "太",
@@ -1191,7 +1260,8 @@
         "太阳 (tài yáng, sun)"
       ],
       "definition-english": "Too; too much; very",
-      "definition-chinese": "太；过分；非常"
+      "definition-chinese": "太；过分；非常",
+      "sentence": "今天的太阳太热了。(Today the sun is too hot.)"
     },
     {
       "character": "阳",
@@ -1208,7 +1278,8 @@
         "阳气 (yáng qì, positive energy)"
       ],
       "definition-english": "Sun; sunshine; male",
-      "definition-chinese": "太阳；阳光；男性"
+      "definition-chinese": "太阳；阳光；男性",
+      "sentence": "今天阳光很好，适合外出。(The sunlight is nice today, perfect for going out.)"
     },
     {
       "character": "王",
@@ -1225,7 +1296,8 @@
         "王国 (wáng guó, kingdom)"
       ],
       "definition-english": "King; royal; monarch",
-      "definition-chinese": "国王；王；王者"
+      "definition-chinese": "国王；王；王者",
+      "sentence": "故事里的国王很善良。(The king in the story is very kind.)"
     },
     {
       "character": "三",
@@ -1242,7 +1314,8 @@
         "三月 (sān yuè, March)"
       ],
       "definition-english": "The number 3; three",
-      "definition-chinese": "数字3"
+      "definition-chinese": "数字3",
+      "sentence": "今天是三月三号。(Today is March 3rd.)"
     },
     {
       "character": "伞",
@@ -1259,7 +1332,8 @@
         "折伞 (zhé sǎn, fold umbrella)"
       ],
       "definition-english": "Umbrella; parasol",
-      "definition-chinese": "伞；遮阳伞；雨伞"
+      "definition-chinese": "伞；遮阳伞；雨伞",
+      "sentence": "下雨了，请带雨伞出门。(It is raining; please bring an umbrella when going out.)"
     },
     {
       "character": "包",
@@ -1276,7 +1350,8 @@
         "包装 (bāo zhuāng, packaging)"
       ],
       "definition-english": "Package; wrap; bag; parcel",
-      "definition-chinese": "包；包裹；包装"
+      "definition-chinese": "包；包裹；包装",
+      "sentence": "我的书包里有课本和笔。(My schoolbag has textbooks and pens.)"
     },
     {
       "character": "老",
@@ -1293,7 +1368,8 @@
         "老鼠 (lǎo shǔ, mouse)"
       ],
       "definition-english": "Old; aged; experienced",
-      "definition-chinese": "老；年老；有经验"
+      "definition-chinese": "老；年老；有经验",
+      "sentence": "老师每天教我们新知识。(The teacher teaches us new knowledge every day.)"
     },
     {
       "character": "师",
@@ -1310,7 +1386,8 @@
         "师父 (shī fù, teacher)"
       ],
       "definition-english": "Teacher; master; expert",
-      "definition-chinese": "老师；师傅；教师"
+      "definition-chinese": "老师；师傅；教师",
+      "sentence": "我的老师很有耐心。(My teacher is very patient.)"
     },
     {
       "character": "早",
@@ -1327,7 +1404,8 @@
         "太早 (tài zǎo, too early)"
       ],
       "definition-english": "Early; morning; dawn",
-      "definition-chinese": "早；早上；清晨"
+      "definition-chinese": "早；早上；清晨",
+      "sentence": "早上好，今天天气真好！(Good morning, the weather is really nice today!)"
     },
     {
       "character": "安",
@@ -1344,7 +1422,8 @@
         "平安 (píng ān, peaceful)"
       ],
       "definition-english": "Peaceful; safe; secure; to install",
-      "definition-chinese": "安全；和平；安装"
+      "definition-chinese": "安全；和平；安装",
+      "sentence": "祝你一路平安。(Wishing you a safe journey.)"
     },
     {
       "character": "半",
@@ -1361,7 +1440,8 @@
         "半天 (bàn tiān, half day)"
       ],
       "definition-english": "Half; middle; partly",
-      "definition-chinese": "半；一半；中间"
+      "definition-chinese": "半；一半；中间",
+      "sentence": "我只用了一半的时间就写完了。(I finished writing in only half the time.)"
     },
     {
       "character": "午",
@@ -1378,7 +1458,8 @@
         "下午 (xià wǔ, afternoon)"
       ],
       "definition-english": "Noon; midday; the 7th earthly branch",
-      "definition-chinese": "中午；正午；午时"
+      "definition-chinese": "中午；正午；午时",
+      "sentence": "我们中午一起吃饭吧。(Let us eat together at noon.)"
     },
     {
       "character": "奶",
@@ -1395,7 +1476,8 @@
         "奶茶 (nǎi chá, milk tea)"
       ],
       "definition-english": "Milk; grandmother; breast",
-      "definition-chinese": "奶；乳汁；奶奶"
+      "definition-chinese": "奶；乳汁；奶奶",
+      "sentence": "我每天早上喝一杯牛奶。(I drink a glass of milk every morning.)"
     },
     {
       "character": "玩",
@@ -1412,7 +1494,8 @@
         "游玩 (yóu wán, have fun)"
       ],
       "definition-english": "To play; to have fun; to toy with",
-      "definition-chinese": "玩；游戏；玩耍"
+      "definition-chinese": "玩；游戏；玩耍",
+      "sentence": "孩子们喜欢玩玩具。(Children like to play with toys.)"
     },
     {
       "character": "具",
@@ -1429,7 +1512,8 @@
         "家具 (jiā jù, furniture)"
       ],
       "definition-english": "Tool; implement; utensil",
-      "definition-chinese": "工具；用具；家具"
+      "definition-chinese": "工具；用具；家具",
+      "sentence": "我需要一些工具来修桌子。(I need some tools to fix the table.)"
     }
   ],
   "p1-6": [
@@ -1448,7 +1532,8 @@
         "飞鸟 (fēi niǎo, flying bird)"
       ],
       "definition-english": "Bird; avian creature",
-      "definition-chinese": "鸟；禽类"
+      "definition-chinese": "鸟；禽类",
+      "sentence": "树上有一只小鸟在唱歌。(There is a small bird singing on the tree.)"
     },
     {
       "character": "竹",
@@ -1465,7 +1550,8 @@
         "竹笋 (zhú sǔn, bamboo shoot)"
       ],
       "definition-english": "Bamboo; bamboo plant",
-      "definition-chinese": "竹；竹子；竹林"
+      "definition-chinese": "竹；竹子；竹林",
+      "sentence": "山上长满了竹林。(The mountain is covered with bamboo groves.)"
     },
     {
       "character": "田",
@@ -1482,7 +1568,8 @@
         "农田 (nóng tián, farmland)"
       ],
       "definition-english": "Field; farm; paddy",
-      "definition-chinese": "田地；农田；田亩"
+      "definition-chinese": "田地；农田；田亩",
+      "sentence": "农民在农田里辛勤工作。(Farmers work hard in the farmland.)"
     },
     {
       "character": "苗",
@@ -1499,7 +1586,8 @@
         "苗子 (miáo zi, sprout)"
       ],
       "definition-english": "Seedling; sprout; young plant",
-      "definition-chinese": "秧苗；幼苗；小植物"
+      "definition-chinese": "秧苗；幼苗；小植物",
+      "sentence": "春天来了，田里长出了秧苗。(Spring has come and seedlings have sprouted in the field.)"
     },
     {
       "character": "象",
@@ -1516,7 +1604,8 @@
         "形象 (xíng xiàng, image)"
       ],
       "definition-english": "Elephant; image; appearance; to look like",
-      "definition-chinese": "象；大象；形象"
+      "definition-chinese": "象；大象；形象",
+      "sentence": "动物园里有一头大象。(There is an elephant in the zoo.)"
     },
     {
       "character": "家",
@@ -1533,7 +1622,8 @@
         "学家 (xué jiā, scholar)"
       ],
       "definition-english": "Home; family; household",
-      "definition-chinese": "家；家庭；住宅"
+      "definition-chinese": "家；家庭；住宅",
+      "sentence": "放学后我们回家吃饭。(After school we go home for dinner.)"
     },
     {
       "character": "刀",
@@ -1550,7 +1640,8 @@
         "刀片 (dāo piàn, blade)"
       ],
       "definition-english": "Knife; blade; sword",
-      "definition-chinese": "刀；刀子；利刃"
+      "definition-chinese": "刀；刀子；利刃",
+      "sentence": "厨师用菜刀切菜。(The chef uses a kitchen knife to chop vegetables.)"
     },
     {
       "character": "网",
@@ -1567,7 +1658,8 @@
         "网页 (wǎng yè, web page)"
       ],
       "definition-english": "Net; network; web",
-      "definition-chinese": "网；网络；网页"
+      "definition-chinese": "网；网络；网页",
+      "sentence": "我在网络上找到了答案。(I found the answer on the internet.)"
     },
     {
       "character": "在",
@@ -1584,7 +1676,8 @@
         "存在 (cún zài, exist)"
       ],
       "definition-english": "At; in; to be at; to be in",
-      "definition-chinese": "在；位置；所在"
+      "definition-chinese": "在；位置；所在",
+      "sentence": "妈妈现在在家。(Mom is at home right now.)"
     },
     {
       "character": "里",
@@ -1601,7 +1694,8 @@
         "家里 (jiā lǐ, at home)"
       ],
       "definition-english": "Inside; within; interior; mile",
-      "definition-chinese": "里；内部；里面"
+      "definition-chinese": "里；内部；里面",
+      "sentence": "房间里面很干净。(Inside the room is very clean.)"
     },
     {
       "character": "上",
@@ -1618,7 +1712,8 @@
         "楼上 (lóu shàng, upstairs)"
       ],
       "definition-english": "Up; above; on; upper; previous",
-      "definition-chinese": "上；上面；向上"
+      "definition-chinese": "上；上面；向上",
+      "sentence": "猫在桌子上面睡觉。(The cat is sleeping on top of the table.)"
     },
     {
       "character": "下",
@@ -1635,7 +1730,8 @@
         "楼下 (lóu xià, downstairs)"
       ],
       "definition-english": "Down; below; under; lower",
-      "definition-chinese": "下；下面；向下"
+      "definition-chinese": "下；下面；向下",
+      "sentence": "楼下有一家超市。(There is a supermarket downstairs.)"
     },
     {
       "character": "大",
@@ -1652,7 +1748,8 @@
         "太大 (tài dà, too big)"
       ],
       "definition-english": "Big; large; great; main",
-      "definition-chinese": "大；巨大；庞大"
+      "definition-chinese": "大；巨大；庞大",
+      "sentence": "这棵树长得很大。(This tree has grown very big.)"
     },
     {
       "character": "小",
@@ -1669,7 +1766,8 @@
         "太小 (tài xiǎo, too small)"
       ],
       "definition-english": "Small; little; minor; young",
-      "definition-chinese": "小；微小；幼小"
+      "definition-chinese": "小；微小；幼小",
+      "sentence": "他有一只小孩一样的笑声。(He has a laugh like a small child.)"
     },
     {
       "character": "来",
@@ -1686,7 +1784,8 @@
         "来往 (lái wǎng, come and go)"
       ],
       "definition-english": "To come; to arrive; to come forth",
-      "definition-chinese": "来；前来；到来"
+      "definition-chinese": "来；前来；到来",
+      "sentence": "朋友从远方来看我。(A friend came from far away to visit me.)"
     },
     {
       "character": "哭",
@@ -1703,7 +1802,8 @@
         "哭笑不得 (kū xiào bù dé, cry-laugh situation)"
       ],
       "definition-english": "To cry; to weep; to shed tears",
-      "definition-chinese": "哭；流泪；哭泣"
+      "definition-chinese": "哭；流泪；哭泣",
+      "sentence": "小孩摔倒后哭泣起来。(The child started crying after falling down.)"
     },
     {
       "character": "笑",
@@ -1720,7 +1820,8 @@
         "笑话 (xiào huà, joke)"
       ],
       "definition-english": "To laugh; to smile; to grin",
-      "definition-chinese": "笑；笑脸；笑容"
+      "definition-chinese": "笑；笑脸；笑容",
+      "sentence": "他讲了一个笑话，大家都笑了。(He told a joke and everyone laughed.)"
     },
     {
       "character": "男",
@@ -1737,7 +1838,8 @@
         "男生 (nán shēng, male student)"
       ],
       "definition-english": "Male; man; boy; masculine",
-      "definition-chinese": "男；男性；男子"
+      "definition-chinese": "男；男性；男子",
+      "sentence": "班里有十个男孩。(There are ten boys in the class.)"
     },
     {
       "character": "爷",
@@ -1754,7 +1856,8 @@
         "爷们 (yé men, guys)"
       ],
       "definition-english": "Grandfather; father; sir; master",
-      "definition-chinese": "爷爷；祖父；老爷"
+      "definition-chinese": "爷爷；祖父；老爷",
+      "sentence": "爷爷每天早上去公园散步。(Grandfather goes for a walk in the park every morning.)"
     },
     {
       "character": "姐",
@@ -1771,7 +1874,8 @@
         "大姐 (dà jiě, elder sister)"
       ],
       "definition-english": "Older sister",
-      "definition-chinese": "年纪比自己大的女性；姐姐"
+      "definition-chinese": "年纪比自己大的女性；姐姐",
+      "sentence": "我的姐姐比我大两岁。(My older sister is two years older than me.)"
     }
   ],
   "p1-7": [
@@ -1790,7 +1894,8 @@
         "果树 (guǒ shù, fruit tree)"
       ],
       "definition-english": "Fruit; result; outcome",
-      "definition-chinese": "果实；结果；水果"
+      "definition-chinese": "果实；结果；水果",
+      "sentence": "市场上有各种各样的水果。(There are all kinds of fruit at the market.)"
     },
     {
       "character": "开",
@@ -1807,7 +1912,8 @@
         "开始 (kāi shǐ, start)"
       ],
       "definition-english": "To open; to turn on; to start",
-      "definition-chinese": "打开；开启；开始"
+      "definition-chinese": "打开；开启；开始",
+      "sentence": "请打开窗户，让空气流通。(Please open the window to let air flow through.)"
     },
     {
       "character": "瓜",
@@ -1824,7 +1930,8 @@
         "南瓜 (nán guā, pumpkin)"
       ],
       "definition-english": "Melon; gourd; squash",
-      "definition-chinese": "瓜；西瓜；瓜果"
+      "definition-chinese": "瓜；西瓜；瓜果",
+      "sentence": "夏天吃西瓜很解暑。(Eating watermelon in summer is very refreshing.)"
     },
     {
       "character": "火",
@@ -1841,7 +1948,8 @@
         "火车 (huǒ chē, train)"
       ],
       "definition-english": "Fire; flame; blaze",
-      "definition-chinese": "火；火焰；火气"
+      "definition-chinese": "火；火焰；火气",
+      "sentence": "火车站在城市的中心。(The train station is in the center of the city.)"
     },
     {
       "character": "花",
@@ -1858,7 +1966,8 @@
         "花园 (huā yuán, garden)"
       ],
       "definition-english": "Flower; bloom; blossom",
-      "definition-chinese": "花；鲜花；花卉"
+      "definition-chinese": "花；鲜花；花卉",
+      "sentence": "花园里种满了鲜花。(The garden is full of fresh flowers.)"
     },
     {
       "character": "叶",
@@ -1875,7 +1984,8 @@
         "页码 (yè mǎ, page number)"
       ],
       "definition-english": "Leaf; page; foliage",
-      "definition-chinese": "叶子；树叶；页"
+      "definition-chinese": "叶子；树叶；页",
+      "sentence": "秋天树上的叶子变黄了。(In autumn the leaves on the trees turn yellow.)"
     },
     {
       "character": "面",
@@ -1892,7 +2002,8 @@
         "前面 (qián miàn, front)"
       ],
       "definition-english": "Face; surface; front; noodle",
-      "definition-chinese": "脸；表面；面条"
+      "definition-chinese": "脸；表面；面条",
+      "sentence": "我今天中午吃了一碗面条。(I had a bowl of noodles for lunch today.)"
     },
     {
       "character": "关",
@@ -1909,7 +2020,8 @@
         "关系 (guān xì, relationship)"
       ],
       "definition-english": "To close; to shut; gate; barrier",
-      "definition-chinese": "关闭；门关；关系"
+      "definition-chinese": "关闭；门关；关系",
+      "sentence": "出门前请关上门。(Please close the door before going out.)"
     },
     {
       "character": "朵",
@@ -1926,7 +2038,8 @@
         "朵朵 (duǒ duǒ, clusters)"
       ],
       "definition-english": "Flower; cluster; measure word for flowers",
-      "definition-chinese": "花朵；花束；量词"
+      "definition-chinese": "花朵；花束；量词",
+      "sentence": "她送给我一朵花。(She gave me one flower.)"
     },
     {
       "character": "两",
@@ -1943,7 +2056,8 @@
         "两年 (liǎng nián, two years)"
       ],
       "definition-english": "Two; both; a pair",
-      "definition-chinese": "两个；两；双"
+      "definition-chinese": "两个；两；双",
+      "sentence": "桌上有两个苹果。(There are two apples on the table.)"
     },
     {
       "character": "片",
@@ -1960,7 +2074,8 @@
         "电影片 (diàn yǐng piān, movie)"
       ],
       "definition-english": "Slice; piece; film; thin object",
-      "definition-chinese": "片；一片；薄片"
+      "definition-chinese": "片；一片；薄片",
+      "sentence": "他吃了一片面包。(He ate a piece of bread.)"
     },
     {
       "character": "画",
@@ -1977,7 +2092,8 @@
         "油画 (yóu huà, oil painting)"
       ],
       "definition-english": "To draw; to paint; picture; painting",
-      "definition-chinese": "画；绘画；图画"
+      "definition-chinese": "画；绘画；图画",
+      "sentence": "她喜欢在家画画。(She likes to draw at home.)"
     },
     {
       "character": "笔",
@@ -1994,7 +2110,8 @@
         "笔尖 (bǐ jiān, pen tip)"
       ],
       "definition-english": "Pen; brush; writing instrument",
-      "definition-chinese": "笔；笔尖；书写工具"
+      "definition-chinese": "笔；笔尖；书写工具",
+      "sentence": "我用铅笔写作业。(I use a pencil to do homework.)"
     },
     {
       "character": "长",
@@ -2011,7 +2128,8 @@
         "长度 (cháng dù, length)"
       ],
       "definition-english": "Long; length; to grow; to increase",
-      "definition-chinese": "长；长度；增长"
+      "definition-chinese": "长；长度；增长",
+      "sentence": "他的头发长得很长。(His hair has grown very long.)"
     },
     {
       "character": "广",
@@ -2028,7 +2146,8 @@
         "广告 (guǎng gào, advertisement)"
       ],
       "definition-english": "Wide; broad; vast; extensive",
-      "definition-chinese": "广；宽广；辽阔"
+      "definition-chinese": "广；宽广；辽阔",
+      "sentence": "广场上有很多人在跳舞。(There are many people dancing in the square.)"
     },
     {
       "character": "多",
@@ -2045,7 +2164,8 @@
         "多久 (duō jiǔ, how long)"
       ],
       "definition-english": "Many; much; more",
-      "definition-chinese": "多；许多；很多"
+      "definition-chinese": "多；许多；很多",
+      "sentence": "图书馆里有很多书。(There are many books in the library.)"
     },
     {
       "character": "少",
@@ -2062,7 +2182,8 @@
         "多少 (duō shǎo, how much)"
       ],
       "definition-english": "Few; little; less",
-      "definition-chinese": "少；很少；较少"
+      "definition-chinese": "少；很少；较少",
+      "sentence": "这道题很少人答对。(Very few people answered this question correctly.)"
     },
     {
       "character": "床",
@@ -2079,7 +2200,8 @@
         "床上 (chuáng shàng, on bed)"
       ],
       "definition-english": "Bed; couch",
-      "definition-chinese": "床；卧床；睡床"
+      "definition-chinese": "床；卧床；睡床",
+      "sentence": "我每晚八点上床睡觉。(I go to bed every night at eight o'clock.)"
     }
   ],
   "p1-8": [
@@ -2098,7 +2220,8 @@
         "目标 (mù biāo, target)"
       ],
       "definition-english": "Eye; look; gaze; item",
-      "definition-chinese": "眼睛；看；目"
+      "definition-chinese": "眼睛；看；目",
+      "sentence": "他的目光落在窗外的风景上。(His gaze fell on the scenery outside the window.)"
     },
     {
       "character": "舌",
@@ -2115,7 +2238,8 @@
         "伸舌 (shēn shé, stick out tongue)"
       ],
       "definition-english": "Tongue; taste organ",
-      "definition-chinese": "舌头；舌体；舌部"
+      "definition-chinese": "舌头；舌体；舌部",
+      "sentence": "小狗伸出舌头喝水。(The puppy stuck out its tongue to drink water.)"
     },
     {
       "character": "手",
@@ -2132,7 +2256,8 @@
         "手心 (shǒu xīn, palm)"
       ],
       "definition-english": "Hand; palm; grip",
-      "definition-chinese": "手；手掌；手指"
+      "definition-chinese": "手；手掌；手指",
+      "sentence": "老师和学生握手问好。(The teacher shook hands with the student as a greeting.)"
     },
     {
       "character": "足",
@@ -2149,7 +2274,8 @@
         "足够 (zú gòu, enough)"
       ],
       "definition-english": "Foot; leg; sufficient; enough",
-      "definition-chinese": "脚；足部；充足"
+      "definition-chinese": "脚；足部；充足",
+      "sentence": "我们带了足够的食物去野餐。(We brought enough food for the picnic.)"
     },
     {
       "character": "本",
@@ -2166,7 +2292,8 @@
         "本身 (běn shēn, itself)"
       ],
       "definition-english": "Root; origin; this; book",
-      "definition-chinese": "根本；原本；本；书本"
+      "definition-chinese": "根本；原本；本；书本",
+      "sentence": "他书本上写满了笔记。(His books are filled with notes.)"
     },
     {
       "character": "工",
@@ -2183,7 +2310,8 @@
         "手工 (shǒu gōng, handicraft)"
       ],
       "definition-english": "Work; labor; worker; job",
-      "definition-chinese": "工作；劳动；工人"
+      "definition-chinese": "工作；劳动；工人",
+      "sentence": "她喜欢做手工艺品。(She likes making handicrafts.)"
     },
     {
       "character": "厂",
@@ -2200,7 +2328,8 @@
         "电厂 (diàn chǎng, power plant)"
       ],
       "definition-english": "Factory; plant; mill; works",
-      "definition-chinese": "工厂；造纸厂；厂房"
+      "definition-chinese": "工厂；造纸厂；厂房",
+      "sentence": "爸爸在一家工厂里工作。(Dad works in a factory.)"
     },
     {
       "character": "走",
@@ -2217,7 +2346,8 @@
         "走开 (zǒu kāi, go away)"
       ],
       "definition-english": "To walk; to go; to run; to move",
-      "definition-chinese": "走；行走；移动"
+      "definition-chinese": "走；行走；移动",
+      "sentence": "我每天早上走路去学校。(I walk to school every morning.)"
     },
     {
       "character": "跑",
@@ -2234,7 +2364,8 @@
         "跑出 (pǎo chū, run out)"
       ],
       "definition-english": "To run; to race; to escape",
-      "definition-chinese": "跑；奔跑；逃跑"
+      "definition-chinese": "跑；奔跑；逃跑",
+      "sentence": "他每天早上跑步锻炼。(He runs every morning for exercise.)"
     },
     {
       "character": "飞",
@@ -2251,7 +2382,8 @@
         "飞鸟 (fēi niǎo, flying bird)"
       ],
       "definition-english": "To fly; to soar; to move quickly",
-      "definition-chinese": "飞；飞行；飞翔"
+      "definition-chinese": "飞；飞行；飞翔",
+      "sentence": "飞鸟在蓝天中自由飞翔。(Flying birds soar freely in the blue sky.)"
     },
     {
       "character": "妹",
@@ -2268,7 +2400,8 @@
         "堂妹 (táng mèi, cousin/female)"
       ],
       "definition-english": "Younger sister",
-      "definition-chinese": "年纪比自己小的女性；妹妹"
+      "definition-chinese": "年纪比自己小的女性；妹妹",
+      "sentence": "妹妹比我小三岁。(My younger sister is three years younger than me.)"
     },
     {
       "character": "门",
@@ -2285,7 +2418,8 @@
         "门口 (mén kǒu, doorway)"
       ],
       "definition-english": "Door; gate; entrance; family",
-      "definition-chinese": "门；大门；门口"
+      "definition-chinese": "门；大门；门口",
+      "sentence": "请问门口是哪里？(Excuse me, where is the doorway?)"
     },
     {
       "character": "看",
@@ -2302,7 +2436,8 @@
         "看书 (kàn shū, read)"
       ],
       "definition-english": "To look; to see; to watch; to regard",
-      "definition-chinese": "看；观看；查看"
+      "definition-chinese": "看；观看；查看",
+      "sentence": "我们一起去看电影吧。(Let us go watch a movie together.)"
     },
     {
       "character": "见",
@@ -2319,7 +2454,8 @@
         "意见 (yì jiàn, opinion)"
       ],
       "definition-english": "To see; to meet; to view",
-      "definition-chinese": "看见；相见；见面"
+      "definition-chinese": "看见；相见；见面",
+      "sentence": "我们明天见面吃午饭。(We will meet tomorrow for lunch.)"
     },
     {
       "character": "问",
@@ -2336,7 +2472,8 @@
         "提问 (tí wèn, ask)"
       ],
       "definition-english": "To ask; to inquire; to question",
-      "definition-chinese": "问；提问；询问"
+      "definition-chinese": "问；提问；询问",
+      "sentence": "他向老师提问。(He asked the teacher a question.)"
     },
     {
       "character": "又",
@@ -2353,7 +2490,8 @@
         "一又二分之一 (yī yòu èr fēn zhī yī, one and a half)"
       ],
       "definition-english": "Again; also; moreover; another",
-      "definition-chinese": "又；再；还"
+      "definition-chinese": "又；再；还",
+      "sentence": "他又迟到了。(He was late again.)"
     },
     {
       "character": "头",
@@ -2370,7 +2508,8 @@
         "抬头 (tái tóu, raise head)"
       ],
       "definition-english": "Head; top; leader; end",
-      "definition-chinese": "头；头部；首领"
+      "definition-chinese": "头；头部；首领",
+      "sentence": "她的头发很长很漂亮。(Her hair is long and beautiful.)"
     },
     {
       "character": "们",
@@ -2387,7 +2526,8 @@
         "学生们 (xué shēng men, students)"
       ],
       "definition-english": "Plural marker for persons",
-      "definition-chinese": "复数标记；们"
+      "definition-chinese": "复数标记；们",
+      "sentence": "我们一起去公园玩。(We go to the park together to play.)"
     },
     {
       "character": "身",
@@ -2404,7 +2544,8 @@
         "身上 (shēn shàng, on one's body)"
       ],
       "definition-english": "Body; self; person; physical",
-      "definition-chinese": "身体；本身；身躯"
+      "definition-chinese": "身体；本身；身躯",
+      "sentence": "运动让身体更健康。(Exercise makes the body healthier.)"
     },
     {
       "character": "体",
@@ -2421,7 +2562,8 @@
         "整体 (zhěng tǐ, whole)"
       ],
       "definition-english": "Body; form; system; substance",
-      "definition-chinese": "身体；体格；体系"
+      "definition-chinese": "身体；体格；体系",
+      "sentence": "他每天做体育运动。(He does physical exercise every day.)"
     }
   ],
   "p1-9": [
@@ -2440,7 +2582,8 @@
         "牛群 (niú qún, cattle herd)"
       ],
       "definition-english": "Ox; cattle; cow; bull",
-      "definition-chinese": "牛；牲畜；牛群"
+      "definition-chinese": "牛；牲畜；牛群",
+      "sentence": "我每天早上喝一杯牛奶。(I drink a glass of milk every morning.)"
     },
     {
       "character": "井",
@@ -2457,7 +2600,8 @@
         "井口 (jǐng kǒu, well mouth)"
       ],
       "definition-english": "Well; pit; hole for water",
-      "definition-chinese": "井；水井；深井"
+      "definition-chinese": "井；水井；深井",
+      "sentence": "村子里有一口深井。(There is a deep well in the village.)"
     },
     {
       "character": "虫",
@@ -2474,7 +2618,8 @@
         "虫害 (chóng hài, insect damage)"
       ],
       "definition-english": "Insect; bug; worm; creature",
-      "definition-chinese": "虫；昆虫；虫子"
+      "definition-chinese": "虫；昆虫；虫子",
+      "sentence": "草地上有很多昆虫。(There are many insects on the grassland.)"
     },
     {
       "character": "弓",
@@ -2491,7 +2636,8 @@
         "拉弓 (lā gōng, draw bow)"
       ],
       "definition-english": "Bow; arch; curved",
-      "definition-chinese": "弓；弓形；弓器"
+      "definition-chinese": "弓；弓形；弓器",
+      "sentence": "古代士兵用弓箭打仗。(Ancient soldiers used bows and arrows in battle.)"
     },
     {
       "character": "贝",
@@ -2508,7 +2654,8 @@
         "海贝 (hǎi bèi, seashell)"
       ],
       "definition-english": "Shell; shellfish; clam",
-      "definition-chinese": "贝；贝壳；贝类"
+      "definition-chinese": "贝；贝壳；贝类",
+      "sentence": "海边可以捡到漂亮的贝壳。(You can pick up pretty shells at the seaside.)"
     },
     {
       "character": "心",
@@ -2525,7 +2672,8 @@
         "中心 (zhōng xīn, center)"
       ],
       "definition-english": "Heart; mind; center; core",
-      "definition-chinese": "心；心脏；中心"
+      "definition-chinese": "心；心脏；中心",
+      "sentence": "他心里很高兴。(He is very happy in his heart.)"
     },
     {
       "character": "豆",
@@ -2542,7 +2690,8 @@
         "黄豆 (huáng dòu, soybean)"
       ],
       "definition-english": "Bean; legume",
-      "definition-chinese": "豆；豆类；豆子"
+      "definition-chinese": "豆；豆类；豆子",
+      "sentence": "妈妈用黄豆做了豆腐。(Mom made tofu from soybeans.)"
     },
     {
       "character": "六",
@@ -2559,7 +2708,8 @@
         "六月 (liù yuè, June)"
       ],
       "definition-english": "The number 6; six",
-      "definition-chinese": "数字6"
+      "definition-chinese": "数字6",
+      "sentence": "今天是六月六号。(Today is June 6th.)"
     },
     {
       "character": "支",
@@ -2576,7 +2726,8 @@
         "笔支 (bǐ zhī, pen)"
       ],
       "definition-english": "Branch; measure word for objects",
-      "definition-chinese": "支；枝条；量词"
+      "definition-chinese": "支；枝条；量词",
+      "sentence": "我需要一支铅笔来写字。(I need a pencil to write.)"
     },
     {
       "character": "条",
@@ -2593,7 +2744,8 @@
         "条形 (tiáo xíng, stripe shape)"
       ],
       "definition-english": "Strip; item; measure word for long objects",
-      "definition-chinese": "条；条形；量词"
+      "definition-chinese": "条；条形；量词",
+      "sentence": "河里游着一条大鱼。(A big fish is swimming in the river.)"
     },
     {
       "character": "九",
@@ -2610,7 +2762,8 @@
         "九月 (jiǔ yuè, September)"
       ],
       "definition-english": "The number 9; nine",
-      "definition-chinese": "数字9"
+      "definition-chinese": "数字9",
+      "sentence": "我们在九月开学。(We start school in September.)"
     },
     {
       "character": "粒",
@@ -2627,7 +2780,8 @@
         "粒子 (lì zi, particle)"
       ],
       "definition-english": "Grain; particle; measure word for small objects",
-      "definition-chinese": "粒；颗粒；量词"
+      "definition-chinese": "粒；颗粒；量词",
+      "sentence": "碗里还剩几粒米。(There are a few grains of rice left in the bowl.)"
     },
     {
       "character": "今",
@@ -2644,7 +2798,8 @@
         "今年 (jīn nián, this year)"
       ],
       "definition-english": "Today; now; present; current",
-      "definition-chinese": "今天；现在；今年"
+      "definition-chinese": "今天；现在；今年",
+      "sentence": "今天天气很好，适合出门。(The weather is great today, perfect for going out.)"
     },
     {
       "character": "什",
@@ -2661,7 +2816,8 @@
         "什么时候 (shén me shí hòu, when)"
       ],
       "definition-english": "What; which; interrogative",
-      "definition-chinese": "什么；何；哪"
+      "definition-chinese": "什么；何；哪",
+      "sentence": "你在想什么？(What are you thinking about?)"
     },
     {
       "character": "么",
@@ -2678,7 +2834,8 @@
         "为什么 (wèi shén me, why)"
       ],
       "definition-english": "What; particle used in words",
-      "definition-chinese": "什么；怎么；虚词"
+      "definition-chinese": "什么；怎么；虚词",
+      "sentence": "为什么天空是蓝色的？(Why is the sky blue?)"
     },
     {
       "character": "华",
@@ -2695,7 +2852,8 @@
         "华人 (huá rén, Chinese person)"
       ],
       "definition-english": "Magnificent; splendid; China",
-      "definition-chinese": "华丽；中华；光彩"
+      "definition-chinese": "华丽；中华；光彩",
+      "sentence": "我们为中华文化感到骄傲。(We are proud of Chinese culture.)"
     },
     {
       "character": "文",
@@ -2712,7 +2870,8 @@
         "中文 (zhōng wén, Chinese language)"
       ],
       "definition-english": "Language; culture; writing; character",
-      "definition-chinese": "文字；文化；语言"
+      "definition-chinese": "文字；文化；语言",
+      "sentence": "他的中文说得很好。(His Chinese is very good.)"
     },
     {
       "character": "点",
@@ -2729,7 +2888,8 @@
         "时间点 (shí jiān diǎn, time point)"
       ],
       "definition-english": "Dot; point; o'clock; spot",
-      "definition-chinese": "点；时间；一点"
+      "definition-chinese": "点；时间；一点",
+      "sentence": "我想再喝一点水。(I want to drink a little more water.)"
     },
     {
       "character": "说",
@@ -2746,7 +2906,8 @@
         "告诉 (gào sù, tell)"
       ],
       "definition-english": "To say; to speak; to tell",
-      "definition-chinese": "说；讲；述说"
+      "definition-chinese": "说；讲；述说",
+      "sentence": "老师叫我们不要在课堂上说话。(The teacher told us not to talk in class.)"
     },
     {
       "character": "语",
@@ -2763,7 +2924,8 @@
         "语气 (yǔ qì, tone)"
       ],
       "definition-english": "Language; speech; word",
-      "definition-chinese": "语言；话语；语气"
+      "definition-chinese": "语言；话语；语气",
+      "sentence": "她学了三年汉语。(She has studied Chinese for three years.)"
     }
   ],
   "p1-10": [
@@ -2782,7 +2944,8 @@
         "月光 (yuè guāng, moonlight)"
       ],
       "definition-english": "Moon; month; lunar",
-      "definition-chinese": "月亮；月份；月"
+      "definition-chinese": "月亮；月份；月",
+      "sentence": "晚上月亮又大又圆。(At night the moon is big and round.)"
     },
     {
       "character": "天",
@@ -2799,7 +2962,8 @@
         "天气 (tiān qì, weather)"
       ],
       "definition-english": "Sky; heaven; day; weather",
-      "definition-chinese": "天空；天气；天"
+      "definition-chinese": "天空；天气；天",
+      "sentence": "今天天气很好，万里无云。(The weather is great today, not a cloud in the sky.)"
     },
     {
       "character": "地",
@@ -2816,7 +2980,8 @@
         "地球 (dì qiú, earth)"
       ],
       "definition-english": "Earth; ground; land; place",
-      "definition-chinese": "地球；地面；土地"
+      "definition-chinese": "地球；地面；土地",
+      "sentence": "地球是我们共同的家园。(The earth is our shared home.)"
     },
     {
       "character": "风",
@@ -2833,7 +2998,8 @@
         "北风 (běi fēng, north wind)"
       ],
       "definition-english": "Wind; breeze; style",
-      "definition-chinese": "风；清风；微风"
+      "definition-chinese": "风；清风；微风",
+      "sentence": "秋天的北风吹得很冷。(The north wind in autumn is very cold.)"
     },
     {
       "character": "雷",
@@ -2850,7 +3016,8 @@
         "闪电和雷 (shǎn diàn hé léi, lightning and thunder)"
       ],
       "definition-english": "Thunder; thunderbolt; sound of thunder",
-      "definition-chinese": "雷；雷声；雷电"
+      "definition-chinese": "雷；雷声；雷电",
+      "sentence": "下雨前先打雷。(Thunder comes before the rain.)"
     },
     {
       "character": "电",
@@ -2867,7 +3034,8 @@
         "电灯 (diàn dēng, electric light)"
       ],
       "definition-english": "Electricity; lightning; electric",
-      "definition-chinese": "电；电气；闪电"
+      "definition-chinese": "电；电气；闪电",
+      "sentence": "房间里的电灯坏了。(The electric light in the room is broken.)"
     },
     {
       "character": "水",
@@ -2884,7 +3052,8 @@
         "河水 (hé shuǐ, river water)"
       ],
       "definition-english": "Water; liquid; fluid",
-      "definition-chinese": "水；水源；清水"
+      "definition-chinese": "水；水源；清水",
+      "sentence": "清水对身体很有好处。(Clear water is very good for the body.)"
     },
     {
       "character": "寸",
@@ -2901,7 +3070,8 @@
         "尺寸 (chǐ cùn, size)"
       ],
       "definition-english": "Inch; measure; unit of length",
-      "definition-chinese": "寸；寸尺；英寸"
+      "definition-chinese": "寸；寸尺；英寸",
+      "sentence": "这块布的尺寸刚好合适。(The size of this piece of cloth is just right.)"
     },
     {
       "character": "方",
@@ -2918,7 +3088,8 @@
         "四方 (sì fāng, four directions)"
       ],
       "definition-english": "Square; way; direction; method",
-      "definition-chinese": "方法；方向；四方"
+      "definition-chinese": "方法；方向；四方",
+      "sentence": "我们讨论了很多解决问题的方法。(We discussed many methods to solve the problem.)"
     },
     {
       "character": "正",
@@ -2935,7 +3106,8 @@
         "正在 (zhèng zài, is...ing)"
       ],
       "definition-english": "Correct; right; proper; straight",
-      "definition-chinese": "正确；对的；正在"
+      "definition-chinese": "正确；对的；正在",
+      "sentence": "他的答案完全正确。(His answer is completely correct.)"
     },
     {
       "character": "反",
@@ -2952,7 +3124,8 @@
         "反复 (fǎn fù, repeat)"
       ],
       "definition-english": "Reverse; opposite; against; contrary",
-      "definition-chinese": "反对；相反；反面"
+      "definition-chinese": "反对；相反；反面",
+      "sentence": "他们两人的意见相反。(The two of them have opposite opinions.)"
     },
     {
       "character": "白",
@@ -2969,7 +3142,8 @@
         "明白 (míng bái, understand)"
       ],
       "definition-english": "White; clear; plain; bright",
-      "definition-chinese": "白色；白的；清白"
+      "definition-chinese": "白色；白的；清白",
+      "sentence": "她穿了一件白色的裙子。(She wore a white dress.)"
     },
     {
       "character": "好",
@@ -2986,7 +3160,8 @@
         "好友 (hǎo yǒu, good friend)"
       ],
       "definition-english": "Good; well; nice; fine",
-      "definition-chinese": "好；很好；美好"
+      "definition-chinese": "好；很好；美好",
+      "sentence": "他们是一对好友。(They are a pair of good friends.)"
     },
     {
       "character": "坏",
@@ -3003,7 +3178,8 @@
         "坏事 (huài shì, bad thing)"
       ],
       "definition-english": "Bad; evil; broken; spoiled",
-      "definition-chinese": "坏；不好；坏事"
+      "definition-chinese": "坏；不好；坏事",
+      "sentence": "不要做坏事。(Do not do bad things.)"
     },
     {
       "character": "对",
@@ -3020,7 +3196,8 @@
         "面对 (miàn duì, face)"
       ],
       "definition-english": "Correct; toward; to face; pair",
-      "definition-chinese": "对；正确；面对"
+      "definition-chinese": "对；正确；面对",
+      "sentence": "对不起，我来晚了。(Sorry, I arrived late.)"
     },
     {
       "character": "古",
@@ -3037,7 +3214,8 @@
         "古人 (gǔ rén, ancients)"
       ],
       "definition-english": "Ancient; old; former; primitive",
-      "definition-chinese": "古代；古老；古人"
+      "definition-chinese": "古代；古老；古人",
+      "sentence": "这座寺庙是古代建筑。(This temple is an ancient building.)"
     },
     {
       "character": "旧",
@@ -3054,7 +3232,8 @@
         "旧时 (jiù shí, former times)"
       ],
       "definition-english": "Old; used; former; obsolete",
-      "definition-chinese": "旧的；老旧；旧时"
+      "definition-chinese": "旧的；老旧；旧时",
+      "sentence": "妈妈把旧衣服捐给了慈善机构。(Mom donated the used clothes to charity.)"
     },
     {
       "character": "有",
@@ -3071,7 +3250,8 @@
         "有没有 (yǒu méi yǒu, do you have)"
       ],
       "definition-english": "To have; there is; to exist",
-      "definition-chinese": "有；存在；拥有"
+      "definition-chinese": "有；存在；拥有",
+      "sentence": "你有没有带雨伞？(Do you have an umbrella with you?)"
     },
     {
       "character": "没",
@@ -3088,7 +3268,8 @@
         "没关系 (méi guān xì, doesn't matter)"
       ],
       "definition-english": "Not; haven't; to drown; to sink",
-      "definition-chinese": "没有；没关系；不"
+      "definition-chinese": "没有；没关系；不",
+      "sentence": "没关系，下次注意就好。(It does not matter, just be careful next time.)"
     },
     {
       "character": "云",
@@ -3105,7 +3286,8 @@
         "多云 (duō yún, cloudy)"
       ],
       "definition-english": "Cloud; cloudy; to say",
-      "definition-chinese": "云；云彩；乌云"
+      "definition-chinese": "云；云彩；乌云",
+      "sentence": "天上飘着几朵白云。(A few white clouds are floating in the sky.)"
     }
   ],
   "p1-11": [
@@ -3124,7 +3306,8 @@
         "甲板 (jiǎ bǎn, deck)"
       ],
       "definition-english": "First; armor; shell; carapace",
-      "definition-chinese": "第一的；盔甲；外壳"
+      "definition-chinese": "第一的；盔甲；外壳",
+      "sentence": "花园里有一只甲虫。(There is a beetle in the garden.)"
     },
     {
       "character": "丁",
@@ -3141,7 +3324,8 @@
         "园丁 (yuán dīng, gardener)"
       ],
       "definition-english": "Fourth; robust; man; person",
-      "definition-chinese": "第四个；丁壮；人丁"
+      "definition-chinese": "第四个；丁壮；人丁",
+      "sentence": "公园里有一位园丁在浇花。(There is a gardener watering flowers in the park.)"
     },
     {
       "character": "前",
@@ -3158,7 +3342,8 @@
         "之前 (zhī qián, before)"
       ],
       "definition-english": "Front; before; ahead; prior",
-      "definition-chinese": "前面；前方；以前"
+      "definition-chinese": "前面；前方；以前",
+      "sentence": "请往前面走。(Please walk forward.)"
     },
     {
       "character": "后",
@@ -3175,7 +3360,8 @@
         "之后 (zhī hòu, after)"
       ],
       "definition-english": "Back; behind; after; rear",
-      "definition-chinese": "后面；后方；以后"
+      "definition-chinese": "后面；后方；以后",
+      "sentence": "后来他找到了答案。(Later he found the answer.)"
     },
     {
       "character": "左",
@@ -3192,7 +3378,8 @@
         "左转 (zuǒ zhuǎn, turn left)"
       ],
       "definition-english": "Left; left side; wrong",
-      "definition-chinese": "左边；左方；左面"
+      "definition-chinese": "左边；左方；左面",
+      "sentence": "银行在学校的左边。(The bank is on the left side of the school.)"
     },
     {
       "character": "右",
@@ -3209,7 +3396,8 @@
         "右转 (yòu zhuǎn, turn right)"
       ],
       "definition-english": "Right; right side; conservative",
-      "definition-chinese": "右边；右方；右面"
+      "definition-chinese": "右边；右方；右面",
+      "sentence": "请在路口右转。(Please turn right at the intersection.)"
     },
     {
       "character": "中",
@@ -3226,7 +3414,8 @@
         "中心 (zhōng xīn, center)"
       ],
       "definition-english": "Middle; center; China; hit",
-      "definition-chinese": "中间；中心；中国"
+      "definition-chinese": "中间；中心；中国",
+      "sentence": "他是中国人。(He is Chinese.)"
     },
     {
       "character": "间",
@@ -3243,7 +3432,8 @@
         "中间 (zhōng jiān, middle)"
       ],
       "definition-english": "Space; gap; room; interval",
-      "definition-chinese": "间隔；房间；时间"
+      "definition-chinese": "间隔；房间；时间",
+      "sentence": "我们的房间很宽敞。(Our room is very spacious.)"
     },
     {
       "character": "边",
@@ -3260,7 +3450,8 @@
         "旁边 (páng biān, beside)"
       ],
       "definition-english": "Side; edge; border; margin",
-      "definition-chinese": "边；边缘；旁边"
+      "definition-chinese": "边；边缘；旁边",
+      "sentence": "书就放在桌子旁边。(The book is placed beside the table.)"
     },
     {
       "character": "同",
@@ -3277,7 +3468,8 @@
         "同样 (tóng yàng, same)"
       ],
       "definition-english": "Same; together; with; equal",
-      "definition-chinese": "相同；一起；共同"
+      "definition-chinese": "相同；一起；共同",
+      "sentence": "我和同学一起完成了作业。(I completed the homework together with my classmates.)"
     },
     {
       "character": "学",
@@ -3294,7 +3486,8 @@
         "学习 (xué xí, study)"
       ],
       "definition-english": "To learn; to study; school",
-      "definition-chinese": "学习；学生；学校"
+      "definition-chinese": "学习；学生；学校",
+      "sentence": "他每天努力学习。(He studies hard every day.)"
     },
     {
       "character": "朋",
@@ -3311,7 +3504,8 @@
         "朋党 (péng dǎng, clique)"
       ],
       "definition-english": "Friend; companion; peer",
-      "definition-chinese": "朋友；伙伴；友人"
+      "definition-chinese": "朋友；伙伴；友人",
+      "sentence": "她有很多好朋友。(She has many good friends.)"
     },
     {
       "character": "友",
@@ -3328,7 +3522,8 @@
         "友好 (yǒu hǎo, friendly)"
       ],
       "definition-english": "Friend; friendship; amity",
-      "definition-chinese": "朋友；友谊；友好"
+      "definition-chinese": "朋友；友谊；友好",
+      "sentence": "我们之间有深厚的友谊。(We share a deep friendship.)"
     },
     {
       "character": "坐",
@@ -3345,7 +3540,8 @@
         "坐车 (zuò chē, ride in car)"
       ],
       "definition-english": "To sit; to be seated; to rest",
-      "definition-chinese": "坐；坐下；坐着"
+      "definition-chinese": "坐；坐下；坐着",
+      "sentence": "请坐下，老师马上来。(Please sit down, the teacher will be here soon.)"
     },
     {
       "character": "高",
@@ -3362,7 +3558,8 @@
         "高等 (gāo děng, high class)"
       ],
       "definition-english": "High; tall; lofty; superior",
-      "definition-chinese": "高；高大；高兴"
+      "definition-chinese": "高；高大；高兴",
+      "sentence": "听到好消息他非常高兴。(He was very happy when he heard the good news.)"
     },
     {
       "character": "发",
@@ -3379,7 +3576,8 @@
         "发起 (fā qǐ, initiate)"
       ],
       "definition-english": "To send; to emit; hair; to develop",
-      "definition-chinese": "发送；头发；发起"
+      "definition-chinese": "发送；头发；发起",
+      "sentence": "她的头发又黑又长。(Her hair is both black and long.)"
     },
     {
       "character": "直",
@@ -3396,7 +3594,8 @@
         "直线 (zhí xiàn, straight line)"
       ],
       "definition-english": "Straight; direct; upright; frank",
-      "definition-chinese": "直；笔直；直接"
+      "definition-chinese": "直；笔直；直接",
+      "sentence": "一直走到路的尽头。(Walk straight to the end of the road.)"
     },
     {
       "character": "起",
@@ -3413,7 +3612,8 @@
         "起点 (qǐ diǎn, start point)"
       ],
       "definition-english": "To rise; to get up; to start",
-      "definition-chinese": "起来；起床；开始"
+      "definition-chinese": "起来；起床；开始",
+      "sentence": "他每天六点起床。(He gets up at six every morning.)"
     },
     {
       "character": "回",
@@ -3430,7 +3630,8 @@
         "回答 (huí dá, answer)"
       ],
       "definition-english": "To return; to go back; turn",
-      "definition-chinese": "回来；回家；返回"
+      "definition-chinese": "回来；回家；返回",
+      "sentence": "放学后我马上回家。(I go home right after school.)"
     },
     {
       "character": "周",
@@ -3447,7 +3648,8 @@
         "一周 (yī zhōu, one week)"
       ],
       "definition-english": "Week; circumference; Zhou dynasty",
-      "definition-chinese": "周；一周；周围"
+      "definition-chinese": "周；一周；周围",
+      "sentence": "我们计划周末去爬山。(We plan to go hiking this weekend.)"
     },
     {
       "character": "末",
@@ -3464,7 +3666,8 @@
         "树末 (shù mò, tree tip)"
       ],
       "definition-english": "End; tip; powder; final",
-      "definition-chinese": "末；末端；周末"
+      "definition-chinese": "末；末端；周末",
+      "sentence": "年末的时候全家人一起庆祝。(At year end the whole family celebrates together.)"
     }
   ],
   "p1-12": [
@@ -3483,7 +3686,8 @@
         "鸡肉 (jī ròu, chicken meat)"
       ],
       "definition-english": "Chicken; hen; fowl",
-      "definition-chinese": "鸡；母鸡；小鸡"
+      "definition-chinese": "鸡；母鸡；小鸡",
+      "sentence": "妈妈煮了一锅鸡汤。(Mom cooked a pot of chicken soup.)"
     },
     {
       "character": "饭",
@@ -3500,7 +3704,8 @@
         "午饭 (wǔ fàn, lunch)"
       ],
       "definition-english": "Rice; meal; cooked rice",
-      "definition-chinese": "米饭；饭菜；饭食"
+      "definition-chinese": "米饭；饭菜；饭食",
+      "sentence": "我们一家人一起吃午饭。(Our whole family eats lunch together.)"
     },
     {
       "character": "鸭",
@@ -3517,7 +3722,8 @@
         "鸭蛋 (yā dàn, duck egg)"
       ],
       "definition-english": "Duck; waterfowl",
-      "definition-chinese": "鸭；鸭子；野鸭"
+      "definition-chinese": "鸭；鸭子；野鸭",
+      "sentence": "池塘里有几只小鸭在游泳。(There are a few ducklings swimming in the pond.)"
     },
     {
       "character": "元",
@@ -3534,7 +3740,8 @@
         "元旦 (yuán dàn, New Year's Day)"
       ],
       "definition-english": "Yuan (currency); dollar; element",
-      "definition-chinese": "元；元钱；一元"
+      "definition-chinese": "元；元钱；一元",
+      "sentence": "元旦那天我们放假。(We have a holiday on New Year's Day.)"
     },
     {
       "character": "饿",
@@ -3551,7 +3758,8 @@
         "挨饿 (ái è, starve)"
       ],
       "definition-english": "Hungry; starving; to hunger",
-      "definition-chinese": "饿；饥饿；肚子饿"
+      "definition-chinese": "饿；饥饿；肚子饿",
+      "sentence": "我已经很饿了，快去吃饭吧。(I am already very hungry, let us go eat.)"
     },
     {
       "character": "饱",
@@ -3568,7 +3776,8 @@
         "饱满 (bǎo mǎn, abundant)"
       ],
       "definition-english": "Full; satisfied; satiated",
-      "definition-chinese": "饱；吃饱；饱满"
+      "definition-chinese": "饱；吃饱；饱满",
+      "sentence": "吃饱了才有力气做事。(You need to eat your fill to have energy for work.)"
     },
     {
       "character": "饼",
@@ -3585,7 +3794,8 @@
         "月饼 (yuè bǐng, mooncake)"
       ],
       "definition-english": "Cake; flatbread; pancake",
-      "definition-chinese": "饼；饼干；月饼"
+      "definition-chinese": "饼；饼干；月饼",
+      "sentence": "中秋节我们吃月饼。(We eat mooncakes during the Mid-Autumn Festival.)"
     },
     {
       "character": "干",
@@ -3602,7 +3812,8 @@
         "干燥 (gān zào, dry)"
       ],
       "definition-english": "Dry; trunk; main; stem",
-      "definition-chinese": "干；干燥；树干"
+      "definition-chinese": "干；干燥；树干",
+      "sentence": "我喜欢吃饼干当零食。(I like eating biscuits as a snack.)"
     },
     {
       "character": "狗",
@@ -3619,7 +3830,8 @@
         "看家狗 (kān jiā gǒu, watchdog)"
       ],
       "definition-english": "Dog; canine; hound",
-      "definition-chinese": "狗；小狗；狗狗"
+      "definition-chinese": "狗；小狗；狗狗",
+      "sentence": "他家养了一只小狗。(He keeps a puppy at his home.)"
     },
     {
       "character": "喜",
@@ -3636,7 +3848,8 @@
         "喜事 (xǐ shì, happy event)"
       ],
       "definition-english": "Happy; joy; to like; to love",
-      "definition-chinese": "喜欢；高兴；快乐"
+      "definition-chinese": "喜欢；高兴；快乐",
+      "sentence": "她非常喜欢画画。(She likes drawing very much.)"
     },
     {
       "character": "欢",
@@ -3653,7 +3866,8 @@
         "欢迎 (huān yíng, welcome)"
       ],
       "definition-english": "Happy; joyful; to rejoice; merry",
-      "definition-chinese": "欢乐；高兴；欢迎"
+      "definition-chinese": "欢乐；高兴；欢迎",
+      "sentence": "老师欢迎新同学加入班级。(The teacher welcomed the new student to the class.)"
     },
     {
       "character": "肉",
@@ -3670,7 +3884,8 @@
         "牛肉 (niú ròu, beef)"
       ],
       "definition-english": "Meat; flesh; pulp",
-      "definition-chinese": "肉；肉类；肉食"
+      "definition-chinese": "肉；肉类；肉食",
+      "sentence": "我今天想吃牛肉炒饭。(I want to eat beef fried rice today.)"
     },
     {
       "character": "猫",
@@ -3687,7 +3902,8 @@
         "花猫 (huā māo, tabby)"
       ],
       "definition-english": "Cat; feline",
-      "definition-chinese": "猫；小猫；猫咪"
+      "definition-chinese": "猫；小猫；猫咪",
+      "sentence": "那只小猫很喜欢睡觉。(That kitten loves to sleep.)"
     },
     {
       "character": "采",
@@ -3704,7 +3920,8 @@
         "采矿 (cǎi kuàng, mining)"
       ],
       "definition-english": "To pick; to gather; color; collect",
-      "definition-chinese": "采摘；采集；采色"
+      "definition-chinese": "采摘；采集；采色",
+      "sentence": "春天我们去野外采花。(In spring we go outdoors to pick flowers.)"
     },
     {
       "character": "歌",
@@ -3721,7 +3938,8 @@
         "儿歌 (ér gē, children song)"
       ],
       "definition-english": "Song; ballad; to sing",
-      "definition-chinese": "歌；歌曲；唱歌"
+      "definition-chinese": "歌；歌曲；唱歌",
+      "sentence": "她唱了一首很好听的儿歌。(She sang a very nice children's song.)"
     },
     {
       "character": "唱",
@@ -3738,7 +3956,8 @@
         "唱生日歌 (chàng shēng rì gē, sing Happy Birthday)"
       ],
       "definition-english": "To sing; to perform; to chant",
-      "definition-chinese": "唱；唱歌；唱念"
+      "definition-chinese": "唱；唱歌；唱念",
+      "sentence": "大家一起唱歌庆祝生日。(Everyone sang together to celebrate the birthday.)"
     },
     {
       "character": "青",
@@ -3755,7 +3974,8 @@
         "青年 (qīng nián, youth)"
       ],
       "definition-english": "Blue; green; young; black",
-      "definition-chinese": "青色；青菜；青年"
+      "definition-chinese": "青色；青菜；青年",
+      "sentence": "市场上有很多新鲜的青菜。(There are many fresh greens at the market.)"
     },
     {
       "character": "菜",
@@ -3772,7 +3992,8 @@
         "菜市场 (cài shì chǎng, vegetable market)"
       ],
       "definition-english": "Vegetable; dish; cuisine; food",
-      "definition-chinese": "蔬菜；菜肴；饭菜"
+      "definition-chinese": "蔬菜；菜肴；饭菜",
+      "sentence": "妈妈去菜市场买了很多菜。(Mom went to the vegetable market and bought many vegetables.)"
     },
     {
       "character": "汤",
@@ -3789,7 +4010,8 @@
         "喝汤 (hē tāng, drink soup)"
       ],
       "definition-english": "Soup; broth; hot water",
-      "definition-chinese": "汤；汤水；喝汤"
+      "definition-chinese": "汤；汤水；喝汤",
+      "sentence": "冬天喝热鸡汤特别暖和。(Drinking hot chicken soup in winter is especially warming.)"
     },
     {
       "character": "蛋",
@@ -3806,7 +4028,8 @@
         "煮蛋 (zhǔ dàn, boiled egg)"
       ],
       "definition-english": "Egg; ovum",
-      "definition-chinese": "蛋；鸡蛋；蛋类"
+      "definition-chinese": "蛋；鸡蛋；蛋类",
+      "sentence": "早餐我吃了一个煮蛋。(I ate a boiled egg for breakfast.)"
     },
     {
       "character": "香",
@@ -3823,7 +4046,8 @@
         "很香 (hěn xiāng, very fragrant)"
       ],
       "definition-english": "Fragrant; aromatic; savory; pleasant-smelling",
-      "definition-chinese": "香；香味；芳香"
+      "definition-chinese": "香；香味；芳香",
+      "sentence": "厨房里飘来一阵香味。(A fragrant smell drifted from the kitchen.)"
     }
   ],
   "p1-13": [
@@ -3842,7 +4066,8 @@
         "用处 (yòng chǔ, usefulness)"
       ],
       "definition-english": "To use; usefulness; purpose",
-      "definition-chinese": "使用；用处；有用"
+      "definition-chinese": "使用；用处；有用",
+      "sentence": "这个工具很有用。(This tool is very useful.)"
     },
     {
       "character": "刷",
@@ -3859,7 +4084,8 @@
         "刷洗 (shuā xǐ, scrub)"
       ],
       "definition-english": "To brush; to scrub; brush",
-      "definition-chinese": "刷；刷洗；牙刷"
+      "definition-chinese": "刷；刷洗；牙刷",
+      "sentence": "每天早晚都要刷牙。(You should brush your teeth morning and night every day.)"
     },
     {
       "character": "巾",
@@ -3876,7 +4102,8 @@
         "布巾 (bù jīn, cloth)"
       ],
       "definition-english": "Towel; cloth; scarf; kerchief",
-      "definition-chinese": "毛巾；手巾；布巾"
+      "definition-chinese": "毛巾；手巾；布巾",
+      "sentence": "洗手后要用毛巾擦干。(After washing your hands, dry them with a towel.)"
     },
     {
       "character": "抹",
@@ -3893,7 +4120,8 @@
         "抹黑 (mǒ hēi, smear)"
       ],
       "definition-english": "To wipe; to smear; to erase",
-      "definition-chinese": "擦拭；涂抹；抹去"
+      "definition-chinese": "擦拭；涂抹；抹去",
+      "sentence": "他用抹布擦桌子。(He wiped the table with a rag.)"
     },
     {
       "character": "洗",
@@ -3910,7 +4138,8 @@
         "洗澡 (xǐ zǎo, bathe)"
       ],
       "definition-english": "To wash; to bathe; to rinse",
-      "definition-chinese": "洗；洗涤；清洗"
+      "definition-chinese": "洗；洗涤；清洗",
+      "sentence": "吃饭前一定要洗手。(You must wash your hands before eating.)"
     },
     {
       "character": "要",
@@ -3927,7 +4156,8 @@
         "重要 (zhòng yào, important)"
       ],
       "definition-english": "To want; to need; must; should",
-      "definition-chinese": "要；需要；必须"
+      "definition-chinese": "要；需要；必须",
+      "sentence": "学好中文很重要。(It is very important to learn Chinese well.)"
     },
     {
       "character": "脸",
@@ -3944,7 +4174,8 @@
         "脸色 (liǎn sè, facial expression)"
       ],
       "definition-english": "Face; cheek; countenance",
-      "definition-chinese": "脸；面部；脸色"
+      "definition-chinese": "脸；面部；脸色",
+      "sentence": "他洗脸后感觉很清爽。(He felt very refreshed after washing his face.)"
     },
     {
       "character": "放",
@@ -3961,7 +4192,8 @@
         "放假 (fàng jià, on holiday)"
       ],
       "definition-english": "To put; to release; to let; to place",
-      "definition-chinese": "放置；释放；放下"
+      "definition-chinese": "放置；释放；放下",
+      "sentence": "今天学校放假。(School is on holiday today.)"
     },
     {
       "character": "冲",
@@ -3978,7 +4210,8 @@
         "冲凉 (chōng liáng, take shower)"
       ],
       "definition-english": "To rush; to dash; to flush; impact",
-      "definition-chinese": "冲向；冲洗；冲刺"
+      "definition-chinese": "冲向；冲洗；冲刺",
+      "sentence": "运动后他去冲凉。(He went to shower after exercising.)"
     },
     {
       "character": "凉",
@@ -3995,7 +4228,8 @@
         "凉水 (liáng shuǐ, cold water)"
       ],
       "definition-english": "Cool; cold; chill; refreshing",
-      "definition-chinese": "凉；凉爽；凉水"
+      "definition-chinese": "凉；凉爽；凉水",
+      "sentence": "夏天喝凉水很舒服。(Drinking cold water in summer feels very comfortable.)"
     },
     {
       "character": "东",
@@ -4012,7 +4246,8 @@
         "东京 (dōng jīng, Tokyo)"
       ],
       "definition-english": "East; eastern; east direction",
-      "definition-chinese": "东方；东边；东部"
+      "definition-chinese": "东方；东边；东部",
+      "sentence": "他买了很多东西回家。(He bought many things and went home.)"
     },
     {
       "character": "西",
@@ -4029,7 +4264,8 @@
         "西瓜 (xī guā, watermelon)"
       ],
       "definition-english": "West; western; west direction",
-      "definition-chinese": "西方；西边；西部"
+      "definition-chinese": "西方；西边；西部",
+      "sentence": "夏天我最喜欢吃西瓜。(In summer I like eating watermelon the most.)"
     },
     {
       "character": "到",
@@ -4046,7 +4282,8 @@
         "见到 (jiàn dào, see)"
       ],
       "definition-english": "To arrive; to reach; until; to",
-      "definition-chinese": "到达；直到；来到"
+      "definition-chinese": "到达；直到；来到",
+      "sentence": "火车准时到达车站。(The train arrived at the station on time.)"
     },
     {
       "character": "先",
@@ -4063,7 +4300,8 @@
         "先进 (xiān jìn, advanced)"
       ],
       "definition-english": "First; earlier; before; prior",
-      "definition-chinese": "先；首先；先前"
+      "definition-chinese": "先；首先；先前",
+      "sentence": "请先生先进来坐。(Please, sir, come in and sit first.)"
     },
     {
       "character": "请",
@@ -4080,7 +4318,8 @@
         "请问 (qǐng wèn, excuse me)"
       ],
       "definition-english": "To request; please; to invite",
-      "definition-chinese": "请；邀请；请求"
+      "definition-chinese": "请；邀请；请求",
+      "sentence": "请问图书馆在哪里？(Excuse me, where is the library?)"
     },
     {
       "character": "很",
@@ -4097,7 +4336,8 @@
         "很高 (hěn gāo, quite tall)"
       ],
       "definition-english": "Very; quite; fairly; rather",
-      "definition-chinese": "很；非常；十分"
+      "definition-chinese": "很；非常；十分",
+      "sentence": "今天的作业很多。(There is a lot of homework today.)"
     },
     {
       "character": "泡",
@@ -4114,7 +4354,8 @@
         "泡水 (pào shuǐ, soak)"
       ],
       "definition-english": "Bubble; foam; to soak; to steep",
-      "definition-chinese": "泡；泡沫；浸泡"
+      "definition-chinese": "泡；泡沫；浸泡",
+      "sentence": "奶奶喜欢泡茶喝。(Grandma likes to steep tea and drink it.)"
     },
     {
       "character": "变",
@@ -4131,7 +4372,8 @@
         "变成 (biàn chéng, become)"
       ],
       "definition-english": "To change; to transform; to alter",
-      "definition-chinese": "变；改变；变成"
+      "definition-chinese": "变；改变；变成",
+      "sentence": "天气突然变冷了。(The weather suddenly became cold.)"
     },
     {
       "character": "谢",
@@ -4148,7 +4390,8 @@
         "感谢 (gǎn xiè, appreciate)"
       ],
       "definition-english": "To thank; thank you; gratitude",
-      "definition-chinese": "感谢；谢谢；道谢"
+      "definition-chinese": "感谢；谢谢；道谢",
+      "sentence": "谢谢你帮助了我。(Thank you for helping me.)"
     }
   ],
   "p1-14": [
@@ -4167,7 +4410,8 @@
         "这样 (zhè yàng, this way)"
       ],
       "definition-english": "This; these; such",
-      "definition-chinese": "这；这个；这些"
+      "definition-chinese": "这；这个；这些",
+      "sentence": "这个苹果真好吃。(This apple is really delicious.)"
     },
     {
       "character": "双",
@@ -4184,7 +4428,8 @@
         "双脚 (shuāng jiǎo, both feet)"
       ],
       "definition-english": "Pair; double; both; twin",
-      "definition-chinese": "一双；双双；两个"
+      "definition-chinese": "一双；双双；两个",
+      "sentence": "妈妈送给我一双新鞋。(Mom gave me a pair of new shoes.)"
     },
     {
       "character": "袜",
@@ -4201,7 +4446,8 @@
         "穿袜 (chuān wà, wear socks)"
       ],
       "definition-english": "Sock; stocking; hosiery",
-      "definition-chinese": "袜子；长袜；短袜"
+      "definition-chinese": "袜子；长袜；短袜",
+      "sentence": "我找不到我的袜子了。(I cannot find my socks.)"
     },
     {
       "character": "那",
@@ -4218,7 +4464,8 @@
         "那样 (nà yàng, that way)"
       ],
       "definition-english": "That; those; then",
-      "definition-chinese": "那；那个；那些"
+      "definition-chinese": "那；那个；那些",
+      "sentence": "那些书都是我的。(All those books are mine.)"
     },
     {
       "character": "皮",
@@ -4235,7 +4482,8 @@
         "橙皮 (chéng pí, orange peel)"
       ],
       "definition-english": "Skin; leather; peel; hide",
-      "definition-chinese": "皮肤；皮革；皮"
+      "definition-chinese": "皮肤；皮革；皮",
+      "sentence": "他穿了一双黑色皮鞋。(He wore a pair of black leather shoes.)"
     },
     {
       "character": "鞋",
@@ -4252,7 +4500,8 @@
         "穿鞋 (chuān xié, wear shoes)"
       ],
       "definition-english": "Shoe; footwear",
-      "definition-chinese": "鞋；鞋子；鞋类"
+      "definition-chinese": "鞋；鞋子；鞋类",
+      "sentence": "出门前要穿好鞋子。(You should put on your shoes before going out.)"
     },
     {
       "character": "件",
@@ -4269,7 +4518,8 @@
         "事件 (shì jiàn, matter)"
       ],
       "definition-english": "Piece; item; matter; measure word",
-      "definition-chinese": "件；一件；物件"
+      "definition-chinese": "件；一件；物件",
+      "sentence": "我买了一件新衣服。(I bought a new piece of clothing.)"
     },
     {
       "character": "服",
@@ -4286,7 +4536,8 @@
         "服务 (fú wù, service)"
       ],
       "definition-english": "Clothes; to wear; service; suit",
-      "definition-chinese": "衣服；服装；服用"
+      "definition-chinese": "衣服；服装；服用",
+      "sentence": "她的服装很漂亮。(Her clothing is very beautiful.)"
     },
     {
       "character": "被",
@@ -4303,7 +4554,8 @@
         "被动 (bèi dòng, passive)"
       ],
       "definition-english": "Quilt; bedding; by (passive voice)",
-      "definition-chinese": "被子；被褥；被"
+      "definition-chinese": "被子；被褥；被",
+      "sentence": "冬天要盖厚被子。(You need to cover yourself with a thick quilt in winter.)"
     },
     {
       "character": "还",
@@ -4320,7 +4572,8 @@
         "还好 (hái hǎo, okay)"
       ],
       "definition-english": "Also; still; yet; to return",
-      "definition-chinese": "还；还要；还是"
+      "definition-chinese": "还；还要；还是",
+      "sentence": "他还是不明白这道题。(He still does not understand this question.)"
     },
     {
       "character": "色",
@@ -4337,7 +4590,8 @@
         "色彩 (sè cǎi, color)"
       ],
       "definition-english": "Color; appearance; shade",
-      "definition-chinese": "颜色；色彩；色调"
+      "definition-chinese": "颜色；色彩；色调",
+      "sentence": "你最喜欢什么颜色？(What color do you like the most?)"
     },
     {
       "character": "红",
@@ -4354,7 +4608,8 @@
         "绛红 (jiàng hóng, crimson)"
       ],
       "definition-english": "Red; popular; prosperous",
-      "definition-chinese": "红色；红的；走红"
+      "definition-chinese": "红色；红的；走红",
+      "sentence": "她脸上红了。(Her face turned red.)"
     },
     {
       "character": "都",
@@ -4371,7 +4626,8 @@
         "首都 (shǒu dū, capital)"
       ],
       "definition-english": "All; both; capital; metropolis",
-      "definition-chinese": "都；全部；首都"
+      "definition-chinese": "都；全部；首都",
+      "sentence": "我们都喜欢唱歌。(We all like singing.)"
     },
     {
       "character": "动",
@@ -4388,7 +4644,8 @@
         "动物 (dòng wù, animal)"
       ],
       "definition-english": "To move; active; movement; dynamic",
-      "definition-chinese": "动；运动；活动"
+      "definition-chinese": "动；运动；活动",
+      "sentence": "动物园里有很多动物。(There are many animals in the zoo.)"
     },
     {
       "character": "作",
@@ -4405,7 +4662,8 @@
         "作品 (zuò pǐn, work/composition)"
       ],
       "definition-english": "To make; to do; work; composition",
-      "definition-chinese": "作；做；工作"
+      "definition-chinese": "作；做；工作",
+      "sentence": "老师让我们做作业。(The teacher asked us to do homework.)"
     },
     {
       "character": "快",
@@ -4422,7 +4680,8 @@
         "快点 (kuài diǎn, hurry up)"
       ],
       "definition-english": "Fast; quick; happy; cheerful",
-      "definition-chinese": "快；快速；快乐"
+      "definition-chinese": "快；快速；快乐",
+      "sentence": "祝你生日快乐！(Wishing you a happy birthday!)"
     },
     {
       "character": "收",
@@ -4439,7 +4698,8 @@
         "收到 (shōu dào, receive)"
       ],
       "definition-english": "To collect; to receive; to gather",
-      "definition-chinese": "收；收集；收到"
+      "definition-chinese": "收；收集；收到",
+      "sentence": "他收到了一封信。(He received a letter.)"
     },
     {
       "character": "拾",
@@ -4456,7 +4716,8 @@
         "拾穗 (shí suì, glean)"
       ],
       "definition-english": "To pick up; ten (formal); to collect",
-      "definition-chinese": "拾起；收拾；十"
+      "definition-chinese": "拾起；收拾；十",
+      "sentence": "请帮我收拾房间。(Please help me tidy up the room.)"
     },
     {
       "character": "穿",
@@ -4473,7 +4734,8 @@
         "穿着 (chuān zhe, dressed in)"
       ],
       "definition-english": "To wear; to put on; to pierce",
-      "definition-chinese": "穿；穿衣；穿着"
+      "definition-chinese": "穿；穿衣；穿着",
+      "sentence": "今天天冷，要多穿衣服。(It is cold today, wear more clothes.)"
     },
     {
       "character": "事",
@@ -4490,7 +4752,8 @@
         "做事 (zuò shì, do things)"
       ],
       "definition-english": "Matter; thing; event; affair",
-      "definition-chinese": "事；事情；事件"
+      "definition-chinese": "事；事情；事件",
+      "sentence": "他讲了一个有趣的故事。(He told an interesting story.)"
     },
     {
       "character": "做",
@@ -4507,7 +4770,8 @@
         "做作业 (zuò zuò yè, do homework)"
       ],
       "definition-english": "To make; to do; to be; to act",
-      "definition-chinese": "做；制作；进行"
+      "definition-chinese": "做；制作；进行",
+      "sentence": "她正在做作业。(She is doing homework.)"
     }
   ],
   "p1-15": [
@@ -4526,7 +4790,8 @@
         "很甜 (hěn tián, very sweet)"
       ],
       "definition-english": "Sweet; sugary; pleasant",
-      "definition-chinese": "甜；甜蜜；口感甜"
+      "definition-chinese": "甜；甜蜜；口感甜",
+      "sentence": "这个蛋糕很甜蜜。(This cake is very sweet.)"
     },
     {
       "character": "苦",
@@ -4543,7 +4808,8 @@
         "辛苦 (xīn kǔ, hard work)"
       ],
       "definition-english": "Bitter; hard; suffering; difficult",
-      "definition-chinese": "苦；苦味；艰苦"
+      "definition-chinese": "苦；苦味；艰苦",
+      "sentence": "学习很辛苦，但收获很大。(Studying is hard work, but the rewards are great.)"
     },
     {
       "character": "臭",
@@ -4560,7 +4826,8 @@
         "很臭 (hěn chòu, very stinky)"
       ],
       "definition-english": "Stinky; smelly; foul-smelling",
-      "definition-chinese": "臭；恶臭；臭味"
+      "definition-chinese": "臭；恶臭；臭味",
+      "sentence": "这双鞋子有臭味。(These shoes have a bad smell.)"
     },
     {
       "character": "生",
@@ -4577,7 +4844,8 @@
         "生吃 (shēng chī, eat raw)"
       ],
       "definition-english": "To live; raw; birth; life; student",
-      "definition-chinese": "生；生活；生命"
+      "definition-chinese": "生；生活；生命",
+      "sentence": "祝你生日快乐，生活幸福！(Wishing you a happy birthday and a happy life!)"
     },
     {
       "character": "重",
@@ -4594,7 +4862,8 @@
         "重新 (chóng xīn, again)"
       ],
       "definition-english": "Heavy; weight; important; grave",
-      "definition-chinese": "重；沉重；重要"
+      "definition-chinese": "重；沉重；重要",
+      "sentence": "这件事情非常重要。(This matter is very important.)"
     },
     {
       "character": "喝",
@@ -4611,7 +4880,8 @@
         "喝牛奶 (hē niú nǎi, drink milk)"
       ],
       "definition-english": "To drink; to beverage",
-      "definition-chinese": "喝；饮用；喝饮料"
+      "definition-chinese": "喝；饮用；喝饮料",
+      "sentence": "天热的时候要多喝水。(You should drink more water when the weather is hot.)"
     },
     {
       "character": "甘",
@@ -4628,7 +4898,8 @@
         "甘蔗 (gān zhè, sugarcane)"
       ],
       "definition-english": "Sweet; willing; pleased",
-      "definition-chinese": "甘甜；甘愿；甜蜜"
+      "definition-chinese": "甘甜；甘愿；甜蜜",
+      "sentence": "甘蔗的汁液很甜。(The juice of sugarcane is very sweet.)"
     },
     {
       "character": "汁",
@@ -4645,7 +4916,8 @@
         "番茄汁 (fān qié zhī, tomato juice)"
       ],
       "definition-english": "Juice; liquid; essence",
-      "definition-chinese": "汁液；果汁；汤汁"
+      "definition-chinese": "汁液；果汁；汤汁",
+      "sentence": "我每天早上喝一杯果汁。(I drink a glass of fruit juice every morning.)"
     },
     {
       "character": "买",
@@ -4662,7 +4934,8 @@
         "买东西 (mǎi dōng xī, go shopping)"
       ],
       "definition-english": "To buy; to purchase; to acquire",
-      "definition-chinese": "买；购买；采购"
+      "definition-chinese": "买；购买；采购",
+      "sentence": "妈妈去超市买东西。(Mom went to the supermarket to go shopping.)"
     },
     {
       "character": "斤",
@@ -4679,7 +4952,8 @@
         "克斤 (kè jīn, gram and jin)"
       ],
       "definition-english": "Jin (weight unit, ~500g); pound",
-      "definition-chinese": "斤；重量单位；磅"
+      "definition-chinese": "斤；重量单位；磅",
+      "sentence": "他买了两斤苹果。(He bought two jin of apples.)"
     },
     {
       "character": "串",
@@ -4696,7 +4970,8 @@
         "串珠 (chuàn zhū, beads)"
       ],
       "definition-english": "String; bunch; to string together",
-      "definition-chinese": "串；一串；串珠"
+      "definition-chinese": "串；一串；串珠",
+      "sentence": "烤肉摊上有很多肉串。(There are many meat skewers at the barbecue stall.)"
     },
     {
       "character": "弯",
@@ -4713,7 +4988,8 @@
         "弯曲 (wān qū, bend)"
       ],
       "definition-english": "Curved; to bend; curve",
-      "definition-chinese": "弯；弯曲；弯腰"
+      "definition-chinese": "弯；弯曲；弯腰",
+      "sentence": "这条路弯弯曲曲的。(This road is very winding.)"
     },
     {
       "character": "选",
@@ -4730,7 +5006,8 @@
         "精选 (jīng xuǎn, hand-picked)"
       ],
       "definition-english": "To select; to choose; choice",
-      "definition-chinese": "选择；选中；精选"
+      "definition-chinese": "选择；选中；精选",
+      "sentence": "他选择了一本好书。(He chose a good book.)"
     },
     {
       "character": "最",
@@ -4747,7 +5024,8 @@
         "最后 (zuì hòu, last)"
       ],
       "definition-english": "Most; utmost; extremity; the best",
-      "definition-chinese": "最；最好；最多"
+      "definition-chinese": "最；最好；最多",
+      "sentence": "她是班里最用功的学生。(She is the most hardworking student in the class.)"
     },
     {
       "character": "抱",
@@ -4764,7 +5042,8 @@
         "拥抱 (yōng bào, embrace)"
       ],
       "definition-english": "To hold; to embrace; to hug",
-      "definition-chinese": "抱；拥抱；怀抱"
+      "definition-chinese": "抱；拥抱；怀抱",
+      "sentence": "妈妈紧紧拥抱着孩子。(Mom held the child in a tight embrace.)"
     },
     {
       "character": "拿",
@@ -4781,7 +5060,8 @@
         "拿走 (ná zǒu, take away)"
       ],
       "definition-english": "To take; to hold; to catch",
-      "definition-chinese": "拿；拿起；拿走"
+      "definition-chinese": "拿；拿起；拿走",
+      "sentence": "请把那本书拿过来。(Please bring that book over here.)"
     },
     {
       "character": "办",
@@ -4798,7 +5078,8 @@
         "办法 (bàn fǎ, way/method)"
       ],
       "definition-english": "To handle; to manage; to do; to organize",
-      "definition-chinese": "办理；处理；办法"
+      "definition-chinese": "办理；处理；办法",
+      "sentence": "遇到问题要想办法解决。(When you encounter a problem, find a way to solve it.)"
     },
     {
       "character": "法",
@@ -4815,7 +5096,8 @@
         "法律 (fǎ lǜ, law)"
       ],
       "definition-english": "Law; method; way; rule",
-      "definition-chinese": "法律；办法；方法"
+      "definition-chinese": "法律；办法；方法",
+      "sentence": "他想出了一个好办法。(He came up with a good method.)"
     },
     {
       "character": "圆",
@@ -4832,7 +5114,8 @@
         "圆满 (yuán mǎn, satisfactory)"
       ],
       "definition-english": "Round; circle; complete",
-      "definition-chinese": "圆；圆形；圆满"
+      "definition-chinese": "圆；圆形；圆满",
+      "sentence": "月亮是圆形的。(The moon is round.)"
     },
     {
       "character": "切",
@@ -4849,7 +5132,8 @@
         "切割 (qiē gē, cut)"
       ],
       "definition-english": "To cut; to slice; closely; urgent",
-      "definition-chinese": "切；切割；切片"
+      "definition-chinese": "切；切割；切片",
+      "sentence": "妈妈在厨房切菜。(Mom is cutting vegetables in the kitchen.)"
     },
     {
       "character": "怎",
@@ -4866,7 +5150,8 @@
         "怎办 (zěn bàn, what to do)"
       ],
       "definition-english": "How; what; why; interrogative",
-      "definition-chinese": "怎样；怎么；如何"
+      "definition-chinese": "怎样；怎么；如何",
+      "sentence": "你怎么去学校的？(How do you get to school?)"
     }
   ],
   "p1-16": [
@@ -4885,7 +5170,8 @@
         "扫帚 (sào zhǒu, broom)"
       ],
       "definition-english": "To sweep; to brush; to scan",
-      "definition-chinese": "扫；扫地；清扫"
+      "definition-chinese": "扫；扫地；清扫",
+      "sentence": "他每天早上打扫房间。(He cleans the room every morning.)"
     },
     {
       "character": "户",
@@ -4902,7 +5188,8 @@
         "户口 (hù kǒu, household registration)"
       ],
       "definition-english": "Door; household; family; account",
-      "definition-chinese": "户；家户；门户"
+      "definition-chinese": "户；家户；门户",
+      "sentence": "这个小区有很多住户。(This neighbourhood has many households.)"
     },
     {
       "character": "桌",
@@ -4919,7 +5206,8 @@
         "饭桌 (fàn zhuō, dining table)"
       ],
       "definition-english": "Table; desk; surface",
-      "definition-chinese": "桌子；桌面；餐桌"
+      "definition-chinese": "桌子；桌面；餐桌",
+      "sentence": "书放在课桌上面。(The books are on top of the desk.)"
     },
     {
       "character": "椅",
@@ -4936,7 +5224,8 @@
         "轮椅 (lún yǐ, wheelchair)"
       ],
       "definition-english": "Chair; seat; stool",
-      "definition-chinese": "椅子；座椅；坐椅"
+      "definition-chinese": "椅子；座椅；坐椅",
+      "sentence": "请把椅子搬过来。(Please move the chair over here.)"
     },
     {
       "character": "兄",
@@ -4953,7 +5242,8 @@
         "堂兄 (táng xiōng, cousin)"
       ],
       "definition-english": "Older brother; elder brother",
-      "definition-chinese": "哥哥；兄长；堂兄"
+      "definition-chinese": "哥哥；兄长；堂兄",
+      "sentence": "他们兄弟两人感情很好。(The two brothers have a very close relationship.)"
     },
     {
       "character": "房",
@@ -4970,7 +5260,8 @@
         "卧室 (wò shì, bedroom)"
       ],
       "definition-english": "Room; house; building; chamber",
-      "definition-chinese": "房间；房子；屋子"
+      "definition-chinese": "房间；房子；屋子",
+      "sentence": "我的房间很干净整齐。(My room is very clean and tidy.)"
     },
     {
       "character": "阿",
@@ -4987,7 +5278,8 @@
         "阿婆 (ā pó, granny)"
       ],
       "definition-english": "Prefix; elder sister; prefix for names",
-      "definition-chinese": "阿；阿姨；阿叔"
+      "definition-chinese": "阿；阿姨；阿叔",
+      "sentence": "阿婆每天在公园里散步。(Granny goes for a walk in the park every day.)"
     },
     {
       "character": "叔",
@@ -5004,7 +5296,8 @@
         "堂叔 (táng shū, uncle)"
       ],
       "definition-english": "Uncle; younger uncle; father's brother",
-      "definition-chinese": "叔叔；伯叔；小叔"
+      "definition-chinese": "叔叔；伯叔；小叔",
+      "sentence": "叔叔送给我一本故事书。(Uncle gave me a storybook.)"
     },
     {
       "character": "会",
@@ -5021,7 +5314,8 @@
         "开会 (kāi huì, have meeting)"
       ],
       "definition-english": "To meet; to be able; to can; meeting",
-      "definition-chinese": "会；开会；聚会"
+      "definition-chinese": "会；开会；聚会",
+      "sentence": "明天我们开会讨论计划。(Tomorrow we will have a meeting to discuss the plan.)"
     },
     {
       "character": "写",
@@ -5038,7 +5332,8 @@
         "写作 (xiě zuò, writing)"
       ],
       "definition-english": "To write; to compose; to draw",
-      "definition-chinese": "写；书写；作文"
+      "definition-chinese": "写；书写；作文",
+      "sentence": "他每天练习写字。(He practises writing characters every day.)"
     },
     {
       "character": "啊",
@@ -5055,7 +5350,8 @@
         "是啊 (shì a, yes)"
       ],
       "definition-english": "Ah; oh; interjection; exclamation",
-      "definition-chinese": "啊；哦；感叹词"
+      "definition-chinese": "啊；哦；感叹词",
+      "sentence": "啊，原来答案是这样！(Ah, so that is the answer!)"
     },
     {
       "character": "完",
@@ -5072,7 +5368,8 @@
         "完全 (wán quán, completely)"
       ],
       "definition-english": "To finish; complete; whole",
-      "definition-chinese": "完成；完全；结束"
+      "definition-chinese": "完成；完全；结束",
+      "sentence": "我终于完成了作业。(I finally completed my homework.)"
     },
     {
       "character": "业",
@@ -5089,7 +5386,8 @@
         "学业 (xué yè, studies)"
       ],
       "definition-english": "Business; occupation; work; trade",
-      "definition-chinese": "事业；工作；事业"
+      "definition-chinese": "事业；工作；事业",
+      "sentence": "他的学业成绩很好。(His academic results are very good.)"
     },
     {
       "character": "躲",
@@ -5106,7 +5404,8 @@
         "躲避 (duǒ bì, evade)"
       ],
       "definition-english": "To hide; to evade; to dodge",
-      "definition-chinese": "躲藏；躲避；隐藏"
+      "definition-chinese": "躲藏；躲避；隐藏",
+      "sentence": "捉迷藏时他躲起来了。(He hid away when playing hide and seek.)"
     },
     {
       "character": "进",
@@ -5123,7 +5422,8 @@
         "进步 (jìn bù, progress)"
       ],
       "definition-english": "To enter; to advance; to go in",
-      "definition-chinese": "进来；进去；进步"
+      "definition-chinese": "进来；进去；进步",
+      "sentence": "请进来坐。(Please come in and sit down.)"
     },
     {
       "character": "净",
@@ -5140,7 +5440,8 @@
         "净化 (jìng huà, purify)"
       ],
       "definition-english": "Clean; pure; net; tidy",
-      "definition-chinese": "干净；清洁；纯净"
+      "definition-chinese": "干净；清洁；纯净",
+      "sentence": "厨房打扫得很干净。(The kitchen has been cleaned very clean.)"
     },
     {
       "character": "谁",
@@ -5157,7 +5458,8 @@
         "谁都 (shéi dōu, anyone)"
       ],
       "definition-english": "Who; whoever; interrogative",
-      "definition-chinese": "谁；什么人；谁的"
+      "definition-chinese": "谁；什么人；谁的",
+      "sentence": "这是谁的书包？(Whose schoolbag is this?)"
     },
     {
       "character": "打",
@@ -5174,7 +5476,8 @@
         "打扫 (dǎ sǎo, clean)"
       ],
       "definition-english": "To hit; to beat; to strike; to play",
-      "definition-chinese": "打；敲击；打球"
+      "definition-chinese": "打；敲击；打球",
+      "sentence": "他们放学后一起打球。(They play ball together after school.)"
     },
     {
       "character": "听",
@@ -5191,7 +5494,8 @@
         "听课 (tīng kè, attend class)"
       ],
       "definition-english": "To listen; to hear; to obey",
-      "definition-chinese": "听；听到；倾听"
+      "definition-chinese": "听；听到；倾听",
+      "sentence": "她喜欢在睡前听音乐。(She likes to listen to music before sleeping.)"
     },
     {
       "character": "声",
@@ -5208,7 +5512,8 @@
         "说声 (shuō shēng, say)"
       ],
       "definition-english": "Sound; voice; tone; noise",
-      "definition-chinese": "声音；声音；嗓音"
+      "definition-chinese": "声音；声音；嗓音",
+      "sentence": "老师的声音很好听。(The teacher has a very pleasant voice.)"
     }
   ],
   "p1-17": [
@@ -5227,7 +5532,8 @@
         "昨晚 (zuó wǎn, last night)"
       ],
       "definition-english": "Yesterday; past day",
-      "definition-chinese": "昨天；前天；昨日"
+      "definition-chinese": "昨天；前天；昨日",
+      "sentence": "昨天我们去动物园玩了。(Yesterday we went to the zoo.)"
     },
     {
       "character": "晚",
@@ -5244,7 +5550,8 @@
         "很晚 (hěn wǎn, very late)"
       ],
       "definition-english": "Evening; late; night; tardy",
-      "definition-chinese": "晚上；夜晚；傍晚"
+      "definition-chinese": "晚上；夜晚；傍晚",
+      "sentence": "昨晚他睡得很香。(He slept very soundly last night.)"
     },
     {
       "character": "星",
@@ -5261,7 +5568,8 @@
         "明星 (míng xīng, celebrity)"
       ],
       "definition-english": "Star; heavenly body; planet",
-      "definition-chinese": "星星；星期；明星"
+      "definition-chinese": "星星；星期；明星",
+      "sentence": "天空中有很多闪亮的星星。(There are many shining stars in the sky.)"
     },
     {
       "character": "明",
@@ -5278,7 +5586,8 @@
         "明白 (míng bái, understand)"
       ],
       "definition-english": "Bright; clear; tomorrow; obvious",
-      "definition-chinese": "明亮；明天；清楚"
+      "definition-chinese": "明亮；明天；清楚",
+      "sentence": "明天是周末，我们可以休息。(Tomorrow is the weekend, we can rest.)"
     },
     {
       "character": "庆",
@@ -5295,7 +5604,8 @@
         "庆典 (qìng diǎn, ceremony)"
       ],
       "definition-english": "To celebrate; to congratulate",
-      "definition-chinese": "庆祝；庆贺；庆典"
+      "definition-chinese": "庆祝；庆贺；庆典",
+      "sentence": "全家人一起庆祝爷爷的生日。(The whole family celebrated grandpa's birthday together.)"
     },
     {
       "character": "祝",
@@ -5312,7 +5622,8 @@
         "庆祝 (qìng zhù, celebrate)"
       ],
       "definition-english": "To wish; to bless; to congratulate",
-      "definition-chinese": "祝福；祝愿；祝贺"
+      "definition-chinese": "祝福；祝愿；祝贺",
+      "sentence": "我祝愿你身体健康。(I wish you good health.)"
     },
     {
       "character": "节",
@@ -5329,7 +5640,8 @@
         "节点 (jié diǎn, node)"
       ],
       "definition-english": "Festival; joint; season; section",
-      "definition-chinese": "节日；节气；节点"
+      "definition-chinese": "节日；节气；节点",
+      "sentence": "春节是中国最重要的节日。(The Spring Festival is the most important festival in China.)"
     },
     {
       "character": "爱",
@@ -5346,7 +5658,8 @@
         "爱好 (ài hào, hobby)"
       ],
       "definition-english": "To love; to like; love; affection",
-      "definition-chinese": "爱；爱心；喜爱"
+      "definition-chinese": "爱；爱心；喜爱",
+      "sentence": "她有很多有趣的爱好。(She has many interesting hobbies.)"
     },
     {
       "character": "给",
@@ -5363,7 +5676,8 @@
         "给予 (jǐ yǔ, give)"
       ],
       "definition-english": "To give; to; for; to provide",
-      "definition-chinese": "给；赠予；给予"
+      "definition-chinese": "给；赠予；给予",
+      "sentence": "他给了我一个惊喜。(He gave me a surprise.)"
     },
     {
       "character": "国",
@@ -5380,7 +5694,8 @@
         "国庆 (guó qìng, National Day)"
       ],
       "definition-english": "Country; nation; state; kingdom",
-      "definition-chinese": "国家；国土；国家"
+      "definition-chinese": "国家；国土；国家",
+      "sentence": "我们热爱自己的国家。(We love our country.)"
     },
     {
       "character": "乐",
@@ -5397,7 +5712,8 @@
         "音乐 (yīn yuè, music)"
       ],
       "definition-english": "Happy; joy; music; to love; pleasant",
-      "definition-chinese": "快乐；音乐；欢乐"
+      "definition-chinese": "快乐；音乐；欢乐",
+      "sentence": "音乐让人感到快乐。(Music makes people feel happy.)"
     },
     {
       "character": "课",
@@ -5414,7 +5730,8 @@
         "功课 (gōng kè, homework)"
       ],
       "definition-english": "Lesson; class; course; period",
-      "definition-chinese": "课；课程；教课"
+      "definition-chinese": "课；课程；教课",
+      "sentence": "我最喜欢上数学课。(I like attending maths class the most.)"
     },
     {
       "character": "台",
@@ -5431,7 +5748,8 @@
         "平台 (píng tái, platform)"
       ],
       "definition-english": "Stage; platform; Taiwan; terrace",
-      "definition-chinese": "舞台；台湾；讲台"
+      "definition-chinese": "舞台；台湾；讲台",
+      "sentence": "他站在舞台上表演。(He performed on the stage.)"
     },
     {
       "character": "讲",
@@ -5448,7 +5766,8 @@
         "讲课 (jiǎng kè, teach)"
       ],
       "definition-english": "To speak; to talk; to explain; to teach",
-      "definition-chinese": "讲述；讲话；讲解"
+      "definition-chinese": "讲述；讲话；讲解",
+      "sentence": "老师讲故事讲得很生动。(The teacher told the story very vividly.)"
     },
     {
       "character": "故",
@@ -5465,7 +5784,8 @@
         "故乡 (gù xiāng, hometown)"
       ],
       "definition-english": "Reason; cause; old; former; story",
-      "definition-chinese": "故事；缘故；故乡"
+      "definition-chinese": "故事；缘故；故乡",
+      "sentence": "他来自一个美丽的故乡。(He comes from a beautiful hometown.)"
     },
     {
       "character": "每",
@@ -5482,7 +5802,8 @@
         "每个 (měi gè, each)"
       ],
       "definition-english": "Every; each; all",
-      "definition-chinese": "每；每个；每天"
+      "definition-chinese": "每；每个；每天",
+      "sentence": "我每天都坚持运动。(I persist in exercising every day.)"
     },
     {
       "character": "童",
@@ -5499,7 +5820,8 @@
         "童话 (tóng huà, fairy tale)"
       ],
       "definition-english": "Child; boy; youth; youngster",
-      "definition-chinese": "儿童；小孩；童年"
+      "definition-chinese": "儿童；小孩；童年",
+      "sentence": "儿童节那天小朋友们很开心。(Children were very happy on Children's Day.)"
     },
     {
       "character": "因",
@@ -5516,7 +5838,8 @@
         "原因 (yuán yīn, reason)"
       ],
       "definition-english": "Because; reason; cause; due to",
-      "definition-chinese": "因为；原因；因此"
+      "definition-chinese": "因为；原因；因此",
+      "sentence": "因为下雨，我们留在家里。(Because it was raining, we stayed at home.)"
     },
     {
       "character": "为",
@@ -5533,7 +5856,8 @@
         "作为 (zuò wéi, as)"
       ],
       "definition-english": "For; to do; to be; to become",
-      "definition-chinese": "为了；作为；为他"
+      "definition-chinese": "为了；作为；为他",
+      "sentence": "他努力学习是为了将来。(He studies hard in order to prepare for the future.)"
     }
   ],
   "p1-18": [
@@ -5552,7 +5876,8 @@
         "白兔 (bái tù, white rabbit)"
       ],
       "definition-english": "Rabbit; hare; bunny",
-      "definition-chinese": "兔子；小兔；兔类"
+      "definition-chinese": "兔子；小兔；兔类",
+      "sentence": "花园里有一只白兔。(There is a white rabbit in the garden.)"
     },
     {
       "character": "尾",
@@ -5569,7 +5894,8 @@
         "尾部 (wěi bù, tail end)"
       ],
       "definition-english": "Tail; end; terminal",
-      "definition-chinese": "尾巴；尾部；末尾"
+      "definition-chinese": "尾巴；尾部；末尾",
+      "sentence": "小狗高兴地摇着尾巴。(The puppy wagged its tail happily.)"
     },
     {
       "character": "短",
@@ -5586,7 +5912,8 @@
         "短发 (duǎn fà, short hair)"
       ],
       "definition-english": "Short; brief; insufficient",
-      "definition-chinese": "短；矮；短暂"
+      "definition-chinese": "短；矮；短暂",
+      "sentence": "夏天他喜欢穿短裤。(He likes to wear shorts in summer.)"
     },
     {
       "character": "眼",
@@ -5603,7 +5930,8 @@
         "眼神 (yǎn shén, eye expression)"
       ],
       "definition-english": "Eye; look; opening",
-      "definition-chinese": "眼睛；眼睛；目光"
+      "definition-chinese": "眼睛；眼睛；目光",
+      "sentence": "她有一双大眼睛。(She has a pair of big eyes.)"
     },
     {
       "character": "睛",
@@ -5620,7 +5948,8 @@
         "眼睛亮 (yǎn jīng liàng, bright eyes)"
       ],
       "definition-english": "Eye; pupil; eyeball",
-      "definition-chinese": "眼睛；眼珠；瞳孔"
+      "definition-chinese": "眼睛；眼珠；瞳孔",
+      "sentence": "他的眼睛明亮有神。(His eyes are bright and expressive.)"
     },
     {
       "character": "爪",
@@ -5637,7 +5966,8 @@
         "尖爪 (jiān zhǎo, sharp claw)"
       ],
       "definition-english": "Claw; paw; talon; nail",
-      "definition-chinese": "爪子；爪；爪牙"
+      "definition-chinese": "爪子；爪；爪牙",
+      "sentence": "老虎的爪子非常锋利。(A tiger's claws are very sharp.)"
     },
     {
       "character": "尖",
@@ -5654,7 +5984,8 @@
         "尖叫 (jiān jiào, scream)"
       ],
       "definition-english": "Sharp; pointed; keen; tip",
-      "definition-chinese": "尖锐；锋利；尖端"
+      "definition-chinese": "尖锐；锋利；尖端",
+      "sentence": "铅笔的笔尖断了。(The tip of the pencil broke.)"
     },
     {
       "character": "物",
@@ -5671,7 +6002,8 @@
         "物品 (wù pǐn, goods)"
       ],
       "definition-english": "Thing; matter; object; substance",
-      "definition-chinese": "东西；物品；物质"
+      "definition-chinese": "东西；物品；物质",
+      "sentence": "动物园里有很多动物。(There are many animals in the zoo.)"
     },
     {
       "character": "虎",
@@ -5688,7 +6020,8 @@
         "虎尾 (hǔ wěi, tiger tail)"
       ],
       "definition-english": "Tiger; feline predator",
-      "definition-chinese": "老虎；虎；大虫"
+      "definition-chinese": "老虎；虎；大虫",
+      "sentence": "老虎是森林里的大型动物。(The tiger is a large animal of the forest.)"
     },
     {
       "character": "狮",
@@ -5705,7 +6038,8 @@
         "公狮 (gōng shī, male lion)"
       ],
       "definition-english": "Lion; beast",
-      "definition-chinese": "狮子；狮；猛兽"
+      "definition-chinese": "狮子；狮；猛兽",
+      "sentence": "狮子是草原上的动物之王。(The lion is the king of animals on the savannah.)"
     },
     {
       "character": "园",
@@ -5722,7 +6056,8 @@
         "动物园 (dòng wù yuán, zoo)"
       ],
       "definition-english": "Garden; park; orchard; plot",
-      "definition-chinese": "公园；园地；花园"
+      "definition-chinese": "公园；园地；花园",
+      "sentence": "我们周末去公园野餐。(We go for a picnic in the park on weekends.)"
     },
     {
       "character": "期",
@@ -5739,7 +6074,8 @@
         "一期 (yī qī, one issue)"
       ],
       "definition-english": "Period; time; week; term",
-      "definition-chinese": "时期；星期；时段"
+      "definition-chinese": "时期；星期；时段",
+      "sentence": "他每个星期六都去踢球。(He plays football every Saturday.)"
     },
     {
       "character": "带",
@@ -5756,7 +6092,8 @@
         "带领 (dài lǐng, lead)"
       ],
       "definition-english": "To bring; to lead; belt; zone",
-      "definition-chinese": "带来；带领；腰带"
+      "definition-chinese": "带来；带领；腰带",
+      "sentence": "出门记得带雨伞。(Remember to bring an umbrella when going out.)"
     },
     {
       "character": "黑",
@@ -5773,7 +6110,8 @@
         "黑色 (hēi sè, black color)"
       ],
       "definition-english": "Black; dark; murky",
-      "definition-chinese": "黑色；黑的；深色"
+      "definition-chinese": "黑色；黑的；深色",
+      "sentence": "夜晚的天空是黑色的。(The night sky is black.)"
     },
     {
       "character": "站",
@@ -5790,7 +6128,8 @@
         "火车站 (huǒ chē zhàn, train station)"
       ],
       "definition-english": "To stand; station; stop; post",
-      "definition-chinese": "站立；车站；站点"
+      "definition-chinese": "站立；车站；站点",
+      "sentence": "他站起来回答老师的问题。(He stood up to answer the teacher's question.)"
     },
     {
       "character": "叫",
@@ -5807,7 +6146,8 @@
         "名叫 (míng jiào, named)"
       ],
       "definition-english": "To call; to shout; to cry; to yell",
-      "definition-chinese": "叫；喊；大叫"
+      "definition-chinese": "叫；喊；大叫",
+      "sentence": "她的名叫小明。(Her name is Xiao Ming.)"
     },
     {
       "character": "认",
@@ -5824,7 +6164,8 @@
         "认出 (rèn chū, recognize)"
       ],
       "definition-english": "To recognize; to know; to admit",
-      "definition-chinese": "认识；认出；承认"
+      "definition-chinese": "认识；认出；承认",
+      "sentence": "我在街上认出了老朋友。(I recognised an old friend on the street.)"
     },
     {
       "character": "话",
@@ -5841,7 +6182,8 @@
         "电话 (diàn huà, telephone)"
       ],
       "definition-english": "Word; speech; talk; conversation",
-      "definition-chinese": "话；言语；说话"
+      "definition-chinese": "话；言语；说话",
+      "sentence": "他打电话给妈妈。(He called mum on the telephone.)"
     },
     {
       "character": "再",
@@ -5858,7 +6200,8 @@
         "再也 (zài yě, never again)"
       ],
       "definition-english": "Again; once more; then",
-      "definition-chinese": "再；再次；又"
+      "definition-chinese": "再；再次；又",
+      "sentence": "再见，明天见！(Goodbye, see you tomorrow!)"
     },
     {
       "character": "孩",
@@ -5875,7 +6218,8 @@
         "女孩 (nǚ hái, girl)"
       ],
       "definition-english": "Child; kid; boy; youngster",
-      "definition-chinese": "孩子；小孩；儿童"
+      "definition-chinese": "孩子；小孩；儿童",
+      "sentence": "小孩们在操场上玩耍。(The children are playing on the playground.)"
     }
   ],
   "p1-19": [
@@ -5894,7 +6238,8 @@
         "组员 (zǔ yuán, group member)"
       ],
       "definition-english": "Group; team; to organize",
-      "definition-chinese": "组织；小组；队组"
+      "definition-chinese": "组织；小组；队组",
+      "sentence": "我们分成几个小组完成任务。(We split into several groups to complete the task.)"
     },
     {
       "character": "屋",
@@ -5911,7 +6256,8 @@
         "卧屋 (wò wū, bedroom)"
       ],
       "definition-english": "House; room; dwelling; shelter",
-      "definition-chinese": "房屋；房间；屋子"
+      "definition-chinese": "房屋；房间；屋子",
+      "sentence": "这间屋子又大又明亮。(This room is both big and bright.)"
     },
     {
       "character": "公",
@@ -5928,7 +6274,8 @@
         "公共 (gōng gòng, public)"
       ],
       "definition-english": "Public; fair; male; duke; prince",
-      "definition-chinese": "公开；公共；公园"
+      "definition-chinese": "公开；公共；公园",
+      "sentence": "我们每天在公园里散步。(We take a walk in the park every day.)"
     },
     {
       "character": "校",
@@ -5945,7 +6292,8 @@
         "校园 (xiào yuán, campus)"
       ],
       "definition-english": "School; to check; to compare",
-      "definition-chinese": "学校；校园；学府"
+      "definition-chinese": "学校；校园；学府",
+      "sentence": "我们的校长非常关心学生。(Our principal cares very much about the students.)"
     },
     {
       "character": "场",
@@ -5962,7 +6310,8 @@
         "场地 (chǎng dì, field)"
       ],
       "definition-english": "Field; place; scene; ground",
-      "definition-chinese": "场地；市场；操场"
+      "definition-chinese": "场地；市场；操场",
+      "sentence": "同学们在操场上踢足球。(The students play football on the playground.)"
     },
     {
       "character": "商",
@@ -5978,7 +6327,8 @@
         "商业 (shāng yè, commerce)"
       ],
       "definition-english": "Merchant; business; to discuss",
-      "definition-chinese": "商人；商店；商业"
+      "definition-chinese": "商人；商店；商业",
+      "sentence": "街上有很多商店。(There are many shops on the street.)"
     },
     {
       "character": "店",
@@ -5995,7 +6345,8 @@
         "开店 (kāi diàn, open shop)"
       ],
       "definition-english": "Shop; store; inn; establishment",
-      "definition-chinese": "店铺；商店；店面"
+      "definition-chinese": "店铺；商店；店面",
+      "sentence": "我们去书店买了几本书。(We went to the bookstore and bought a few books.)"
     },
     {
       "character": "梯",
@@ -6012,7 +6363,8 @@
         "梯形 (tī xíng, trapezoid)"
       ],
       "definition-english": "Ladder; stairs; step; staircase",
-      "definition-chinese": "梯子；楼梯；阶梯"
+      "definition-chinese": "梯子；楼梯；阶梯",
+      "sentence": "请走楼梯，不要跑。(Please use the stairs and do not run.)"
     },
     {
       "character": "扶",
@@ -6029,7 +6381,8 @@
         "扶养 (fú yǎng, support)"
       ],
       "definition-english": "To support; to help; railing; assist",
-      "definition-chinese": "扶持；扶养；扶手"
+      "definition-chinese": "扶持；扶养；扶手",
+      "sentence": "他扶着扶手慢慢走下楼梯。(He held the handrail and walked slowly down the stairs.)"
     },
     {
       "character": "常",
@@ -6046,7 +6399,8 @@
         "常见 (cháng jiàn, common)"
       ],
       "definition-english": "Often; usual; always; regular",
-      "definition-chinese": "经常；常常；通常"
+      "definition-chinese": "经常；常常；通常",
+      "sentence": "他常常帮助同学解决问题。(He often helps classmates solve problems.)"
     },
     {
       "character": "球",
@@ -6063,7 +6417,8 @@
         "打球 (dǎ qiú, play ball)"
       ],
       "definition-english": "Ball; sphere; globe; orb",
-      "definition-chinese": "球；球体；运动球"
+      "definition-chinese": "球；球体；运动球",
+      "sentence": "他最喜欢打篮球。(He likes playing basketball the most.)"
     },
     {
       "character": "步",
@@ -6080,7 +6435,8 @@
         "散步 (sàn bù, stroll)"
       ],
       "definition-english": "Step; pace; to walk; stride",
-      "definition-chinese": "步；步步；散步"
+      "definition-chinese": "步；步步；散步",
+      "sentence": "我们每天晚饭后去散步。(We go for a stroll every evening after dinner.)"
     },
     {
       "character": "图",
@@ -6097,7 +6453,8 @@
         "地图 (dì tú, map)"
       ],
       "definition-english": "Picture; map; chart; to attempt",
-      "definition-chinese": "图画；图片；地图"
+      "definition-chinese": "图画；图片；地图",
+      "sentence": "他正在看一张地图。(He is looking at a map.)"
     },
     {
       "character": "习",
@@ -6114,7 +6471,8 @@
         "作习 (zuò xí, routine)"
       ],
       "definition-english": "To practice; habit; custom",
-      "definition-chinese": "练习；习惯；习题"
+      "definition-chinese": "练习；习惯；习题",
+      "sentence": "每天练习写字是个好习惯。(Practising writing characters every day is a good habit.)"
     },
     {
       "character": "伙",
@@ -6131,7 +6489,8 @@
         "一伙 (yī huǒ, a group)"
       ],
       "definition-english": "Companion; friend; partner; group",
-      "definition-chinese": "伙伴；朋友；伙食"
+      "definition-chinese": "伙伴；朋友；伙食",
+      "sentence": "他和伙伴们一起去旅行。(He went travelling with his companions.)"
     },
     {
       "character": "伴",
@@ -6148,7 +6507,8 @@
         "旅伴 (lǚ bàn, travel partner)"
       ],
       "definition-english": "Companion; friend; mate; partner",
-      "definition-chinese": "伙伴；同伴；陪伴"
+      "definition-chinese": "伙伴；同伴；陪伴",
+      "sentence": "好的同伴让旅途更快乐。(Good companions make the journey more enjoyable.)"
     },
     {
       "character": "游",
@@ -6165,7 +6525,8 @@
         "游玩 (yóu wán, have fun)"
       ],
       "definition-english": "To travel; to tour; to swim",
-      "definition-chinese": "旅游；游泳；游历"
+      "definition-chinese": "旅游；游泳；游历",
+      "sentence": "暑假我们全家去旅游。(During the summer holiday our whole family went travelling.)"
     },
     {
       "character": "拍",
@@ -6182,7 +6543,8 @@
         "拍照 (pāi zhào, take photo)"
       ],
       "definition-english": "To clap; to pat; to photograph",
-      "definition-chinese": "拍手；拍照；拍摄"
+      "definition-chinese": "拍手；拍照；拍摄",
+      "sentence": "他们在公园里拍照留念。(They took photos in the park as a memento.)"
     },
     {
       "character": "兴",
@@ -6199,7 +6561,8 @@
         "兴奋 (xīng fèn, excited)"
       ],
       "definition-english": "Happy; interest; to prosper; joy",
-      "definition-chinese": "高兴；兴趣；兴奋"
+      "definition-chinese": "高兴；兴趣；兴奋",
+      "sentence": "他对音乐有很大的兴趣。(He has a great interest in music.)"
     },
     {
       "character": "戏",
@@ -6216,7 +6579,8 @@
         "看戏 (kàn xì, watch play)"
       ],
       "definition-english": "Play; drama; game; show",
-      "definition-chinese": "游戏；戏剧；戏份"
+      "definition-chinese": "游戏；戏剧；戏份",
+      "sentence": "孩子们放学后一起玩游戏。(The children play games together after school.)"
     }
   ]
 }
