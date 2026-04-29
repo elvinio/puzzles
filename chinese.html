@@ -586,6 +586,22 @@
     .browse-word-eng { font-size: 0.73rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .browse-empty { color: var(--muted); font-size: 0.9rem; text-align: center; padding: 40px; width: 100%; max-width: 720px; }
 
+    /* ── Speaker button ── */
+    .speak-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85em;
+      opacity: 0.5;
+      padding: 2px 5px;
+      border-radius: 6px;
+      transition: opacity 0.15s, background 0.15s;
+      line-height: 1;
+      flex-shrink: 0;
+      color: inherit;
+    }
+    .speak-btn:hover { opacity: 1; background: rgba(109,40,217,0.2); }
+
     /* ── Toast ── */
     #toast {
       position: fixed;
@@ -829,7 +845,10 @@
     <button class="char-modal-close" id="cm-close">✕</button>
     <div class="char-modal-header">
       <div class="char-modal-big" id="cm-char"></div>
-      <div class="char-modal-pinyin-lg" id="cm-pinyin"></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="char-modal-pinyin-lg" id="cm-pinyin"></div>
+        <button class="speak-btn" id="cm-speak-btn" title="Listen">🔊</button>
+      </div>
       <div class="char-modal-eng" id="cm-eng"></div>
     </div>
     <div class="char-modal-section">
@@ -1477,10 +1496,11 @@ function showSummary() {
     item.appendChild(charEl);
     item.insertAdjacentHTML('beforeend', `
       <div class="result-info">
-        <div class="result-pinyin">${r.word.pinyin}</div>
+        <div class="result-pinyin" style="display:flex;align-items:center;gap:4px"><span>${r.word.pinyin}</span></div>
         <div class="result-english">${esc(r.word.english)}</div>
       </div>
       <div class="result-time">${(r.timeMs/1000).toFixed(1)}s ${r.correct ? '✓' : '✗'}</div>`);
+    item.querySelector('.result-pinyin').appendChild(makeSpeakBtn(r.word.character));
     list.appendChild(item);
   });
 
@@ -1558,7 +1578,7 @@ function renderStatsTable() {
     const dueCls = r.dueDate && r.dueDate <= today ? 'warn' : '';
     return `<tr data-word-key="${w.key}">
       <td class="td-char">${w.character}</td>
-      <td class="td-pinyin">${w.pinyin}</td>
+      <td class="td-pinyin"><span style="display:inline-flex;align-items:center;gap:4px">${w.pinyin}<button class="speak-btn" data-char="${w.character}" title="Listen">🔊</button></span></td>
       <td>${esc(w.english)}</td>
       <td class="td-lesson">L${w.lessonNum}</td>
       <td class="${correctCls}">${r.correct}</td>
@@ -1587,6 +1607,8 @@ document.getElementById('stats-back-btn').addEventListener('click', () => {
 function showCharModal(word) {
   document.getElementById('cm-char').textContent   = word.character;
   document.getElementById('cm-pinyin').textContent = word.pinyin;
+  const cmSpeak = document.getElementById('cm-speak-btn');
+  cmSpeak.onclick = e => { e.stopPropagation(); speakChinese(word.character); };
   document.getElementById('cm-eng').textContent    = word.english;
   document.getElementById('cm-def-en').textContent = word['definition-english'] || '';
   document.getElementById('cm-def-zh').textContent = word['definition-chinese'] || '';
@@ -1619,8 +1641,10 @@ document.getElementById('cm-close').addEventListener('click', () => {
   document.getElementById('char-modal').classList.remove('open');
 });
 
-// Stats table: click td-char to open character modal
+// Stats table: speak button and click td-char to open character modal
 document.getElementById('stats-tbody').addEventListener('click', e => {
+  const speakBtn = e.target.closest('.speak-btn[data-char]');
+  if (speakBtn) { e.stopPropagation(); speakChinese(speakBtn.dataset.char); return; }
   const td = e.target.closest('td.td-char');
   if (!td) return;
   const key = td.closest('tr').dataset.wordKey;
@@ -1629,6 +1653,27 @@ document.getElementById('stats-tbody').addEventListener('click', e => {
   const word = pool.find(w => w.key === key);
   if (word) showCharModal(word);
 });
+
+// ═══════════════════════════════════════════════════════════════
+// SPEECH
+// ═══════════════════════════════════════════════════════════════
+function speakChinese(character) {
+  if (!window.speechSynthesis) return;
+  const utt = new SpeechSynthesisUtterance(character);
+  utt.lang = 'zh-CN';
+  utt.rate = 0.8;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utt);
+}
+
+function makeSpeakBtn(character) {
+  const btn = document.createElement('button');
+  btn.className = 'speak-btn';
+  btn.title = 'Listen';
+  btn.textContent = '🔊';
+  btn.addEventListener('click', e => { e.stopPropagation(); speakChinese(character); });
+  return btn;
+}
 
 // ═══════════════════════════════════════════════════════════════
 // UTILITIES
@@ -1701,11 +1746,15 @@ function renderBrowseWords() {
   words.forEach(w => {
     const card = document.createElement('div');
     card.className = 'browse-word-card';
+    const wordObj = { ...w, lessonKey, lessonNum: B.lesson, level: B.level, key: `${lessonKey}-${w.character}` };
     card.innerHTML = `
       <div class="browse-word-char">${w.character}</div>
-      <div class="browse-word-pinyin">${w.pinyin}</div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <div class="browse-word-pinyin">${w.pinyin}</div>
+      </div>
       <div class="browse-word-eng">${esc(w.english)}</div>`;
-    card.addEventListener('click', () => showCharModal({ ...w, lessonKey, lessonNum: B.lesson, level: B.level, key: `${lessonKey}-${w.character}` }));
+    card.querySelector('.browse-word-pinyin').after(makeSpeakBtn(w.character));
+    card.addEventListener('click', () => showCharModal(wordObj));
     grid.appendChild(card);
   });
 }
