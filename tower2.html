@@ -214,16 +214,24 @@ const building = { rooms: [], nextId: 1 };
 const SAVE_KEY = 'tower2_state';
 
 function saveState() {
-  localStorage.setItem(SAVE_KEY, JSON.stringify({ rooms: building.rooms, nextId: building.nextId }));
+  localStorage.setItem(SAVE_KEY, JSON.stringify({
+    rooms: building.rooms, nextId: building.nextId,
+    towerFund, gameYear, gameQuarter, gameDay, gameHour,
+  }));
 }
 
 function loadState() {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return;
-    const { rooms, nextId } = JSON.parse(raw);
+    const { rooms, nextId, towerFund: f, gameYear: y, gameQuarter: q, gameDay: d, gameHour: h } = JSON.parse(raw);
     building.rooms = rooms;
     building.nextId = nextId;
+    if (f != null) towerFund   = f;
+    if (y != null) gameYear    = y;
+    if (q != null) gameQuarter = q;
+    if (d != null) gameDay     = d;
+    if (h != null) { gameHour = h; prevHourInt = Math.floor(h); }
     for (const room of rooms) createRoomSprite(room);
     const subwayRoom = building.rooms.find(r => r.type === 'subway');
     if (subwayRoom) createSubwayLine(subwayRoom);
@@ -232,8 +240,13 @@ function loadState() {
   }
 }
 let tool      = 'office';
+let towerFund  = 500_000;
+let gameYear   = 1;
+let gameQuarter = 1;
+let gameDay    = 1;
 let gameHour  = 9;
 let prevHourInt = 9;
+const DAYS_PER_QUARTER = 30;
 
 let viewX = 0;
 let viewY = 0;
@@ -1403,7 +1416,17 @@ function gameLoop(ticker) {
   const hoursAdvance = gameHour < 8
     ? ticker.deltaMS * 2 / 1000
     : ticker.deltaMS / 60000;
-  gameHour = (gameHour + hoursAdvance) % 24;
+  const newHour = (gameHour + hoursAdvance) % 24;
+  if (newHour < gameHour) {
+    // Crossed midnight — advance calendar
+    gameDay++;
+    if (gameDay > DAYS_PER_QUARTER) {
+      gameDay = 1;
+      gameQuarter++;
+      if (gameQuarter > 4) { gameQuarter = 1; gameYear++; }
+    }
+  }
+  gameHour = newHour;
   const hourInt = Math.floor(gameHour);
   if (hourInt !== prevHourInt) {
     prevHourInt = hourInt;
