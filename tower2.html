@@ -978,20 +978,20 @@ const SKY_KEYS = [
   [ 7,  0x163060, 0x2A5898, 0x78A8D0, 0xF0A040],  // early morning
   [ 8,  0x205898, 0x3C78C0, 0x7DC0E0, 0xE0D0A0],  // morning clearing
   [10,  0x4A9ED6, 0x68B8E8, 0xA8DAEF, 0xE8F8FF],  // clear day bright
-  [17,  0x4A9ED6, 0x68B8E8, 0xA8DAEF, 0xE8F8FF],  // afternoon bright
-  [18,  0x183878, 0x485890, 0xB07838, 0xF0B848],  // golden hour
-  [19,  0x060818, 0x201048, 0xA83828, 0xE86020],  // sunset
-  [20,  0x030408, 0x0C0820, 0x482030, 0x882818],  // dusk
-  [21,  0x020610, 0x050E22, 0x0A1428, 0x142038],  // night
+  [16,  0x4898C8, 0x62A8DC, 0xA8C8D0, 0xF8E888],  // 4pm warm start
+  [17,  0x1E4878, 0x3C5890, 0xC09040, 0xF4A830],  // 5pm golden hour
+  [18,  0x080C28, 0x281850, 0xC04020, 0xF06020],  // 6pm sunset peak
+  [19,  0x040810, 0x100C28, 0x581828, 0x901810],  // 7pm deep dusk
+  [20,  0x020610, 0x050E22, 0x0A1428, 0x142038],  // 8pm full night
   [24,  0x020610, 0x050E22, 0x0A1428, 0x142038],  // midnight (wrap)
 ];
 
 function getStarAlpha(h) {
   const hr = ((h % 24) + 24) % 24;
-  if (hr >= 7 && hr < 19)  return 0;
-  if (hr >= 21 || hr < 5)  return 1;
-  if (hr >= 5  && hr < 7)  return 1 - (hr - 5) / 2;
-  return (hr - 19) / 2;  // 19–21 fade in
+  if (hr >= 7 && hr < 18)  return 0;             // day: no stars
+  if (hr >= 20 || hr < 5)  return 1;             // full night
+  if (hr >= 5  && hr < 7)  return 1 - (hr - 5) / 2;  // dawn fade out
+  return (hr - 18) / 2;                          // 18→20 sunset fade in
 }
 
 function buildStarGraphics() {
