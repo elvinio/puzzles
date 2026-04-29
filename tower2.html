@@ -1398,8 +1398,12 @@ function destroyBeamSprite(roomId) {
 
 // ─── Game loop (ticker) ───────────────────────────────────────────────────────
 function gameLoop(ticker) {
-  // Advance time: 1 real minute = 1 in-game hour
-  gameHour = (gameHour + ticker.deltaMS / 60000) % 24;
+  // Midnight–08:00: 1 real second = 2 game hours (fast night skip)
+  // 08:00–24:00:  1 real minute = 1 game hour  (normal rate)
+  const hoursAdvance = gameHour < 8
+    ? ticker.deltaMS * 2 / 1000
+    : ticker.deltaMS / 60000;
+  gameHour = (gameHour + hoursAdvance) % 24;
   const hourInt = Math.floor(gameHour);
   if (hourInt !== prevHourInt) {
     prevHourInt = hourInt;
