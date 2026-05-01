@@ -1073,6 +1073,14 @@ const BASE_TO_TONES = {
   u: ['ū','ú','ǔ','ù'],
   ü: ['ǖ','ǘ','ǚ','ǜ'],
 };
+const TONE_NUMBER = {
+  'ā':1,'á':2,'ǎ':3,'à':4,
+  'ē':1,'é':2,'ě':3,'è':4,
+  'ī':1,'í':2,'ǐ':3,'ì':4,
+  'ō':1,'ó':2,'ǒ':3,'ò':4,
+  'ū':1,'ú':2,'ǔ':3,'ù':4,
+  'ǖ':1,'ǘ':2,'ǚ':3,'ǜ':4,
+};
 // Phonetically similar finals for distractor generation
 const SIMILAR_FINALS = {
   an:['ang','en','uan'], ang:['an','eng','uang'],
@@ -1671,7 +1679,7 @@ function showSummary() {
         <div class="result-english">${esc(r.word.english)}</div>
       </div>
       <div class="result-time">${(r.timeMs/1000).toFixed(1)}s ${r.correct ? '✓' : '✗'}</div>`);
-    item.querySelector('.result-pinyin').appendChild(makeSpeakBtn(r.word.character));
+    item.querySelector('.result-pinyin').appendChild(makeSpeakBtn(r.word.character, r.word.pinyin));
     list.appendChild(item);
   });
 
@@ -1749,7 +1757,7 @@ function renderStatsTable() {
     const dueCls = r.dueDate && r.dueDate <= today ? 'warn' : '';
     return `<tr data-word-key="${w.key}">
       <td class="td-char">${w.character}</td>
-      <td class="td-pinyin"><span style="display:inline-flex;align-items:center;gap:4px">${w.pinyin}<button class="speak-btn" data-char="${w.character}" title="Listen">🔊</button></span></td>
+      <td class="td-pinyin"><span style="display:inline-flex;align-items:center;gap:4px">${w.pinyin}<button class="speak-btn" data-char="${w.character}" data-pinyin="${w.pinyin}" title="Listen">🔊</button></span></td>
       <td>${esc(w.english)}</td>
       <td class="td-lesson">L${w.lessonNum}</td>
       <td class="${correctCls}">${r.correct}</td>
@@ -1779,7 +1787,7 @@ function showCharModal(word) {
   document.getElementById('cm-char').textContent   = word.character;
   document.getElementById('cm-pinyin').textContent = word.pinyin;
   const cmSpeak = document.getElementById('cm-speak-btn');
-  cmSpeak.onclick = e => { e.stopPropagation(); speakChinese(word.character); };
+  cmSpeak.onclick = e => { e.stopPropagation(); speakChinese(word.pinyin || word.character); };
   document.getElementById('cm-eng').textContent    = word.english;
   document.getElementById('cm-def-en').textContent = word['definition-english'] || '';
   document.getElementById('cm-def-zh').textContent = word['definition-chinese'] || '';
@@ -1815,7 +1823,7 @@ document.getElementById('cm-close').addEventListener('click', () => {
 // Stats table: speak button and click td-char to open character modal
 document.getElementById('stats-tbody').addEventListener('click', e => {
   const speakBtn = e.target.closest('.speak-btn[data-char]');
-  if (speakBtn) { e.stopPropagation(); speakChinese(speakBtn.dataset.char); return; }
+  if (speakBtn) { e.stopPropagation(); speakChinese(speakBtn.dataset.pinyin || speakBtn.dataset.char); return; }
   const td = e.target.closest('td.td-char');
   if (!td) return;
   const key = td.closest('tr').dataset.wordKey;
@@ -1828,21 +1836,49 @@ document.getElementById('stats-tbody').addEventListener('click', e => {
 // ═══════════════════════════════════════════════════════════════
 // SPEECH
 // ═══════════════════════════════════════════════════════════════
-function speakChinese(character) {
-  if (!window.speechSynthesis) return;
-  const utt = new SpeechSynthesisUtterance(character);
-  utt.lang = 'zh-CN';
-  utt.rate = 0.8;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utt);
+let _audioQueue = [];
+let _currentAudio = null;
+
+function _pinyinToFilename(syllable) {
+  let tone = 5;
+  for (const ch of syllable) {
+    if (TONE_NUMBER[ch]) { tone = TONE_NUMBER[ch]; break; }
+  }
+  const base = stripTones(syllable).replace(/ü/g, 'v');
+  return `pinyin_audio/${base}${tone}.mp3`;
 }
 
-function makeSpeakBtn(character) {
+function _playNext() {
+  if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
+  if (_audioQueue.length === 0) return;
+  const src = _audioQueue.shift();
+  const audio = new Audio(src);
+  _currentAudio = audio;
+  audio.onerror = () => _playNext();
+  audio.onended = () => _playNext();
+  audio.play().catch(() => _playNext());
+}
+
+function speakChinese(pinyinOrChar) {
+  if (!pinyinOrChar) return;
+  if (/[一-鿿]/.test(pinyinOrChar)) {
+    if (!window.speechSynthesis) return;
+    const utt = new SpeechSynthesisUtterance(pinyinOrChar);
+    utt.lang = 'zh-CN'; utt.rate = 0.8;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utt);
+    return;
+  }
+  _audioQueue = pinyinOrChar.trim().split(/\s+/).filter(Boolean).map(_pinyinToFilename);
+  _playNext();
+}
+
+function makeSpeakBtn(character, pinyin) {
   const btn = document.createElement('button');
   btn.className = 'speak-btn';
   btn.title = 'Listen';
   btn.textContent = '🔊';
-  btn.addEventListener('click', e => { e.stopPropagation(); speakChinese(character); });
+  btn.addEventListener('click', e => { e.stopPropagation(); speakChinese(pinyin || character); });
   return btn;
 }
 
@@ -1924,7 +1960,7 @@ function renderBrowseWords() {
         <div class="browse-word-pinyin">${w.pinyin}</div>
       </div>
       <div class="browse-word-eng">${esc(w.english)}</div>`;
-    card.querySelector('.browse-word-pinyin').after(makeSpeakBtn(w.character));
+    card.querySelector('.browse-word-pinyin').after(makeSpeakBtn(w.character, w.pinyin));
     card.addEventListener('click', () => showCharModal(wordObj));
     grid.appendChild(card);
   });
@@ -2109,7 +2145,7 @@ function renderSpellingQuestion(idx) {
     speakerBtn.className = 'sp-q-speaker';
     speakerBtn.innerHTML = '🔊';
     speakerBtn.title = 'Listen again';
-    speakerBtn.addEventListener('click', () => speakChinese(q.word));
+    speakerBtn.addEventListener('click', () => speakChinese(q.pinyin || q.word));
     const hint = document.createElement('div');
     hint.className = 'sp-q-hint';
     hint.textContent = 'Tap to hear again';
@@ -2124,7 +2160,7 @@ function renderSpellingQuestion(idx) {
       sentDiv.innerHTML = esc(q.chinese).replace(q.word, blankHtml);
       card.appendChild(sentDiv);
     }
-    speakChinese(q.word);
+    speakChinese(q.pinyin || q.word);
 
   } else {
     if (q.chinese) {

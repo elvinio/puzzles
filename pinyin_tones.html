@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinyin Tones</title>
+<style>
+  :root {
+    --bg: #13111a; --surface: #1e1b2e; --border: #2e2a45;
+    --text: #e8e3f8; --muted: #7c7a99;
+    --p-xl: #a78bfa; --p-lt: rgba(167,139,250,0.15);
+    --tone1: #60a5fa; --tone2: #34d399; --tone3: #f59e0b; --tone4: #f87171;
+    --active: rgba(167,139,250,0.25);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui,-apple-system,sans-serif; min-height: 100vh; }
+
+  header { padding: 20px 24px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 1.2rem; font-weight: 700; color: var(--p-xl); }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .mode-toggle {
+    margin-left: auto; display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px; flex-shrink: 0;
+  }
+  .mode-toggle button {
+    padding: 4px 12px; border-radius: 16px; border: none; cursor: pointer;
+    font-size: 0.75rem; font-weight: 600; transition: background 0.15s, color 0.15s;
+    background: transparent; color: var(--muted);
+  }
+  .mode-toggle button.active { background: var(--p-xl); color: #13111a; }
+
+  .initial-nav {
+    position: sticky; top: 0; z-index: 11;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 8px 24px; display: flex; gap: 4px; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .initial-nav::-webkit-scrollbar { display: none; }
+  .initial-nav a {
+    flex-shrink: 0; padding: 4px 9px; border-radius: 6px;
+    font-size: 0.78rem; font-weight: 700; color: var(--muted);
+    text-decoration: none; transition: background 0.12s, color 0.12s;
+  }
+  .initial-nav a:hover { background: var(--p-lt); color: var(--p-xl); }
+  .initial-nav a.current { background: var(--p-lt); color: var(--p-xl); }
+
+  .tone-bar {
+    position: sticky; top: 37px; z-index: 10;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 10px 24px; display: flex; align-items: center; gap: 10px;
+  }
+  .tone-bar span { font-size: 0.8rem; color: var(--muted); }
+  .tone-indicator {
+    display: flex; gap: 6px;
+  }
+  .tone-pip {
+    width: 28px; height: 28px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; opacity: 0.35;
+    transition: opacity 0.1s, transform 0.1s;
+    color: #fff;
+  }
+  .tone-pip.t1 { background: var(--tone1); }
+  .tone-pip.t2 { background: var(--tone2); }
+  .tone-pip.t3 { background: var(--tone3); }
+  .tone-pip.t4 { background: var(--tone4); }
+  .tone-pip.active { opacity: 1; transform: scale(1.15); }
+  .tone-pip.clickable { cursor: pointer; }
+  .tone-pip.clickable:hover { opacity: 0.8; transform: scale(1.08); }
+
+  .current-label {
+    margin-left: 12px; font-size: 0.9rem; color: var(--text); font-weight: 600; min-width: 80px;
+  }
+
+  main { padding: 20px 24px; }
+
+  .group { margin-bottom: 24px; }
+  .group-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 8px; padding-left: 2px;
+  }
+  .grid {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .syllable-btn {
+    padding: 7px 12px; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); font-size: 0.88rem; cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, transform 0.1s;
+    user-select: none;
+  }
+  .syllable-btn:hover { background: var(--p-lt); border-color: var(--p-xl); }
+  .syllable-btn.playing { background: var(--active); border-color: var(--p-xl); transform: scale(1.05); }
+  .syllable-btn.done { border-color: var(--p-xl); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Pinyin Tone Explorer</h1>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tone1)"></div>Tone 1 (flat)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tone2)"></div>Tone 2 (rising)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tone3)"></div>Tone 3 (dip)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tone4)"></div>Tone 4 (falling)</div>
+  </div>
+  <div class="mode-toggle">
+    <button id="btn-mp3" class="active" onclick="setMode('mp3')">MP3</button>
+    <button id="btn-tts" onclick="setMode('tts')">TTS</button>
+  </div>
+</header>
+
+<nav class="initial-nav" id="initial-nav"></nav>
+
+<div class="tone-bar">
+  <span>Playing:</span>
+  <div class="tone-indicator">
+    <div class="tone-pip t1" id="pip1" onclick="playSingleTone(1)">1</div>
+    <div class="tone-pip t2" id="pip2" onclick="playSingleTone(2)">2</div>
+    <div class="tone-pip t3" id="pip3" onclick="playSingleTone(3)">3</div>
+    <div class="tone-pip t4" id="pip4" onclick="playSingleTone(4)">4</div>
+  </div>
+  <div class="current-label" id="current-label">—</div>
+</div>
+
+<main id="main"></main>
+
+<script>
+const GROUPS = [
+  { label: 'Standalone', syllables: ['a','o','e','ai','ei','ao','ou','er','an','en','ang','eng'] },
+  { label: 'b', syllables: ['ba','bo','bai','bei','bao','ban','ben','bang','beng','bi','bie','biao','bian','bin','bing'] },
+  { label: 'p', syllables: ['pa','po','pai','pei','pao','pou','pan','pen','pang','peng','pi','pie','piao','pian','pin','ping'] },
+  { label: 'm', syllables: ['ma','mo','me','mai','mei','mao','mou','man','men','mang','meng','mi','mie','miao','miu','mian','min','ming'] },
+  { label: 'f', syllables: ['fa','fo','fei','fou','fan','fen','fang','feng'] },
+  { label: 'd', syllables: ['da','de','dai','dao','dou','dan','dang','deng','di','die','diao','diu','dian','ding','dong','duan','dui','dun','duo'] },
+  { label: 't', syllables: ['ta','te','tai','tao','tou','tan','tang','teng','ti','tie','tiao','tian','ting','tong','tuan','tui','tun','tuo'] },
+  { label: 'n', syllables: ['na','ne','nai','nei','nao','nan','nang','neng','ni','nie','niao','niu','nian','nin','ning','nong','nuan','nv','nve'] },
+  { label: 'l', syllables: ['la','le','lai','lei','lao','lou','lan','lang','leng','li','lie','liao','liu','lian','lin','ling','long','luan','lv','lve','lun','luo'] },
+  { label: 'g', syllables: ['ga','ge','gai','gei','gao','gou','gan','gen','gang','geng','gong','gua','guai','guan','guang','gui','gun','guo'] },
+  { label: 'k', syllables: ['ka','ke','kai','kao','kou','kan','ken','kang','keng','kong','kua','kuai','kuan','kuang','kui','kun','kuo'] },
+  { label: 'h', syllables: ['ha','he','hai','hei','hao','hou','han','hen','hang','heng','hong','hua','huai','huan','huang','hui','hun','huo'] },
+  { label: 'j', syllables: ['ji','jia','jie','jiao','jiu','jian','jin','jing','jiong','ju','jue','juan','jun'] },
+  { label: 'q', syllables: ['qi','qia','qie','qiao','qiu','qian','qin','qing','qiong','qu','que','quan','qun'] },
+  { label: 'x', syllables: ['xi','xia','xie','xiao','xiu','xian','xin','xing','xiong','xu','xue','xuan','xun'] },
+  { label: 'zh', syllables: ['zha','zhe','zhi','zhai','zhao','zhou','zhan','zhen','zhang','zheng','zhong','zhua','zhuai','zhuan','zhuang','zhui','zhun','zhuo'] },
+  { label: 'ch', syllables: ['cha','che','chi','chai','chao','chou','chan','chen','chang','cheng','chong','chuai','chuan','chuang','chui','chun','chuo'] },
+  { label: 'sh', syllables: ['sha','she','shi','shao','shou','shan','shen','shang','sheng','shua','shuai','shuan','shuang','shui','shun','shuo'] },
+  { label: 'r', syllables: ['re','ri','rao','rou','ran','ren','rang','reng','rong','ruan','rui','run','ruo'] },
+  { label: 'z', syllables: ['za','ze','zi','zai','zao','zou','zan','zen','zang','zeng','zong','zuan','zui','zun','zuo'] },
+  { label: 'c', syllables: ['ca','ce','ci','cai','cao','cou','can','cen','cang','ceng','cong','cuan','cui','cun','cuo'] },
+  { label: 's', syllables: ['sa','se','si','sai','sao','sou','san','sen','sang','seng','song','suan','sui','sun','suo'] },
+  { label: 'y', syllables: ['ya','ye','yao','you','yan','yin','yang','ying','yong','yu','yue','yuan','yun'] },
+  { label: 'w', syllables: ['wa','wo','wai','wei','wan','wen','wang','weng','wu'] },
+];
+
+// Chinese character lookup for TTS: [T1, T2, T3, T4], null = tone doesn't exist
+const TONE_CHAR = {
+  a:    ['啊','啊','啊','啊'],   o:    ['哦','哦','哦','哦'],
+  e:    [null,'鹅',null,'饿'],   ai:   ['哎','挨','矮','爱'],
+  ei:   [null,null,null,'诶'],   ao:   ['凹','熬','袄','傲'],
+  ou:   ['欧',null,'呕','偶'],   er:   [null,'儿','耳','二'],
+  an:   ['安',null,null,'暗'],   en:   ['恩',null,null,null],
+  ang:  [null,'昂',null,null],   eng:  [null,null,null,null],
+  ba:   ['八','拔','把','爸'],   bo:   ['波','薄','跛',null],
+  bai:  ['掰','白','百','拜'],   bei:  ['杯',null,'北','被'],
+  bao:  ['包','雹','宝','报'],   ban:  ['班',null,'板','办'],
+  ben:  ['奔',null,'本','笨'],   bang: ['帮',null,'榜','棒'],
+  beng: ['崩',null,null,'蹦'],   bi:   ['逼','鼻','比','必'],
+  bie:  ['憋','别',null,null],   biao: ['标',null,'表',null],
+  bian: ['边',null,'扁','变'],   bin:  ['宾',null,null,'鬓'],
+  bing: ['冰',null,'饼','病'],
+  pa:   ['趴','爬',null,'怕'],   po:   ['坡','婆','颇','破'],
+  pai:  ['拍','排',null,'派'],   pei:  ['胚','赔',null,'配'],
+  pao:  ['抛','袍','跑','炮'],   pou:  ['剖',null,null,null],
+  pan:  ['攀','盘',null,'判'],   pen:  ['喷','盆',null,null],
+  pang: ['乓','旁','膀','胖'],   peng: ['烹','朋',null,'碰'],
+  pi:   ['批','皮','痞','屁'],   pie:  ['瞥',null,'撇',null],
+  piao: ['飘',null,'瞟','票'],   pian: ['偏','便',null,'骗'],
+  pin:  ['拼','频','品','聘'],   ping: ['乒','平',null,null],
+  ma:   ['妈','麻','马','骂'],   mo:   ['摸','魔','抹','墨'],
+  me:   [null,null,null,null],   mai:  [null,'埋','买','卖'],
+  mei:  [null,'梅','美','妹'],   mao:  ['猫','毛','卯','帽'],
+  mou:  [null,'谋','某',null],   man:  [null,'蛮','满','慢'],
+  men:  ['闷','门',null,'闷'],   mang: [null,'忙','莽',null],
+  meng: ['蒙','萌','猛','梦'],   mi:   ['咪','迷','米','密'],
+  mie:  ['咩',null,null,'灭'],   miao: ['喵','苗','秒','妙'],
+  miu:  [null,null,null,'谬'],   mian: [null,'棉','免','面'],
+  min:  [null,'民','敏',null],   ming: [null,'明',null,'命'],
+  fa:   ['发','罚','法','发'],   fo:   [null,'佛',null,null],
+  fei:  ['飞','肥','匪','费'],   fou:  [null,null,'否',null],
+  fan:  ['翻','烦','反','饭'],   fen:  ['分','坟','粉','份'],
+  fang: ['方','房','访','放'],   feng: ['风','缝','讽','凤'],
+  da:   ['搭','答','打','大'],   de:   [null,'得',null,null],
+  dai:  ['呆',null,'逮','带'],   dao:  ['刀',null,'岛','道'],
+  dou:  ['都',null,'抖','豆'],   dan:  ['单',null,'胆','蛋'],
+  dang: ['当',null,'党','当'],   deng: ['灯',null,'等','凳'],
+  di:   ['低','敌','底','地'],   die:  ['爹','蝶',null,null],
+  diao: ['雕',null,null,'掉'],   diu:  ['丢',null,null,null],
+  dian: ['颠',null,'点','电'],   ding: ['丁',null,'顶','定'],
+  dong: ['东',null,'懂','动'],   duan: ['端',null,'短','断'],
+  dui:  ['堆',null,null,'对'],   dun:  ['蹲',null,null,'顿'],
+  duo:  ['多','夺','朵','剁'],
+  ta:   ['他',null,null,'踏'],   te:   [null,null,null,'特'],
+  tai:  ['胎','台',null,'太'],   tao:  ['掏','桃','讨','套'],
+  tou:  ['偷','头',null,'透'],   tan:  ['摊','谈','坦','叹'],
+  tang: ['汤','糖','躺','趟'],   teng: [null,'疼',null,null],
+  ti:   ['踢','题','体','替'],   tie:  ['贴',null,'铁',null],
+  tiao: ['挑','条','挑','跳'],   tian: ['天','田','舔',null],
+  ting: ['听','停','挺',null],   tong: ['通','同','桶','痛'],
+  tuan: [null,'团',null,null],   tui:  ['推',null,'腿','退'],
+  tun:  ['吞','臀',null,null],   tuo:  ['脱','驼','妥','拓'],
+  na:   [null,'拿','哪','那'],   ne:   [null,null,null,'讷'],
+  nai:  [null,null,'奶','耐'],   nei:  [null,null,null,'内'],
+  nao:  [null,'挠','脑','闹'],   nan:  [null,'男',null,'难'],
+  nang: [null,'囊',null,null],   neng: [null,'能',null,null],
+  ni:   [null,'泥','你','腻'],   nie:  ['捏',null,null,'孽'],
+  niao: [null,null,'鸟','尿'],   niu:  [null,'牛','扭',null],
+  nian: ['蔫','年','碾','念'],   nin:  [null,'您',null,null],
+  ning: [null,'宁','拧','泞'],   nong: [null,'农',null,'弄'],
+  nuan: [null,null,'暖',null],   nv:   [null,null,'女',null],
+  nve:  [null,null,null,'虐'],
+  la:   ['拉',null,null,'辣'],   lo:   [null,null,null,null],
+  le:   [null,null,null,'乐'],   lai:  [null,'来',null,'赖'],
+  lei:  [null,'雷','累','泪'],   lao:  ['捞','劳','老','烙'],
+  lou:  ['搂','楼',null,'漏'],   lan:  [null,'蓝','懒','烂'],
+  lang: [null,'狼','朗','浪'],   leng: [null,'棱','冷',null],
+  li:   [null,'离','里','力'],   lie:  [null,null,'咧','列'],
+  liao: [null,'聊','了','料'],   liu:  ['溜','留','柳','六'],
+  lian: [null,'连','脸','练'],   lin:  [null,'林',null,'吝'],
+  ling: [null,'零','领','另'],   long: [null,'龙','拢',null],
+  luan: [null,'孪','卵','乱'],   lv:   [null,'驴','旅','律'],
+  lve:  [null,null,null,'略'],   lun:  [null,'轮',null,'论'],
+  luo:  [null,'锣','裸','落'],
+  ga:   ['嘎',null,null,null],   ge:   ['戈','格',null,'个'],
+  gai:  ['该',null,'改','盖'],   gei:  [null,null,null,'给'],
+  gao:  ['高',null,'稿','告'],   gou:  ['勾',null,'狗','够'],
+  gan:  ['干',null,'敢','干'],   gen:  ['根',null,'跟',null],
+  gang: ['刚',null,'港','杠'],   geng: ['更',null,'耿','更'],
+  gong: ['功',null,'拱','共'],   gua:  ['瓜',null,'寡','挂'],
+  guai: ['乖',null,'拐','怪'],   guan: ['关',null,'管','罐'],
+  guang:['光',null,'广',null],   gui:  ['规',null,'鬼','贵'],
+  gun:  [null,null,'滚',null],   guo:  ['锅',null,'果','过'],
+  ka:   ['卡',null,null,'卡'],   ke:   ['科','壳','可','课'],
+  kai:  ['开',null,null,'慨'],   kao:  ['烤',null,'考','靠'],
+  kou:  ['扣',null,'口','叩'],   kan:  ['看',null,'砍','看'],
+  ken:  [null,null,'肯',null],   kang: ['康',null,'慷','抗'],
+  keng: ['坑',null,null,null],   kong: ['空',null,'孔','控'],
+  kua:  ['夸',null,'垮','跨'],   kuai: [null,'快',null,'筷'],
+  kuan: ['宽',null,'款',null],   kuang:['框',null,'矿',null],
+  kui:  ['亏',null,'傀','愧'],   kun:  ['坤',null,'捆',null],
+  kuo:  [null,null,null,'阔'],
+  ha:   ['哈',null,null,'哈'],   he:   ['喝','河',null,'喝'],
+  hai:  ['嗨','还','海','害'],   hei:  ['嘿',null,null,null],
+  hao:  ['蒿','毫','好','号'],   hou:  ['吼','猴','后','厚'],
+  han:  ['酣','寒','喊','汉'],   hen:  [null,'痕','很','恨'],
+  hang: ['航',null,null,'巷'],   heng: ['亨','横',null,'横'],
+  hong: ['轰','红','哄',null],   hua:  ['花','华',null,'化'],
+  huai: ['怀',null,'踹',null],   huan: ['欢','环','缓','换'],
+  huang:['荒','黄','谎','晃'],   hui:  ['灰','回','悔','会'],
+  hun:  ['婚','魂',null,'混'],   huo:  [null,'活','火','货'],
+  ji:   ['机','及','己','记'],   jia:  ['加','颊','假','架'],
+  jie:  ['阶','节','解','戒'],   jiao: ['交','茄','角','叫'],
+  jiu:  ['究','久','酒','就'],   jian: ['间','肩','检','见'],
+  jin:  ['今','金','尽','近'],   jing: ['京','井','警','静'],
+  jiong:[null,null,null,null],   ju:   ['居','局','举','句'],
+  jue:  [null,'绝','觉',null],   juan: ['捐','卷','卷','倦'],
+  jun:  ['军','均','俊','郡'],
+  qi:   ['期','奇','起','气'],   qia:  [null,'恰',null,null],
+  qie:  ['切',null,'且',null],   qiao: ['敲',null,'巧','俏'],
+  qiu:  ['秋','求',null,null],   qian: ['千','钱','浅','欠'],
+  qin:  ['亲','琴',null,'寝'],   qing: ['青','情','请','庆'],
+  qiong:[null,'穷',null,null],   qu:   ['区','渠','取','去'],
+  que:  ['缺','瘸','却','确'],   quan: ['圈','全','犬','劝'],
+  qun:  ['裙',null,null,null],
+  xi:   ['希','席','洗','戏'],   xia:  ['虾','侠','下','吓'],
+  xie:  ['些','鞋','写','谢'],   xiao: ['消','肖','小','笑'],
+  xiu:  ['休','修','朽','锈'],   xian: ['仙','闲','显','现'],
+  xin:  ['心','新','信','信'],   xing: ['星','行','醒','幸'],
+  xiong:[null,'雄',null,null],   xu:   ['须','徐','许','续'],
+  xue:  ['靴','学','雪','削'],   xuan: ['宣','玄','选','绚'],
+  xun:  ['熏','寻',null,'训'],
+  zha:  ['扎','炸','扎','炸'],   zhe:  ['遮','折','者','这'],
+  zhi:  ['知','直','只','志'],   zhai: ['摘','宅','窄','债'],
+  zhao: ['招','找','召','照'],   zhou: ['州','轴','肘','周'],
+  zhan: ['沾','占','展','战'],   zhen: ['真','针','枕','阵'],
+  zhang:['张','长','掌','障'],   zheng:['争','蒸','整','正'],
+  zhong:['中',null,'种','众'],   zhua: [null,null,'爪',null],
+  zhuai:[null,null,null,null],   zhuan:['专',null,'转','转'],
+  zhuang:['装',null,'撞','壮'], zhui: ['追',null,null,'缀'],
+  zhun: ['准',null,'准',null],   zhuo: ['捉','卓','琢',null],
+  cha:  ['插','茶','差','岔'],   che:  ['车',null,'扯','撤'],
+  chi:  ['吃','迟','尺','斥'],   chai: ['拆','柴',null,null],
+  chao: ['超','朝','炒','钞'],   chou: ['抽','愁','丑','臭'],
+  chan: ['搀','蝉','产','颤'],   chen: ['沉','陈',null,'趁'],
+  chang:['唱','长','厂','畅'],   cheng:['撑','城','秤','乘'],
+  chong:['冲','虫','宠','充'],   chua: [null,null,null,null],
+  chuai:[null,null,'揣',null],   chuan:['川','船','串','穿'],
+  chuang:['窗','床','闯','创'], chui: ['吹',null,null,'垂'],
+  chun: ['春','唇','蠢',null],   chuo: [null,'戳',null,null],
+  sha:  ['沙',null,'傻','煞'],   she:  ['奢','蛇','舍','摄'],
+  shi:  ['诗','石','始','是'],   shao: ['烧','勺','少','哨'],
+  shou: ['收','熟','手','售'],   shan: ['山','善','闪','扇'],
+  shen: ['深','神','审','渗'],   shang:['商','尚','上','上'],
+  sheng:['声','绳','省','剩'],   shua: ['刷',null,null,null],
+  shuai:['帅','率','甩',null],   shuan:['拴',null,'涮',null],
+  shuang:['双',null,'爽',null], shui: ['水',null,'睡',null],
+  shun: ['顺',null,null,null],   shuo: [null,'说',null,null],
+  re:   [null,'热','惹',null],   ri:   [null,'日',null,null],
+  rao:  [null,'饶',null,'绕'],   rou:  [null,'柔',null,'肉'],
+  ran:  [null,'然','染',null],   ren:  ['仁','人','忍','任'],
+  rang: [null,'瓤','让',null],   reng: ['扔','仍',null,null],
+  rong: [null,'荣','冗',null],   rua:  [null,null,null,null],
+  ruan: [null,'软',null,null],   rui:  ['睿',null,null,'锐'],
+  run:  [null,'润',null,null],   ruo:  [null,'若','弱',null],
+  za:   ['扎','杂','砸',null],   ze:   [null,'则',null,'泽'],
+  zi:   ['资',null,'子','字'],   zai:  ['灾',null,'宰','再'],
+  zao:  ['糟','凿','早','造'],   zou:  [null,'走',null,'奏'],
+  zan:  ['赞','咱','暂',null],   zen:  [null,null,null,'怎'],
+  zang: ['脏',null,null,'葬'],   zeng: ['增',null,null,'憎'],
+  zong: ['宗','棕','总','纵'],   zuan: ['钻',null,null,'钻'],
+  zui:  ['嘴',null,'醉',null],   zun:  ['尊',null,null,null],
+  zuo:  ['作','坐','左','做'],
+  ca:   ['擦',null,null,null],   ce:   [null,'侧','测',null],
+  ci:   [null,'慈','此','次'],   cai:  ['猜','才','踩','菜'],
+  cao:  ['操','曹','草',null],   cou:  ['凑',null,null,null],
+  can:  ['餐','蚕','惨','灿'],   cen:  [null,'参',null,null],
+  cang: ['仓','苍',null,'舱'],   ceng: [null,'层',null,null],
+  cong: ['聪','丛',null,'从'],   cuan: ['蹿',null,null,'篡'],
+  cui:  ['催','脆',null,'粹'],   cun:  ['村','存','寸',null],
+  cuo:  ['搓',null,null,'错'],
+  sa:   ['撒',null,'洒',null],   se:   [null,'色','涩',null],
+  si:   ['思','司','死','四'],   sai:  ['塞',null,null,'赛'],
+  sao:  ['骚',null,'嫂','扫'],   sou:  ['搜','馊','叟','嗽'],
+  san:  ['三',null,'散','散'],   sen:  ['森',null,null,null],
+  sang: ['丧','桑','嗓',null],   seng: ['僧',null,null,null],
+  song: ['松',null,'耸','送'],   suan: ['酸',null,'蒜',null],
+  sui:  ['虽','随',null,'岁'],   sun:  ['孙',null,'损','笋'],
+  suo:  ['缩','索','锁',null],
+  ya:   ['压','牙','哑','亚'],   yo:   [null,null,null,null],
+  ye:   ['耶','爷','也','夜'],   yao:  ['腰','摇','咬','要'],
+  you:  ['忧','游','有','又'],   yan:  ['烟','盐','眼','验'],
+  yin:  ['阴','银','引','印'],   yang: ['央','羊','养','样'],
+  ying: ['英','赢','影','应'],   yong: ['拥','用','永','用'],
+  yu:   ['鱼','于','语','遇'],   yue:  ['约','月','岳','乐'],
+  yuan: ['冤','圆','远','愿'],   yun:  ['晕','云','允','运'],
+  wa:   ['哇','蛙','瓦','袜'],   wo:   ['窝',null,'我','卧'],
+  wai:  ['歪',null,null,'外'],   wei:  ['威','围','委','位'],
+  wan:  ['弯','玩','碗','万'],   wen:  ['温','文','吻','问'],
+  wang: ['汪','王','往','旺'],   weng: ['翁',null,null,'瓮'],
+  wu:   ['污','无','武','雾'],
+};
+
+function ttsCharFor(syllable, tone) {
+  const row = TONE_CHAR[syllable];
+  return row ? row[tone - 1] : null;
+}
+
+let _mode = 'mp3';
+let _queue = [];
+let _currentAudio = null;
+let _activeSyllable = null;
+let _currentSyllable = null;
+
+function setMode(mode) {
+  _mode = mode;
+  document.getElementById('btn-mp3').classList.toggle('active', mode === 'mp3');
+  document.getElementById('btn-tts').classList.toggle('active', mode === 'tts');
+  if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  _queue = [];
+  setPips(-1);
+  if (_activeSyllable) { _activeSyllable.classList.remove('playing','done'); _activeSyllable = null; }
+  document.getElementById('current-label').textContent = _currentSyllable || '—';
+}
+
+function setPipsClickable(on) {
+  [1,2,3,4].forEach(t => document.getElementById('pip'+t).classList.toggle('clickable', on));
+}
+
+function finishPlayback() {
+  setPips(-1);
+  if (_activeSyllable) { _activeSyllable.classList.remove('playing'); _activeSyllable.classList.add('done'); }
+  document.getElementById('current-label').textContent = _currentSyllable || '—';
+}
+
+function speakChar(char, onDone) {
+  const utt = new SpeechSynthesisUtterance(char);
+  utt.lang = 'zh-CN'; utt.rate = 0.7;
+  utt.onend = onDone; utt.onerror = onDone;
+  speechSynthesis.speak(utt);
+}
+
+function playSingleTone(tone) {
+  if (!_currentSyllable) return;
+  if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  _queue = [];
+  setPips(tone);
+  document.getElementById('current-label').textContent = _currentSyllable + ' · ' + tone;
+  const done = () => { setPips(-1); document.getElementById('current-label').textContent = _currentSyllable; };
+
+  if (_mode === 'tts') {
+    const char = ttsCharFor(_currentSyllable, tone);
+    if (char) { speakChar(char, done); } else { setPips(-1); setTimeout(done, 600); }
+  } else {
+    const audio = new Audio(`pinyin_audio/${_currentSyllable}${tone}.mp3`);
+    _currentAudio = audio;
+    audio.onerror = () => { setPips(-1); document.getElementById('current-label').textContent = _currentSyllable; };
+    audio.onended = () => { setPips(-1); document.getElementById('current-label').textContent = _currentSyllable; };
+    audio.play().catch(() => { setPips(-1); });
+  }
+}
+
+function playNext() {
+  if (_queue.length === 0) { finishPlayback(); return; }
+  const { tone, syllable } = _queue.shift();
+  setPips(tone);
+  document.getElementById('current-label').textContent = syllable + ' · ' + tone;
+  if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
+  const audio = new Audio(`pinyin_audio/${syllable}${tone}.mp3`);
+  _currentAudio = audio;
+  audio.onerror = () => playNext();
+  audio.onended = () => playNext();
+  audio.play().catch(() => playNext());
+}
+
+function playSyllableTTS(syllable) {
+  speechSynthesis.cancel();
+  const tones = [1, 2, 3, 4];
+  let idx = 0;
+  function next() {
+    if (idx >= tones.length) { finishPlayback(); return; }
+    const tone = tones[idx++];
+    const char = ttsCharFor(syllable, tone);
+    if (char) {
+      setPips(tone);
+      document.getElementById('current-label').textContent = syllable + ' · ' + tone;
+      speakChar(char, next);
+    } else {
+      setPips(-1);
+      setTimeout(next, 600);
+    }
+  }
+  next();
+}
+
+function setPips(tone) {
+  [1,2,3,4].forEach(t => {
+    document.getElementById('pip' + t).classList.toggle('active', t === tone);
+  });
+}
+
+function playSyllable(syllable, btn) {
+  if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  if (_activeSyllable) { _activeSyllable.classList.remove('playing','done'); }
+  _activeSyllable = btn;
+  _currentSyllable = syllable;
+  btn.classList.add('playing');
+  btn.classList.remove('done');
+  setPipsClickable(true);
+  if (_mode === 'tts') {
+    playSyllableTTS(syllable);
+  } else {
+    _queue = [1,2,3,4].map(t => ({ tone: t, syllable }));
+    playNext();
+  }
+}
+
+// Build UI
+const main = document.getElementById('main');
+const nav = document.getElementById('initial-nav');
+
+GROUPS.forEach(({ label, syllables }) => {
+  const id = 'group-' + label.toLowerCase();
+
+  // Nav link
+  const a = document.createElement('a');
+  a.href = '#' + id;
+  a.textContent = label === 'Standalone' ? '∅' : label;
+  a.dataset.group = id;
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.getElementById(id);
+    const stickyH = document.getElementById('initial-nav').offsetHeight
+                  + document.querySelector('.tone-bar').offsetHeight;
+    const top = target.getBoundingClientRect().top + window.scrollY - stickyH - 8;
+    window.scrollTo({ top, behavior: 'smooth' });
+  });
+  nav.appendChild(a);
+
+  // Group section
+  const group = document.createElement('div');
+  group.className = 'group';
+  group.id = id;
+  const gl = document.createElement('div');
+  gl.className = 'group-label';
+  gl.textContent = label === 'Standalone' ? 'Standalone vowels' : `Initial: ${label}-`;
+  group.appendChild(gl);
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  syllables.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'syllable-btn';
+    btn.textContent = s;
+    btn.addEventListener('click', () => playSyllable(s, btn));
+    grid.appendChild(btn);
+  });
+  group.appendChild(grid);
+  main.appendChild(group);
+});
+
+// Highlight nav link for the group closest to top of viewport
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    const link = nav.querySelector(`[data-group="${entry.target.id}"]`);
+    if (link) link.classList.toggle('current', entry.isIntersecting);
+  });
+}, { rootMargin: '-20% 0px -75% 0px' });
+
+document.querySelectorAll('.group').forEach(g => observer.observe(g));
+</script>
+</body>
+</html>
