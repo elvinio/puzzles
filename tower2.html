@@ -1697,6 +1697,7 @@ function tickElevator(room, dt) {
   }
 
   parts.car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H;
+  parts.car.texture = getElevatorCarTexture(room);
 }
 
 // ─── ECS: Sim people ─────────────────────────────────────────────────────────

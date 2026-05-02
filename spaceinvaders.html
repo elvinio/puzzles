@@ -241,6 +241,10 @@
       <span>Lives</span>
       <span class="hud-val" id="hudLives">♥♥♥</span>
     </div>
+    <div class="hud-item">
+      <span>Auto</span>
+      <span class="hud-val" id="hudAuto" style="color:#6b7280">OFF</span>
+    </div>
   </div>
 
   <div class="canvas-wrap">
@@ -260,7 +264,7 @@
     <button class="tc-btn tc-shoot" id="btnShoot">FIRE</button>
     <button class="tc-btn" id="btnRight">▶</button>
   </div>
-  <div class="kbd-hint">Keyboard: ← → Arrow keys + Space to shoot</div>
+  <div class="kbd-hint">Keyboard: ← → Arrow keys + Space to shoot · A to toggle auto-fire</div>
 </div>
 
 <script>
@@ -287,7 +291,7 @@ const SHIELD_MASK = [
 ];
 
 const LEVELS = [
-  { gridSpeed:28,  invFireInterval:2.2, invBulletsMax:2, ufoPoints:[50,100] },
+  { gridSpeed:18,  invFireInterval:3.2, invBulletsMax:1, ufoPoints:[50,100] },
   { gridSpeed:38,  invFireInterval:1.8, invBulletsMax:2, ufoPoints:[50,100,150] },
   { gridSpeed:50,  invFireInterval:1.4, invBulletsMax:3, ufoPoints:[100,150,300] },
   { gridSpeed:64,  invFireInterval:1.1, invBulletsMax:3, ufoPoints:[100,150,300] },
@@ -347,6 +351,7 @@ let explosions = [];
 
 // Input
 const keys = { left: false, right: false, shoot: false };
+let autoFire = false;
 
 // ── Audio ─────────────────────────────────────────────────────────────────────
 let audioCtx = null;
@@ -538,6 +543,7 @@ function initGame(lv) {
 function startNewGame() {
   lives = 3;
   score = 0;
+  autoFire = false;
   initGame(1);
   gameState = 'playing';
   hideOverlay();
@@ -611,7 +617,7 @@ function movePlayer(dt) {
   if (keys.left)  player.x = Math.max(0, player.x - 220 * dt);
   if (keys.right) player.x = Math.min(CW - PLAYER_W, player.x + 220 * dt);
   if (shootCooldown > 0) shootCooldown -= dt;
-  if (keys.shoot && shootCooldown <= 0 && playerBullets.length === 0) {
+  if ((keys.shoot || autoFire) && shootCooldown <= 0 && playerBullets.length === 0) {
     firePlayerBullet();
   }
 }
@@ -651,7 +657,7 @@ function fireInvaderBullet() {
   if (candidates.length === 0) return;
   const shooter = candidates[Math.floor(Math.random() * candidates.length)];
   const pos = invaderScreenPos(shooter);
-  const spd = 160 + level * 20;
+  const spd = 100 + level * 20;
   invaderBullets.push({
     x: pos.x + INV_W / 2 - 2,
     y: pos.y + INV_H,
@@ -1144,6 +1150,9 @@ function updateHUD() {
   document.getElementById('hudLevel').textContent = level;
   document.getElementById('hudLives').textContent = '♥'.repeat(Math.max(0, lives));
   document.getElementById('hudBest').textContent = loadBestScore().toLocaleString();
+  const hudAuto = document.getElementById('hudAuto');
+  hudAuto.textContent = autoFire ? 'ON' : 'OFF';
+  hudAuto.style.color = autoFire ? '#4ade80' : '#6b7280';
 }
 
 // ── Score persistence ─────────────────────────────────────────────────────────
@@ -1234,6 +1243,9 @@ function initInput() {
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft')  { keys.left  = true; e.preventDefault(); }
     if (e.key === 'ArrowRight') { keys.right = true; e.preventDefault(); }
+    if (e.key === 'a' || e.key === 'A') {
+      if (gameState === 'playing') { autoFire = !autoFire; updateHUD(); }
+    }
     if (e.key === ' ') {
       e.preventDefault();
       keys.shoot = true;
