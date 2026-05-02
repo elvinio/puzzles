@@ -204,7 +204,7 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
+      grid-template-columns: repeat(15, 1fr);
       gap: 2px;
       width: min(88vw, 560px);
       touch-action: manipulation;
@@ -217,7 +217,7 @@
     .cell {
       aspect-ratio: 1;
       background: var(--water);
-      border: 1px solid #1a1235;
+      border: 1px solid #3d3070;
       border-radius: 2px;
       position: relative;
       overflow: hidden;
@@ -792,7 +792,7 @@
     'use strict';
 
     /* ── Constants ── */
-    const GRID = 10;
+    const GRID = 15;
     const TOTAL = GRID * GRID;
     const BLITZ_SECS = 8;
     const POWERUP_TYPES = ['radar', 'cluster', 'torpedo'];
