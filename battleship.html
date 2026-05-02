@@ -266,6 +266,12 @@
       0%   { box-shadow: inset 0 0 0 2px #22d3ee; }
       100% { box-shadow: inset 0 0 0 0px #22d3ee; }
     }
+    /* Radar: ship detected — persistent visible glow until fired at */
+    .cell.radar-ship {
+      background: #0a2a2a;
+      border-color: #22d3ee;
+      box-shadow: inset 0 0 6px rgba(34,211,238,0.5);
+    }
 
     /* Fog of war: hide own ships */
     .cell.fogged { background: var(--water); border-color: #1a1235; }
@@ -774,7 +780,7 @@
           <div class="mode-rule-desc">Every confirmed hit earns a random power-up stored in your inventory (max 3 each):<br>
           🔍 <strong>Radar</strong> — reveals a 3×3 area without firing<br>
           💥 <strong>Cluster</strong> — fires at a 2×2 area<br>
-          🚀 <strong>Torpedo</strong> — fires a 3-cell strip in a row or column</div>
+          🚀 <strong>Torpedo</strong> — fires the entire selected row or column (all 15 cells)</div>
         </div>
       </div>
       <div class="tab-panel" id="tab-ships">
@@ -1021,7 +1027,9 @@
       for (let i = 0; i < TOTAL; i++) {
         const cell = grid[i];
         kids[i].className = cellClass(cell, showShips, fogMode);
-        if (cell.revealed && !cell.hit) kids[i].classList.add('radar-ping');
+        if (cell.revealed && !cell.hit) {
+          kids[i].classList.add(cell.shipId ? 'radar-ship' : 'radar-ping');
+        }
       }
     }
 
@@ -1244,14 +1252,12 @@
         const axis = S.torpedoAxis || 'h';
         S.torpedoAxis = null;
         hideTorpedoPick();
-        for (let d = -1; d <= 1; d++) {
-          const nr = axis === 'v' ? r+d : r;
-          const nc = axis === 'h' ? c+d : c;
-          if (nr>=0&&nr<GRID&&nc>=0&&nc<GRID) {
-            const i = idx(nr,nc);
-            const h = fireAt(i, S.enemyGrid, S.enemyShips, true);
-            if (h) { S.stats.pHits++; hitOccurred = true; }
-          }
+        for (let d = 0; d < GRID; d++) {
+          const nr = axis === 'v' ? d : r;
+          const nc = axis === 'h' ? d : c;
+          const i = idx(nr, nc);
+          const h = fireAt(i, S.enemyGrid, S.enemyShips, true);
+          if (h) { S.stats.pHits++; hitOccurred = true; }
         }
         renderBothGrids();
       }
@@ -1316,13 +1322,10 @@
     /* ── Player shot ── */
     function onEnemyClick(cellIdx) {
       if (S.phase !== 'PLAYER_TURN') return;
-      const cell = S.enemyGrid[cellIdx];
-      if (cell.hit) return;
 
-      // Power-up armed (non-torpedo)
+      // Power-up armed: allow clicking any cell (including already-hit ones for area weapons)
       if (MODES[S.mode].powerups && S.activePowerup !== 'none') {
         if (S.activePowerup === 'torpedo') {
-          // Need axis selection first
           showTorpedoPick(cellIdx);
           return;
         }
@@ -1331,6 +1334,7 @@
       }
 
       // Normal shot
+      if (S.enemyGrid[cellIdx].hit) return;
       S.stats.pShots++;
       const hit = fireAt(cellIdx, S.enemyGrid, S.enemyShips, true);
       if (hit) S.stats.pHits++;
