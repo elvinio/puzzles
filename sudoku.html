@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Sudoku</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #13111c;
+      --surface: #1c1730;
+      --brd:     #4c1d95;
+      --p:       #6d28d9;
+      --p-lt:    #7c3aed;
+      --p-xl:    #a78bfa;
+      --p-text:  #e2d9f3;
+      --muted:   #7c6fa0;
+      /* cell state colours */
+      --cell-sel:     #2d1f5a;
+      --cell-peer:    #1e1640;
+      --cell-match:   #241d4a;
+      --cell-conf-bg: #3d1020;
+      --cell-conf-tx: #f87171;
+    }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg);
+      color: var(--p-text);
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 12px 12px 32px;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      overscroll-behavior: none;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      flex-shrink: 0;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      min-width: 60px;
+    }
+    .back-link:hover { color: var(--p-xl); }
+    h1 {
+      font-size: clamp(1.2rem, 4vw, 1.7rem);
+      font-weight: 900;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Difficulty tabs ── */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-bottom: 8px;
+    }
+    .tab {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 2px solid var(--brd);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: all 0.15s;
+      touch-action: manipulation;
+    }
+    .tab:hover { border-color: var(--p-lt); color: var(--p-text); }
+    .tab.active {
+      background: var(--p);
+      border-color: var(--p-lt);
+      color: #fff;
+    }
+
+    /* ── HUD ── */
+    .hud {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-shrink: 0;
+      margin-bottom: 12px;
+    }
+    .hud-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+    }
+    .hud-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    .hud-val {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--p-xl);
+      line-height: 1;
+    }
+
+    /* ── Board ── */
+    .board-wrap {
+      flex-shrink: 0;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      width: min(95vw, 460px);
+      aspect-ratio: 1;
+      border: 2.5px solid var(--p-lt);
+      border-radius: 4px;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(0.85rem, 3.2vw, 1.25rem);
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      background: var(--surface);
+      color: var(--p-text);
+      border-right: 1px solid #2e2550;
+      border-bottom: 1px solid #2e2550;
+      transition: background 0.08s;
+      /* prevent text selection on rapid taps */
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* box boundary — thick right border after cols 3 and 6 */
+    .cell.box-right  { border-right: 2.5px solid var(--p); }
+    /* box boundary — thick bottom border after rows 3 and 6 */
+    .cell.box-bottom { border-bottom: 2.5px solid var(--p); }
+    /* remove right/bottom borders on last col/row (outer border handles it) */
+    .cell.last-col { border-right: none; }
+    .cell.last-row { border-bottom: none; }
+
+    /* state classes */
+    .cell.clue     { font-weight: 900; color: var(--p-text); pointer-events: none; }
+    .cell.user     { color: var(--p-xl); }
+    .cell.peer     { background: var(--cell-peer); }
+    .cell.match    { background: var(--cell-match); }
+    .cell.selected { background: var(--cell-sel); }
+    .cell.conflict { background: var(--cell-conf-bg) !important; color: var(--cell-conf-tx) !important; }
+
+    /* ── Number picker popup ── */
+    [hidden] { display: none !important; }
+
+    .picker {
+      position: fixed;
+      z-index: 200;
+      background: var(--surface);
+      border: 2px solid var(--p-lt);
+      border-radius: 14px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+    }
+    .picker-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+    }
+    .pick-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      border: 2px solid var(--brd);
+      background: var(--bg);
+      color: var(--p-xl);
+      font-size: 1.25rem;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.1s, border-color 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pick-btn:active {
+      background: var(--p);
+      border-color: var(--p-lt);
+      color: #fff;
+    }
+    .pick-erase {
+      width: 100%;
+      height: 40px;
+      border-radius: 10px;
+      border: 2px solid var(--brd);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.1s, border-color 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pick-erase:active {
+      background: #2a1030;
+      border-color: var(--cell-conf-tx);
+      color: var(--cell-conf-tx);
+    }
+
+    /* ── Win overlay ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,8,20,0.88);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .overlay.show { display: flex; }
+    .win-box {
+      background: var(--surface);
+      border: 2px solid var(--p-lt);
+      border-radius: 20px;
+      padding: 36px 40px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      max-width: 320px;
+      width: 90%;
+    }
+    .win-title { font-size: 2rem; font-weight: 900; color: var(--p-xl); }
+    .win-stats { font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
+    .win-stats b { color: var(--p-text); }
+    .btn {
+      padding: 12px 32px;
+      border-radius: 12px;
+      border: none;
+      background: var(--p);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s;
+    }
+    .btn:hover { background: var(--p-lt); }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-link" href="index.html">← Back</a>
+  <h1>Sudoku</h1>
+  <div style="min-width:60px"></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-level="easy">Easy</button>
+  <button class="tab" data-level="medium">Medium</button>
+  <button class="tab" data-level="hard">Hard</button>
+</div>
+
+<div class="hud">
+  <div class="hud-cell">
+    <div class="hud-label">TIME</div>
+    <div class="hud-val" id="timer">0:00</div>
+  </div>
+</div>
+
+<div class="board-wrap">
+  <div class="board" id="board"></div>
+</div>
+
+<!-- Number picker -->
+<div class="picker" id="picker" hidden>
+  <div class="picker-grid" id="pickerGrid"></div>
+  <button class="pick-erase" id="pickErase">⌫ Erase</button>
+</div>
+
+<!-- Win overlay -->
+<div class="overlay" id="overlay">
+  <div class="win-box">
+    <div class="win-title">Solved! 🎉</div>
+    <div class="win-stats" id="winStats"></div>
+    <button class="btn" id="playAgain">Play Again</button>
+  </div>
+</div>
+
+<script>
+/* ── Constants ───────────────────────────────────────── */
+const CLUES = { easy: 36, medium: 30, hard: 25 };
+
+/* ── State ───────────────────────────────────────────── */
+let solution      = new Array(81).fill(0);
+let puzzle        = new Array(81).fill(0);
+let board         = new Array(81).fill(0);
+let isClue        = new Array(81).fill(false);
+let selected      = -1;
+let level         = 'easy';
+let seconds       = 0;
+let timerInterval = null;
+let won           = false;
+
+/* ── Puzzle generation ───────────────────────────────── */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function isValid(grid, r, c, digit) {
+  for (let j = 0; j < 9; j++) if (grid[r * 9 + j] === digit) return false;
+  for (let i = 0; i < 9; i++) if (grid[i * 9 + c] === digit) return false;
+  const r0 = Math.floor(r / 3) * 3, c0 = Math.floor(c / 3) * 3;
+  for (let dr = 0; dr < 3; dr++)
+    for (let dc = 0; dc < 3; dc++)
+      if (grid[(r0 + dr) * 9 + (c0 + dc)] === digit) return false;
+  return true;
+}
+
+function fillBox(grid, r0, c0) {
+  const digits = shuffle([1,2,3,4,5,6,7,8,9]);
+  let k = 0;
+  for (let dr = 0; dr < 3; dr++)
+    for (let dc = 0; dc < 3; dc++)
+      grid[(r0 + dr) * 9 + (c0 + dc)] = digits[k++];
+}
+
+function solveSudoku(grid, pos) {
+  if (pos === 81) return true;
+  const r = Math.floor(pos / 9), c = pos % 9;
+  if (grid[pos] !== 0) return solveSudoku(grid, pos + 1);
+  const cands = shuffle([1,2,3,4,5,6,7,8,9]);
+  for (const d of cands) {
+    if (isValid(grid, r, c, d)) {
+      grid[pos] = d;
+      if (solveSudoku(grid, pos + 1)) return true;
+      grid[pos] = 0;
+    }
+  }
+  return false;
+}
+
+/* Count solutions up to `limit`; used to verify puzzle uniqueness. */
+function countSolutions(grid, limit) {
+  // find first empty cell
+  let pos = -1;
+  for (let i = 0; i < 81; i++) { if (grid[i] === 0) { pos = i; break; } }
+  if (pos === -1) return 1; // fully filled = 1 solution
+  const r = Math.floor(pos / 9), c = pos % 9;
+  let count = 0;
+  for (let d = 1; d <= 9; d++) {
+    if (isValid(grid, r, c, d)) {
+      grid[pos] = d;
+      count += countSolutions(grid, limit - count);
+      grid[pos] = 0;
+      if (count >= limit) break;
+    }
+  }
+  return count;
+}
+
+function createPuzzle(sol, clueCount) {
+  const puz = sol.slice();
+  const indices = shuffle(Array.from({length: 81}, (_, i) => i));
+  let removed = 0;
+  const target = 81 - clueCount;
+  for (const idx of indices) {
+    if (removed === target) break;
+    const saved = puz[idx];
+    puz[idx] = 0;
+    const copy = puz.slice();
+    if (countSolutions(copy, 2) === 1) {
+      removed++;
+    } else {
+      puz[idx] = saved;
+    }
+  }
+  return puz;
+}
+
+function generatePuzzle(clueCount) {
+  const grid = new Array(81).fill(0);
+  fillBox(grid, 0, 0);
+  fillBox(grid, 3, 3);
+  fillBox(grid, 6, 6);
+  solveSudoku(grid, 0);
+  const sol = grid.slice();
+  const puz = createPuzzle(sol, clueCount);
+  return { sol, puz };
+}
+
+/* ── Timer ───────────────────────────────────────────── */
+function fmt(s) {
+  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+}
+function startTimer() {
+  clearInterval(timerInterval);
+  seconds = 0;
+  document.getElementById('timer').textContent = '0:00';
+  timerInterval = setInterval(() => {
+    seconds++;
+    document.getElementById('timer').textContent = fmt(seconds);
+  }, 1000);
+}
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+/* ── Conflict detection ──────────────────────────────── */
+function getConflicts() {
+  const conflicts = new Set();
+  // check 9 rows, 9 cols, 9 boxes
+  for (let u = 0; u < 9; u++) {
+    const rowUnit = Array.from({length: 9}, (_, j) => u * 9 + j);
+    const colUnit = Array.from({length: 9}, (_, i) => i * 9 + u);
+    const br = Math.floor(u / 3) * 3, bc = (u % 3) * 3;
+    const boxUnit = [];
+    for (let dr = 0; dr < 3; dr++) for (let dc = 0; dc < 3; dc++) boxUnit.push((br + dr) * 9 + (bc + dc));
+
+    for (const unit of [rowUnit, colUnit, boxUnit]) {
+      const seen = {};
+      for (const idx of unit) {
+        const v = board[idx];
+        if (!v) continue;
+        if (seen[v] !== undefined) { conflicts.add(idx); conflicts.add(seen[v]); }
+        else seen[v] = idx;
+      }
+    }
+  }
+  return conflicts;
+}
+
+/* ── Rendering ───────────────────────────────────────── */
+function buildBoard() {
+  const boardEl = document.getElementById('board');
+  boardEl.innerHTML = '';
+  for (let i = 0; i < 81; i++) {
+    const el = document.createElement('div');
+    el.className = 'cell';
+    const col = i % 9, row = Math.floor(i / 9);
+    if (col === 2 || col === 5) el.classList.add('box-right');
+    if (row === 2 || row === 5) el.classList.add('box-bottom');
+    if (col === 8) el.classList.add('last-col');
+    if (row === 8) el.classList.add('last-row');
+    el.dataset.idx = i;
+    boardEl.appendChild(el);
+  }
+}
+
+function renderBoard() {
+  const cells = document.getElementById('board').children;
+  const conflicts = getConflicts();
+  const selVal = selected >= 0 ? board[selected] : 0;
+  const selRow = selected >= 0 ? Math.floor(selected / 9) : -1;
+  const selCol = selected >= 0 ? selected % 9 : -1;
+  const selBox = selected >= 0 ? Math.floor(selRow / 3) * 3 + Math.floor(selCol / 3) : -1;
+
+  for (let i = 0; i < 81; i++) {
+    const el = cells[i];
+    const v = board[i];
+    el.textContent = v || '';
+
+    // remove all state classes
+    el.classList.remove('clue', 'user', 'peer', 'match', 'selected', 'conflict');
+
+    if (isClue[i])      el.classList.add('clue');
+    else if (v)         el.classList.add('user');
+
+    if (selected >= 0 && i !== selected) {
+      const r = Math.floor(i / 9), c = i % 9;
+      const box = Math.floor(r / 3) * 3 + Math.floor(c / 3);
+      if (r === selRow || c === selCol || box === selBox) el.classList.add('peer');
+      if (selVal && v === selVal) el.classList.add('match');
+    }
+    if (i === selected) el.classList.add('selected');
+    if (conflicts.has(i)) el.classList.add('conflict');
+  }
+}
+
+/* ── Win detection ───────────────────────────────────── */
+function checkWin() {
+  for (let i = 0; i < 81; i++) if (!board[i]) return;
+  if (getConflicts().size > 0) return;
+  won = true;
+  stopTimer();
+  if (window.__avatarSave) window.__avatarSave('sudoku-' + level, seconds, true);
+  setTimeout(() => {
+    document.getElementById('winStats').innerHTML =
+      `Difficulty: <b>${level.charAt(0).toUpperCase() + level.slice(1)}</b><br>Time: <b>${fmt(seconds)}</b>`;
+    document.getElementById('overlay').classList.add('show');
+  }, 400);
+}
+
+/* ── Number picker ───────────────────────────────────── */
+function showPicker(cellIdx) {
+  const picker = document.getElementById('picker');
+  picker.hidden = false;
+
+  const cellEl = document.getElementById('board').children[cellIdx];
+  const rect = cellEl.getBoundingClientRect();
+  const pw = picker.offsetWidth;
+  const ph = picker.offsetHeight;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const M = 8;
+
+  let top  = rect.bottom + M;
+  let left = rect.left + (rect.width - pw) / 2;
+
+  if (left + pw > vw - M) left = vw - pw - M;
+  if (left < M) left = M;
+  if (top + ph > vh - M) top = rect.top - ph - M;
+  if (top < M) top = M;
+
+  picker.style.left = left + 'px';
+  picker.style.top  = top  + 'px';
+}
+
+function hidePicker() {
+  document.getElementById('picker').hidden = true;
+}
+
+function enterDigit(n) {
+  if (selected < 0 || isClue[selected] || won) return;
+  board[selected] = n;
+  selected = -1;
+  hidePicker();
+  renderBoard();
+  checkWin();
+}
+
+/* ── Cell interaction ────────────────────────────────── */
+function selectCell(idx) {
+  if (isClue[idx] || won) return;
+  if (selected === idx) {
+    selected = -1;
+    hidePicker();
+    renderBoard();
+    return;
+  }
+  selected = idx;
+  renderBoard();
+  showPicker(idx);
+}
+
+/* ── Game init ───────────────────────────────────────── */
+function newGame() {
+  stopTimer();
+  hidePicker();
+  selected = -1;
+  won = false;
+  document.getElementById('overlay').classList.remove('show');
+
+  const { sol, puz } = generatePuzzle(CLUES[level]);
+  solution = sol;
+  puzzle   = puz;
+  board    = puz.slice();
+  isClue   = puz.map(v => v !== 0);
+
+  buildBoard();
+  renderBoard();
+  startTimer();
+}
+
+/* ── Build picker buttons ────────────────────────────── */
+(function buildPicker() {
+  const grid = document.getElementById('pickerGrid');
+  for (let n = 1; n <= 9; n++) {
+    const btn = document.createElement('button');
+    btn.className = 'pick-btn';
+    btn.textContent = n;
+    btn.addEventListener('pointerdown', e => { e.stopPropagation(); enterDigit(n); });
+    grid.appendChild(btn);
+  }
+  document.getElementById('pickErase').addEventListener('pointerdown', e => {
+    e.stopPropagation();
+    enterDigit(0);
+  });
+})();
+
+/* ── Event wiring ────────────────────────────────────── */
+
+// Tab clicks
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    level = btn.dataset.level;
+    newGame();
+  });
+});
+
+// Board cell clicks (event delegation)
+document.getElementById('board').addEventListener('click', e => {
+  const cell = e.target.closest('.cell');
+  if (!cell) return;
+  selectCell(+cell.dataset.idx);
+});
+
+// Dismiss picker when tapping outside board and picker
+document.addEventListener('pointerdown', e => {
+  const picker = document.getElementById('picker');
+  const boardEl = document.getElementById('board');
+  if (!picker.hidden &&
+      !picker.contains(e.target) &&
+      !boardEl.contains(e.target)) {
+    hidePicker();
+    selected = -1;
+    renderBoard();
+  }
+}, true);
+
+// Play again button
+document.getElementById('playAgain').addEventListener('click', newGame);
+
+// Boot
+newGame();
+</script>
+<script src="avatar.js"></script>
+</body>
+</html>
