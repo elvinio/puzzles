@@ -206,7 +206,7 @@
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       gap: 2px;
-      width: min(44vw, 300px);
+      width: min(88vw, 560px);
       touch-action: manipulation;
       border: 2px solid var(--brd-lt);
       border-radius: 6px;
@@ -332,9 +332,9 @@
     /* Dual grids */
     .dual-grids {
       display: flex;
+      flex-direction: column;
       gap: 14px;
-      justify-content: center;
-      flex-wrap: wrap;
+      align-items: center;
     }
 
     /* Power-up bar */
@@ -614,7 +614,6 @@
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
     @media (max-width: 480px) {
-      .grid { width: min(42vw, 240px); }
       .dual-grids { gap: 8px; }
       .ship-tray { min-width: 140px; }
     }
