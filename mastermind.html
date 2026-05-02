@@ -600,6 +600,17 @@
       border-color: #7c3aed;
       color: #c4b5fd;
     }
+
+    .ctrl-btn.hard-active {
+      background: #7c2d12;
+      border-color: #ef4444;
+      color: #fca5a5;
+    }
+
+    .hard-mode .palette-color {
+      width: 36px;
+      height: 36px;
+    }
   </style>
 </head>
 <body>
@@ -614,6 +625,7 @@
       <button class="ctrl-btn" id="newBtn">New Game</button>
       <button class="ctrl-btn" id="rulesBtn">Rules</button>
       <button class="ctrl-btn hint-btn" id="hintBtn">Hint</button>
+      <button class="ctrl-btn" id="hardBtn">Hard</button>
       <span class="guess-counter">Guess <strong id="guessNum">1</strong> / 10</span>
     </div>
 
@@ -631,14 +643,7 @@
 
     <div class="bottom-bar">
       <button class="confirm-btn" id="confirmBtn" disabled>Check Guess</button>
-      <div class="palette" id="palette">
-        <button class="palette-color" data-color="0" style="--c:#ef4444" aria-label="Red"></button>
-        <button class="palette-color" data-color="1" style="--c:#f97316" aria-label="Orange"></button>
-        <button class="palette-color" data-color="2" style="--c:#eab308" aria-label="Yellow"></button>
-        <button class="palette-color" data-color="3" style="--c:#22c55e" aria-label="Green"></button>
-        <button class="palette-color" data-color="4" style="--c:#3b82f6" aria-label="Blue"></button>
-        <button class="palette-color" data-color="5" style="--c:#a855f7" aria-label="Purple"></button>
-      </div>
+      <div class="palette" id="palette"></div>
     </div>
 
   </div><!-- /.game-wrapper -->
@@ -716,10 +721,11 @@
   </div>
 
   <script>
-    const COLORS      = ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#a855f7'];
-    const COLOR_NAMES = ['Red','Orange','Yellow','Green','Blue','Purple'];
+    const COLORS      = ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#a855f7','#ec4899','#06b6d4'];
+    const COLOR_NAMES = ['Red','Orange','Yellow','Green','Blue','Purple','Pink','Teal'];
     const CODE_LEN    = 4;
     const MAX_ROWS    = 10;
+    const NORMAL_COLORS = 6;
     const state = {
       secret:       [],
       guesses:      [],
@@ -728,6 +734,7 @@
       selectedSlot: 0,
       gameOver:     false,
       won:          false,
+      hardMode:     false,
     };
 
     // ── Hint analysis ─────────────────────────────────────────
@@ -736,11 +743,12 @@
         return { title: 'Possible codes', samples: [], consistentCount: 0 };
       }
 
+      const n = state.hardMode ? COLORS.length : NORMAL_COLORS;
       const allCodes = [];
-      for (let a = 0; a < 6; a++)
-        for (let b = 0; b < 6; b++)
-          for (let c = 0; c < 6; c++)
-            for (let d = 0; d < 6; d++)
+      for (let a = 0; a < n; a++)
+        for (let b = 0; b < n; b++)
+          for (let c = 0; c < n; c++)
+            for (let d = 0; d < n; d++)
               allCodes.push([a, b, c, d]);
 
       const consistent = allCodes.filter(code =>
@@ -810,6 +818,20 @@
       for (const c of secRem) freq[c]++;
       for (const c of gueRem) { if (freq[c] > 0) { white++; freq[c]--; } }
       return { black, white };
+    }
+
+    // ── Build palette ─────────────────────────────────────────
+    function buildPalette() {
+      paletteEl.innerHTML = '';
+      const count = state.hardMode ? COLORS.length : NORMAL_COLORS;
+      for (let i = 0; i < count; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'palette-color';
+        btn.dataset.color = i;
+        btn.style.setProperty('--c', COLORS[i]);
+        btn.setAttribute('aria-label', COLOR_NAMES[i]);
+        paletteEl.appendChild(btn);
+      }
     }
 
     // ── Build board ───────────────────────────────────────────
@@ -1005,7 +1027,8 @@
 
     // ── Init game ─────────────────────────────────────────────
     function initGame() {
-      state.secret       = Array.from({ length: CODE_LEN }, () => Math.floor(Math.random() * COLORS.length));
+      const numColors = state.hardMode ? COLORS.length : NORMAL_COLORS;
+      state.secret       = Array.from({ length: CODE_LEN }, () => Math.floor(Math.random() * numColors));
       state.guesses      = [];
       state.feedbacks    = [];
       state.currentGuess = [null, null, null, null];
@@ -1030,11 +1053,20 @@
       endOverlay.classList.remove('visible');
       document.querySelector('.bottom-bar').style.display = '';
 
+      const gameWrapper = document.querySelector('.game-wrapper');
+      gameWrapper.classList.toggle('hard-mode', state.hardMode);
+      document.getElementById('hardBtn').classList.toggle('hard-active', state.hardMode);
+
+      buildPalette();
       buildBoard();
     }
 
     // ── Event listeners ───────────────────────────────────────
     document.getElementById('newBtn').addEventListener('click', initGame);
+    document.getElementById('hardBtn').addEventListener('click', () => {
+      state.hardMode = !state.hardMode;
+      initGame();
+    });
     document.getElementById('rulesBtn').addEventListener('click', () => rulesBackdrop.classList.add('visible'));
     document.getElementById('hintBtn').addEventListener('click', showHint);
     document.getElementById('hintClose').addEventListener('click', () => document.getElementById('hintBackdrop').classList.remove('visible'));
