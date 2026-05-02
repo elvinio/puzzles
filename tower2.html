@@ -231,6 +231,11 @@ const GROUND_MARGIN  = 80;
 // World-space Y coordinate of the ground line (rooms use Y increasing downward)
 const WORLD_GROUND_Y = MAX_FLOORS * FLOOR_H + 500; // 2900
 
+// ─── Elevator constants ───────────────────────────────────────────────────────
+const EL_MAX_SPEED  = 2;   // floors per second (cruising)
+const EL_ACCEL      = 4;   // floors per second² (acceleration & braking)
+const EL_DWELL_TIME = 1;   // seconds to wait at each stop
+
 // ─── Sim constants ────────────────────────────────────────────────────────────
 const NUM_SIMS         = 100;
 const SIM_W            = 8;    // px (= CELL_W)
@@ -553,7 +558,7 @@ function placeRoom(type, col, floor) {
   if (type === 'twin_hotel')   { room.variant = Math.floor(Math.random() * 4); room.occupied = true; room.dirty = false; room.infested = false; }
   if (type === 'suite_hotel')  { room.variant = Math.floor(Math.random() * 2); room.occupied = true; room.dirty = false; room.infested = false; }
   if (type === 'carpark_lot')  { room.carVariant = Math.floor(Math.random() * 13) + 2; }
-  if (type === 'elevator')    { room.bottomFloor = floor - 1; room.topFloor = floor; room.floor = floor - 1; room.carFloor = floor - 1; room.carTarget = floor; room.carPassengers = 0; }
+  if (type === 'elevator')    { room.bottomFloor = floor - 1; room.topFloor = floor; room.floor = floor - 1; room.carFloor = floor - 1; room.carTarget = floor - 1; room.carPassengers = 0; room.carVelocity = 0; room.elevState = 'idle'; room.dwellTimer = 0; room.requestQueue = []; room.homerFloor = 0; }
   building.rooms.push(room);
   createRoomSprite(room);
   if (type === 'carpark_ramp') { refreshCarparkRampNeighbors(col, floor); refreshCarparkLotsOnFloor(floor); }
@@ -1604,6 +1609,96 @@ function updateClockButtons() {
   document.getElementById('btn-ff').classList.toggle('active', clockState === 'fast');
 }
 
+// ─── Elevator dispatch ───────────────────────────────────────────────────────
+
+function addElevRequest(room, floor) {
+  const f = Math.max(room.bottomFloor, Math.min(room.topFloor, floor));
+  if (!room.requestQueue.includes(f)) room.requestQueue.push(f);
+}
+
+function _moveElevToTarget(room, dt) {
+  const dir  = Math.sign(room.carTarget - room.carFloor);
+  const dist = Math.abs(room.carTarget - room.carFloor);
+  if (dist === 0) return;
+  // Max speed that still allows stopping at target: v = sqrt(2 * a * dist)
+  const capSpeed   = Math.min(EL_MAX_SPEED, Math.sqrt(2 * EL_ACCEL * dist));
+  const curSpeed   = Math.abs(room.carVelocity);
+  if (curSpeed < capSpeed) {
+    room.carVelocity = Math.min(capSpeed, curSpeed + EL_ACCEL * dt) * dir;
+  } else {
+    room.carVelocity = Math.max(capSpeed, curSpeed - EL_ACCEL * dt) * dir;
+  }
+  room.carFloor += room.carVelocity * dt;
+  // Clamp overshoot
+  if ((dir > 0 && room.carFloor >= room.carTarget) ||
+      (dir < 0 && room.carFloor <= room.carTarget)) {
+    room.carFloor = room.carTarget;
+    room.carVelocity = 0;
+  }
+}
+
+function tickElevator(room, dt) {
+  // Migrate rooms loaded from a save that predate the dispatch system
+  if (!room.elevState) {
+    room.carVelocity  = 0;
+    room.elevState    = 'idle';
+    room.dwellTimer   = 0;
+    room.requestQueue = [];
+    room.homerFloor   = 0;
+    room.carTarget    = room.carFloor;
+  }
+  const parts = elevatorParts.get(room.id);
+  if (!parts || room.topFloor - room.bottomFloor <= 0) return;
+  const home = Math.max(room.bottomFloor, Math.min(room.topFloor, room.homerFloor));
+
+  if (room.elevState === 'idle') {
+    if (room.requestQueue.length > 0) {
+      room.carTarget = room.requestQueue[0];
+      room.elevState = 'moving';
+    } else if (room.carFloor !== home) {
+      room.carTarget = home;
+      room.elevState = 'homing';
+    }
+
+  } else if (room.elevState === 'homing') {
+    // Redirect immediately if a request arrives
+    if (room.requestQueue.length > 0) {
+      room.carTarget = room.requestQueue[0];
+      room.elevState = 'moving';
+    } else {
+      _moveElevToTarget(room, dt);
+      if (room.carFloor === room.carTarget) room.elevState = 'idle';
+    }
+
+  } else if (room.elevState === 'moving') {
+    _moveElevToTarget(room, dt);
+    if (room.carFloor === room.carTarget) {
+      // Arrived — remove this floor from request queue and dwell
+      const idx = room.requestQueue.indexOf(room.carTarget);
+      if (idx >= 0) room.requestQueue.splice(idx, 1);
+      room.dwellTimer = EL_DWELL_TIME;
+      room.elevState  = 'dwelling';
+    }
+
+  } else if (room.elevState === 'dwelling') {
+    room.dwellTimer -= dt;
+    if (room.dwellTimer <= 0) {
+      room.dwellTimer = 0;
+      if (room.requestQueue.length > 0) {
+        room.carTarget = room.requestQueue[0];
+        room.elevState = 'moving';
+      } else if (room.carFloor !== home) {
+        room.carTarget = home;
+        room.elevState = 'homing';
+      } else {
+        room.elevState = 'idle';
+      }
+    }
+  }
+
+  parts.car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H;
+}
+
 // ─── ECS: Sim people ─────────────────────────────────────────────────────────
 
 function simFloorY(floor) {
@@ -1715,6 +1810,7 @@ function tickSims(dt) {
         if (!fq[step.boardFloor]) fq[step.boardFloor] = [];
         fq[step.boardFloor].push(i);
         simElevId[i] = elev.id;
+        addElevRequest(elev, step.boardFloor);
         simState[i] = SIM_STATE.QUEUING;
       } else {
         simX[i] += Math.sign(dx) * SIM_WALK_SPEED * dt;
@@ -1738,8 +1834,9 @@ function tickSims(dt) {
         simX[i] = (elev.col + 4) * CELL_W + qIdx * SIM_W;
         simY[i] = simFloorY(step.boardFloor);
       }
-      if (Math.abs(elev.carFloor - step.boardFloor) < SIM_BOARD_THRESH) {
+      if (elev.elevState === 'dwelling' && elev.carFloor === step.boardFloor) {
         queue.splice(qIdx, 1);
+        addElevRequest(elev, step.exitFloor);
         simState[i] = SIM_STATE.RIDING;
       }
 
@@ -1749,7 +1846,7 @@ function tickSims(dt) {
       if (!elev) { simElevId[i] = -1; simState[i] = SIM_STATE.WAITING; simTimer[i] = 0; continue; }
       simX[i] = elev.col * CELL_W + (4 * CELL_W - SIM_W) / 2;
       simY[i] = WORLD_GROUND_Y - (elev.carFloor + 1) * FLOOR_H + BEAM_H;
-      if (Math.abs(elev.carFloor - step.exitFloor) < SIM_BOARD_THRESH) {
+      if (elev.elevState === 'dwelling' && elev.carFloor === step.exitFloor) {
         simFloor[i] = step.exitFloor;
         simY[i]     = simFloorY(simFloor[i]);
         simX[i]     = (elev.col + 4) * CELL_W;
@@ -1807,23 +1904,9 @@ function gameLoop(ticker) {
 
   // Animate elevator cars
   const dt = ticker.deltaMS / 1000;
-  const EL_SPEED = 2; // floors per second
   for (const room of building.rooms) {
     if (room.type !== 'elevator') continue;
-    const parts = elevatorParts.get(room.id);
-    if (!parts) continue;
-    const range = room.topFloor - room.bottomFloor;
-    if (range <= 0) continue;
-    const diff = room.carTarget - room.carFloor;
-    if (Math.abs(diff) <= EL_SPEED * dt) {
-      room.carFloor = room.carTarget;
-      room.carTarget = room.carFloor <= room.bottomFloor ? room.topFloor :
-                       room.carFloor >= room.topFloor    ? room.bottomFloor :
-                       (Math.random() < 0.5 ? room.bottomFloor : room.topFloor);
-    } else {
-      room.carFloor += Math.sign(diff) * EL_SPEED * dt;
-    }
-    parts.car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H;
+    tickElevator(room, dt);
   }
 
   if (clockState !== 'stopped') tickSims(dt);
