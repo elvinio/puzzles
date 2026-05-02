@@ -231,6 +231,15 @@ const GROUND_MARGIN  = 80;
 // World-space Y coordinate of the ground line (rooms use Y increasing downward)
 const WORLD_GROUND_Y = MAX_FLOORS * FLOOR_H + 500; // 2900
 
+// ─── Sim constants ────────────────────────────────────────────────────────────
+const NUM_SIMS         = 100;
+const SIM_W            = 8;    // px (= CELL_W)
+const SIM_H            = 24;   // px (= ROOM_H)
+const SIM_WALK_SPEED   = 8;    // px/sec horizontal
+const SIM_WAIT_TIME    = 5;    // seconds at destination
+const SIM_BOARD_THRESH = 0.2;  // floors — car must be this close to board/disembark
+const SIM_STATE = { WAITING: 0, WALK_TO_ELEV: 1, QUEUING: 2, RIDING: 3, WALK_TO_DEST: 4 };
+
 const ROOM_DEFS = {
   lobby:  { widthCells: 32, heightFloors: 1, minFloor: 0,    maxFloor: 0,   color: 0x7A6040, label: 'Lobby'  },
   office: { widthCells:  9, heightFloors: 1, minFloor: -MAX_BASEMENT, maxFloor: 999, color: 0x3A6BC4, label: 'Office' },
@@ -341,7 +350,7 @@ const STAR_DATA = Array.from({ length: 280 }, () => ({
 
 // ─── PixiJS scene objects ─────────────────────────────────────────────────────
 let app;
-let skyGraphics, starGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, beamLayer, elevatorLayer, subwayLineLayer, ghostGraphics, labelContainer;
+let skyGraphics, starGraphics, groundGraphics, worldContainer, gridGraphics, roomLayer, beamLayer, elevatorLayer, simLayer, subwayLineLayer, ghostGraphics, labelContainer;
 let subwayLineTilingSprite = null;
 
 const texCache      = {};           // key → PIXI.Texture
@@ -349,7 +358,23 @@ const roomSprites   = new Map();    // roomId → PIXI.Sprite
 const beamSprites   = new Map();    // roomId → PIXI.TilingSprite
 const elevatorParts = new Map();    // roomId → { container, car, motor, spring, shafts[] }
 let   beamTex     = null;
+let   simTex      = null;
 const labelPool   = [];           // pooled PIXI.Text objects
+
+// ─── ECS component arrays (parallel, indexed by simId 0..NUM_SIMS-1) ─────────
+const simX         = new Float32Array(NUM_SIMS);
+const simY         = new Float32Array(NUM_SIMS);
+const simFloor     = new Int16Array(NUM_SIMS);
+const simDestX     = new Float32Array(NUM_SIMS);
+const simDestFloor = new Int16Array(NUM_SIMS);
+const simState     = new Uint8Array(NUM_SIMS);
+const simTimer     = new Float32Array(NUM_SIMS);
+const simElevId    = new Int32Array(NUM_SIMS).fill(-1);
+const simPath      = new Array(NUM_SIMS).fill(null);   // Array<{elevId,boardFloor,exitFloor}>
+const simStep      = new Uint8Array(NUM_SIMS);
+const simSprites   = new Array(NUM_SIMS);
+// Per-elevator-per-floor queue: Map<roomId, { [floor]: simId[] }>
+const elevQueues   = new Map();
 
 let elevatorDragState = null;     // { room, end:'top'|'bottom' }
 
@@ -472,6 +497,8 @@ function canPlace(type, col, floor, widthOverride) {
       if (elevOcc.has(`${c},${floor-1}`) || elevOcc.has(`${c},${floor}`) || elevOcc.has(`${c},${floor+1}`)) return false;
     return true;
   }
+  // Rooms above ground require at least one room on the floor immediately below
+  if (floor > 0 && !building.rooms.some(r => r.type !== 'elevator' && r.floor === floor - 1)) return false;
   // Only one subway allowed
   if (type === 'subway' && building.rooms.some(r => r.type === 'subway')) return false;
   // Carpark ramp must start at B1 or directly below an existing ramp stack
@@ -1503,6 +1530,7 @@ function buildScene() {
   labelContainer = new PIXI.Container();  // screen-space
 
   beamLayer = new PIXI.Container();
+  simLayer = new PIXI.Container();
   elevatorLayer = new PIXI.Container();
   subwayLineLayer = new PIXI.Container();
 
@@ -1520,6 +1548,7 @@ function buildScene() {
   worldContainer.addChild(roomLayer);
   worldContainer.addChild(beamLayer);
   worldContainer.addChild(elevatorLayer);
+  worldContainer.addChild(simLayer);
   worldContainer.addChild(ghostGraphics);
 
   app.stage.addChild(skyGraphics);
@@ -1575,6 +1604,188 @@ function updateClockButtons() {
   document.getElementById('btn-ff').classList.toggle('active', clockState === 'fast');
 }
 
+// ─── ECS: Sim people ─────────────────────────────────────────────────────────
+
+function simFloorY(floor) {
+  return WORLD_GROUND_Y - (floor + 1) * FLOOR_H + BEAM_H;
+}
+
+function pickSimDest(i) {
+  const rooms = building.rooms.filter(r => r.type !== 'elevator');
+  if (rooms.length === 0) { simDestFloor[i] = simFloor[i]; simDestX[i] = simX[i]; return; }
+  const room = rooms[Math.floor(Math.random() * rooms.length)];
+  simDestFloor[i] = room.floor;
+  const w = (room.widthCells ?? ROOM_DEFS[room.type].widthCells) * CELL_W;
+  simDestX[i] = room.col * CELL_W + Math.random() * Math.max(0, w - SIM_W);
+}
+
+function astarPath(startFloor, endFloor) {
+  if (startFloor === endFloor) return [];
+  const gScore   = new Map([[startFloor, 0]]);
+  const fScore   = new Map([[startFloor, Math.abs(endFloor - startFloor)]]);
+  const cameFrom = new Map();
+  const openSet  = [startFloor];
+  while (openSet.length > 0) {
+    openSet.sort((a, b) => (fScore.get(a) ?? Infinity) - (fScore.get(b) ?? Infinity));
+    const current = openSet.shift();
+    if (current === endFloor) {
+      const steps = [];
+      let cur = endFloor;
+      while (cameFrom.has(cur)) {
+        const { fromFloor, elevId } = cameFrom.get(cur);
+        steps.unshift({ elevId, boardFloor: fromFloor, exitFloor: cur });
+        cur = fromFloor;
+      }
+      return steps;
+    }
+    const cg = gScore.get(current) ?? Infinity;
+    for (const r of building.rooms) {
+      if (r.type !== 'elevator') continue;
+      if (r.bottomFloor > current || r.topFloor < current) continue;
+      for (let nb = r.bottomFloor; nb <= r.topFloor; nb++) {
+        if (nb === current) continue;
+        const tg = cg + Math.abs(nb - current);
+        if (tg < (gScore.get(nb) ?? Infinity)) {
+          cameFrom.set(nb, { fromFloor: current, elevId: r.id });
+          gScore.set(nb, tg);
+          fScore.set(nb, tg + Math.abs(endFloor - nb));
+          if (!openSet.includes(nb)) openSet.push(nb);
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function initSims() {
+  const lobby = building.rooms.find(r => r.type === 'lobby');
+  const lobbyW = lobby ? (lobby.widthCells ?? ROOM_DEFS.lobby.widthCells) * CELL_W : GRID_COLS * CELL_W;
+  const lobbyX0 = lobby ? lobby.col * CELL_W : 0;
+  const lobbyY = simFloorY(0);
+  for (let i = 0; i < NUM_SIMS; i++) {
+    simX[i]     = lobbyX0 + Math.random() * Math.max(0, lobbyW - SIM_W);
+    simY[i]     = lobbyY;
+    simFloor[i] = 0;
+    simState[i] = SIM_STATE.WAITING;
+    simTimer[i] = Math.random() * SIM_WAIT_TIME;
+    const sprite = new PIXI.Sprite(simTex);
+    sprite.width  = SIM_W;
+    sprite.height = SIM_H;
+    sprite.x = simX[i];
+    sprite.y = lobbyY;
+    simSprites[i] = sprite;
+    simLayer.addChild(sprite);
+  }
+}
+
+function tickSims(dt) {
+  for (let i = 0; i < NUM_SIMS; i++) {
+    const st = simState[i];
+
+    if (st === SIM_STATE.WAITING) {
+      simTimer[i] -= dt;
+      if (simTimer[i] <= 0) {
+        pickSimDest(i);
+        if (simDestFloor[i] === simFloor[i]) {
+          simPath[i] = []; simStep[i] = 0;
+          simState[i] = SIM_STATE.WALK_TO_DEST;
+        } else {
+          const path = astarPath(simFloor[i], simDestFloor[i]);
+          if (!path || path.length === 0) {
+            simDestFloor[i] = simFloor[i];
+            simPath[i] = []; simStep[i] = 0;
+            simState[i] = SIM_STATE.WALK_TO_DEST;
+          } else {
+            simPath[i] = path; simStep[i] = 0;
+            simState[i] = SIM_STATE.WALK_TO_ELEV;
+          }
+        }
+      }
+
+    } else if (st === SIM_STATE.WALK_TO_ELEV) {
+      const step = simPath[i][simStep[i]];
+      const elev = building.rooms.find(r => r.id === step.elevId);
+      if (!elev) { simState[i] = SIM_STATE.WAITING; simTimer[i] = 0; continue; }
+      const targetX = elev.col * CELL_W - SIM_W;
+      const dx = targetX - simX[i];
+      if (Math.abs(dx) <= SIM_WALK_SPEED * dt) {
+        simX[i] = targetX;
+        if (!elevQueues.has(elev.id)) elevQueues.set(elev.id, {});
+        const fq = elevQueues.get(elev.id);
+        if (!fq[step.boardFloor]) fq[step.boardFloor] = [];
+        fq[step.boardFloor].push(i);
+        simElevId[i] = elev.id;
+        simState[i] = SIM_STATE.QUEUING;
+      } else {
+        simX[i] += Math.sign(dx) * SIM_WALK_SPEED * dt;
+      }
+
+    } else if (st === SIM_STATE.QUEUING) {
+      const step = simPath[i][simStep[i]];
+      const elev = building.rooms.find(r => r.id === simElevId[i]);
+      if (!elev) {
+        const fq = elevQueues.get(simElevId[i]);
+        if (fq && fq[step.boardFloor]) {
+          const idx = fq[step.boardFloor].indexOf(i);
+          if (idx >= 0) fq[step.boardFloor].splice(idx, 1);
+        }
+        simElevId[i] = -1; simState[i] = SIM_STATE.WAITING; simTimer[i] = 0; continue;
+      }
+      const fq = elevQueues.get(elev.id) || {};
+      const queue = fq[step.boardFloor] || [];
+      const qIdx = queue.indexOf(i);
+      if (qIdx >= 0) {
+        simX[i] = (elev.col + 4) * CELL_W + qIdx * SIM_W;
+        simY[i] = simFloorY(step.boardFloor);
+      }
+      if (Math.abs(elev.carFloor - step.boardFloor) < SIM_BOARD_THRESH) {
+        queue.splice(qIdx, 1);
+        simState[i] = SIM_STATE.RIDING;
+      }
+
+    } else if (st === SIM_STATE.RIDING) {
+      const step = simPath[i][simStep[i]];
+      const elev = building.rooms.find(r => r.id === simElevId[i]);
+      if (!elev) { simElevId[i] = -1; simState[i] = SIM_STATE.WAITING; simTimer[i] = 0; continue; }
+      simX[i] = elev.col * CELL_W + (4 * CELL_W - SIM_W) / 2;
+      simY[i] = WORLD_GROUND_Y - (elev.carFloor + 1) * FLOOR_H + BEAM_H;
+      if (Math.abs(elev.carFloor - step.exitFloor) < SIM_BOARD_THRESH) {
+        simFloor[i] = step.exitFloor;
+        simY[i]     = simFloorY(simFloor[i]);
+        simX[i]     = (elev.col + 4) * CELL_W;
+        simElevId[i] = -1;
+        simStep[i]++;
+        simState[i] = (simStep[i] < simPath[i].length) ? SIM_STATE.WALK_TO_ELEV : SIM_STATE.WALK_TO_DEST;
+      }
+
+    } else if (st === SIM_STATE.WALK_TO_DEST) {
+      simY[i] = simFloorY(simFloor[i]);
+      const dx = simDestX[i] - simX[i];
+      if (Math.abs(dx) <= SIM_WALK_SPEED * dt) {
+        simX[i]     = simDestX[i];
+        simState[i] = SIM_STATE.WAITING;
+        simTimer[i] = SIM_WAIT_TIME;
+      } else {
+        simX[i] += Math.sign(dx) * SIM_WALK_SPEED * dt;
+      }
+    }
+
+    simSprites[i].x = simX[i];
+    simSprites[i].y = simY[i];
+  }
+
+  // Update elevator passenger counts
+  for (const r of building.rooms) {
+    if (r.type === 'elevator') r.carPassengers = 0;
+  }
+  for (let i = 0; i < NUM_SIMS; i++) {
+    if (simState[i] === SIM_STATE.RIDING && simElevId[i] >= 0) {
+      const r = building.rooms.find(r => r.id === simElevId[i]);
+      if (r) r.carPassengers++;
+    }
+  }
+}
+
 // ─── Game loop (ticker) ───────────────────────────────────────────────────────
 function gameLoop(ticker) {
   // Advance time: normal = 1 hr/5s, fast = 1 hr/1s
@@ -1614,6 +1825,8 @@ function gameLoop(ticker) {
     }
     parts.car.y = WORLD_GROUND_Y - (room.carFloor + 1) * FLOOR_H;
   }
+
+  if (clockState !== 'stopped') tickSims(dt);
 }
 
 // ─── Error overlay ────────────────────────────────────────────────────────────
@@ -1671,11 +1884,30 @@ function showError(msg) {
       ));
 
     beamTex = beamTexLoaded;
+    simTex  = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const cv = document.createElement('canvas');
+        cv.width = img.width; cv.height = img.height;
+        const cx = cv.getContext('2d', { willReadFrequently: true });
+        cx.drawImage(img, 0, 0);
+        const id = cx.getImageData(0, 0, cv.width, cv.height);
+        const d = id.data;
+        for (let j = 0; j < d.length; j += 4) {
+          if (d[j] > 230 && d[j + 1] > 100 && d[j + 1] < 170 && d[j + 2] > 230) d[j + 3] = 0;
+        }
+        cx.putImageData(id, 0, 0);
+        resolve(PIXI.Texture.from(cv));
+      };
+      img.onerror = reject;
+      img.src = 'tower/sim.png';
+    });
     buildTextureCache({ lobbyGround: lobbyGroundTex, office: officeTex, condo: condoTex, retail: retailTex, hotelSingle: hotelSingleTex, hotelTwin: hotelTwinTex, hotelSuite: hotelSuiteTex, restaurant: restaurantTex, cafe: cafeTex, recycling: recyclingTex, subway: subwayTex, subwayLine: subwayLineTex, housekeeping: housekeepingTex, security: securityTex, carparkRamp: carparkRampTex, basementBg: basementBgTex, carparkLot: carparkLotTex, elevator: elevatorTex });
 
     buildScene();
     buildStarGraphics();
     loadState();
+    initSims();
     refreshVisuals();
 
     attachInput();
