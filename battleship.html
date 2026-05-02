@@ -1244,15 +1244,24 @@
       let hitOccurred = false;
 
       if (type === 'radar') {
+        let found = 0;
         for (let dr = -1; dr <= 1; dr++)
           for (let dc = -1; dc <= 1; dc++) {
             const nr = r+dr, nc = c+dc;
             if (nr>=0&&nr<GRID&&nc>=0&&nc<GRID) {
               const i = idx(nr,nc);
-              S.enemyGrid[i].revealed = true;
+              const rcell = S.enemyGrid[i];
+              if (!rcell.hit) {
+                if (rcell.shipId) {
+                  rcell.revealed = true;  // highlight ship presence
+                  found++;
+                } else {
+                  fireAt(i, S.enemyGrid, S.enemyShips, true);  // mark as miss
+                }
+              }
             }
           }
-        log(`Radar scan at ${coordStr(targetIdx)} — area revealed.`, 'sys');
+        log(`Radar at ${coordStr(targetIdx)} — ${found ? found + ' ship cell(s) detected!' : 'clear waters.'}`, 'sys');
         renderBothGrids();
 
       } else if (type === 'cluster') {
