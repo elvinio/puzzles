@@ -836,6 +836,7 @@
       salvoShotsLeft: 0,
       salvoFired: [],
       inventory: { radar: 0, cluster: 0, torpedo: 0 },
+      aiInventory: { radar: 0, cluster: 0, torpedo: 0 },
       activePowerup: 'none',
       torpedoAxis: null,
       stats: { pShots: 0, pHits: 0, cShots: 0, cHits: 0, t0: 0 },
@@ -1192,10 +1193,11 @@
             log(`Computer sank your ${ship.name}!`, 'sink');
             showSunk(`Your ${ship.name} was sunk!`);
             playSink();
+            if (MODES[S.mode].powerups) awardAIPowerup();
           }
         } else {
           if (byPlayer) { log(`Hit at ${cs}!`, 'hit'); playHit(); if (MODES[S.mode].powerups) awardPowerup(); }
-          else          { log(`Computer hit at ${cs}!`, 'hit'); playHit(); }
+          else          { log(`Computer hit at ${cs}!`, 'hit'); playHit(); if (MODES[S.mode].powerups) awardAIPowerup(); }
         }
         return true;
       } else {
@@ -1215,6 +1217,21 @@
       S.inventory[type]++;
       log(`Power-up earned: ${type}!`, 'sys');
       updatePowerupBar();
+    }
+
+    function awardAIPowerup() {
+      const type = POWERUP_TYPES[Math.floor(Math.random() * POWERUP_TYPES.length)];
+      S.aiInventory[type]++;
+      log(`Computer acquired a power-up!`, 'sys');
+    }
+
+    function hasPowerup(inv) {
+      return POWERUP_TYPES.some(t => inv[t] > 0);
+    }
+
+    function pickRandomPowerup(inv) {
+      const available = POWERUP_TYPES.filter(t => inv[t] > 0);
+      return available[Math.floor(Math.random() * available.length)];
     }
 
     function executePowerup(targetIdx, type) {
@@ -1422,16 +1439,14 @@
       return pool[Math.floor(Math.random() * pool.length)];
     }
 
-    function doComputerShot() {
-      const shotIdx = chooseAIShot();
+    // Fire at a specific cell as the computer, update hunt/target AI state. No render.
+    function aiFireAt(shotIdx) {
       const ai = S.ai, g = S.playerGrid;
-
+      if (g[shotIdx].hit) return false;
       S.stats.cShots++;
       const hit = fireAt(shotIdx, g, S.playerShips, false);
-      if (hit) S.stats.cHits++;
-      renderBothGrids();
-
       if (hit) {
+        S.stats.cHits++;
         const ship = S.playerShips.find(s => s.id === g[shotIdx].shipId);
         if (ship && ship.sunk) {
           ai.hitStack = ai.hitStack.filter(i => g[i].shipId !== ship.id);
@@ -1452,9 +1467,63 @@
           }
         }
       } else {
-        if (ai.mode === 'target' && ai.dir) {
-          ai.dir = null;
-          rebuildAICandidates();
+        if (ai.mode === 'target' && ai.dir) { ai.dir = null; rebuildAICandidates(); }
+      }
+      return hit;
+    }
+
+    function doComputerShot() {
+      aiFireAt(chooseAIShot());
+      renderBothGrids();
+    }
+
+    function executeAIPowerup(type) {
+      S.aiInventory[type]--;
+      const g = S.playerGrid;
+      const labels = { radar: 'Radar', cluster: 'Cluster Bomb', torpedo: 'Torpedo' };
+      log(`Computer used ${labels[type]}!`, 'sys');
+
+      if (type === 'radar') {
+        // Scan 3×3 around chosen cell; discovered ship cells feed into targeting
+        const {r, c} = rc(chooseAIShot());
+        for (let dr = -1; dr <= 1; dr++)
+          for (let dc = -1; dc <= 1; dc++) {
+            const nr = r+dr, nc = c+dc;
+            if (nr>=0&&nr<GRID&&nc>=0&&nc<GRID) {
+              const i = idx(nr,nc);
+              if (g[i].shipId && !g[i].hit && !S.ai.hitStack.includes(i)) {
+                if (S.ai.mode === 'hunt') { S.ai.mode = 'target'; S.ai.firstHit = i; }
+                S.ai.hitStack.push(i);
+                rebuildAICandidates();
+              }
+            }
+          }
+
+      } else if (type === 'cluster') {
+        const {r, c} = rc(chooseAIShot());
+        for (let dr = 0; dr <= 1; dr++)
+          for (let dc = 0; dc <= 1; dc++) {
+            const nr = r+dr, nc = c+dc;
+            if (nr>=0&&nr<GRID&&nc>=0&&nc<GRID) aiFireAt(idx(nr,nc));
+          }
+
+      } else if (type === 'torpedo') {
+        const {r, c} = rc(chooseAIShot());
+        // Align direction with known hit direction when in target mode
+        const dir = S.ai.mode === 'target'
+          ? (S.ai.dir === 'h' ? (Math.random()<0.5?'r':'l')
+           : S.ai.dir === 'v' ? (Math.random()<0.5?'d':'u')
+           : ['r','l','d','u'][Math.floor(Math.random()*4)])
+          : ['r','l','d','u'][Math.floor(Math.random()*4)];
+        const path = [];
+        if (dir==='r') for (let nc=c; nc<GRID; nc++) path.push(idx(r,nc));
+        if (dir==='l') for (let nc=c; nc>=0; nc--) path.push(idx(r,nc));
+        if (dir==='d') for (let nr=r; nr<GRID; nr++) path.push(idx(nr,c));
+        if (dir==='u') for (let nr=r; nr>=0; nr--) path.push(idx(nr,c));
+        for (const i of path) {
+          if (g[i].hit) continue;
+          if (g[i].shipId) { aiFireAt(i); break; }
+          else aiFireAt(i);
         }
       }
     }
@@ -1462,8 +1531,16 @@
     function doComputerTurn() {
       if (S.phase !== 'COMPUTER_TURN') return;
       const mode = MODES[S.mode];
-      const shots = mode.salvo ? countLiving(S.enemyShips) : 1;
 
+      // Always spend a power-up first if one is available
+      if (mode.powerups && hasPowerup(S.aiInventory)) {
+        executeAIPowerup(pickRandomPowerup(S.aiInventory));
+        renderBothGrids();
+        updateHUD();
+        if (checkWin(false)) { endGame('computer'); return; }
+      }
+
+      const shots = mode.salvo ? countLiving(S.enemyShips) : 1;
       let delay = 0;
       for (let i = 0; i < shots; i++) {
         setTimeout(() => {
@@ -1541,7 +1618,8 @@
       S.playerTurn = true;
       S.salvoFired = [];
       S.salvoShotsLeft = 5;
-      S.inventory = { radar: 0, cluster: 0, torpedo: 0 };
+      S.inventory   = { radar: 0, cluster: 0, torpedo: 0 };
+      S.aiInventory = { radar: 0, cluster: 0, torpedo: 0 };
       S.activePowerup = 'none';
       S.torpedoAxis = null;
       S.stats = { pShots: 0, pHits: 0, cShots: 0, cHits: 0, t0: 0 };
