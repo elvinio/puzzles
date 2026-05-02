@@ -695,12 +695,14 @@
       </div>
     </div>
 
-    <!-- Torpedo axis picker (hidden until torpedo is armed) -->
+    <!-- Torpedo direction picker (hidden until torpedo is armed) -->
     <div class="torpedo-pick" id="torpedoPick">
-      <span>Torpedo axis:</span>
-      <button class="axis-btn" data-axis="h">→ Row</button>
-      <button class="axis-btn" data-axis="v">↓ Column</button>
-      <button class="axis-btn" data-axis="cancel" style="border-color:var(--muted);color:var(--muted);">Cancel</button>
+      <span>Fire torpedo:</span>
+      <button class="axis-btn" data-dir="r">→ Right</button>
+      <button class="axis-btn" data-dir="l">← Left</button>
+      <button class="axis-btn" data-dir="d">↓ Down</button>
+      <button class="axis-btn" data-dir="u">↑ Up</button>
+      <button class="axis-btn" data-dir="cancel" style="border-color:var(--muted);color:var(--muted);">Cancel</button>
     </div>
 
     <!-- Dual grids -->
@@ -780,7 +782,7 @@
           <div class="mode-rule-desc">Every confirmed hit earns a random power-up stored in your inventory (max 3 each):<br>
           🔍 <strong>Radar</strong> — reveals a 3×3 area without firing<br>
           💥 <strong>Cluster</strong> — fires at a 2×2 area<br>
-          🚀 <strong>Torpedo</strong> — fires the entire selected row or column (all 15 cells)</div>
+          🚀 <strong>Torpedo</strong> — click a cell, pick a direction (→ ← ↓ ↑). The torpedo travels from that cell, marking misses until it hits a ship — then stops</div>
         </div>
       </div>
       <div class="tab-panel" id="tab-ships">
@@ -1249,15 +1251,28 @@
         renderBothGrids();
 
       } else if (type === 'torpedo') {
-        const axis = S.torpedoAxis || 'h';
+        const dir = S.torpedoAxis || 'r';
         S.torpedoAxis = null;
         hideTorpedoPick();
-        for (let d = 0; d < GRID; d++) {
-          const nr = axis === 'v' ? d : r;
-          const nc = axis === 'h' ? d : c;
-          const i = idx(nr, nc);
-          const h = fireAt(i, S.enemyGrid, S.enemyShips, true);
-          if (h) { S.stats.pHits++; hitOccurred = true; }
+        // Build ordered list of cells from clicked position in chosen direction
+        const path = [];
+        if (dir === 'r') { for (let nc = c; nc < GRID; nc++)  path.push(idx(r, nc)); }
+        if (dir === 'l') { for (let nc = c; nc >= 0; nc--)    path.push(idx(r, nc)); }
+        if (dir === 'd') { for (let nr = r; nr < GRID; nr++)  path.push(idx(nr, c)); }
+        if (dir === 'u') { for (let nr = r; nr >= 0; nr--)    path.push(idx(nr, c)); }
+        for (const i of path) {
+          const tcell = S.enemyGrid[i];
+          if (tcell.hit) continue; // already revealed, torpedo passes through
+          if (tcell.shipId) {
+            // Hit — mark and stop
+            fireAt(i, S.enemyGrid, S.enemyShips, true);
+            S.stats.pHits++;
+            hitOccurred = true;
+            break;
+          } else {
+            // Miss — mark and keep travelling
+            fireAt(i, S.enemyGrid, S.enemyShips, true);
+          }
         }
         renderBothGrids();
       }
@@ -1734,15 +1749,15 @@
     torpedoPickEl.addEventListener('click', e => {
       const btn = e.target.closest('.axis-btn');
       if (!btn) return;
-      const axis = btn.dataset.axis;
-      if (axis === 'cancel') {
+      const dir = btn.dataset.dir;
+      if (dir === 'cancel') {
         S.activePowerup = 'none';
         hideTorpedoPick();
         updatePowerupBar();
         return;
       }
       const targetIdx = parseInt(torpedoPickEl.dataset.target, 10);
-      S.torpedoAxis = axis;
+      S.torpedoAxis = dir;
       hideTorpedoPick();
       executePowerup(targetIdx, 'torpedo');
     });
