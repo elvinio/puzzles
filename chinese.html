@@ -1,30 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Chinese Practice</title>
   <style>
     @font-face {
-  font-family: 'KaiTiRegular';
-  src: url('fonts/KaiTiRegular.ttf') format('truetype');
-}
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      font-family: 'KaiTiRegular';
+      src: url('fonts/KaiTiRegular.ttf') format('truetype');
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
-      --bg:      #13111c;
+      --bg: #13111c;
       --surface: #1c1730;
-      --brd:     #4c1d95;
-      --p:       #6d28d9;
-      --p-lt:    #7c3aed;
-      --p-xl:    #a78bfa;
-      --p-text:  #e2d9f3;
-      --muted:   #7c6fa0;
-      --ok:      #16a34a;
-      --ok-lt:   #22c55e;
-      --err:     #dc2626;
-      --err-lt:  #ef4444;
-      --warn:    #f59e0b;
+      --brd: #4c1d95;
+      --p: #6d28d9;
+      --p-lt: #7c3aed;
+      --p-xl: #a78bfa;
+      --p-text: #e2d9f3;
+      --muted: #7c6fa0;
+      --ok: #16a34a;
+      --ok-lt: #22c55e;
+      --err: #dc2626;
+      --err-lt: #ef4444;
+      --warn: #f59e0b;
     }
 
     body {
@@ -46,7 +54,10 @@
       padding: 12px 16px 40px;
       gap: 12px;
     }
-    .screen.active { display: flex; }
+
+    .screen.active {
+      display: flex;
+    }
 
     /* ── Topbar ── */
     .topbar {
@@ -57,6 +68,7 @@
       justify-content: space-between;
       flex-shrink: 0;
     }
+
     .back-link {
       color: var(--muted);
       text-decoration: none;
@@ -68,7 +80,11 @@
       padding: 0;
       font-family: inherit;
     }
-    .back-link:hover { color: var(--p-xl); }
+
+    .back-link:hover {
+      color: var(--p-xl);
+    }
+
     h1 {
       font-size: clamp(1.1rem, 4vw, 1.6rem);
       font-weight: 900;
@@ -76,7 +92,12 @@
       letter-spacing: 0.04em;
       text-align: center;
     }
-    .topbar-right { min-width: 60px; display: flex; justify-content: flex-end; }
+
+    .topbar-right {
+      min-width: 60px;
+      display: flex;
+      justify-content: flex-end;
+    }
 
     /* ── Section label ── */
     .section-label {
@@ -102,7 +123,12 @@
       /* width: 100%; */
       max-width: 620px;
     }
-    .avatar-chip-name { font-size: 0.95rem; font-weight: 700; }
+
+    .avatar-chip-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
     .no-avatar-warn {
       color: var(--err-lt);
       font-size: 0.85rem;
@@ -119,6 +145,7 @@
       width: 100%;
       max-width: 620px;
     }
+
     .tab {
       padding: 8px 18px;
       border-radius: 20px;
@@ -132,8 +159,17 @@
       transition: all 0.15s;
       touch-action: manipulation;
     }
-    .tab:hover { border-color: var(--p-lt); color: var(--p-text); }
-    .tab.active { background: var(--p); border-color: var(--p-lt); color: #fff; }
+
+    .tab:hover {
+      border-color: var(--p-lt);
+      color: var(--p-text);
+    }
+
+    .tab.active {
+      background: var(--p);
+      border-color: var(--p-lt);
+      color: #fff;
+    }
 
     /* ── Buttons ── */
     .btn {
@@ -148,18 +184,47 @@
       transition: background 0.15s, transform 0.1s;
       touch-action: manipulation;
     }
-    .btn:hover { background: var(--p-lt); }
-    .btn:active { transform: scale(0.97); }
-    .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+    .btn:hover {
+      background: var(--p-lt);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .btn-outline {
       background: transparent;
       border: 2px solid var(--brd);
       color: var(--muted);
     }
-    .btn-outline:hover { border-color: var(--p-lt); color: var(--p-text); background: transparent; }
-    .btn-sm { padding: 8px 18px; font-size: 0.85rem; border-radius: 10px; }
-    .btn-danger { background: var(--err); }
-    .btn-danger:hover { background: var(--err-lt); }
+
+    .btn-outline:hover {
+      border-color: var(--p-lt);
+      color: var(--p-text);
+      background: transparent;
+    }
+
+    .btn-sm {
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      border-radius: 10px;
+    }
+
+    .btn-danger {
+      background: var(--err);
+    }
+
+    .btn-danger:hover {
+      background: var(--err-lt);
+    }
+
     .btn-row {
       display: flex;
       gap: 10px;
@@ -191,11 +256,35 @@
       justify-content: center;
       flex-shrink: 0;
     }
-    .hud-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-    .hud-label { font-size: 0.6rem; font-weight: 800; color: var(--muted); letter-spacing: 0.12em; }
-    .hud-val { font-size: 1.35rem; font-weight: 900; color: var(--p-xl); line-height: 1; }
-    .hud-val.warn { color: var(--warn); }
-    .hud-val.danger { color: var(--err-lt); }
+
+    .hud-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .hud-label {
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+    }
+
+    .hud-val {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--p-xl);
+      line-height: 1;
+    }
+
+    .hud-val.warn {
+      color: var(--warn);
+    }
+
+    .hud-val.danger {
+      color: var(--err-lt);
+    }
 
     .progress-bar-wrap {
       width: 100%;
@@ -206,6 +295,7 @@
       overflow: hidden;
       flex-shrink: 0;
     }
+
     .progress-bar-fill {
       height: 100%;
       background: var(--p-lt);
@@ -225,6 +315,7 @@
       min-height: 120px;
       position: relative;
     }
+
     .source-key {
       position: absolute;
       bottom: 0;
@@ -234,6 +325,7 @@
       font-weight: 400;
       letter-spacing: 0.05em;
     }
+
     .question-type-label {
       font-size: 0.68rem;
       font-weight: 700;
@@ -241,6 +333,7 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
+
     .question-text {
       font-size: clamp(3rem, 14vw, 5.5rem);
       font-weight: 900;
@@ -249,12 +342,14 @@
       text-align: center;
       font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
     }
+
     .question-text.is-pinyin {
       font-size: clamp(2rem, 8vw, 3.5rem);
       color: var(--p-xl);
       letter-spacing: 0.04em;
       font-family: system-ui, -apple-system, sans-serif;
     }
+
     .question-text.is-english {
       font-size: clamp(1.2rem, 5vw, 2rem);
       color: var(--p-xl);
@@ -271,6 +366,7 @@
       max-width: 620px;
       flex-shrink: 0;
     }
+
     .opt-btn {
       padding: 14px 8px;
       border-radius: 14px;
@@ -289,33 +385,47 @@
       line-height: 1;
       font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
     }
+
     .opt-btn.is-pinyin-opt {
       font-size: clamp(1rem, 4vw, 1.5rem);
       font-weight: 700;
       letter-spacing: 0.02em;
       font-family: system-ui, -apple-system, sans-serif;
     }
-    .opt-btn:hover { border-color: var(--p-lt); background: #241a45; }
-    .opt-btn:active { transform: scale(0.96); }
+
+    .opt-btn:hover {
+      border-color: var(--p-lt);
+      background: #241a45;
+    }
+
+    .opt-btn:active {
+      transform: scale(0.96);
+    }
+
     .opt-btn.flash-correct {
       border-color: var(--ok-lt);
       background: #0a2016;
       color: var(--ok-lt);
       pointer-events: none;
     }
+
     .opt-btn.flash-wrong {
       border-color: var(--err-lt);
       background: #1a0a0a;
       color: var(--err-lt);
       pointer-events: none;
     }
+
     .opt-btn.flash-reveal {
       border-color: var(--ok-lt);
       background: #0f2d1a;
       color: var(--ok-lt);
       pointer-events: none;
     }
-    .opt-btn[disabled] { pointer-events: none; }
+
+    .opt-btn[disabled] {
+      pointer-events: none;
+    }
 
     /* ═══════════════════════════════════════
        SUMMARY SCREEN
@@ -328,6 +438,7 @@
       width: 100%;
       max-width: 620px;
     }
+
     .summary-stat {
       display: flex;
       flex-direction: column;
@@ -339,15 +450,29 @@
       min-width: 80px;
       gap: 4px;
     }
+
     .summary-val {
       font-size: 2.2rem;
       font-weight: 900;
       line-height: 1;
       color: var(--p-xl);
     }
-    .summary-val.ok { color: var(--ok-lt); }
-    .summary-val.err { color: var(--err-lt); }
-    .summary-lbl { font-size: 0.62rem; font-weight: 800; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .summary-val.ok {
+      color: var(--ok-lt);
+    }
+
+    .summary-val.err {
+      color: var(--err-lt);
+    }
+
+    .summary-lbl {
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
 
     .result-list {
       width: 100%;
@@ -359,6 +484,7 @@
       max-height: 300px;
       flex-shrink: 0;
     }
+
     .result-item {
       display: flex;
       align-items: center;
@@ -369,13 +495,52 @@
       border-left: 4px solid var(--brd);
       flex-shrink: 0;
     }
-    .result-item.ok { border-left-color: var(--ok-lt); }
-    .result-item.err { border-left-color: var(--err-lt); }
-    .result-char { font-size: 1.6rem; font-weight: 900; flex-shrink: 0; min-width: 32px; text-align: center; font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; cursor: pointer; }
-    .result-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-    .result-pinyin { font-size: 0.82rem; color: var(--p-xl); }
-    .result-english { font-size: 0.75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .result-time { font-size: 0.8rem; color: var(--muted); flex-shrink: 0; text-align: right; }
+
+    .result-item.ok {
+      border-left-color: var(--ok-lt);
+    }
+
+    .result-item.err {
+      border-left-color: var(--err-lt);
+    }
+
+    .result-char {
+      font-size: 1.6rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      min-width: 32px;
+      text-align: center;
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      cursor: pointer;
+    }
+
+    .result-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .result-pinyin {
+      font-size: 0.82rem;
+      color: var(--p-xl);
+    }
+
+    .result-english {
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .result-time {
+      font-size: 0.8rem;
+      color: var(--muted);
+      flex-shrink: 0;
+      text-align: right;
+    }
 
     /* ═══════════════════════════════════════
        STATS SCREEN
@@ -387,6 +552,7 @@
       width: 100%;
       max-width: 720px;
     }
+
     .av-chip {
       display: flex;
       align-items: center;
@@ -402,8 +568,16 @@
       color: var(--muted);
       touch-action: manipulation;
     }
-    .av-chip.active { border-color: var(--p-lt); color: var(--p-text); }
-    .av-chip:hover { border-color: var(--p-lt); color: var(--p-text); }
+
+    .av-chip.active {
+      border-color: var(--p-lt);
+      color: var(--p-text);
+    }
+
+    .av-chip:hover {
+      border-color: var(--p-lt);
+      color: var(--p-text);
+    }
 
     .stats-controls {
       display: flex;
@@ -413,6 +587,7 @@
       width: 100%;
       max-width: 720px;
     }
+
     .sort-select {
       background: var(--surface);
       border: 2px solid var(--brd);
@@ -430,11 +605,13 @@
       overflow-x: auto;
       flex: 1;
     }
+
     .stats-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.83rem;
     }
+
     .stats-table th {
       background: var(--surface);
       color: var(--muted);
@@ -447,33 +624,79 @@
       border-bottom: 2px solid var(--brd);
       white-space: nowrap;
     }
+
     .stats-table td {
       padding: 9px 12px;
-      border-bottom: 1px solid rgba(76,29,149,0.25);
+      border-bottom: 1px solid rgba(76, 29, 149, 0.25);
       color: var(--p-text);
     }
-    .stats-table td.td-char { font-size: 1.4rem; font-weight: 900; font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; cursor: pointer; }
-    .stats-table td.td-pinyin { color: var(--p-xl); }
-    .stats-table td.td-lesson { color: var(--muted); font-size: 0.75rem; }
-    .stats-table td.ok { color: var(--ok-lt); font-weight: 700; }
-    .stats-table td.err { color: var(--err-lt); font-weight: 700; }
-    .stats-table td.warn { color: var(--warn); font-weight: 700; }
-    .stats-table tr:hover td { background: rgba(109,40,217,0.1); }
-    .stats-empty { text-align: center; color: var(--muted); padding: 48px 16px; font-size: 0.9rem; }
-    .stats-count { color: var(--muted); font-size: 0.78rem; align-self: flex-start; width: 100%; max-width: 720px; }
+
+    .stats-table td.td-char {
+      font-size: 1.4rem;
+      font-weight: 900;
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      cursor: pointer;
+    }
+
+    .stats-table td.td-pinyin {
+      color: var(--p-xl);
+    }
+
+    .stats-table td.td-lesson {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .stats-table td.ok {
+      color: var(--ok-lt);
+      font-weight: 700;
+    }
+
+    .stats-table td.err {
+      color: var(--err-lt);
+      font-weight: 700;
+    }
+
+    .stats-table td.warn {
+      color: var(--warn);
+      font-weight: 700;
+    }
+
+    .stats-table tr:hover td {
+      background: rgba(109, 40, 217, 0.1);
+    }
+
+    .stats-empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 48px 16px;
+      font-size: 0.9rem;
+    }
+
+    .stats-count {
+      color: var(--muted);
+      font-size: 0.78rem;
+      align-self: flex-start;
+      width: 100%;
+      max-width: 720px;
+    }
 
     /* ── Character Card Modal ── */
     .char-modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0, 0, 0, 0.75);
       z-index: 900;
       align-items: center;
       justify-content: center;
       padding: 20px;
     }
-    .char-modal-overlay.open { display: flex; }
+
+    .char-modal-overlay.open {
+      display: flex;
+    }
+
     .char-modal {
       background: var(--surface);
       border: 2px solid var(--brd);
@@ -488,10 +711,13 @@
       flex-direction: column;
       gap: 16px;
     }
+
     .char-modal-close {
       position: absolute;
-      top: 12px; right: 14px;
-      background: none; border: none;
+      top: 12px;
+      right: 14px;
+      background: none;
+      border: none;
       color: var(--muted);
       font-size: 1.3rem;
       cursor: pointer;
@@ -500,41 +726,84 @@
       font-family: inherit;
       line-height: 1;
     }
-    .char-modal-close:hover { color: var(--p-text); background: rgba(255,255,255,0.06); }
+
+    .char-modal-close:hover {
+      color: var(--p-text);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
     .char-modal-header {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
       padding-bottom: 16px;
-      border-bottom: 1px solid rgba(76,29,149,0.4);
+      border-bottom: 1px solid rgba(76, 29, 149, 0.4);
     }
+
     .char-modal-big {
       font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
       font-size: 5.5rem;
       line-height: 1;
       color: var(--p-text);
     }
-    .char-modal-pinyin-lg { font-size: 1.4rem; color: var(--p-xl); font-weight: 700; }
-    .char-modal-eng { font-size: 0.9rem; color: var(--muted); font-style: italic; }
-    .char-modal-section { display: flex; flex-direction: column; gap: 8px; }
+
+    .char-modal-pinyin-lg {
+      font-size: 1.4rem;
+      color: var(--p-xl);
+      font-weight: 700;
+    }
+
+    .char-modal-eng {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .char-modal-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
     .char-modal-sec-label {
-      font-size: 0.6rem; font-weight: 800;
-      letter-spacing: 0.14em; color: var(--muted);
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: var(--muted);
       text-transform: uppercase;
     }
-    .char-modal-text { font-size: 0.9rem; color: var(--p-text); line-height: 1.6; }
-    .char-modal-text.zh { font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; font-size: 1rem; }
-    .char-modal-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .char-modal-text {
+      font-size: 0.9rem;
+      color: var(--p-text);
+      line-height: 1.6;
+    }
+
+    .char-modal-text.zh {
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      font-size: 1rem;
+    }
+
+    .char-modal-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
     .char-modal-chip {
-      background: rgba(109,40,217,0.15);
+      background: rgba(109, 40, 217, 0.15);
       border: 1.5px solid var(--brd);
       border-radius: 10px;
       padding: 5px 12px;
       font-size: 0.85rem;
       color: var(--p-text);
     }
-    .char-modal-chip.zh { font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; font-size: 1rem; }
+
+    .char-modal-chip.zh {
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      font-size: 1rem;
+    }
 
     /* ── Browse Screen ── */
     .browse-lesson-tabs {
@@ -544,6 +813,7 @@
       width: 100%;
       max-width: 720px;
     }
+
     .browse-lesson-tab {
       padding: 6px 14px;
       border-radius: 16px;
@@ -557,8 +827,17 @@
       transition: all 0.15s;
       touch-action: manipulation;
     }
-    .browse-lesson-tab:hover { border-color: var(--p-lt); color: var(--p-text); }
-    .browse-lesson-tab.active { background: var(--p); border-color: var(--p-lt); color: #fff; }
+
+    .browse-lesson-tab:hover {
+      border-color: var(--p-lt);
+      color: var(--p-text);
+    }
+
+    .browse-lesson-tab.active {
+      background: var(--p);
+      border-color: var(--p-lt);
+      color: #fff;
+    }
 
     .browse-word-grid {
       width: 100%;
@@ -569,6 +848,7 @@
       overflow-y: auto;
       flex: 1;
     }
+
     .browse-word-card {
       background: var(--surface);
       border: 2px solid var(--brd);
@@ -580,11 +860,41 @@
       cursor: pointer;
       transition: border-color 0.12s;
     }
-    .browse-word-card:hover { border-color: var(--p-lt); }
-    .browse-word-char { font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; font-size: 2rem; font-weight: 900; color: var(--p-text); line-height: 1; }
-    .browse-word-pinyin { font-size: 0.8rem; color: var(--p-xl); font-weight: 700; }
-    .browse-word-eng { font-size: 0.73rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .browse-empty { color: var(--muted); font-size: 0.9rem; text-align: center; padding: 40px; width: 100%; max-width: 720px; }
+
+    .browse-word-card:hover {
+      border-color: var(--p-lt);
+    }
+
+    .browse-word-char {
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--p-text);
+      line-height: 1;
+    }
+
+    .browse-word-pinyin {
+      font-size: 0.8rem;
+      color: var(--p-xl);
+      font-weight: 700;
+    }
+
+    .browse-word-eng {
+      font-size: 0.73rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .browse-empty {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 40px;
+      width: 100%;
+      max-width: 720px;
+    }
 
     /* ── Speaker button ── */
     .speak-btn {
@@ -600,7 +910,11 @@
       flex-shrink: 0;
       color: inherit;
     }
-    .speak-btn:hover { opacity: 1; background: rgba(109,40,217,0.2); }
+
+    .speak-btn:hover {
+      opacity: 1;
+      background: rgba(109, 40, 217, 0.2);
+    }
 
     /* ── Toast ── */
     #toast {
@@ -623,12 +937,29 @@
       max-width: 90vw;
       text-align: center;
     }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
 
     /* ══ Spelling Screen ══ */
-    .sp-subview { display: none; }
-    .sp-subview.sp-active { display: contents; }
-    .sp-test-list { width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 8px; }
+    .sp-subview {
+      display: none;
+    }
+
+    .sp-subview.sp-active {
+      display: contents;
+    }
+
+    .sp-test-list {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
     .sp-test-card {
       background: var(--surface);
       border: 2px solid var(--brd);
@@ -639,14 +970,63 @@
       justify-content: space-between;
       gap: 12px;
     }
-    .sp-test-card-info { flex: 1; cursor: pointer; min-width: 0; }
-    .sp-test-card-info:hover .sp-test-name { color: var(--p-xl); }
-    .sp-test-name { font-size: 1rem; font-weight: 800; color: var(--p-text); transition: color 0.12s; }
-    .sp-test-meta { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
-    .sp-empty { color: var(--muted); font-size: 0.9rem; text-align: center; padding: 40px; width: 100%; max-width: 620px; }
-    .sp-form { width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 14px; }
-    .sp-field { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 620px; }
-    .sp-label { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
+
+    .sp-test-card-info {
+      flex: 1;
+      cursor: pointer;
+      min-width: 0;
+    }
+
+    .sp-test-card-info:hover .sp-test-name {
+      color: var(--p-xl);
+    }
+
+    .sp-test-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--p-text);
+      transition: color 0.12s;
+    }
+
+    .sp-test-meta {
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .sp-empty {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 40px;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .sp-form {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .sp-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .sp-label {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
     .sp-input {
       background: var(--surface);
       border: 2px solid var(--brd);
@@ -658,9 +1038,27 @@
       width: 100%;
       transition: border-color 0.15s;
     }
-    .sp-input:focus { outline: none; border-color: var(--p-lt); }
-    .sp-input::placeholder { color: var(--muted); opacity: 0.6; }
-    .sp-q-num { font-size: 0.68rem; font-weight: 800; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; width: 100%; max-width: 620px; }
+
+    .sp-input:focus {
+      outline: none;
+      border-color: var(--p-lt);
+    }
+
+    .sp-input::placeholder {
+      color: var(--muted);
+      opacity: 0.6;
+    }
+
+    .sp-q-num {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      width: 100%;
+      max-width: 620px;
+    }
+
     .sp-question-card {
       width: 100%;
       max-width: 620px;
@@ -673,32 +1071,75 @@
       gap: 20px;
       flex: 1;
     }
-    .sp-q-audio-row { display: flex; align-items: center; gap: 16px; }
+
+    .sp-q-audio-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
     .sp-q-speaker {
-      width: 60px; height: 60px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background: var(--p);
-      border: none; color: #fff;
+      border: none;
+      color: #fff;
       font-size: 1.6rem;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
       transition: background 0.15s, transform 0.1s;
       touch-action: manipulation;
     }
-    .sp-q-speaker:hover { background: var(--p-lt); }
-    .sp-q-speaker:active { transform: scale(0.93); }
-    .sp-q-hint { font-size: 0.82rem; color: var(--muted); }
+
+    .sp-q-speaker:hover {
+      background: var(--p-lt);
+    }
+
+    .sp-q-speaker:active {
+      transform: scale(0.93);
+    }
+
+    .sp-q-hint {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
     .sp-q-sentence {
       font-size: 1.25rem;
       font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
       color: var(--p-text);
       line-height: 1.8;
     }
-    .sp-blank { color: var(--p-xl); font-style: normal; font-family: system-ui, -apple-system, sans-serif; }
-    .sp-underline { text-decoration: underline; text-underline-offset: 4px; }
-    .sp-bracket { color: var(--muted); font-family: system-ui, -apple-system, sans-serif; font-size: 1rem; }
-    .sp-results-section { width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 8px; }
+
+    .sp-blank {
+      color: var(--p-xl);
+      font-style: normal;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .sp-underline {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .sp-bracket {
+      color: var(--muted);
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 1rem;
+    }
+
+    .sp-results-section {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
     .sp-answer-item {
       background: var(--surface);
       border: 1.5px solid var(--brd);
@@ -708,1054 +1149,1095 @@
       flex-direction: column;
       gap: 4px;
     }
-    .sp-ans-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-    .sp-ans-qnum { font-size: 0.72rem; font-weight: 800; color: var(--muted); min-width: 28px; flex-shrink: 0; }
-    .sp-ans-word { font-size: 1.4rem; font-weight: 900; font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; color: var(--p-text); line-height: 1; }
-    .sp-ans-arrow { font-size: 0.8rem; color: var(--muted); }
-    .sp-ans-pinyin { font-size: 0.9rem; color: var(--p-xl); font-weight: 700; }
-    .sp-ans-sentence { font-size: 0.78rem; color: var(--muted); font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif; margin-top: 2px; }
+
+    .sp-ans-top {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sp-ans-qnum {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--muted);
+      min-width: 28px;
+      flex-shrink: 0;
+    }
+
+    .sp-ans-word {
+      font-size: 1.4rem;
+      font-weight: 900;
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      color: var(--p-text);
+      line-height: 1;
+    }
+
+    .sp-ans-arrow {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .sp-ans-pinyin {
+      font-size: 0.9rem;
+      color: var(--p-xl);
+      font-weight: 700;
+    }
+
+    .sp-ans-sentence {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      margin-top: 2px;
+    }
   </style>
 </head>
+
 <body>
 
-<!-- ═══════════════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════
      SCREEN: SETUP
 ════════════════════════════════════════════════ -->
-<div id="screen-setup" class="screen active">
-  <div class="topbar">
-    <a class="back-link" href="index.html">← Games</a>
-    <h1>Chinese Practice</h1>
-    <div class="topbar-right" style="display:flex;gap:6px">
-      <a class="btn btn-outline btn-sm" href="chinese-cards.html">Cards</a>
-      <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
-      <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
-      <button class="btn btn-outline btn-sm" id="setup-spelling-btn">默写</button>
-    </div>
-  </div>
-
-  <!-- Avatar -->
-  <div class="avatar-chip" id="setup-avatar-chip" style="display:none">
-    <div id="setup-avatar-svg"></div>
-    <span class="avatar-chip-name" id="setup-avatar-name"></span>
-  </div>
-  <div class="no-avatar-warn" id="setup-no-avatar" style="display:none">
-    No avatar selected — <a href="avatar.html" style="color:var(--p-xl)">create one first</a>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- Level -->
-  <div class="section-label">Level</div>
-  <div class="tab-row" id="setup-level-tabs">
-    <button class="tab active" data-level="p1">Primary 1</button>
-    <button class="tab" data-level="p2">Primary 2</button>
-    <button class="tab" data-level="p3">Primary 3</button>
-  </div>
-
-  <!-- Lessons -->
-  <div class="section-label">Lessons (up to)</div>
-  <div class="tab-row" id="setup-lesson-tabs">
-    <button class="tab active" data-max="3">L1–3</button>
-    <button class="tab" data-max="6">L1–6</button>
-    <button class="tab" data-max="8">L1–8</button>
-    <button class="tab" data-max="12">L1–12</button>
-    <button class="tab" data-max="15">L1–15</button>
-    <button class="tab" data-max="19">L1–19</button>
-    <button class="tab" data-max="test">Test</button>
-  </div>
-
-  <!-- Test mode -->
-  <div class="section-label">Test Mode</div>
-  <div class="tab-row" id="setup-mode-tabs">
-    <button class="tab active" data-mode="pinyin-chinese">Pinyin → 汉字</button>
-    <button class="tab" data-mode="chinese-pinyin">汉字 → Pinyin</button>
-    <button class="tab" data-mode="english-chinese">English → 汉字</button>
-    <button class="tab" data-mode="word-fill">词语</button>
-    <button class="tab" data-mode="mix">Mix All</button>
-  </div>
-
-  <div class="divider"></div>
-  <button class="btn" id="setup-start" style="width:100%;max-width:620px">▶ Start Practice</button>
-</div>
-
-<!-- ═══════════════════════════════════════════════
-     SCREEN: SPELLING
-════════════════════════════════════════════════ -->
-<div id="screen-spelling" class="screen">
-
-  <!-- Sub-view: list -->
-  <div id="sp-list-view" class="sp-subview sp-active">
+  <div id="screen-setup" class="screen active">
     <div class="topbar">
-      <button class="back-link" id="sp-back-to-setup">← Back</button>
-      <h1>默写 Spelling</h1>
-      <div class="topbar-right">
-        <button class="btn btn-sm" id="sp-new-btn">＋ New</button>
+      <a class="back-link" href="index.html">← Games</a>
+      <h1>Chinese Practice</h1>
+      <div class="topbar-right" style="display:flex;gap:6px">
+        <a class="btn btn-outline btn-sm" href="chinese-cards.html">Cards</a>
+        <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
+        <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
+        <button class="btn btn-outline btn-sm" id="setup-spelling-btn">默写</button>
       </div>
     </div>
-    <div id="sp-test-list" class="sp-test-list"></div>
-  </div>
 
-  <!-- Sub-view: create form -->
-  <div id="sp-create-view" class="sp-subview">
-    <div class="topbar">
-      <button class="back-link" id="sp-form-back">← Back</button>
-      <h1>New Test</h1>
-      <div class="topbar-right"></div>
+    <!-- Avatar -->
+    <div class="avatar-chip" id="setup-avatar-chip" style="display:none">
+      <div id="setup-avatar-svg"></div>
+      <span class="avatar-chip-name" id="setup-avatar-name"></span>
     </div>
-    <div class="sp-form">
-      <div class="sp-field">
-        <div class="sp-label">Level</div>
-        <div class="tab-row" id="sp-level-tabs">
-          <button class="tab active" data-level="p1">Primary 1</button>
-          <button class="tab" data-level="p2">Primary 2</button>
-          <button class="tab" data-level="p3">Primary 3</button>
-        </div>
-      </div>
-      <div class="sp-field">
-        <label class="sp-label" for="sp-name-input">Test Name</label>
-        <input class="sp-input" id="sp-name-input" type="text" placeholder="e.g. Week 3 Spelling">
-      </div>
-      <div class="sp-field">
-        <label class="sp-label" for="sp-writing-input">Writing Test Words</label>
-        <div style="font-size:0.72rem;color:var(--muted)">Comma-separated — audio plays, user writes the characters</div>
-        <input class="sp-input" id="sp-writing-input" type="text" placeholder="e.g. 天气,月亮,衣服">
-      </div>
-      <div class="sp-field">
-        <label class="sp-label" for="sp-pinyin-input">Pinyin Test Words</label>
-        <div style="font-size:0.72rem;color:var(--muted)">Comma-separated — sentence shown, user writes the pinyin</div>
-        <input class="sp-input" id="sp-pinyin-input" type="text" placeholder="e.g. 衣,鱼,雨">
-      </div>
-      <button class="btn" id="sp-save-btn" style="width:100%">Save Test</button>
+    <div class="no-avatar-warn" id="setup-no-avatar" style="display:none">
+      No avatar selected — <a href="avatar.html" style="color:var(--p-xl)">create one first</a>
     </div>
-  </div>
 
-  <!-- Sub-view: active test -->
-  <div id="sp-test-view" class="sp-subview">
-    <div class="topbar">
-      <button class="back-link" id="sp-test-end-btn">✕ End</button>
-      <h1 id="sp-test-title">Spelling</h1>
-      <div class="topbar-right"></div>
-    </div>
-    <div class="sp-q-num" id="sp-progress-label"></div>
-    <div class="sp-question-card" id="sp-question-card"></div>
-    <div class="btn-row" style="width:100%;max-width:620px">
-      <button class="btn" id="sp-next-btn" style="width:100%">Next →</button>
-    </div>
-  </div>
+    <div class="divider"></div>
 
-  <!-- Sub-view: results -->
-  <div id="sp-results-view" class="sp-subview">
-    <div class="topbar">
-      <div style="width:60px"></div>
-      <h1>Answers</h1>
-      <div style="width:60px"></div>
-    </div>
-    <div id="sp-results-content" style="width:100%;max-width:620px;display:flex;flex-direction:column;gap:16px"></div>
-    <div class="btn-row" style="width:100%;max-width:620px;margin-top:8px">
-      <button class="btn btn-outline" id="sp-results-back-btn" style="width:100%">← Back to Tests</button>
-    </div>
-  </div>
-
-</div>
-
-<!-- ═══════════════════════════════════════════════
-     SCREEN: GAME
-════════════════════════════════════════════════ -->
-<div id="screen-game" class="screen">
-  <div class="topbar">
-    <div style="width:60px"></div>
-    <h1>Chinese Practice</h1>
-    <div class="topbar-right">
-      <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
-    </div>
-  </div>
-
-  <div class="hud">
-    <div class="hud-cell">
-      <div class="hud-label">REMAINING</div>
-      <div class="hud-val" id="hud-timer">—</div>
-    </div>
-    <div class="hud-cell">
-      <div class="hud-label">CARD</div>
-      <div class="hud-val" id="hud-card">—</div>
-    </div>
-    <div class="hud-cell">
-      <div class="hud-label">CORRECT</div>
-      <div class="hud-val ok" id="hud-correct">0</div>
-    </div>
-    <div class="hud-cell">
-      <div class="hud-label">WRONG</div>
-      <div class="hud-val" style="color:var(--err-lt)" id="hud-wrong">0</div>
-    </div>
-  </div>
-
-  <div class="progress-bar-wrap">
-    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
-  </div>
-
-  <div class="question-wrap" id="question-wrap">
-    <div class="question-type-label" id="question-type-label"></div>
-    <div class="question-text" id="question-text"></div>
-  </div>
-
-  <div class="options-grid" id="options-grid"></div>
-
-  <div class="btn-row" id="continue-row" style="display:none">
-    <button class="btn" id="continue-btn">Continue →</button>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════
-     SCREEN: SUMMARY
-════════════════════════════════════════════════ -->
-<div id="screen-summary" class="screen">
-  <div class="topbar">
-    <div style="width:60px"></div>
-    <h1>Session Complete</h1>
-    <div style="width:60px"></div>
-  </div>
-
-  <div class="summary-stats">
-    <div class="summary-stat">
-      <div class="summary-val ok" id="summary-correct">0</div>
-      <div class="summary-lbl">Correct</div>
-    </div>
-    <div class="summary-stat">
-      <div class="summary-val err" id="summary-wrong">0</div>
-      <div class="summary-lbl">Wrong</div>
-    </div>
-    <div class="summary-stat">
-      <div class="summary-val" id="summary-time">0:00</div>
-      <div class="summary-lbl">Time</div>
-    </div>
-  </div>
-
-  <div class="result-list" id="summary-result-list"></div>
-
-  <div class="btn-row">
-    <button class="btn" id="summary-again-btn">Play Again</button>
-    <button class="btn btn-outline" id="summary-setup-btn">Change Settings</button>
-    <button class="btn btn-outline" id="summary-stats-btn">View Stats</button>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════
-     SCREEN: STATS
-════════════════════════════════════════════════ -->
-<div id="screen-stats" class="screen">
-  <div class="topbar">
-    <button class="back-link" id="stats-back-btn">← Back</button>
-    <h1>Stats</h1>
-    <div style="width:60px"></div>
-  </div>
-
-  <div class="section-label">Player</div>
-  <div class="av-chips" id="stats-av-chips"></div>
-
-  <div class="stats-controls">
-    <div class="tab-row" id="stats-level-tabs" style="flex:1">
+    <!-- Level -->
+    <div class="section-label">Level</div>
+    <div class="tab-row" id="setup-level-tabs">
       <button class="tab active" data-level="p1">Primary 1</button>
       <button class="tab" data-level="p2">Primary 2</button>
       <button class="tab" data-level="p3">Primary 3</button>
     </div>
-    <select class="sort-select" id="stats-sort">
-      <option value="wrong">Most Wrong</option>
-      <option value="time">Slowest</option>
-      <option value="due">Next Due</option>
-      <option value="lesson">By Lesson</option>
-    </select>
+
+    <!-- Lessons -->
+    <div class="section-label">Lessons</div>
+    <div class="tab-row" id="setup-lesson-tabs">
+      <button class="tab active" data-min="1" data-max="3">L1–3</button>
+      <button class="tab" data-min="4" data-max="6">L4–6</button>
+      <button class="tab" data-min="8" data-max="8">L7–8</button>
+      <button class="tab" data-min="9" data-max="12">L9–12</button>
+      <button class="tab" data-min="13" data-max="15">L13–15</button>
+      <button class="tab" data-min="16" data-max="19">L16–19</button>
+      <button class="tab" data-max="test">Test</button>
+    </div>
+
+    <!-- Test mode -->
+    <div class="section-label">Test Mode</div>
+    <div class="tab-row" id="setup-mode-tabs">
+      <button class="tab active" data-mode="pinyin-chinese">Pinyin → 汉字</button>
+      <button class="tab" data-mode="chinese-pinyin">汉字 → Pinyin</button>
+      <button class="tab" data-mode="english-chinese">English → 汉字</button>
+      <button class="tab" data-mode="word-fill">词语</button>
+      <button class="tab" data-mode="mix">Mix All</button>
+    </div>
+
+    <div class="divider"></div>
+    <button class="btn" id="setup-start" style="width:100%;max-width:620px">▶ Start Practice</button>
   </div>
 
-  <div class="stats-count" id="stats-count"></div>
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: SPELLING
+════════════════════════════════════════════════ -->
+  <div id="screen-spelling" class="screen">
 
-  <div class="stats-table-wrap">
-    <table class="stats-table">
-      <thead>
-        <tr>
-          <th>Char</th>
-          <th>Pinyin</th>
-          <th>English</th>
-          <th>Lesson</th>
-          <th>✓</th>
-          <th>✗</th>
-          <th>Avg Time</th>
-          <th>Next Review</th>
-        </tr>
-      </thead>
-      <tbody id="stats-tbody"></tbody>
-    </table>
+    <!-- Sub-view: list -->
+    <div id="sp-list-view" class="sp-subview sp-active">
+      <div class="topbar">
+        <button class="back-link" id="sp-back-to-setup">← Back</button>
+        <h1>默写 Spelling</h1>
+        <div class="topbar-right">
+          <button class="btn btn-sm" id="sp-new-btn">＋ New</button>
+        </div>
+      </div>
+      <div id="sp-test-list" class="sp-test-list"></div>
+    </div>
+
+    <!-- Sub-view: create form -->
+    <div id="sp-create-view" class="sp-subview">
+      <div class="topbar">
+        <button class="back-link" id="sp-form-back">← Back</button>
+        <h1>New Test</h1>
+        <div class="topbar-right"></div>
+      </div>
+      <div class="sp-form">
+        <div class="sp-field">
+          <div class="sp-label">Level</div>
+          <div class="tab-row" id="sp-level-tabs">
+            <button class="tab active" data-level="p1">Primary 1</button>
+            <button class="tab" data-level="p2">Primary 2</button>
+            <button class="tab" data-level="p3">Primary 3</button>
+          </div>
+        </div>
+        <div class="sp-field">
+          <label class="sp-label" for="sp-name-input">Test Name</label>
+          <input class="sp-input" id="sp-name-input" type="text" placeholder="e.g. Week 3 Spelling">
+        </div>
+        <div class="sp-field">
+          <label class="sp-label" for="sp-writing-input">Writing Test Words</label>
+          <div style="font-size:0.72rem;color:var(--muted)">Comma-separated — audio plays, user writes the characters
+          </div>
+          <input class="sp-input" id="sp-writing-input" type="text" placeholder="e.g. 天气,月亮,衣服">
+        </div>
+        <div class="sp-field">
+          <label class="sp-label" for="sp-pinyin-input">Pinyin Test Words</label>
+          <div style="font-size:0.72rem;color:var(--muted)">Comma-separated — sentence shown, user writes the pinyin
+          </div>
+          <input class="sp-input" id="sp-pinyin-input" type="text" placeholder="e.g. 衣,鱼,雨">
+        </div>
+        <button class="btn" id="sp-save-btn" style="width:100%">Save Test</button>
+      </div>
+    </div>
+
+    <!-- Sub-view: active test -->
+    <div id="sp-test-view" class="sp-subview">
+      <div class="topbar">
+        <button class="back-link" id="sp-test-end-btn">✕ End</button>
+        <h1 id="sp-test-title">Spelling</h1>
+        <div class="topbar-right"></div>
+      </div>
+      <div class="sp-q-num" id="sp-progress-label"></div>
+      <div class="sp-question-card" id="sp-question-card"></div>
+      <div class="btn-row" style="width:100%;max-width:620px">
+        <button class="btn" id="sp-next-btn" style="width:100%">Next →</button>
+      </div>
+    </div>
+
+    <!-- Sub-view: results -->
+    <div id="sp-results-view" class="sp-subview">
+      <div class="topbar">
+        <div style="width:60px"></div>
+        <h1>Answers</h1>
+        <div style="width:60px"></div>
+      </div>
+      <div id="sp-results-content" style="width:100%;max-width:620px;display:flex;flex-direction:column;gap:16px"></div>
+      <div class="btn-row" style="width:100%;max-width:620px;margin-top:8px">
+        <button class="btn btn-outline" id="sp-results-back-btn" style="width:100%">← Back to Tests</button>
+      </div>
+    </div>
+
   </div>
-</div>
 
-<!-- ═══════════════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: GAME
+════════════════════════════════════════════════ -->
+  <div id="screen-game" class="screen">
+    <div class="topbar">
+      <div style="width:60px"></div>
+      <h1>Chinese Practice</h1>
+      <div class="topbar-right">
+        <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-cell">
+        <div class="hud-label">REMAINING</div>
+        <div class="hud-val" id="hud-timer">—</div>
+      </div>
+      <div class="hud-cell">
+        <div class="hud-label">CARD</div>
+        <div class="hud-val" id="hud-card">—</div>
+      </div>
+      <div class="hud-cell">
+        <div class="hud-label">CORRECT</div>
+        <div class="hud-val ok" id="hud-correct">0</div>
+      </div>
+      <div class="hud-cell">
+        <div class="hud-label">WRONG</div>
+        <div class="hud-val" style="color:var(--err-lt)" id="hud-wrong">0</div>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+
+    <div class="question-wrap" id="question-wrap">
+      <div class="question-type-label" id="question-type-label"></div>
+      <div class="question-text" id="question-text"></div>
+    </div>
+
+    <div class="options-grid" id="options-grid"></div>
+
+    <div class="btn-row" id="continue-row" style="display:none">
+      <button class="btn" id="continue-btn">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: SUMMARY
+════════════════════════════════════════════════ -->
+  <div id="screen-summary" class="screen">
+    <div class="topbar">
+      <div style="width:60px"></div>
+      <h1>Session Complete</h1>
+      <div style="width:60px"></div>
+    </div>
+
+    <div class="summary-stats">
+      <div class="summary-stat">
+        <div class="summary-val ok" id="summary-correct">0</div>
+        <div class="summary-lbl">Correct</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-val err" id="summary-wrong">0</div>
+        <div class="summary-lbl">Wrong</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-val" id="summary-time">0:00</div>
+        <div class="summary-lbl">Time</div>
+      </div>
+    </div>
+
+    <div class="result-list" id="summary-result-list"></div>
+
+    <div class="btn-row">
+      <button class="btn" id="summary-again-btn">Play Again</button>
+      <button class="btn btn-outline" id="summary-setup-btn">Change Settings</button>
+      <button class="btn btn-outline" id="summary-stats-btn">View Stats</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: STATS
+════════════════════════════════════════════════ -->
+  <div id="screen-stats" class="screen">
+    <div class="topbar">
+      <button class="back-link" id="stats-back-btn">← Back</button>
+      <h1>Stats</h1>
+      <div style="width:60px"></div>
+    </div>
+
+    <div class="section-label">Player</div>
+    <div class="av-chips" id="stats-av-chips"></div>
+
+    <div class="stats-controls">
+      <div class="tab-row" id="stats-level-tabs" style="flex:1">
+        <button class="tab active" data-level="p1">Primary 1</button>
+        <button class="tab" data-level="p2">Primary 2</button>
+        <button class="tab" data-level="p3">Primary 3</button>
+      </div>
+      <select class="sort-select" id="stats-sort">
+        <option value="wrong">Most Wrong</option>
+        <option value="time">Slowest</option>
+        <option value="due">Next Due</option>
+        <option value="lesson">By Lesson</option>
+      </select>
+    </div>
+
+    <div class="stats-count" id="stats-count"></div>
+
+    <div class="stats-table-wrap">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Char</th>
+            <th>Pinyin</th>
+            <th>English</th>
+            <th>Lesson</th>
+            <th>✓</th>
+            <th>✗</th>
+            <th>Avg Time</th>
+            <th>Next Review</th>
+          </tr>
+        </thead>
+        <tbody id="stats-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
      SCREEN: BROWSE BY LESSON
 ════════════════════════════════════════════════ -->
-<div id="screen-browse" class="screen">
-  <div class="topbar">
-    <button class="back-link" id="browse-back-btn">← Back</button>
-    <h1>Browse Words</h1>
-    <div style="width:60px"></div>
+  <div id="screen-browse" class="screen">
+    <div class="topbar">
+      <button class="back-link" id="browse-back-btn">← Back</button>
+      <h1>Browse Words</h1>
+      <div style="width:60px"></div>
+    </div>
+
+    <div class="section-label">Level</div>
+    <div class="tab-row" id="browse-level-tabs">
+      <button class="tab active" data-level="p1">Primary 1</button>
+      <button class="tab" data-level="p2">Primary 2</button>
+      <button class="tab" data-level="p3">Primary 3</button>
+    </div>
+
+    <div class="section-label">Lesson</div>
+    <div class="browse-lesson-tabs" id="browse-lesson-tabs"></div>
+
+    <div class="browse-word-grid" id="browse-word-grid"></div>
   </div>
 
-  <div class="section-label">Level</div>
-  <div class="tab-row" id="browse-level-tabs">
-    <button class="tab active" data-level="p1">Primary 1</button>
-    <button class="tab" data-level="p2">Primary 2</button>
-    <button class="tab" data-level="p3">Primary 3</button>
-  </div>
-
-  <div class="section-label">Lesson</div>
-  <div class="browse-lesson-tabs" id="browse-lesson-tabs"></div>
-
-  <div class="browse-word-grid" id="browse-word-grid"></div>
-</div>
-
-<!-- Character Card Modal -->
-<div id="char-modal" class="char-modal-overlay">
-  <div class="char-modal">
-    <button class="char-modal-close" id="cm-close">✕</button>
-    <div class="char-modal-header">
-      <div class="char-modal-big" id="cm-char"></div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <div class="char-modal-pinyin-lg" id="cm-pinyin"></div>
-        <button class="speak-btn" id="cm-speak-btn" title="Listen">🔊</button>
+  <!-- Character Card Modal -->
+  <div id="char-modal" class="char-modal-overlay">
+    <div class="char-modal">
+      <button class="char-modal-close" id="cm-close">✕</button>
+      <div class="char-modal-header">
+        <div class="char-modal-big" id="cm-char"></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="char-modal-pinyin-lg" id="cm-pinyin"></div>
+          <button class="speak-btn" id="cm-speak-btn" title="Listen">🔊</button>
+        </div>
+        <div class="char-modal-eng" id="cm-eng"></div>
       </div>
-      <div class="char-modal-eng" id="cm-eng"></div>
-    </div>
-    <div class="char-modal-section">
-      <div class="char-modal-sec-label">Definition</div>
-      <div class="char-modal-text" id="cm-def-en"></div>
-      <div class="char-modal-text zh" id="cm-def-zh"></div>
-    </div>
-    <div class="char-modal-section">
-      <div class="char-modal-sec-label">Words</div>
-      <div class="char-modal-chips" id="cm-words"></div>
-    </div>
-    <div class="char-modal-section">
-      <div class="char-modal-sec-label">Same Sound</div>
-      <div class="char-modal-chips" id="cm-same"></div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Definition</div>
+        <div class="char-modal-text" id="cm-def-en"></div>
+        <div class="char-modal-text zh" id="cm-def-zh"></div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Words</div>
+        <div class="char-modal-chips" id="cm-words"></div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Same Sound</div>
+        <div class="char-modal-chips" id="cm-same"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="toast"></div>
+  <div id="toast"></div>
 
-<script src="avatar.js"></script>
-<script>
-'use strict';
+  <script src="avatar.js"></script>
+  <script>
+    'use strict';
 
-// ═══════════════════════════════════════════════════════════════
-// EDITABLE CONFIG
-// ═══════════════════════════════════════════════════════════════
-const SESSION_CONFIG = {
-  p1: { cards: 10, minutes: 6 },
-  p2: { cards: 12, minutes: 8 },
-  p3: { cards: 15, minutes: 10 },
-};
-const LESSON_GROUPS = [3, 6, 9, 12, 15, 19];
+    // ═══════════════════════════════════════════════════════════════
+    // EDITABLE CONFIG
+    // ═══════════════════════════════════════════════════════════════
+    const SESSION_CONFIG = {
+      p1: { cards: 10, minutes: 6 },
+      p2: { cards: 12, minutes: 8 },
+      p3: { cards: 15, minutes: 10 },
+    };
+    const LESSON_GROUPS = [3, 6, 9, 12, 15, 19];
 
-// ═══════════════════════════════════════════════════════════════
-// PINYIN UTILITIES
-// ═══════════════════════════════════════════════════════════════
-const TONED_TO_BASE = {
-  'ā':'a','á':'a','ǎ':'a','à':'a',
-  'ē':'e','é':'e','ě':'e','è':'e',
-  'ī':'i','í':'i','ǐ':'i','ì':'i',
-  'ō':'o','ó':'o','ǒ':'o','ò':'o',
-  'ū':'u','ú':'u','ǔ':'u','ù':'u',
-  'ǖ':'ü','ǘ':'ü','ǚ':'ü','ǜ':'ü',
-};
-const BASE_TO_TONES = {
-  a: ['ā','á','ǎ','à'],
-  e: ['ē','é','ě','è'],
-  i: ['ī','í','ǐ','ì'],
-  o: ['ō','ó','ǒ','ò'],
-  u: ['ū','ú','ǔ','ù'],
-  ü: ['ǖ','ǘ','ǚ','ǜ'],
-};
-const TONE_NUMBER = {
-  'ā':1,'á':2,'ǎ':3,'à':4,
-  'ē':1,'é':2,'ě':3,'è':4,
-  'ī':1,'í':2,'ǐ':3,'ì':4,
-  'ō':1,'ó':2,'ǒ':3,'ò':4,
-  'ū':1,'ú':2,'ǔ':3,'ù':4,
-  'ǖ':1,'ǘ':2,'ǚ':3,'ǜ':4,
-};
-// Phonetically similar finals for distractor generation
-const SIMILAR_FINALS = {
-  an:['ang','en','uan'], ang:['an','eng','uang'],
-  en:['an','eng','in'],  eng:['en','ang','ing'],
-  in:['ing','en'],       ing:['in','eng'],
-  un:['ong','en'],       ong:['un','eng'],
-  ian:['iang','an'],     iang:['ian','ang'],
-  uan:['an','uang'],     uang:['uan','ang'],
-  ie:['e','ue'],         ue:['ie','e'],
-  ao:['ou','iao'],       ou:['ao','iou'],
-  iao:['ao','iou'],      iou:['iao','ou'],
-  ai:['ei','uai'],       ei:['ai'],
-  uai:['ai','ui'],       ui:['ei'],
-  i:['ü','u'],           u:['ü','i'],
-  ü:['u','i'],
-};
-const INITIALS = ['zh','ch','sh','b','p','m','f','d','t','n','l','g','k','h','j','q','x','r','z','c','s','y','w'];
+    // ═══════════════════════════════════════════════════════════════
+    // PINYIN UTILITIES
+    // ═══════════════════════════════════════════════════════════════
+    const TONED_TO_BASE = {
+      'ā': 'a', 'á': 'a', 'ǎ': 'a', 'à': 'a',
+      'ē': 'e', 'é': 'e', 'ě': 'e', 'è': 'e',
+      'ī': 'i', 'í': 'i', 'ǐ': 'i', 'ì': 'i',
+      'ō': 'o', 'ó': 'o', 'ǒ': 'o', 'ò': 'o',
+      'ū': 'u', 'ú': 'u', 'ǔ': 'u', 'ù': 'u',
+      'ǖ': 'ü', 'ǘ': 'ü', 'ǚ': 'ü', 'ǜ': 'ü',
+    };
+    const BASE_TO_TONES = {
+      a: ['ā', 'á', 'ǎ', 'à'],
+      e: ['ē', 'é', 'ě', 'è'],
+      i: ['ī', 'í', 'ǐ', 'ì'],
+      o: ['ō', 'ó', 'ǒ', 'ò'],
+      u: ['ū', 'ú', 'ǔ', 'ù'],
+      ü: ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
+    };
+    const TONE_NUMBER = {
+      'ā': 1, 'á': 2, 'ǎ': 3, 'à': 4,
+      'ē': 1, 'é': 2, 'ě': 3, 'è': 4,
+      'ī': 1, 'í': 2, 'ǐ': 3, 'ì': 4,
+      'ō': 1, 'ó': 2, 'ǒ': 3, 'ò': 4,
+      'ū': 1, 'ú': 2, 'ǔ': 3, 'ù': 4,
+      'ǖ': 1, 'ǘ': 2, 'ǚ': 3, 'ǜ': 4,
+    };
+    // Phonetically similar finals for distractor generation
+    const SIMILAR_FINALS = {
+      an: ['ang', 'en', 'uan'], ang: ['an', 'eng', 'uang'],
+      en: ['an', 'eng', 'in'], eng: ['en', 'ang', 'ing'],
+      in: ['ing', 'en'], ing: ['in', 'eng'],
+      un: ['ong', 'en'], ong: ['un', 'eng'],
+      ian: ['iang', 'an'], iang: ['ian', 'ang'],
+      uan: ['an', 'uang'], uang: ['uan', 'ang'],
+      ie: ['e', 'ue'], ue: ['ie', 'e'],
+      ao: ['ou', 'iao'], ou: ['ao', 'iou'],
+      iao: ['ao', 'iou'], iou: ['iao', 'ou'],
+      ai: ['ei', 'uai'], ei: ['ai'],
+      uai: ['ai', 'ui'], ui: ['ei'],
+      i: ['ü', 'u'], u: ['ü', 'i'],
+      ü: ['u', 'i'],
+    };
+    const INITIALS = ['zh', 'ch', 'sh', 'b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'k', 'h', 'j', 'q', 'x', 'r', 'z', 'c', 's', 'y', 'w'];
 
-function stripTones(p) {
-  return [...(p||'')].map(c => TONED_TO_BASE[c] || c).join('');
-}
-
-function getToneVariants(pinyin) {
-  // Find first toned character and generate the other 3 tones
-  for (let i = 0; i < pinyin.length; i++) {
-    const base = TONED_TO_BASE[pinyin[i]];
-    if (base) {
-      return BASE_TO_TONES[base]
-        .map(tc => pinyin.slice(0, i) + tc + pinyin.slice(i + 1))
-        .filter(v => v !== pinyin);
+    function stripTones(p) {
+      return [...(p || '')].map(c => TONED_TO_BASE[c] || c).join('');
     }
-  }
-  // Neutral-tone word — add tones to first vowel found
-  for (const v of ['a','e','o','i','u','ü']) {
-    const idx = pinyin.indexOf(v);
-    if (idx >= 0 && BASE_TO_TONES[v]) {
-      return BASE_TO_TONES[v].map(tc => pinyin.slice(0, idx) + tc + pinyin.slice(idx + 1));
+
+    function getToneVariants(pinyin) {
+      // Find first toned character and generate the other 3 tones
+      for (let i = 0; i < pinyin.length; i++) {
+        const base = TONED_TO_BASE[pinyin[i]];
+        if (base) {
+          return BASE_TO_TONES[base]
+            .map(tc => pinyin.slice(0, i) + tc + pinyin.slice(i + 1))
+            .filter(v => v !== pinyin);
+        }
+      }
+      // Neutral-tone word — add tones to first vowel found
+      for (const v of ['a', 'e', 'o', 'i', 'u', 'ü']) {
+        const idx = pinyin.indexOf(v);
+        if (idx >= 0 && BASE_TO_TONES[v]) {
+          return BASE_TO_TONES[v].map(tc => pinyin.slice(0, idx) + tc + pinyin.slice(idx + 1));
+        }
+      }
+      return [];
     }
-  }
-  return [];
-}
 
-function extractFinal(pinyinBase) {
-  for (const init of INITIALS) {
-    if (pinyinBase.startsWith(init)) return pinyinBase.slice(init.length);
-  }
-  return pinyinBase;
-}
+    function extractFinal(pinyinBase) {
+      for (const init of INITIALS) {
+        if (pinyinBase.startsWith(init)) return pinyinBase.slice(init.length);
+      }
+      return pinyinBase;
+    }
 
-function getSimilarFromPool(pinyin, pool, exclude) {
-  const base = stripTones(pinyin);
-  const final = extractFinal(base);
-  const similar = SIMILAR_FINALS[final] || [];
-  return pool
-    .map(w => w.pinyin)
-    .filter(p => {
-      if (exclude.has(p)) return false;
-      const pFinal = extractFinal(stripTones(p));
-      return similar.includes(pFinal);
-    });
-}
+    function getSimilarFromPool(pinyin, pool, exclude) {
+      const base = stripTones(pinyin);
+      const final = extractFinal(base);
+      const similar = SIMILAR_FINALS[final] || [];
+      return pool
+        .map(w => w.pinyin)
+        .filter(p => {
+          if (exclude.has(p)) return false;
+          const pFinal = extractFinal(stripTones(p));
+          return similar.includes(pFinal);
+        });
+    }
 
-// ═══════════════════════════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════════════════════════
-const DATA = { p1: null, p2: null, p3: null };
+    // ═══════════════════════════════════════════════════════════════
+    // DATA
+    // ═══════════════════════════════════════════════════════════════
+    const DATA = { p1: null, p2: null, p3: null };
 
-const dataPromise = Promise.all([
-  fetch('chinese-p1.json').then(r => r.json()).catch(() => null),
-  fetch('chinese-p2.json').then(r => r.json()).catch(() => null),
-  fetch('chinese-p3.json').then(r => r.json()).catch(() => null),
-]).then(([p1, p2, p3]) => { DATA.p1 = p1; DATA.p2 = p2; DATA.p3 = p3; });
+    const dataPromise = Promise.all([
+      fetch('chinese-p1.json').then(r => r.json()).catch(() => null),
+      fetch('chinese-p2.json').then(r => r.json()).catch(() => null),
+      fetch('chinese-p3.json').then(r => r.json()).catch(() => null),
+    ]).then(([p1, p2, p3]) => { DATA.p1 = p1; DATA.p2 = p2; DATA.p3 = p3; });
 
-function getWordPool(level, lessonMax) {
-  const data = DATA[level];
-  if (!data) return [];
-  const seen = new Set();
-  const words = [];
-  for (let i = 1; i <= lessonMax; i++) {
-    const lessonKey = `${level}-${i}`;
-    (data[lessonKey] || []).forEach(entry => {
-      const key = `${lessonKey}-${entry.character}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        words.push({ key, lessonKey, lessonNum: i, level, ...entry });
+    function getWordPool(level, lessonMin, lessonMax) {
+      const data = DATA[level];
+      if (!data) return [];
+      const seen = new Set();
+      const words = [];
+      for (let i = lessonMin; i <= lessonMax; i++) {
+        const lessonKey = `${level}-${i}`;
+        (data[lessonKey] || []).forEach(entry => {
+          const key = `${lessonKey}-${entry.character}`;
+          if (!seen.has(key)) {
+            seen.add(key);
+            words.push({ key, lessonKey, lessonNum: i, level, ...entry });
+          }
+        });
+      }
+      return words;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // PROGRESS (Spaced Repetition Storage)
+    // ═══════════════════════════════════════════════════════════════
+    function progressKey(avatarId) { return `chinese-progress-${avatarId}`; }
+
+    function loadProgress(avatarId) {
+      try { return JSON.parse(localStorage.getItem(progressKey(avatarId)) || '{}'); }
+      catch { return {}; }
+    }
+
+    function saveProgress(avatarId, progress) {
+      try { localStorage.setItem(progressKey(avatarId), JSON.stringify(progress)); }
+      catch { }
+    }
+
+    function freshRecord() {
+      return { correct: 0, wrong: 0, totalTimeMs: 0, attempts: 0, interval: 1, easeFactor: 2.5, dueDate: todayStr(), lastTested: null };
+    }
+
+    function todayStr() { return new Date().toISOString().slice(0, 10); }
+
+    function updateRecord(rec, correct, timeMs) {
+      rec = { ...rec };
+      rec.attempts++;
+      rec.lastTested = todayStr();
+      rec.totalTimeMs += timeMs;
+      if (correct) {
+        rec.correct++;
+        const s = timeMs / 1000;
+        if (s < 5) { rec.interval = Math.round(rec.interval * rec.easeFactor); }
+        else if (s < 10) { rec.interval = Math.round(rec.interval * 2.0); rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.05); }
+        else { rec.interval = Math.round(rec.interval * 1.3); rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.10); }
+        rec.interval = Math.max(1, rec.interval);
+      } else {
+        rec.wrong++;
+        rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.15);
+        rec.interval = 1;
+      }
+      const due = new Date();
+      due.setDate(due.getDate() + rec.interval);
+      rec.dueDate = due.toISOString().slice(0, 10);
+      return rec;
+    }
+
+    function buildQueue(pool, progress, targetCards) {
+      const today = todayStr();
+      const isDue = k => { const r = progress[k]; return r && r.attempts > 0 && (!r.dueDate || r.dueDate <= today); };
+      const isNew = k => !progress[k] || progress[k].attempts === 0;
+      const isWeak = k => { const r = progress[k]; return r && r.attempts > 0 && !isDue(k); };
+
+      const due = pool.filter(w => isDue(w.key)).sort((a, b) => (progress[a.key].dueDate || '') < (progress[b.key].dueDate || '') ? -1 : 1);
+      const nw = shuffle(pool.filter(w => isNew(w.key)));
+      const weak = pool.filter(w => isWeak(w.key)).sort((a, b) => (progress[b.key]?.wrong || 0) - (progress[a.key]?.wrong || 0));
+
+      const q = [...due];
+      for (const w of nw) { if (q.length >= targetCards) break; q.push(w); }
+      for (const w of weak) { if (q.length >= targetCards) break; q.push(w); }
+      return q.slice(0, targetCards);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // CARD GENERATORS
+    // ═══════════════════════════════════════════════════════════════
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function pickChars(pool, excludeChars, count) {
+      const seen = new Set(excludeChars);
+      const candidates = shuffle(pool.filter(w => !seen.has(w.character)));
+      const result = [];
+      for (const w of candidates) {
+        if (result.length >= count) break;
+        if (!seen.has(w.character)) { result.push(w.character); seen.add(w.character); }
+      }
+      return result;
+    }
+
+    function makePinyinChinese(word, pool) {
+      const targetBase = stripTones(word.pinyin);
+      // Wrong options: characters whose base pinyin differs from the target
+      const filtered = pool.filter(w => stripTones(w.pinyin) !== targetBase && w.character !== word.character);
+      let distractors = pickChars(filtered, [word.character], 3);
+      // Fallback: any different character
+      if (distractors.length < 3) {
+        const extra = pickChars(pool, [word.character, ...distractors], 3 - distractors.length);
+        distractors.push(...extra);
+      }
+      return { type: 'pinyin-chinese', prompt: word.pinyin, answer: word.character, options: shuffle([word.character, ...distractors.slice(0, 3)]), word };
+    }
+
+    function makeChinesePinyin(word, pool) {
+      const correct = word.pinyin;
+      const exclude = new Set([correct]);
+      const distractors = [];
+
+      // Step 1: same-base different tones
+      for (const v of getToneVariants(correct)) {
+        if (distractors.length >= 3) break;
+        if (!exclude.has(v)) { distractors.push(v); exclude.add(v); }
+      }
+      // Step 2: similar-sounding from pool
+      if (distractors.length < 3) {
+        for (const v of shuffle(getSimilarFromPool(correct, pool, exclude))) {
+          if (distractors.length >= 3) break;
+          if (!exclude.has(v)) { distractors.push(v); exclude.add(v); }
+        }
+      }
+      // Step 3: random pinyin from pool
+      if (distractors.length < 3) {
+        for (const v of shuffle([...new Set(pool.map(w => w.pinyin))].filter(p => !exclude.has(p)))) {
+          if (distractors.length >= 3) break;
+          distractors.push(v); exclude.add(v);
+        }
+      }
+
+      return { type: 'chinese-pinyin', prompt: word.character, answer: correct, options: shuffle([correct, ...distractors.slice(0, 3)]), word };
+    }
+
+    function makeEnglishChinese(word, pool) {
+      const distractors = pickChars(pool, [word.character], 3);
+      return { type: 'english-chinese', prompt: word.english, answer: word.character, options: shuffle([word.character, ...distractors.slice(0, 3)]), word };
+    }
+
+    function makeWordFill(word, pool) {
+      if (!word.words || word.words.length === 0) return null;
+
+      // Pick a random phrase from words array (e.g., "衣服 (clothes)")
+      const phraseStr = word.words[Math.floor(Math.random() * word.words.length)];
+      // Extract just the Chinese characters before the space/paren
+      const phraseMatch = phraseStr.match(/^([^\s(]+)/);
+      const phrase = phraseMatch ? phraseMatch[1] : phraseStr;
+
+      // Extract pinyin and English from parentheses; format: (pinyin, english)
+      const englishMatch = phraseStr.match(/\(([^)]+)\)/);
+      let englishFromPhrase = word.english;
+      let phraseP = null;
+      if (englishMatch) {
+        const content = englishMatch[1];
+        const commaIdx = content.search(/[,，]/);
+        if (commaIdx !== -1) {
+          phraseP = content.slice(0, commaIdx).trim();
+          englishFromPhrase = content.slice(commaIdx + 1).trim();
+        } else {
+          englishFromPhrase = content;
+        }
+      }
+
+      if (phrase.length === 0 || !phrase.includes(word.character)) return null;
+
+      // Find the position of the main character to blank out
+      const blankPos = phrase.indexOf(word.character);
+      const prompt = phrase.slice(0, blankPos) + '_' + phrase.slice(blankPos + 1);
+
+      // Generate 3 distractors
+      const distractors = pickChars(pool, [word.character], 3);
+
+      // Mask the pinyin syllable that is being tested
+      let maskedPinyin = phraseP;
+      if (phraseP) {
+        const syllables = phraseP.split(' ');
+        if (blankPos < syllables.length) {
+          syllables[blankPos] = '_';
+          maskedPinyin = syllables.join(' ');
+        }
+      }
+
+      return {
+        type: 'word-fill',
+        prompt,
+        answer: word.character,
+        options: shuffle([word.character, ...distractors.slice(0, 3)]),
+        word,
+        phrase,
+        english: englishFromPhrase,
+        phrasePinyin: maskedPinyin
+      };
+    }
+
+    function makeCard(word, pool, mode) {
+      if (mode === 'mix') mode = ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'word-fill'][Math.floor(Math.random() * 4)];
+      if (mode === 'pinyin-chinese') return makePinyinChinese(word, pool);
+      if (mode === 'chinese-pinyin') return makeChinesePinyin(word, pool);
+      if (mode === 'word-fill') return makeWordFill(word, pool);
+      return makeEnglishChinese(word, pool);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // APP STATE
+    // ═══════════════════════════════════════════════════════════════
+    const S = {
+      level: 'p1',
+      lessonMin: 1,
+      lessonMax: 3,
+      lessonTest: false,
+      mode: 'pinyin-chinese',
+      cards: [],
+      cardIndex: 0,
+      results: [],
+      sessionStart: 0,
+      cardStart: 0,
+      timerInterval: null,
+      timeLimitReached: false,
+      timeLimitMs: 0,
+      avatarId: null,
+      progress: {},
+      wordPool: [],
+      statsAvatarId: null,
+      statsLevel: 'p1',
+      statsPrev: 'setup',   // which screen to go back to
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // NAVIGATION
+    // ═══════════════════════════════════════════════════════════════
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TOAST
+    // ═══════════════════════════════════════════════════════════════
+    let toastTimer = null;
+    function showToast(msg, ms = 2500) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), ms);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // SETUP SCREEN
+    // ═══════════════════════════════════════════════════════════════
+    function initSetup() {
+      const avatar = window.__avatarGetActive ? window.__avatarGetActive() : null;
+      const chip = document.getElementById('setup-avatar-chip');
+      const warn = document.getElementById('setup-no-avatar');
+      const startBtn = document.getElementById('setup-start');
+
+      if (avatar) {
+        S.avatarId = avatar.id;
+        S.progress = loadProgress(avatar.id);
+        chip.style.display = 'flex';
+        warn.style.display = 'none';
+        document.getElementById('setup-avatar-svg').innerHTML = window.__avatarRender ? window.__avatarRender(avatar, '40') : '👤';
+        document.getElementById('setup-avatar-name').textContent = avatar.nickname;
+        startBtn.disabled = false;
+      } else {
+        chip.style.display = 'none';
+        warn.style.display = 'block';
+        startBtn.disabled = true;
+        S.avatarId = null;
+      }
+      showScreen('screen-setup');
+    }
+
+    // Tab helpers
+    function bindTabs(containerId, onSelect) {
+      const container = document.getElementById(containerId);
+      container.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          onSelect(tab);
+        });
+      });
+    }
+
+    bindTabs('setup-level-tabs', tab => { S.level = tab.dataset.level; });
+    bindTabs('setup-lesson-tabs', tab => {
+      if (tab.dataset.max === 'test') {
+        S.lessonTest = true;
+        S.lessonMin = 1;
+        S.lessonMax = 19;
+      } else {
+        S.lessonTest = false;
+        S.lessonMin = Number(tab.dataset.min);
+        S.lessonMax = Number(tab.dataset.max);
       }
     });
-  }
-  return words;
-}
+    bindTabs('setup-mode-tabs', tab => { S.mode = tab.dataset.mode; });
 
-// ═══════════════════════════════════════════════════════════════
-// PROGRESS (Spaced Repetition Storage)
-// ═══════════════════════════════════════════════════════════════
-function progressKey(avatarId) { return `chinese-progress-${avatarId}`; }
-
-function loadProgress(avatarId) {
-  try { return JSON.parse(localStorage.getItem(progressKey(avatarId)) || '{}'); }
-  catch { return {}; }
-}
-
-function saveProgress(avatarId, progress) {
-  try { localStorage.setItem(progressKey(avatarId), JSON.stringify(progress)); }
-  catch {}
-}
-
-function freshRecord() {
-  return { correct: 0, wrong: 0, totalTimeMs: 0, attempts: 0, interval: 1, easeFactor: 2.5, dueDate: todayStr(), lastTested: null };
-}
-
-function todayStr() { return new Date().toISOString().slice(0, 10); }
-
-function updateRecord(rec, correct, timeMs) {
-  rec = { ...rec };
-  rec.attempts++;
-  rec.lastTested = todayStr();
-  rec.totalTimeMs += timeMs;
-  if (correct) {
-    rec.correct++;
-    const s = timeMs / 1000;
-    if (s < 5)       { rec.interval = Math.round(rec.interval * rec.easeFactor); }
-    else if (s < 10) { rec.interval = Math.round(rec.interval * 2.0); rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.05); }
-    else             { rec.interval = Math.round(rec.interval * 1.3); rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.10); }
-    rec.interval = Math.max(1, rec.interval);
-  } else {
-    rec.wrong++;
-    rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.15);
-    rec.interval = 1;
-  }
-  const due = new Date();
-  due.setDate(due.getDate() + rec.interval);
-  rec.dueDate = due.toISOString().slice(0, 10);
-  return rec;
-}
-
-function buildQueue(pool, progress, targetCards) {
-  const today = todayStr();
-  const isDue  = k => { const r = progress[k]; return r && r.attempts > 0 && (!r.dueDate || r.dueDate <= today); };
-  const isNew  = k => !progress[k] || progress[k].attempts === 0;
-  const isWeak = k => { const r = progress[k]; return r && r.attempts > 0 && !isDue(k); };
-
-  const due  = pool.filter(w => isDue(w.key)).sort((a, b) => (progress[a.key].dueDate||'') < (progress[b.key].dueDate||'') ? -1 : 1);
-  const nw   = shuffle(pool.filter(w => isNew(w.key)));
-  const weak = pool.filter(w => isWeak(w.key)).sort((a, b) => (progress[b.key]?.wrong||0) - (progress[a.key]?.wrong||0));
-
-  const q = [...due];
-  for (const w of nw)   { if (q.length >= targetCards) break; q.push(w); }
-  for (const w of weak) { if (q.length >= targetCards) break; q.push(w); }
-  return q.slice(0, targetCards);
-}
-
-// ═══════════════════════════════════════════════════════════════
-// CARD GENERATORS
-// ═══════════════════════════════════════════════════════════════
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function pickChars(pool, excludeChars, count) {
-  const seen = new Set(excludeChars);
-  const candidates = shuffle(pool.filter(w => !seen.has(w.character)));
-  const result = [];
-  for (const w of candidates) {
-    if (result.length >= count) break;
-    if (!seen.has(w.character)) { result.push(w.character); seen.add(w.character); }
-  }
-  return result;
-}
-
-function makePinyinChinese(word, pool) {
-  const targetBase = stripTones(word.pinyin);
-  // Wrong options: characters whose base pinyin differs from the target
-  const filtered = pool.filter(w => stripTones(w.pinyin) !== targetBase && w.character !== word.character);
-  let distractors = pickChars(filtered, [word.character], 3);
-  // Fallback: any different character
-  if (distractors.length < 3) {
-    const extra = pickChars(pool, [word.character, ...distractors], 3 - distractors.length);
-    distractors.push(...extra);
-  }
-  return { type: 'pinyin-chinese', prompt: word.pinyin, answer: word.character, options: shuffle([word.character, ...distractors.slice(0,3)]), word };
-}
-
-function makeChinesePinyin(word, pool) {
-  const correct = word.pinyin;
-  const exclude = new Set([correct]);
-  const distractors = [];
-
-  // Step 1: same-base different tones
-  for (const v of getToneVariants(correct)) {
-    if (distractors.length >= 3) break;
-    if (!exclude.has(v)) { distractors.push(v); exclude.add(v); }
-  }
-  // Step 2: similar-sounding from pool
-  if (distractors.length < 3) {
-    for (const v of shuffle(getSimilarFromPool(correct, pool, exclude))) {
-      if (distractors.length >= 3) break;
-      if (!exclude.has(v)) { distractors.push(v); exclude.add(v); }
-    }
-  }
-  // Step 3: random pinyin from pool
-  if (distractors.length < 3) {
-    for (const v of shuffle([...new Set(pool.map(w => w.pinyin))].filter(p => !exclude.has(p)))) {
-      if (distractors.length >= 3) break;
-      distractors.push(v); exclude.add(v);
-    }
-  }
-
-  return { type: 'chinese-pinyin', prompt: word.character, answer: correct, options: shuffle([correct, ...distractors.slice(0,3)]), word };
-}
-
-function makeEnglishChinese(word, pool) {
-  const distractors = pickChars(pool, [word.character], 3);
-  return { type: 'english-chinese', prompt: word.english, answer: word.character, options: shuffle([word.character, ...distractors.slice(0,3)]), word };
-}
-
-function makeWordFill(word, pool) {
-  if (!word.words || word.words.length === 0) return null;
-
-  // Pick a random phrase from words array (e.g., "衣服 (clothes)")
-  const phraseStr = word.words[Math.floor(Math.random() * word.words.length)];
-  // Extract just the Chinese characters before the space/paren
-  const phraseMatch = phraseStr.match(/^([^\s(]+)/);
-  const phrase = phraseMatch ? phraseMatch[1] : phraseStr;
-
-  // Extract pinyin and English from parentheses; format: (pinyin, english)
-  const englishMatch = phraseStr.match(/\(([^)]+)\)/);
-  let englishFromPhrase = word.english;
-  let phraseP = null;
-  if (englishMatch) {
-    const content = englishMatch[1];
-    const commaIdx = content.search(/[,，]/);
-    if (commaIdx !== -1) {
-      phraseP = content.slice(0, commaIdx).trim();
-      englishFromPhrase = content.slice(commaIdx + 1).trim();
-    } else {
-      englishFromPhrase = content;
-    }
-  }
-
-  if (phrase.length === 0 || !phrase.includes(word.character)) return null;
-
-  // Find the position of the main character to blank out
-  const blankPos = phrase.indexOf(word.character);
-  const prompt = phrase.slice(0, blankPos) + '_' + phrase.slice(blankPos + 1);
-
-  // Generate 3 distractors
-  const distractors = pickChars(pool, [word.character], 3);
-
-  // Mask the pinyin syllable that is being tested
-  let maskedPinyin = phraseP;
-  if (phraseP) {
-    const syllables = phraseP.split(' ');
-    if (blankPos < syllables.length) {
-      syllables[blankPos] = '_';
-      maskedPinyin = syllables.join(' ');
-    }
-  }
-
-  return {
-    type: 'word-fill',
-    prompt,
-    answer: word.character,
-    options: shuffle([word.character, ...distractors.slice(0,3)]),
-    word,
-    phrase,
-    english: englishFromPhrase,
-    phrasePinyin: maskedPinyin
-  };
-}
-
-function makeCard(word, pool, mode) {
-  if (mode === 'mix') mode = ['pinyin-chinese','chinese-pinyin','english-chinese','word-fill'][Math.floor(Math.random()*4)];
-  if (mode === 'pinyin-chinese') return makePinyinChinese(word, pool);
-  if (mode === 'chinese-pinyin') return makeChinesePinyin(word, pool);
-  if (mode === 'word-fill') return makeWordFill(word, pool);
-  return makeEnglishChinese(word, pool);
-}
-
-// ═══════════════════════════════════════════════════════════════
-// APP STATE
-// ═══════════════════════════════════════════════════════════════
-const S = {
-  level: 'p1',
-  lessonMax: 3,
-  lessonTest: false,
-  mode: 'pinyin-chinese',
-  cards: [],
-  cardIndex: 0,
-  results: [],
-  sessionStart: 0,
-  cardStart: 0,
-  timerInterval: null,
-  timeLimitReached: false,
-  timeLimitMs: 0,
-  avatarId: null,
-  progress: {},
-  wordPool: [],
-  statsAvatarId: null,
-  statsLevel: 'p1',
-  statsPrev: 'setup',   // which screen to go back to
-};
-
-// ═══════════════════════════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-// ═══════════════════════════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════════════════════════
-let toastTimer = null;
-function showToast(msg, ms = 2500) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), ms);
-}
-
-// ═══════════════════════════════════════════════════════════════
-// SETUP SCREEN
-// ═══════════════════════════════════════════════════════════════
-function initSetup() {
-  const avatar = window.__avatarGetActive ? window.__avatarGetActive() : null;
-  const chip = document.getElementById('setup-avatar-chip');
-  const warn = document.getElementById('setup-no-avatar');
-  const startBtn = document.getElementById('setup-start');
-
-  if (avatar) {
-    S.avatarId = avatar.id;
-    S.progress = loadProgress(avatar.id);
-    chip.style.display = 'flex';
-    warn.style.display = 'none';
-    document.getElementById('setup-avatar-svg').innerHTML = window.__avatarRender ? window.__avatarRender(avatar, '40') : '👤';
-    document.getElementById('setup-avatar-name').textContent = avatar.nickname;
-    startBtn.disabled = false;
-  } else {
-    chip.style.display = 'none';
-    warn.style.display = 'block';
-    startBtn.disabled = true;
-    S.avatarId = null;
-  }
-  showScreen('screen-setup');
-}
-
-// Tab helpers
-function bindTabs(containerId, onSelect) {
-  const container = document.getElementById(containerId);
-  container.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      onSelect(tab);
+    document.getElementById('setup-stats-btn').addEventListener('click', () => {
+      S.statsPrev = 'setup';
+      openStats();
     });
-  });
-}
 
-bindTabs('setup-level-tabs',  tab => { S.level = tab.dataset.level; });
-bindTabs('setup-lesson-tabs', tab => {
-  if (tab.dataset.max === 'test') {
-    S.lessonTest = true;
-    S.lessonMax = 19;
-  } else {
-    S.lessonTest = false;
-    S.lessonMax = Number(tab.dataset.max);
-  }
-});
-bindTabs('setup-mode-tabs',   tab => { S.mode = tab.dataset.mode; });
+    document.getElementById('setup-start').addEventListener('click', startSession);
 
-document.getElementById('setup-stats-btn').addEventListener('click', () => {
-  S.statsPrev = 'setup';
-  openStats();
-});
+    // ═══════════════════════════════════════════════════════════════
+    // START SESSION
+    // ═══════════════════════════════════════════════════════════════
+    async function startSession() {
+      await dataPromise;
+      if (!DATA[S.level]) { showToast('Failed to load word data'); return; }
 
-document.getElementById('setup-start').addEventListener('click', startSession);
+      S.wordPool = getWordPool(S.level, S.lessonMin, S.lessonMax);
+      if (S.wordPool.length === 0) { showToast('No words found'); return; }
 
-// ═══════════════════════════════════════════════════════════════
-// START SESSION
-// ═══════════════════════════════════════════════════════════════
-async function startSession() {
-  await dataPromise;
-  if (!DATA[S.level]) { showToast('Failed to load word data'); return; }
+      const cfg = SESSION_CONFIG[S.level];
+      S.progress = loadProgress(S.avatarId);
 
-  S.wordPool = getWordPool(S.level, S.lessonTest ? 19 : S.lessonMax);
-  if (S.wordPool.length === 0) { showToast('No words found'); return; }
+      let queue;
+      if (S.lessonTest) {
+        S.timeLimitMs = Infinity;
+        const today = todayStr();
+        queue = S.wordPool
+          .filter(w => { const r = S.progress[w.key]; return r && r.attempts > 0 && (!r.dueDate || r.dueDate <= today); })
+          .sort((a, b) => (S.progress[a.key].dueDate || '') < (S.progress[b.key].dueDate || '') ? -1 : 1);
+        if (queue.length === 0) { showToast('No words due for review'); return; }
+      } else {
+        S.timeLimitMs = cfg.minutes * 60 * 1000;
+        queue = buildQueue(S.wordPool, S.progress, cfg.cards);
+        if (queue.length === 0) { showToast('No words to review'); return; }
+      }
 
-  const cfg = SESSION_CONFIG[S.level];
-  S.progress = loadProgress(S.avatarId);
+      S.cards = queue.map(w => makeCard(w, S.wordPool, S.mode)).filter(c => c !== null);
+      if (S.cards.length === 0) { showToast('No valid cards for this mode'); return; }
+      S.cardIndex = 0;
+      S.results = [];
+      S.timeLimitReached = false;
+      S.sessionStart = Date.now();
 
-  let queue;
-  if (S.lessonTest) {
-    S.timeLimitMs = Infinity;
-    const today = todayStr();
-    queue = S.wordPool
-      .filter(w => { const r = S.progress[w.key]; return r && r.attempts > 0 && (!r.dueDate || r.dueDate <= today); })
-      .sort((a, b) => (S.progress[a.key].dueDate || '') < (S.progress[b.key].dueDate || '') ? -1 : 1);
-    if (queue.length === 0) { showToast('No words due for review'); return; }
-  } else {
-    S.timeLimitMs = cfg.minutes * 60 * 1000;
-    queue = buildQueue(S.wordPool, S.progress, cfg.cards);
-    if (queue.length === 0) { showToast('No words to review'); return; }
-  }
-
-  S.cards = queue.map(w => makeCard(w, S.wordPool, S.mode)).filter(c => c !== null);
-  if (S.cards.length === 0) { showToast('No valid cards for this mode'); return; }
-  S.cardIndex = 0;
-  S.results = [];
-  S.timeLimitReached = false;
-  S.sessionStart = Date.now();
-
-  showScreen('screen-game');
-  startTimer();
-  renderCard();
-}
-
-// ═══════════════════════════════════════════════════════════════
-// SESSION TIMER
-// ═══════════════════════════════════════════════════════════════
-function startTimer() {
-  clearInterval(S.timerInterval);
-  S.timerInterval = setInterval(() => {
-    const elapsed = Date.now() - S.sessionStart;
-    const remaining = Math.max(0, S.timeLimitMs - elapsed);
-    const mins = Math.floor(remaining / 60000);
-    const el = document.getElementById('hud-timer');
-    if (S.timeLimitMs === Infinity) el.textContent = '—';
-    else if (remaining <= 0)        el.textContent = '0 min';
-    else if (mins < 1)              el.textContent = '< 1 min';
-    else                            el.textContent = `${mins} min`;
-    el.className = 'hud-val';
-    if (S.timeLimitMs !== Infinity) {
-      if (remaining / S.timeLimitMs < 0.15) el.classList.add('danger');
-      else if (remaining / S.timeLimitMs < 0.35) el.classList.add('warn');
+      showScreen('screen-game');
+      startTimer();
+      renderCard();
     }
-    if (remaining <= 0 && !S.timeLimitReached) {
-      S.timeLimitReached = true;
-      showToast("Time's up — finish this card", 3000);
+
+    // ═══════════════════════════════════════════════════════════════
+    // SESSION TIMER
+    // ═══════════════════════════════════════════════════════════════
+    function startTimer() {
+      clearInterval(S.timerInterval);
+      S.timerInterval = setInterval(() => {
+        const elapsed = Date.now() - S.sessionStart;
+        const remaining = Math.max(0, S.timeLimitMs - elapsed);
+        const mins = Math.floor(remaining / 60000);
+        const el = document.getElementById('hud-timer');
+        if (S.timeLimitMs === Infinity) el.textContent = '—';
+        else if (remaining <= 0) el.textContent = '0 min';
+        else if (mins < 1) el.textContent = '< 1 min';
+        else el.textContent = `${mins} min`;
+        el.className = 'hud-val';
+        if (S.timeLimitMs !== Infinity) {
+          if (remaining / S.timeLimitMs < 0.15) el.classList.add('danger');
+          else if (remaining / S.timeLimitMs < 0.35) el.classList.add('warn');
+        }
+        if (remaining <= 0 && !S.timeLimitReached) {
+          S.timeLimitReached = true;
+          showToast("Time's up — finish this card", 3000);
+        }
+      }, 500);
     }
-  }, 500);
-}
 
-function stopTimer() { clearInterval(S.timerInterval); }
+    function stopTimer() { clearInterval(S.timerInterval); }
 
-// ═══════════════════════════════════════════════════════════════
-// RENDER CARD
-// ═══════════════════════════════════════════════════════════════
-function renderCard() {
-  const card = S.cards[S.cardIndex];
-  const total = S.cards.length;
+    // ═══════════════════════════════════════════════════════════════
+    // RENDER CARD
+    // ═══════════════════════════════════════════════════════════════
+    function renderCard() {
+      const card = S.cards[S.cardIndex];
+      const total = S.cards.length;
 
-  document.getElementById('hud-card').textContent = `${S.cardIndex + 1}/${total}`;
-  document.getElementById('progress-fill').style.width = `${(S.cardIndex / total) * 100}%`;
-  document.getElementById('hud-correct').textContent = S.results.filter(r => r.correct).length;
-  document.getElementById('hud-wrong').textContent   = S.results.filter(r => !r.correct).length;
+      document.getElementById('hud-card').textContent = `${S.cardIndex + 1}/${total}`;
+      document.getElementById('progress-fill').style.width = `${(S.cardIndex / total) * 100}%`;
+      document.getElementById('hud-correct').textContent = S.results.filter(r => r.correct).length;
+      document.getElementById('hud-wrong').textContent = S.results.filter(r => !r.correct).length;
 
-  const typeLabel = document.getElementById('question-type-label');
-  const qText     = document.getElementById('question-text');
-  const qWrap     = document.getElementById('question-wrap');
-  const sourceKey = card.word.lessonKey;
+      const typeLabel = document.getElementById('question-type-label');
+      const qText = document.getElementById('question-text');
+      const qWrap = document.getElementById('question-wrap');
+      const sourceKey = card.word.lessonKey;
 
-  // Remove old source key if exists
-  const oldKey = qWrap.querySelector('.source-key');
-  if (oldKey) oldKey.remove();
+      // Remove old source key if exists
+      const oldKey = qWrap.querySelector('.source-key');
+      if (oldKey) oldKey.remove();
 
-  qText.onclick = null;
-  qText.style.cursor = '';
-  if (card.type === 'pinyin-chinese') {
-    typeLabel.textContent = 'Which character matches this sound?';
-    qText.textContent = card.prompt;
-    qText.className = 'question-text is-pinyin';
-  } else if (card.type === 'chinese-pinyin') {
-    typeLabel.textContent = 'Which pinyin is correct?';
-    qText.textContent = card.prompt;
-    qText.className = 'question-text';
-    qText.style.cursor = 'pointer';
-    qText.onclick = () => showCharModal(card.word);
-  } else if (card.type === 'word-fill') {
-    typeLabel.textContent = '';
-    const pinyinHint = card.phrasePinyin ? `<div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.phrasePinyin)}</div>` : '';
-    qText.innerHTML = `<div>${card.prompt}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.english)}</div>`;
-    qText.className = 'question-text';
-    qText.style.cursor = 'pointer';
-    qText.onclick = () => showCharModal(card.word);
-  } else {
-    typeLabel.textContent = 'Which character means this?';
-    qText.textContent = card.prompt;
-    qText.className = 'question-text is-english';
-  }
+      qText.onclick = null;
+      qText.style.cursor = '';
+      if (card.type === 'pinyin-chinese') {
+        typeLabel.textContent = 'Which character matches this sound?';
+        qText.textContent = card.prompt;
+        qText.className = 'question-text is-pinyin';
+      } else if (card.type === 'chinese-pinyin') {
+        typeLabel.textContent = 'Which pinyin is correct?';
+        qText.textContent = card.prompt;
+        qText.className = 'question-text';
+        qText.style.cursor = 'pointer';
+        qText.onclick = () => showCharModal(card.word);
+      } else if (card.type === 'word-fill') {
+        typeLabel.textContent = '';
+        const pinyinHint = card.phrasePinyin ? `<div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.phrasePinyin)}</div>` : '';
+        qText.innerHTML = `<div>${card.prompt}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.english)}</div>`;
+        qText.className = 'question-text';
+        qText.style.cursor = 'pointer';
+        qText.onclick = () => showCharModal(card.word);
+      } else {
+        typeLabel.textContent = 'Which character means this?';
+        qText.textContent = card.prompt;
+        qText.className = 'question-text is-english';
+      }
 
-  // Add source key in bottom right
-  const keyEl = document.createElement('div');
-  keyEl.className = 'source-key';
-  keyEl.textContent = sourceKey;
-  qWrap.appendChild(keyEl);
+      // Add source key in bottom right
+      const keyEl = document.createElement('div');
+      keyEl.className = 'source-key';
+      keyEl.textContent = sourceKey;
+      qWrap.appendChild(keyEl);
 
-  const grid = document.getElementById('options-grid');
-  grid.innerHTML = '';
-  const isPinyinOpt = card.type === 'chinese-pinyin';
+      const grid = document.getElementById('options-grid');
+      grid.innerHTML = '';
+      const isPinyinOpt = card.type === 'chinese-pinyin';
 
-  card.options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className = 'opt-btn' + (isPinyinOpt ? ' is-pinyin-opt' : '');
-    btn.textContent = opt;
-    btn.addEventListener('click', () => handleAnswer(opt, card));
-    grid.appendChild(btn);
-  });
+      card.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn' + (isPinyinOpt ? ' is-pinyin-opt' : '');
+        btn.textContent = opt;
+        btn.addEventListener('click', () => handleAnswer(opt, card));
+        grid.appendChild(btn);
+      });
 
-  document.getElementById('continue-row').style.display = 'none';
-  S.cardStart = Date.now();
-}
+      document.getElementById('continue-row').style.display = 'none';
+      S.cardStart = Date.now();
+    }
 
-// ═══════════════════════════════════════════════════════════════
-// HANDLE ANSWER
-// ═══════════════════════════════════════════════════════════════
-function handleAnswer(chosen, card) {
-  const timeMs = Date.now() - S.cardStart;
-  const correct = chosen === card.answer;
+    // ═══════════════════════════════════════════════════════════════
+    // HANDLE ANSWER
+    // ═══════════════════════════════════════════════════════════════
+    function handleAnswer(chosen, card) {
+      const timeMs = Date.now() - S.cardStart;
+      const correct = chosen === card.answer;
 
-  // Flash feedback on buttons
-  document.querySelectorAll('#options-grid .opt-btn').forEach(btn => {
-    if (btn.textContent === card.answer) btn.classList.add(correct ? 'flash-correct' : 'flash-reveal');
-    else if (btn.textContent === chosen && !correct) btn.classList.add('flash-wrong');
-    btn.disabled = true;
-  });
+      // Flash feedback on buttons
+      document.querySelectorAll('#options-grid .opt-btn').forEach(btn => {
+        if (btn.textContent === card.answer) btn.classList.add(correct ? 'flash-correct' : 'flash-reveal');
+        else if (btn.textContent === chosen && !correct) btn.classList.add('flash-wrong');
+        btn.disabled = true;
+      });
 
-  // Update SR record
-  let rec = S.progress[card.word.key] || freshRecord();
-  rec = updateRecord(rec, correct, timeMs);
-  S.progress[card.word.key] = rec;
-  saveProgress(S.avatarId, S.progress);
+      // Update SR record
+      let rec = S.progress[card.word.key] || freshRecord();
+      rec = updateRecord(rec, correct, timeMs);
+      S.progress[card.word.key] = rec;
+      saveProgress(S.avatarId, S.progress);
 
-  S.results.push({ word: card.word, correct, timeMs, type: card.type });
+      S.results.push({ word: card.word, correct, timeMs, type: card.type });
 
-  if (correct) {
-    setTimeout(() => {
+      if (correct) {
+        setTimeout(() => {
+          S.cardIndex++;
+          const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
+          if (done) { stopTimer(); showSummary(); }
+          else renderCard();
+        }, 1500);
+      } else {
+        document.getElementById('continue-row').style.display = 'flex';
+      }
+    }
+
+    // Game → end session manually
+    document.getElementById('game-end-btn').addEventListener('click', () => {
+      stopTimer();
+      showSummary();
+    });
+
+    // Game → continue to next card
+    document.getElementById('continue-btn').addEventListener('click', () => {
       S.cardIndex++;
       const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
       if (done) { stopTimer(); showSummary(); }
       else renderCard();
-    }, 1500);
-  } else {
-    document.getElementById('continue-row').style.display = 'flex';
-  }
-}
+    });
 
-// Game → end session manually
-document.getElementById('game-end-btn').addEventListener('click', () => {
-  stopTimer();
-  showSummary();
-});
+    // ═══════════════════════════════════════════════════════════════
+    // SUMMARY SCREEN
+    // ═══════════════════════════════════════════════════════════════
+    function showSummary() {
+      const elapsed = Date.now() - S.sessionStart;
+      const correct = S.results.filter(r => r.correct).length;
+      const wrong = S.results.length - correct;
 
-// Game → continue to next card
-document.getElementById('continue-btn').addEventListener('click', () => {
-  S.cardIndex++;
-  const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
-  if (done) { stopTimer(); showSummary(); }
-  else renderCard();
-});
+      document.getElementById('summary-correct').textContent = correct;
+      document.getElementById('summary-wrong').textContent = wrong;
+      const m = Math.floor(elapsed / 60000), sec = Math.floor((elapsed % 60000) / 1000);
+      document.getElementById('summary-time').textContent = `${m}:${String(sec).padStart(2, '0')}`;
 
-// ═══════════════════════════════════════════════════════════════
-// SUMMARY SCREEN
-// ═══════════════════════════════════════════════════════════════
-function showSummary() {
-  const elapsed = Date.now() - S.sessionStart;
-  const correct = S.results.filter(r => r.correct).length;
-  const wrong   = S.results.length - correct;
+      const list = document.getElementById('summary-result-list');
+      list.innerHTML = '';
+      S.results.forEach(r => {
+        const item = document.createElement('div');
+        item.className = `result-item ${r.correct ? 'ok' : 'err'}`;
 
-  document.getElementById('summary-correct').textContent = correct;
-  document.getElementById('summary-wrong').textContent   = wrong;
-  const m = Math.floor(elapsed / 60000), sec = Math.floor((elapsed % 60000) / 1000);
-  document.getElementById('summary-time').textContent = `${m}:${String(sec).padStart(2,'0')}`;
+        const charEl = document.createElement('div');
+        charEl.className = 'result-char';
+        charEl.textContent = r.word.character;
+        charEl.addEventListener('click', () => showCharModal(r.word));
 
-  const list = document.getElementById('summary-result-list');
-  list.innerHTML = '';
-  S.results.forEach(r => {
-    const item = document.createElement('div');
-    item.className = `result-item ${r.correct ? 'ok' : 'err'}`;
-
-    const charEl = document.createElement('div');
-    charEl.className = 'result-char';
-    charEl.textContent = r.word.character;
-    charEl.addEventListener('click', () => showCharModal(r.word));
-
-    item.appendChild(charEl);
-    item.insertAdjacentHTML('beforeend', `
+        item.appendChild(charEl);
+        item.insertAdjacentHTML('beforeend', `
       <div class="result-info">
         <div class="result-pinyin" style="display:flex;align-items:center;gap:4px"><span>${r.word.pinyin}</span></div>
         <div class="result-english">${esc(r.word.english)}</div>
       </div>
-      <div class="result-time">${(r.timeMs/1000).toFixed(1)}s ${r.correct ? '✓' : '✗'}</div>`);
-    item.querySelector('.result-pinyin').appendChild(makeSpeakBtn(r.word.character, r.word.pinyin));
-    list.appendChild(item);
-  });
+      <div class="result-time">${(r.timeMs / 1000).toFixed(1)}s ${r.correct ? '✓' : '✗'}</div>`);
+        item.querySelector('.result-pinyin').appendChild(makeSpeakBtn(r.word.character, r.word.pinyin));
+        list.appendChild(item);
+      });
 
-  // Save best accuracy to avatar scores
-  if (S.results.length && window.__avatarSave) {
-    const pct = Math.round((correct / S.results.length) * 100);
-    window.__avatarSave(`chinese-${S.level}-accuracy`, pct, false);
-  }
+      // Save best accuracy to avatar scores
+      if (S.results.length && window.__avatarSave) {
+        const pct = Math.round((correct / S.results.length) * 100);
+        window.__avatarSave(`chinese-${S.level}-accuracy`, pct, false);
+      }
 
-  showScreen('screen-summary');
-}
+      showScreen('screen-summary');
+    }
 
-document.getElementById('summary-again-btn').addEventListener('click', startSession);
-document.getElementById('summary-setup-btn').addEventListener('click', initSetup);
-document.getElementById('summary-stats-btn').addEventListener('click', () => { S.statsPrev = 'summary'; openStats(); });
+    document.getElementById('summary-again-btn').addEventListener('click', startSession);
+    document.getElementById('summary-setup-btn').addEventListener('click', initSetup);
+    document.getElementById('summary-stats-btn').addEventListener('click', () => { S.statsPrev = 'summary'; openStats(); });
 
-// ═══════════════════════════════════════════════════════════════
-// STATS SCREEN
-// ═══════════════════════════════════════════════════════════════
-function openStats() {
-  S.statsAvatarId = S.avatarId;
-  S.statsLevel    = S.level;
-  renderAvatarChips();
-  renderStatsTable();
-  showScreen('screen-stats');
-}
+    // ═══════════════════════════════════════════════════════════════
+    // STATS SCREEN
+    // ═══════════════════════════════════════════════════════════════
+    function openStats() {
+      S.statsAvatarId = S.avatarId;
+      S.statsLevel = S.level;
+      renderAvatarChips();
+      renderStatsTable();
+      showScreen('screen-stats');
+    }
 
-function renderAvatarChips() {
-  const avatars = window.__avatarLoadAvatars ? window.__avatarLoadAvatars() : [];
-  const container = document.getElementById('stats-av-chips');
-  container.innerHTML = '';
-  if (avatars.length === 0) {
-    container.innerHTML = '<span style="color:var(--muted);font-size:0.85rem">No avatars yet</span>';
-    return;
-  }
-  avatars.forEach(av => {
-    const chip = document.createElement('div');
-    chip.className = `av-chip ${av.id === S.statsAvatarId ? 'active' : ''}`;
-    chip.innerHTML = `<div style="flex-shrink:0">${window.__avatarRender ? window.__avatarRender(av, '28') : '👤'}</div>${esc(av.nickname)}`;
-    chip.addEventListener('click', () => { S.statsAvatarId = av.id; renderAvatarChips(); renderStatsTable(); });
-    container.appendChild(chip);
-  });
-}
+    function renderAvatarChips() {
+      const avatars = window.__avatarLoadAvatars ? window.__avatarLoadAvatars() : [];
+      const container = document.getElementById('stats-av-chips');
+      container.innerHTML = '';
+      if (avatars.length === 0) {
+        container.innerHTML = '<span style="color:var(--muted);font-size:0.85rem">No avatars yet</span>';
+        return;
+      }
+      avatars.forEach(av => {
+        const chip = document.createElement('div');
+        chip.className = `av-chip ${av.id === S.statsAvatarId ? 'active' : ''}`;
+        chip.innerHTML = `<div style="flex-shrink:0">${window.__avatarRender ? window.__avatarRender(av, '28') : '👤'}</div>${esc(av.nickname)}`;
+        chip.addEventListener('click', () => { S.statsAvatarId = av.id; renderAvatarChips(); renderStatsTable(); });
+        container.appendChild(chip);
+      });
+    }
 
-function renderStatsTable() {
-  const progress = S.statsAvatarId ? loadProgress(S.statsAvatarId) : {};
-  const pool = getWordPool(S.statsLevel, 19);
+    function renderStatsTable() {
+      const progress = S.statsAvatarId ? loadProgress(S.statsAvatarId) : {};
+      const pool = getWordPool(S.statsLevel, 1, 19);
 
-  let rows = pool
-    .map(w => ({ ...w, rec: progress[w.key] }))
-    .filter(w => w.rec && w.rec.attempts > 0);
+      let rows = pool
+        .map(w => ({ ...w, rec: progress[w.key] }))
+        .filter(w => w.rec && w.rec.attempts > 0);
 
-  const sort = document.getElementById('stats-sort').value;
-  if (sort === 'wrong')  rows.sort((a,b) => (b.rec.wrong||0) - (a.rec.wrong||0));
-  else if (sort === 'time')   rows.sort((a,b) => avgTime(b.rec) - avgTime(a.rec));
-  else if (sort === 'due')    rows.sort((a,b) => (a.rec.dueDate||'') < (b.rec.dueDate||'') ? -1 : 1);
-  else if (sort === 'lesson') rows.sort((a,b) => a.lessonNum - b.lessonNum);
+      const sort = document.getElementById('stats-sort').value;
+      if (sort === 'wrong') rows.sort((a, b) => (b.rec.wrong || 0) - (a.rec.wrong || 0));
+      else if (sort === 'time') rows.sort((a, b) => avgTime(b.rec) - avgTime(a.rec));
+      else if (sort === 'due') rows.sort((a, b) => (a.rec.dueDate || '') < (b.rec.dueDate || '') ? -1 : 1);
+      else if (sort === 'lesson') rows.sort((a, b) => a.lessonNum - b.lessonNum);
 
-  document.getElementById('stats-count').textContent = rows.length
-    ? `${rows.length} word${rows.length !== 1 ? 's' : ''} practiced`
-    : '';
+      document.getElementById('stats-count').textContent = rows.length
+        ? `${rows.length} word${rows.length !== 1 ? 's' : ''} practiced`
+        : '';
 
-  const tbody = document.getElementById('stats-tbody');
-  if (rows.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="stats-empty">No practice data yet for this level.<br>Complete a session to see your progress here.</td></tr>`;
-    return;
-  }
+      const tbody = document.getElementById('stats-tbody');
+      if (rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="stats-empty">No practice data yet for this level.<br>Complete a session to see your progress here.</td></tr>`;
+        return;
+      }
 
-  const today = todayStr();
-  tbody.innerHTML = rows.map(w => {
-    const r = w.rec;
-    const avg = r.attempts ? (r.totalTimeMs / r.attempts / 1000).toFixed(1) + 's' : '—';
-    const wrongCls = r.wrong > 0 ? 'err' : 'ok';
-    const correctCls = r.correct > 0 ? 'ok' : '';
-    const dueCls = r.dueDate && r.dueDate <= today ? 'warn' : '';
-    return `<tr data-word-key="${w.key}">
+      const today = todayStr();
+      tbody.innerHTML = rows.map(w => {
+        const r = w.rec;
+        const avg = r.attempts ? (r.totalTimeMs / r.attempts / 1000).toFixed(1) + 's' : '—';
+        const wrongCls = r.wrong > 0 ? 'err' : 'ok';
+        const correctCls = r.correct > 0 ? 'ok' : '';
+        const dueCls = r.dueDate && r.dueDate <= today ? 'warn' : '';
+        return `<tr data-word-key="${w.key}">
       <td class="td-char">${w.character}</td>
       <td class="td-pinyin"><span style="display:inline-flex;align-items:center;gap:4px">${w.pinyin}<button class="speak-btn" data-char="${w.character}" data-pinyin="${w.pinyin}" title="Listen">🔊</button></span></td>
       <td>${esc(w.english)}</td>
@@ -1765,487 +2247,488 @@ function renderStatsTable() {
       <td>${avg}</td>
       <td class="${dueCls}">${r.dueDate || '—'}</td>
     </tr>`;
-  }).join('');
-}
+      }).join('');
+    }
 
-function avgTime(rec) { return rec.attempts ? rec.totalTimeMs / rec.attempts : 0; }
+    function avgTime(rec) { return rec.attempts ? rec.totalTimeMs / rec.attempts : 0; }
 
-// Stats level tabs
-bindTabs('stats-level-tabs', tab => { S.statsLevel = tab.dataset.level; renderStatsTable(); });
+    // Stats level tabs
+    bindTabs('stats-level-tabs', tab => { S.statsLevel = tab.dataset.level; renderStatsTable(); });
 
-document.getElementById('stats-sort').addEventListener('change', renderStatsTable);
+    document.getElementById('stats-sort').addEventListener('change', renderStatsTable);
 
-document.getElementById('stats-back-btn').addEventListener('click', () => {
-  if (S.statsPrev === 'summary') showScreen('screen-summary');
-  else initSetup();
-});
-
-// ═══════════════════════════════════════════════════════════════
-// CHARACTER CARD MODAL
-// ═══════════════════════════════════════════════════════════════
-function showCharModal(word) {
-  document.getElementById('cm-char').textContent   = word.character;
-  document.getElementById('cm-pinyin').textContent = word.pinyin;
-  const cmSpeak = document.getElementById('cm-speak-btn');
-  cmSpeak.onclick = e => { e.stopPropagation(); speakChinese(word.pinyin || word.character); };
-  document.getElementById('cm-eng').textContent    = word.english;
-  document.getElementById('cm-def-en').textContent = word['definition-english'] || '';
-  document.getElementById('cm-def-zh').textContent = word['definition-chinese'] || '';
-
-  const wordsEl = document.getElementById('cm-words');
-  wordsEl.innerHTML = '';
-  (word.words || []).forEach(w => {
-    const chip = document.createElement('span');
-    chip.className = 'char-modal-chip zh';
-    chip.textContent = w;
-    wordsEl.appendChild(chip);
-  });
-
-  const sameEl = document.getElementById('cm-same');
-  sameEl.innerHTML = '';
-  (word['same-sounding-character'] || []).forEach(s => {
-    const chip = document.createElement('span');
-    chip.className = 'char-modal-chip';
-    chip.textContent = s;
-    sameEl.appendChild(chip);
-  });
-
-  document.getElementById('char-modal').classList.add('open');
-}
-
-document.getElementById('char-modal').addEventListener('click', e => {
-  if (e.target.id === 'char-modal') document.getElementById('char-modal').classList.remove('open');
-});
-document.getElementById('cm-close').addEventListener('click', () => {
-  document.getElementById('char-modal').classList.remove('open');
-});
-
-// Stats table: speak button and click td-char to open character modal
-document.getElementById('stats-tbody').addEventListener('click', e => {
-  const speakBtn = e.target.closest('.speak-btn[data-char]');
-  if (speakBtn) { e.stopPropagation(); speakChinese(speakBtn.dataset.pinyin || speakBtn.dataset.char); return; }
-  const td = e.target.closest('td.td-char');
-  if (!td) return;
-  const key = td.closest('tr').dataset.wordKey;
-  if (!key) return;
-  const pool = getWordPool(S.statsLevel, 19);
-  const word = pool.find(w => w.key === key);
-  if (word) showCharModal(word);
-});
-
-// ═══════════════════════════════════════════════════════════════
-// SPEECH
-// ═══════════════════════════════════════════════════════════════
-let _audioQueue = [];
-let _currentAudio = null;
-
-function _pinyinToFilename(syllable) {
-  let tone = 5;
-  for (const ch of syllable) {
-    if (TONE_NUMBER[ch]) { tone = TONE_NUMBER[ch]; break; }
-  }
-  const base = stripTones(syllable).replace(/ü/g, 'v');
-  return `pinyin_audio/${base}${tone}.mp3`;
-}
-
-function _playNext() {
-  if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
-  if (_audioQueue.length === 0) return;
-  const src = _audioQueue.shift();
-  const audio = new Audio(src);
-  _currentAudio = audio;
-  audio.onerror = () => _playNext();
-  audio.onended = () => _playNext();
-  audio.play().catch(() => _playNext());
-}
-
-function speakChinese(pinyinOrChar) {
-  if (!pinyinOrChar) return;
-  if (/[一-鿿]/.test(pinyinOrChar)) {
-    if (!window.speechSynthesis) return;
-    const utt = new SpeechSynthesisUtterance(pinyinOrChar);
-    utt.lang = 'zh-CN'; utt.rate = 0.8;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utt);
-    return;
-  }
-  _audioQueue = pinyinOrChar.trim().split(/\s+/).filter(Boolean).map(_pinyinToFilename);
-  _playNext();
-}
-
-function makeSpeakBtn(character, pinyin) {
-  const btn = document.createElement('button');
-  btn.className = 'speak-btn';
-  btn.title = 'Listen';
-  btn.textContent = '🔊';
-  btn.addEventListener('click', e => { e.stopPropagation(); speakChinese(pinyin || character); });
-  return btn;
-}
-
-// ═══════════════════════════════════════════════════════════════
-// UTILITIES
-// ═══════════════════════════════════════════════════════════════
-function esc(s) {
-  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-// ═══════════════════════════════════════════════════════════════
-// BROWSE SCREEN
-// ═══════════════════════════════════════════════════════════════
-const B = { level: 'p1', lesson: 1, prev: 'setup' };
-
-function getLessonCount(level) {
-  const data = DATA[level];
-  if (!data) return 0;
-  let max = 0;
-  for (const key of Object.keys(data)) {
-    const m = key.match(/^[a-z]\d+-(\d+)$/);
-    if (m) max = Math.max(max, Number(m[1]));
-  }
-  return max;
-}
-
-function openBrowse(prev) {
-  B.prev = prev || 'setup';
-  B.level = S.level;
-  B.lesson = 1;
-  renderBrowseLevelTabs();
-  renderBrowseLessonTabs();
-  renderBrowseWords();
-  showScreen('screen-browse');
-}
-
-function renderBrowseLevelTabs() {
-  document.querySelectorAll('#browse-level-tabs .tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.level === B.level);
-  });
-}
-
-function renderBrowseLessonTabs() {
-  const container = document.getElementById('browse-lesson-tabs');
-  container.innerHTML = '';
-  const count = getLessonCount(B.level);
-  for (let i = 1; i <= count; i++) {
-    const btn = document.createElement('button');
-    btn.className = 'browse-lesson-tab' + (i === B.lesson ? ' active' : '');
-    btn.textContent = `L${i}`;
-    btn.addEventListener('click', () => {
-      B.lesson = i;
-      container.querySelectorAll('.browse-lesson-tab').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderBrowseWords();
+    document.getElementById('stats-back-btn').addEventListener('click', () => {
+      if (S.statsPrev === 'summary') showScreen('screen-summary');
+      else initSetup();
     });
-    container.appendChild(btn);
-  }
-}
 
-function renderBrowseWords() {
-  const grid = document.getElementById('browse-word-grid');
-  grid.innerHTML = '';
-  const data = DATA[B.level];
-  if (!data) { grid.innerHTML = `<div class="browse-empty">Loading…</div>`; return; }
-  const lessonKey = `${B.level}-${B.lesson}`;
-  const words = data[lessonKey] || [];
-  if (words.length === 0) {
-    grid.innerHTML = `<div class="browse-empty">No words for ${lessonKey}</div>`;
-    return;
-  }
-  words.forEach(w => {
-    const card = document.createElement('div');
-    card.className = 'browse-word-card';
-    const wordObj = { ...w, lessonKey, lessonNum: B.lesson, level: B.level, key: `${lessonKey}-${w.character}` };
-    card.innerHTML = `
+    // ═══════════════════════════════════════════════════════════════
+    // CHARACTER CARD MODAL
+    // ═══════════════════════════════════════════════════════════════
+    function showCharModal(word) {
+      document.getElementById('cm-char').textContent = word.character;
+      document.getElementById('cm-pinyin').textContent = word.pinyin;
+      const cmSpeak = document.getElementById('cm-speak-btn');
+      cmSpeak.onclick = e => { e.stopPropagation(); speakChinese(word.pinyin || word.character); };
+      document.getElementById('cm-eng').textContent = word.english;
+      document.getElementById('cm-def-en').textContent = word['definition-english'] || '';
+      document.getElementById('cm-def-zh').textContent = word['definition-chinese'] || '';
+
+      const wordsEl = document.getElementById('cm-words');
+      wordsEl.innerHTML = '';
+      (word.words || []).forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'char-modal-chip zh';
+        chip.textContent = w;
+        wordsEl.appendChild(chip);
+      });
+
+      const sameEl = document.getElementById('cm-same');
+      sameEl.innerHTML = '';
+      (word['same-sounding-character'] || []).forEach(s => {
+        const chip = document.createElement('span');
+        chip.className = 'char-modal-chip';
+        chip.textContent = s;
+        sameEl.appendChild(chip);
+      });
+
+      document.getElementById('char-modal').classList.add('open');
+    }
+
+    document.getElementById('char-modal').addEventListener('click', e => {
+      if (e.target.id === 'char-modal') document.getElementById('char-modal').classList.remove('open');
+    });
+    document.getElementById('cm-close').addEventListener('click', () => {
+      document.getElementById('char-modal').classList.remove('open');
+    });
+
+    // Stats table: speak button and click td-char to open character modal
+    document.getElementById('stats-tbody').addEventListener('click', e => {
+      const speakBtn = e.target.closest('.speak-btn[data-char]');
+      if (speakBtn) { e.stopPropagation(); speakChinese(speakBtn.dataset.pinyin || speakBtn.dataset.char); return; }
+      const td = e.target.closest('td.td-char');
+      if (!td) return;
+      const key = td.closest('tr').dataset.wordKey;
+      if (!key) return;
+      const pool = getWordPool(S.statsLevel, 1, 19);
+      const word = pool.find(w => w.key === key);
+      if (word) showCharModal(word);
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // SPEECH
+    // ═══════════════════════════════════════════════════════════════
+    let _audioQueue = [];
+    let _currentAudio = null;
+
+    function _pinyinToFilename(syllable) {
+      let tone = 5;
+      for (const ch of syllable) {
+        if (TONE_NUMBER[ch]) { tone = TONE_NUMBER[ch]; break; }
+      }
+      const base = stripTones(syllable).replace(/ü/g, 'v');
+      return `pinyin_audio/${base}${tone}.mp3`;
+    }
+
+    function _playNext() {
+      if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
+      if (_audioQueue.length === 0) return;
+      const src = _audioQueue.shift();
+      const audio = new Audio(src);
+      _currentAudio = audio;
+      audio.onerror = () => _playNext();
+      audio.onended = () => _playNext();
+      audio.play().catch(() => _playNext());
+    }
+
+    function speakChinese(pinyinOrChar) {
+      if (!pinyinOrChar) return;
+      if (/[一-鿿]/.test(pinyinOrChar)) {
+        if (!window.speechSynthesis) return;
+        const utt = new SpeechSynthesisUtterance(pinyinOrChar);
+        utt.lang = 'zh-CN'; utt.rate = 0.8;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utt);
+        return;
+      }
+      _audioQueue = pinyinOrChar.trim().split(/\s+/).filter(Boolean).map(_pinyinToFilename);
+      _playNext();
+    }
+
+    function makeSpeakBtn(character, pinyin) {
+      const btn = document.createElement('button');
+      btn.className = 'speak-btn';
+      btn.title = 'Listen';
+      btn.textContent = '🔊';
+      btn.addEventListener('click', e => { e.stopPropagation(); speakChinese(pinyin || character); });
+      return btn;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // UTILITIES
+    // ═══════════════════════════════════════════════════════════════
+    function esc(s) {
+      return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // BROWSE SCREEN
+    // ═══════════════════════════════════════════════════════════════
+    const B = { level: 'p1', lesson: 1, prev: 'setup' };
+
+    function getLessonCount(level) {
+      const data = DATA[level];
+      if (!data) return 0;
+      let max = 0;
+      for (const key of Object.keys(data)) {
+        const m = key.match(/^[a-z]\d+-(\d+)$/);
+        if (m) max = Math.max(max, Number(m[1]));
+      }
+      return max;
+    }
+
+    function openBrowse(prev) {
+      B.prev = prev || 'setup';
+      B.level = S.level;
+      B.lesson = 1;
+      renderBrowseLevelTabs();
+      renderBrowseLessonTabs();
+      renderBrowseWords();
+      showScreen('screen-browse');
+    }
+
+    function renderBrowseLevelTabs() {
+      document.querySelectorAll('#browse-level-tabs .tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.level === B.level);
+      });
+    }
+
+    function renderBrowseLessonTabs() {
+      const container = document.getElementById('browse-lesson-tabs');
+      container.innerHTML = '';
+      const count = getLessonCount(B.level);
+      for (let i = 1; i <= count; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'browse-lesson-tab' + (i === B.lesson ? ' active' : '');
+        btn.textContent = `L${i}`;
+        btn.addEventListener('click', () => {
+          B.lesson = i;
+          container.querySelectorAll('.browse-lesson-tab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderBrowseWords();
+        });
+        container.appendChild(btn);
+      }
+    }
+
+    function renderBrowseWords() {
+      const grid = document.getElementById('browse-word-grid');
+      grid.innerHTML = '';
+      const data = DATA[B.level];
+      if (!data) { grid.innerHTML = `<div class="browse-empty">Loading…</div>`; return; }
+      const lessonKey = `${B.level}-${B.lesson}`;
+      const words = data[lessonKey] || [];
+      if (words.length === 0) {
+        grid.innerHTML = `<div class="browse-empty">No words for ${lessonKey}</div>`;
+        return;
+      }
+      words.forEach(w => {
+        const card = document.createElement('div');
+        card.className = 'browse-word-card';
+        const wordObj = { ...w, lessonKey, lessonNum: B.lesson, level: B.level, key: `${lessonKey}-${w.character}` };
+        card.innerHTML = `
       <div class="browse-word-char">${w.character}</div>
       <div style="display:flex;align-items:center;gap:4px">
         <div class="browse-word-pinyin">${w.pinyin}</div>
       </div>
       <div class="browse-word-eng">${esc(w.english)}</div>`;
-    card.querySelector('.browse-word-pinyin').after(makeSpeakBtn(w.character, w.pinyin));
-    card.addEventListener('click', () => showCharModal(wordObj));
-    grid.appendChild(card);
-  });
-}
+        card.querySelector('.browse-word-pinyin').after(makeSpeakBtn(w.character, w.pinyin));
+        card.addEventListener('click', () => showCharModal(wordObj));
+        grid.appendChild(card);
+      });
+    }
 
-bindTabs('browse-level-tabs', tab => {
-  B.level = tab.dataset.level;
-  B.lesson = 1;
-  renderBrowseLessonTabs();
-  renderBrowseWords();
-});
+    bindTabs('browse-level-tabs', tab => {
+      B.level = tab.dataset.level;
+      B.lesson = 1;
+      renderBrowseLessonTabs();
+      renderBrowseWords();
+    });
 
-document.getElementById('browse-back-btn').addEventListener('click', () => {
-  if (B.prev === 'stats') showScreen('screen-stats');
-  else initSetup();
-});
+    document.getElementById('browse-back-btn').addEventListener('click', () => {
+      if (B.prev === 'stats') showScreen('screen-stats');
+      else initSetup();
+    });
 
-document.getElementById('setup-browse-btn').addEventListener('click', async () => {
-  await dataPromise;
-  openBrowse('setup');
-});
+    document.getElementById('setup-browse-btn').addEventListener('click', async () => {
+      await dataPromise;
+      openBrowse('setup');
+    });
 
-// ═══════════════════════════════════════════════════════════════
-// SPELLING MODE
-// ═══════════════════════════════════════════════════════════════
-const SP = { level: 'p1', questions: [], currentIdx: 0, testName: '' };
+    // ═══════════════════════════════════════════════════════════════
+    // SPELLING MODE
+    // ═══════════════════════════════════════════════════════════════
+    const SP = { level: 'p1', questions: [], currentIdx: 0, testName: '' };
 
-function spellingTests() {
-  try { return JSON.parse(localStorage.getItem('spelling-tests') || '[]'); } catch { return []; }
-}
-function saveSpellingTests(arr) { localStorage.setItem('spelling-tests', JSON.stringify(arr)); }
+    function spellingTests() {
+      try { return JSON.parse(localStorage.getItem('spelling-tests') || '[]'); } catch { return []; }
+    }
+    function saveSpellingTests(arr) { localStorage.setItem('spelling-tests', JSON.stringify(arr)); }
 
-function showSpellingSubview(id) {
-  ['sp-list-view','sp-create-view','sp-test-view','sp-results-view'].forEach(sid => {
-    document.getElementById(sid).classList.toggle('sp-active', sid === id);
-  });
-}
+    function showSpellingSubview(id) {
+      ['sp-list-view', 'sp-create-view', 'sp-test-view', 'sp-results-view'].forEach(sid => {
+        document.getElementById(sid).classList.toggle('sp-active', sid === id);
+      });
+    }
 
-function showSpellingScreen() {
-  renderSpellingList();
-  showSpellingSubview('sp-list-view');
-  showScreen('screen-spelling');
-}
+    function showSpellingScreen() {
+      renderSpellingList();
+      showSpellingSubview('sp-list-view');
+      showScreen('screen-spelling');
+    }
 
-function renderSpellingList() {
-  const tests = spellingTests();
-  const container = document.getElementById('sp-test-list');
-  if (tests.length === 0) {
-    container.innerHTML = '<div class="sp-empty">No tests yet. Tap ＋ New to create one.</div>';
-    return;
-  }
-  container.innerHTML = '';
-  tests.forEach(t => {
-    const card = document.createElement('div');
-    card.className = 'sp-test-card';
-    const wc = (t.writingWords || []).length;
-    const pc = (t.pinyinWords || []).length;
-    card.innerHTML = `
+    function renderSpellingList() {
+      const tests = spellingTests();
+      const container = document.getElementById('sp-test-list');
+      if (tests.length === 0) {
+        container.innerHTML = '<div class="sp-empty">No tests yet. Tap ＋ New to create one.</div>';
+        return;
+      }
+      container.innerHTML = '';
+      tests.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'sp-test-card';
+        const wc = (t.writingWords || []).length;
+        const pc = (t.pinyinWords || []).length;
+        card.innerHTML = `
       <div class="sp-test-card-info" data-id="${esc(t.id)}">
         <div class="sp-test-name">${esc(t.name)}</div>
         <div class="sp-test-meta">${esc(t.level.toUpperCase())} · ${wc} writing · ${pc} pinyin</div>
       </div>
       <button class="btn btn-danger btn-sm" data-del="${esc(t.id)}" style="flex-shrink:0">✕</button>`;
-    card.querySelector('.sp-test-card-info').addEventListener('click', () => startSpellingTest(t.id));
-    card.querySelector('[data-del]').addEventListener('click', e => { e.stopPropagation(); deleteSpellingTest(t.id); });
-    container.appendChild(card);
-  });
-}
-
-function deleteSpellingTest(id) {
-  saveSpellingTests(spellingTests().filter(t => t.id !== id));
-  renderSpellingList();
-}
-
-function showSpellingCreate() {
-  SP.level = 'p1';
-  document.getElementById('sp-name-input').value = '';
-  document.getElementById('sp-pinyin-input').value = '';
-  document.getElementById('sp-writing-input').value = '';
-  document.querySelectorAll('#sp-level-tabs .tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.level === 'p1');
-  });
-  showSpellingSubview('sp-create-view');
-}
-
-function saveSpellingTest() {
-  const name = document.getElementById('sp-name-input').value.trim();
-  if (!name) { showToast('Please enter a test name'); return; }
-  const writingWords = document.getElementById('sp-writing-input').value.split(/[,，]/).map(w => w.trim()).filter(Boolean);
-  const pinyinWords  = document.getElementById('sp-pinyin-input').value.split(/[,，]/).map(w => w.trim()).filter(Boolean);
-  if (writingWords.length === 0 && pinyinWords.length === 0) { showToast('Add at least one word to test'); return; }
-  const tests = spellingTests();
-  tests.push({ id: Date.now().toString(), level: SP.level, name, writingWords, pinyinWords });
-  saveSpellingTests(tests);
-  renderSpellingList();
-  showSpellingSubview('sp-list-view');
-  showToast('Test saved!');
-}
-
-function findSpellingEntry(level, word) {
-  const data = DATA[level];
-  if (!data) return null;
-  for (const lk of Object.keys(data)) {
-    for (const entry of data[lk]) {
-      if (entry.character === word) return { entry, pinyin: entry.pinyin };
+        card.querySelector('.sp-test-card-info').addEventListener('click', () => startSpellingTest(t.id));
+        card.querySelector('[data-del]').addEventListener('click', e => { e.stopPropagation(); deleteSpellingTest(t.id); });
+        container.appendChild(card);
+      });
     }
-  }
-  // Search inside compound words array
-  for (const lk of Object.keys(data)) {
-    for (const entry of data[lk]) {
-      for (const w of (entry.words || [])) {
-        if (w === word || w.startsWith(word + ' ') || w.startsWith(word + '(')) {
-          const m = w.match(/\(([^,)]+)/);
-          return { entry, pinyin: m ? m[1].trim() : entry.pinyin };
+
+    function deleteSpellingTest(id) {
+      saveSpellingTests(spellingTests().filter(t => t.id !== id));
+      renderSpellingList();
+    }
+
+    function showSpellingCreate() {
+      SP.level = 'p1';
+      document.getElementById('sp-name-input').value = '';
+      document.getElementById('sp-pinyin-input').value = '';
+      document.getElementById('sp-writing-input').value = '';
+      document.querySelectorAll('#sp-level-tabs .tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.level === 'p1');
+      });
+      showSpellingSubview('sp-create-view');
+    }
+
+    function saveSpellingTest() {
+      const name = document.getElementById('sp-name-input').value.trim();
+      if (!name) { showToast('Please enter a test name'); return; }
+      const writingWords = document.getElementById('sp-writing-input').value.split(/[,，]/).map(w => w.trim()).filter(Boolean);
+      const pinyinWords = document.getElementById('sp-pinyin-input').value.split(/[,，]/).map(w => w.trim()).filter(Boolean);
+      if (writingWords.length === 0 && pinyinWords.length === 0) { showToast('Add at least one word to test'); return; }
+      const tests = spellingTests();
+      tests.push({ id: Date.now().toString(), level: SP.level, name, writingWords, pinyinWords });
+      saveSpellingTests(tests);
+      renderSpellingList();
+      showSpellingSubview('sp-list-view');
+      showToast('Test saved!');
+    }
+
+    function findSpellingEntry(level, word) {
+      const data = DATA[level];
+      if (!data) return null;
+      for (const lk of Object.keys(data)) {
+        for (const entry of data[lk]) {
+          if (entry.character === word) return { entry, pinyin: entry.pinyin };
         }
       }
+      // Search inside compound words array
+      for (const lk of Object.keys(data)) {
+        for (const entry of data[lk]) {
+          for (const w of (entry.words || [])) {
+            if (w === word || w.startsWith(word + ' ') || w.startsWith(word + '(')) {
+              const m = w.match(/\(([^,)]+)/);
+              return { entry, pinyin: m ? m[1].trim() : entry.pinyin };
+            }
+          }
+        }
+      }
+      return null;
     }
-  }
-  return null;
-}
 
-function parseSentence(str) {
-  if (!str) return { chinese: '', english: '' };
-  const idx = str.indexOf('(');
-  if (idx === -1) return { chinese: str.trim(), english: '' };
-  return { chinese: str.slice(0, idx).trim(), english: str.slice(idx + 1).replace(/\)$/, '').trim() };
-}
-
-function buildSpellingQuestions(test) {
-  const questions = [];
-  const skipped = [];
-  for (const word of (test.writingWords || [])) {
-    const found = findSpellingEntry(test.level, word);
-    if (!found) { skipped.push(word); continue; }
-    const { chinese } = parseSentence(found.entry.sentence);
-    questions.push({ type: 'writing', word, pinyin: found.pinyin, chinese });
-  }
-  for (const word of (test.pinyinWords || [])) {
-    const found = findSpellingEntry(test.level, word);
-    if (!found) { skipped.push(word); continue; }
-    const { chinese } = parseSentence(found.entry.sentence);
-    questions.push({ type: 'pinyin', word, pinyin: found.pinyin, chinese });
-  }
-  if (skipped.length) setTimeout(() => showToast('Not found, skipped: ' + skipped.join(', ')), 300);
-  return questions;
-}
-
-function startSpellingTest(id) {
-  dataPromise.then(() => {
-    const test = spellingTests().find(t => t.id === id);
-    if (!test) return;
-    SP.questions = buildSpellingQuestions(test);
-    SP.currentIdx = 0;
-    SP.testName = test.name;
-    if (SP.questions.length === 0) { showToast('No valid words found for this test'); return; }
-    document.getElementById('sp-test-title').textContent = test.name;
-    showSpellingSubview('sp-test-view');
-    renderSpellingQuestion(0);
-  });
-}
-
-function renderSpellingQuestion(idx) {
-  const q = SP.questions[idx];
-  const total = SP.questions.length;
-  document.getElementById('sp-progress-label').textContent = `Question ${idx + 1} of ${total}`;
-  document.getElementById('sp-next-btn').textContent = idx < total - 1 ? 'Next →' : 'See Answers';
-
-  const card = document.getElementById('sp-question-card');
-  card.innerHTML = '';
-
-  const numDiv = document.createElement('div');
-  numDiv.className = 'sp-q-num';
-  numDiv.textContent = q.type === 'writing'
-    ? `Q${idx + 1}. — Write the character`
-    : `Q${idx + 1}. — Write the pinyin`;
-  card.appendChild(numDiv);
-
-  if (q.type === 'writing') {
-    const audioRow = document.createElement('div');
-    audioRow.className = 'sp-q-audio-row';
-    const speakerBtn = document.createElement('button');
-    speakerBtn.className = 'sp-q-speaker';
-    speakerBtn.innerHTML = '🔊';
-    speakerBtn.title = 'Listen again';
-    speakerBtn.addEventListener('click', () => speakChinese(q.pinyin || q.word));
-    const hint = document.createElement('div');
-    hint.className = 'sp-q-hint';
-    hint.textContent = 'Tap to hear again';
-    audioRow.appendChild(speakerBtn);
-    audioRow.appendChild(hint);
-    card.appendChild(audioRow);
-
-    if (q.chinese) {
-      const sentDiv = document.createElement('div');
-      sentDiv.className = 'sp-q-sentence';
-      const blankHtml = `<span class="sp-blank">___</span><span class="sp-blank" style="font-size:0.85rem"> (${esc(q.pinyin)})</span>`;
-      sentDiv.innerHTML = esc(q.chinese).replace(q.word, blankHtml);
-      card.appendChild(sentDiv);
+    function parseSentence(str) {
+      if (!str) return { chinese: '', english: '' };
+      const idx = str.indexOf('(');
+      if (idx === -1) return { chinese: str.trim(), english: '' };
+      return { chinese: str.slice(0, idx).trim(), english: str.slice(idx + 1).replace(/\)$/, '').trim() };
     }
-    speakChinese(q.pinyin || q.word);
 
-  } else {
-    if (q.chinese) {
-      const sentDiv = document.createElement('div');
-      sentDiv.className = 'sp-q-sentence';
-      const underlineHtml = `<span class="sp-underline">${esc(q.word)}</span><span class="sp-bracket"> [ ]</span>`;
-      sentDiv.innerHTML = esc(q.chinese).replace(q.word, underlineHtml);
-      card.appendChild(sentDiv);
+    function buildSpellingQuestions(test) {
+      const questions = [];
+      const skipped = [];
+      for (const word of (test.writingWords || [])) {
+        const found = findSpellingEntry(test.level, word);
+        if (!found) { skipped.push(word); continue; }
+        const { chinese } = parseSentence(found.entry.sentence);
+        questions.push({ type: 'writing', word, pinyin: found.pinyin, chinese });
+      }
+      for (const word of (test.pinyinWords || [])) {
+        const found = findSpellingEntry(test.level, word);
+        if (!found) { skipped.push(word); continue; }
+        const { chinese } = parseSentence(found.entry.sentence);
+        questions.push({ type: 'pinyin', word, pinyin: found.pinyin, chinese });
+      }
+      if (skipped.length) setTimeout(() => showToast('Not found, skipped: ' + skipped.join(', ')), 300);
+      return questions;
     }
-    const hint = document.createElement('div');
-    hint.className = 'sp-q-hint';
-    hint.textContent = 'Write the pinyin for the underlined word';
-    card.appendChild(hint);
-  }
-}
 
-function nextSpellingQuestion() {
-  if (SP.currentIdx < SP.questions.length - 1) {
-    SP.currentIdx++;
-    renderSpellingQuestion(SP.currentIdx);
-  } else {
-    showSpellingResults();
-  }
-}
+    function startSpellingTest(id) {
+      dataPromise.then(() => {
+        const test = spellingTests().find(t => t.id === id);
+        if (!test) return;
+        SP.questions = buildSpellingQuestions(test);
+        SP.currentIdx = 0;
+        SP.testName = test.name;
+        if (SP.questions.length === 0) { showToast('No valid words found for this test'); return; }
+        document.getElementById('sp-test-title').textContent = test.name;
+        showSpellingSubview('sp-test-view');
+        renderSpellingQuestion(0);
+      });
+    }
 
-function showSpellingResults() {
-  const container = document.getElementById('sp-results-content');
-  container.innerHTML = '';
-  const writingQs = SP.questions.filter(q => q.type === 'writing');
-  const pinyinQs  = SP.questions.filter(q => q.type === 'pinyin');
+    function renderSpellingQuestion(idx) {
+      const q = SP.questions[idx];
+      const total = SP.questions.length;
+      document.getElementById('sp-progress-label').textContent = `Question ${idx + 1} of ${total}`;
+      document.getElementById('sp-next-btn').textContent = idx < total - 1 ? 'Next →' : 'See Answers';
 
-  function buildSection(title, qs, startNum) {
-    if (!qs.length) return;
-    const sec = document.createElement('div');
-    sec.className = 'sp-results-section';
-    const hdr = document.createElement('div');
-    hdr.className = 'section-label';
-    hdr.textContent = title;
-    sec.appendChild(hdr);
-    qs.forEach((q, i) => {
-      const item = document.createElement('div');
-      item.className = 'sp-answer-item';
-      const top = document.createElement('div');
-      top.className = 'sp-ans-top';
-      top.innerHTML = `
+      const card = document.getElementById('sp-question-card');
+      card.innerHTML = '';
+
+      const numDiv = document.createElement('div');
+      numDiv.className = 'sp-q-num';
+      numDiv.textContent = q.type === 'writing'
+        ? `Q${idx + 1}. — Write the character`
+        : `Q${idx + 1}. — Write the pinyin`;
+      card.appendChild(numDiv);
+
+      if (q.type === 'writing') {
+        const audioRow = document.createElement('div');
+        audioRow.className = 'sp-q-audio-row';
+        const speakerBtn = document.createElement('button');
+        speakerBtn.className = 'sp-q-speaker';
+        speakerBtn.innerHTML = '🔊';
+        speakerBtn.title = 'Listen again';
+        speakerBtn.addEventListener('click', () => speakChinese(q.pinyin || q.word));
+        const hint = document.createElement('div');
+        hint.className = 'sp-q-hint';
+        hint.textContent = 'Tap to hear again';
+        audioRow.appendChild(speakerBtn);
+        audioRow.appendChild(hint);
+        card.appendChild(audioRow);
+
+        if (q.chinese) {
+          const sentDiv = document.createElement('div');
+          sentDiv.className = 'sp-q-sentence';
+          const blankHtml = `<span class="sp-blank">___</span><span class="sp-blank" style="font-size:0.85rem"> (${esc(q.pinyin)})</span>`;
+          sentDiv.innerHTML = esc(q.chinese).replace(q.word, blankHtml);
+          card.appendChild(sentDiv);
+        }
+        speakChinese(q.pinyin || q.word);
+
+      } else {
+        if (q.chinese) {
+          const sentDiv = document.createElement('div');
+          sentDiv.className = 'sp-q-sentence';
+          const underlineHtml = `<span class="sp-underline">${esc(q.word)}</span><span class="sp-bracket"> [ ]</span>`;
+          sentDiv.innerHTML = esc(q.chinese).replace(q.word, underlineHtml);
+          card.appendChild(sentDiv);
+        }
+        const hint = document.createElement('div');
+        hint.className = 'sp-q-hint';
+        hint.textContent = 'Write the pinyin for the underlined word';
+        card.appendChild(hint);
+      }
+    }
+
+    function nextSpellingQuestion() {
+      if (SP.currentIdx < SP.questions.length - 1) {
+        SP.currentIdx++;
+        renderSpellingQuestion(SP.currentIdx);
+      } else {
+        showSpellingResults();
+      }
+    }
+
+    function showSpellingResults() {
+      const container = document.getElementById('sp-results-content');
+      container.innerHTML = '';
+      const writingQs = SP.questions.filter(q => q.type === 'writing');
+      const pinyinQs = SP.questions.filter(q => q.type === 'pinyin');
+
+      function buildSection(title, qs, startNum) {
+        if (!qs.length) return;
+        const sec = document.createElement('div');
+        sec.className = 'sp-results-section';
+        const hdr = document.createElement('div');
+        hdr.className = 'section-label';
+        hdr.textContent = title;
+        sec.appendChild(hdr);
+        qs.forEach((q, i) => {
+          const item = document.createElement('div');
+          item.className = 'sp-answer-item';
+          const top = document.createElement('div');
+          top.className = 'sp-ans-top';
+          top.innerHTML = `
         <span class="sp-ans-qnum">Q${startNum + i}.</span>
         <span class="sp-ans-word">${esc(q.word)}</span>
         <span class="sp-ans-arrow">→</span>
         <span class="sp-ans-pinyin">${esc(q.pinyin)}</span>`;
-      item.appendChild(top);
-      if (q.chinese) {
-        const sent = document.createElement('div');
-        sent.className = 'sp-ans-sentence';
-        sent.textContent = q.chinese;
-        item.appendChild(sent);
+          item.appendChild(top);
+          if (q.chinese) {
+            const sent = document.createElement('div');
+            sent.className = 'sp-ans-sentence';
+            sent.textContent = q.chinese;
+            item.appendChild(sent);
+          }
+          sec.appendChild(item);
+        });
+        container.appendChild(sec);
       }
-      sec.appendChild(item);
-    });
-    container.appendChild(sec);
-  }
 
-  buildSection('Writing Answers', writingQs, 1);
-  buildSection('Pinyin Answers', pinyinQs, writingQs.length + 1);
-  showSpellingSubview('sp-results-view');
-}
+      buildSection('Writing Answers', writingQs, 1);
+      buildSection('Pinyin Answers', pinyinQs, writingQs.length + 1);
+      showSpellingSubview('sp-results-view');
+    }
 
-// Spelling event listeners
-document.getElementById('setup-spelling-btn').addEventListener('click', () => showSpellingScreen());
-document.getElementById('sp-back-to-setup').addEventListener('click', () => initSetup());
-document.getElementById('sp-new-btn').addEventListener('click', () => showSpellingCreate());
-document.getElementById('sp-form-back').addEventListener('click', () => showSpellingSubview('sp-list-view'));
-document.getElementById('sp-save-btn').addEventListener('click', () => saveSpellingTest());
-document.getElementById('sp-next-btn').addEventListener('click', () => nextSpellingQuestion());
-document.getElementById('sp-test-end-btn').addEventListener('click', () => showSpellingSubview('sp-list-view'));
-document.getElementById('sp-results-back-btn').addEventListener('click', () => showSpellingSubview('sp-list-view'));
-bindTabs('sp-level-tabs', tab => { SP.level = tab.dataset.level; });
+    // Spelling event listeners
+    document.getElementById('setup-spelling-btn').addEventListener('click', () => showSpellingScreen());
+    document.getElementById('sp-back-to-setup').addEventListener('click', () => initSetup());
+    document.getElementById('sp-new-btn').addEventListener('click', () => showSpellingCreate());
+    document.getElementById('sp-form-back').addEventListener('click', () => showSpellingSubview('sp-list-view'));
+    document.getElementById('sp-save-btn').addEventListener('click', () => saveSpellingTest());
+    document.getElementById('sp-next-btn').addEventListener('click', () => nextSpellingQuestion());
+    document.getElementById('sp-test-end-btn').addEventListener('click', () => showSpellingSubview('sp-list-view'));
+    document.getElementById('sp-results-back-btn').addEventListener('click', () => showSpellingSubview('sp-list-view'));
+    bindTabs('sp-level-tabs', tab => { SP.level = tab.dataset.level; });
 
-// ═══════════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════════
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initSetup);
-} else {
-  initSetup();
-}
-</script>
+    // ═══════════════════════════════════════════════════════════════
+    // INIT
+    // ═══════════════════════════════════════════════════════════════
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSetup);
+    } else {
+      initSetup();
+    }
+  </script>
 </body>
+
 </html>
