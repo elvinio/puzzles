@@ -98,11 +98,49 @@
     .section .grid {
       max-width: 100%;
     }
+
+    .card {
+      position: relative;
+    }
+
+    .fav-btn {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      background: none;
+      border: none;
+      padding: 2px;
+      cursor: pointer;
+      line-height: 1;
+      color: #4c1d95;
+      transition: transform 0.15s, color 0.15s;
+      z-index: 1;
+    }
+
+    .fav-btn:active {
+      transform: scale(1.25);
+    }
+
+    .fav-btn svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .fav-btn.faved {
+      color: #f472b6;
+    }
+
   </style>
 </head>
 <body>
 
   <h1>Puzzles</h1>
+
+  <div class="section" id="favourites-section">
+    <div class="section-header favourites-header">Favourites</div>
+    <div class="grid" id="favourites-grid"></div>
+  </div>
 
   <div class="section">
     <div class="section-header">Admin</div>
@@ -242,6 +280,73 @@
     </div>
   </div>
 
+
+  <script>
+    const FAVS_KEY = 'puzzles-favourites';
+    const HEART_EMPTY = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+    const HEART_FILLED = `<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+
+    function getFavs() {
+      try { return JSON.parse(localStorage.getItem(FAVS_KEY) || '[]'); } catch { return []; }
+    }
+
+    function setFavs(favs) {
+      localStorage.setItem(FAVS_KEY, JSON.stringify(favs));
+    }
+
+    function renderFavsSection() {
+      const favs = getFavs();
+      const section = document.getElementById('favourites-section');
+      const grid = document.getElementById('favourites-grid');
+      if (!favs.length) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
+      grid.innerHTML = '';
+      favs.forEach(function(href) {
+        const original = document.querySelector('a.card[href="' + href + '"]');
+        if (!original) return;
+        const clone = original.cloneNode(true);
+        const btn = clone.querySelector('.fav-btn');
+        if (btn) btn.addEventListener('click', onHeartClick);
+        grid.appendChild(clone);
+      });
+    }
+
+    function onHeartClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const card = this.closest('a.card');
+      const href = card.getAttribute('href');
+      let favs = getFavs();
+      const idx = favs.indexOf(href);
+      if (idx === -1) {
+        favs.push(href);
+      } else {
+        favs.splice(idx, 1);
+      }
+      setFavs(favs);
+      const isFaved = favs.includes(href);
+      document.querySelectorAll('a.card[href="' + href + '"] .fav-btn').forEach(function(b) {
+        b.classList.toggle('faved', isFaved);
+        b.innerHTML = isFaved ? HEART_FILLED : HEART_EMPTY;
+      });
+      renderFavsSection();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const favs = getFavs();
+      document.querySelectorAll('a.card[href]').forEach(function(card) {
+        const href = card.getAttribute('href');
+        const isFaved = favs.includes(href);
+        const btn = document.createElement('button');
+        btn.className = 'fav-btn' + (isFaved ? ' faved' : '');
+        btn.setAttribute('aria-label', 'Favourite');
+        btn.innerHTML = isFaved ? HEART_FILLED : HEART_EMPTY;
+        btn.addEventListener('click', onHeartClick);
+        card.appendChild(btn);
+      });
+      renderFavsSection();
+    });
+  </script>
 
   <script src="avatar.js"></script>
   <script>
