@@ -1231,15 +1231,7 @@
 
     <!-- Lessons -->
     <div class="section-label">Lessons</div>
-    <div class="tab-row" id="setup-lesson-tabs">
-      <button class="tab active" data-min="1" data-max="3">L1–3</button>
-      <button class="tab" data-min="4" data-max="6">L4–6</button>
-      <button class="tab" data-min="8" data-max="8">L7–8</button>
-      <button class="tab" data-min="9" data-max="12">L9–12</button>
-      <button class="tab" data-min="13" data-max="15">L13–15</button>
-      <button class="tab" data-min="16" data-max="19">L16–19</button>
-      <button class="tab" data-max="test">Test</button>
-    </div>
+    <div class="tab-row" id="setup-lesson-tabs"></div>
 
     <!-- Test mode -->
     <div class="section-label">Test Mode</div>
@@ -1631,14 +1623,18 @@
       fetch('chinese-p1.json').then(r => r.json()).catch(() => null),
       fetch('chinese-p2.json').then(r => r.json()).catch(() => null),
       fetch('chinese-p3.json').then(r => r.json()).catch(() => null),
-    ]).then(([p1, p2, p3]) => { DATA.p1 = p1; DATA.p2 = p2; DATA.p3 = p3; });
+    ]).then(([p1, p2, p3]) => { 
+      DATA.p1 = p1; DATA.p2 = p2; DATA.p3 = p3; 
+      if (typeof renderSetupLessonTabs === 'function') renderSetupLessonTabs();
+    });
 
-    function getWordPool(level, lessonMin, lessonMax) {
+    function getWordPool(level, lessons) {
       const data = DATA[level];
       if (!data) return [];
       const seen = new Set();
       const words = [];
-      for (let i = lessonMin; i <= lessonMax; i++) {
+      const lessonArray = (lessons === 'all') ? Array.from({length: getLessonCount(level)}, (_, i) => i + 1) : lessons;
+      for (const i of lessonArray) {
         const lessonKey = `${level}-${i}`;
         (data[lessonKey] || []).forEach(entry => {
           const key = `${lessonKey}-${entry.character}`;
@@ -1848,8 +1844,7 @@
     // ═══════════════════════════════════════════════════════════════
     const S = {
       level: 'p1',
-      lessonMin: 1,
-      lessonMax: 3,
+      lessons: [1],
       lessonTest: false,
       mode: 'pinyin-chinese',
       cards: [],
@@ -1926,18 +1921,46 @@
       });
     }
 
-    bindTabs('setup-level-tabs', tab => { S.level = tab.dataset.level; });
-    bindTabs('setup-lesson-tabs', tab => {
-      if (tab.dataset.max === 'test') {
-        S.lessonTest = true;
-        S.lessonMin = 1;
-        S.lessonMax = 19;
-      } else {
-        S.lessonTest = false;
-        S.lessonMin = Number(tab.dataset.min);
-        S.lessonMax = Number(tab.dataset.max);
-      }
+    bindTabs('setup-level-tabs', tab => { 
+      S.level = tab.dataset.level; 
+      S.lessons = [1];
+      S.lessonTest = false;
+      renderSetupLessonTabs();
     });
+
+    function renderSetupLessonTabs() {
+      const container = document.getElementById('setup-lesson-tabs');
+      if (!container) return;
+      container.innerHTML = '';
+      const count = getLessonCount(S.level);
+      
+      for (let i = 1; i <= count; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'tab' + (S.lessons.includes(i) && !S.lessonTest ? ' active' : '');
+        btn.textContent = 'L' + i;
+        btn.addEventListener('click', () => {
+          S.lessonTest = false;
+          if (S.lessons.includes(i)) {
+            S.lessons = S.lessons.filter(l => l !== i);
+            if (S.lessons.length === 0) S.lessons = [i];
+          } else {
+            S.lessons.push(i);
+            S.lessons.sort((a,b) => a-b);
+          }
+          renderSetupLessonTabs();
+        });
+        container.appendChild(btn);
+      }
+      
+      const testBtn = document.createElement('button');
+      testBtn.className = 'tab' + (S.lessonTest ? ' active' : '');
+      testBtn.textContent = 'Test';
+      testBtn.addEventListener('click', () => {
+        S.lessonTest = true;
+        renderSetupLessonTabs();
+      });
+      container.appendChild(testBtn);
+    }
     bindTabs('setup-mode-tabs', tab => { S.mode = tab.dataset.mode; });
 
     document.getElementById('setup-stats-btn').addEventListener('click', () => {
@@ -1954,7 +1977,7 @@
       await dataPromise;
       if (!DATA[S.level]) { showToast('Failed to load word data'); return; }
 
-      S.wordPool = getWordPool(S.level, S.lessonMin, S.lessonMax);
+      S.wordPool = getWordPool(S.level, S.lessonTest ? 'all' : S.lessons);
       if (S.wordPool.length === 0) { showToast('No words found'); return; }
 
       const cfg = SESSION_CONFIG[S.level];
@@ -2208,7 +2231,7 @@
 
     function renderStatsTable() {
       const progress = S.statsAvatarId ? loadProgress(S.statsAvatarId) : {};
-      const pool = getWordPool(S.statsLevel, 1, 19);
+      const pool = getWordPool(S.statsLevel, 'all');
 
       let rows = pool
         .map(w => ({ ...w, rec: progress[w.key] }))
@@ -2310,7 +2333,7 @@
       if (!td) return;
       const key = td.closest('tr').dataset.wordKey;
       if (!key) return;
-      const pool = getWordPool(S.statsLevel, 1, 19);
+      const pool = getWordPool(S.statsLevel, 'all');
       const word = pool.find(w => w.key === key);
       if (word) showCharModal(word);
     });
