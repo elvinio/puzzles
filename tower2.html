@@ -237,13 +237,18 @@ const EL_ACCEL      = 4;   // floors per second² (acceleration & braking)
 const EL_DWELL_TIME = 1;   // seconds to wait at each stop
 
 // ─── Sim constants ────────────────────────────────────────────────────────────
-const NUM_SIMS         = 100;
 const SIM_W            = 8;    // px (= CELL_W)
 const SIM_H            = 24;   // px (= ROOM_H)
-const SIM_WALK_SPEED   = 8;    // px/sec horizontal
+const SIM_WALK_SPEED   = 16;   // px/sec horizontal (normal speed)
 const SIM_WAIT_TIME    = 5;    // seconds at destination
 const SIM_BOARD_THRESH = 0.2;  // floors — car must be this close to board/disembark
 const SIM_STATE = { WAITING: 0, WALK_TO_ELEV: 1, QUEUING: 2, RIDING: 3, WALK_TO_DEST: 4 };
+const SIM_SCHED = {
+  WORKER_OUTSIDE: 0, WORKER_ARRIVING: 1, WORKER_AT_WORK: 2,
+  WORKER_GOING_LUNCH: 3, WORKER_AT_LUNCH: 4, WORKER_RETURNING: 5, WORKER_LEAVING: 6,
+  RESIDENT_SLEEPING: 7, RESIDENT_HOME: 8, RESIDENT_OUTSIDE: 9,
+  GUEST_IN_ROOM: 10,
+};
 
 const ROOM_DEFS = {
   lobby:  { widthCells: 32, heightFloors: 1, minFloor: 0,    maxFloor: 0,   color: 0x7A6040, label: 'Lobby'  },
@@ -307,7 +312,7 @@ const SUITE_HOTEL_COL_SX = [0, 88, 176, 264, 352, 440, 528, 616, 704];
 const SUITE_HOTEL_ROW_SY = [0, 32];
 
 // ─── Game state ───────────────────────────────────────────────────────────────
-const building = { rooms: [], nextId: 1 };
+const building = { rooms: [], sims: [], nextId: 1 };
 
 const SAVE_KEY = 'tower2_state';
 
@@ -325,6 +330,7 @@ function loadState() {
     for (const room of rooms) createRoomSprite(room);
     const subwayRoom = building.rooms.find(r => r.type === 'subway');
     if (subwayRoom) createSubwayLine(subwayRoom);
+    generateSimsForAllRooms();
   } catch (e) {
     console.warn('tower2: failed to load saved state', e);
   }
@@ -332,6 +338,7 @@ function loadState() {
 let tool      = 'select';
 let gameHour  = 9;
 let prevHourInt = 9;
+let prevMinuteInt = 0;
 let totalGameHours = 9;  // drives gameHour; starts at 9am day 1 year 0
 let clockState = 'play'; // 'stopped' | 'play' | 'fast'
 let towerFund  = 2000000;
@@ -366,19 +373,7 @@ let   beamTex     = null;
 let   simTex      = null;
 const labelPool   = [];           // pooled PIXI.Text objects
 
-// ─── ECS component arrays (parallel, indexed by simId 0..NUM_SIMS-1) ─────────
-const simX         = new Float32Array(NUM_SIMS);
-const simY         = new Float32Array(NUM_SIMS);
-const simFloor     = new Int16Array(NUM_SIMS);
-const simDestX     = new Float32Array(NUM_SIMS);
-const simDestFloor = new Int16Array(NUM_SIMS);
-const simState     = new Uint8Array(NUM_SIMS);
-const simTimer     = new Float32Array(NUM_SIMS);
-const simElevId    = new Int32Array(NUM_SIMS).fill(-1);
-const simPath      = new Array(NUM_SIMS).fill(null);   // Array<{elevId,boardFloor,exitFloor}>
-const simStep      = new Uint8Array(NUM_SIMS);
-const simSprites   = new Array(NUM_SIMS);
-// Per-elevator-per-floor queue: Map<roomId, { [floor]: simId[] }>
+// Per-elevator-per-floor queue: Map<roomId, { [floor]: sim[] }>
 const elevQueues   = new Map();
 
 let elevatorDragState = null;     // { room, end:'top'|'bottom' }
@@ -561,6 +556,7 @@ function placeRoom(type, col, floor) {
   if (type === 'elevator')    { room.bottomFloor = floor - 1; room.topFloor = floor; room.floor = floor - 1; room.carFloor = floor - 1; room.carTarget = floor - 1; room.carPassengers = 0; room.carVelocity = 0; room.elevState = 'idle'; room.dwellTimer = 0; room.requestQueue = []; room.homerFloor = 0; }
   building.rooms.push(room);
   createRoomSprite(room);
+  generateSimsForRoom(room);
   if (type === 'carpark_ramp') { refreshCarparkRampNeighbors(col, floor); refreshCarparkLotsOnFloor(floor); }
   if (type === 'carpark_lot')  refreshCarparkLotsOnFloor(floor);
   saveState();
@@ -585,6 +581,7 @@ function deleteAt(col, floor) {
       }
     }
     const { col: rc, floor: rf, type: rt } = room;
+    removeSimsForRoom(room.id);
     destroyRoomSprite(room.id);
     building.rooms.splice(idx, 1);
     if (rt === 'carpark_ramp') { refreshCarparkRampNeighbors(rc, rf); refreshCarparkLotsOnFloor(rf); }
@@ -852,21 +849,21 @@ function handleElevatorDrag(targetFloor) {
   buildElevatorSprites(room);
 }
 
-function condoTimeCol() {
-  if (gameHour >= 6  && gameHour < 17) return 0;
-  if (gameHour >= 17 && gameHour < 21) return 1;
-  return 2;
-}
-
 function getRoomTexture(room) {
   switch (room.type) {
     case 'lobby':  return texCache['lobby'];
     case 'office': {
-      const phase = (gameHour >= 6 && gameHour < 21) ? 'day' : 'night';
+      const phase = room.hasWorkers ? 'day' : 'night';
       return texCache[`office_${phase}_${room.colVar ?? 0}_${room.rowVar ?? 0}`];
     }
-    case 'condo':
-      return texCache[`condo_${condoTimeCol()}_${room.variant ?? 0}`];
+    case 'condo': {
+      let tod;
+      if (room.residentsAsleep) { tod = 2; }
+      else if (gameHour >= 6 && gameHour < 17) { tod = 0; }
+      else if (gameHour < 21) { tod = 1; }
+      else { tod = 2; }
+      return texCache[`condo_${tod}_${room.variant ?? 0}`];
+    }
     case 'recycling':
       return texCache[`recycling_${room.fillLevel ?? 0}`];
     case 'subway': {
@@ -986,11 +983,15 @@ function destroyRoomSprite(roomId) {
   destroyBeamSprite(roomId);
 }
 
+function updateRoomTexture(room) {
+  const sprite = roomSprites.get(room.id);
+  if (sprite) sprite.texture = getRoomTexture(room);
+}
+
 function updateAllRoomTextures() {
   for (const room of building.rooms) {
     if (!['office', 'condo', 'retail', 'restaurant', 'cafe', 'recycling', 'single_hotel', 'twin_hotel', 'suite_hotel', 'subway'].includes(room.type)) continue;
-    const sprite = roomSprites.get(room.id);
-    if (sprite) sprite.texture = getRoomTexture(room);
+    updateRoomTexture(room);
   }
 }
 
@@ -1599,7 +1600,8 @@ function getTimeInfo() {
 function updateClockDisplay() {
   const { hourOfDay, dayOfQuarter, quarter, year } = getTimeInfo();
   const h = Math.floor(hourOfDay);
-  document.getElementById('clock-time').textContent = String(h).padStart(2, '0') + ':00';
+  const m = Math.floor((hourOfDay % 1) * 60);
+  document.getElementById('clock-time').textContent = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
   document.getElementById('clock-date').textContent = `Y${year} Q${quarter} D${dayOfQuarter}`;
 }
 
@@ -1706,15 +1708,6 @@ function simFloorY(floor) {
   return WORLD_GROUND_Y - (floor + 1) * FLOOR_H + BEAM_H;
 }
 
-function pickSimDest(i) {
-  const rooms = building.rooms.filter(r => r.type !== 'elevator');
-  if (rooms.length === 0) { simDestFloor[i] = simFloor[i]; simDestX[i] = simX[i]; return; }
-  const room = rooms[Math.floor(Math.random() * rooms.length)];
-  simDestFloor[i] = room.floor;
-  const w = (room.widthCells ?? ROOM_DEFS[room.type].widthCells) * CELL_W;
-  simDestX[i] = room.col * CELL_W + Math.random() * Math.max(0, w - SIM_W);
-}
-
 function astarPath(startFloor, endFloor) {
   if (startFloor === endFloor) return [];
   const gScore   = new Map([[startFloor, 0]]);
@@ -1753,132 +1746,427 @@ function astarPath(startFloor, endFloor) {
   return null;
 }
 
+function simWalkSpeed() {
+  return SIM_WALK_SPEED * (clockState === 'fast' ? 5 : 1);
+}
+
 function initSims() {
-  const lobby = building.rooms.find(r => r.type === 'lobby');
-  const lobbyW = lobby ? (lobby.widthCells ?? ROOM_DEFS.lobby.widthCells) * CELL_W : GRID_COLS * CELL_W;
-  const lobbyX0 = lobby ? lobby.col * CELL_W : 0;
-  const lobbyY = simFloorY(0);
-  for (let i = 0; i < NUM_SIMS; i++) {
-    simX[i]     = lobbyX0 + Math.random() * Math.max(0, lobbyW - SIM_W);
-    simY[i]     = lobbyY;
-    simFloor[i] = 0;
-    simState[i] = SIM_STATE.WAITING;
-    simTimer[i] = Math.random() * SIM_WAIT_TIME;
-    const sprite = new PIXI.Sprite(simTex);
-    sprite.width  = SIM_W;
-    sprite.height = SIM_H;
-    sprite.x = simX[i];
-    sprite.y = lobbyY;
-    simSprites[i] = sprite;
-    simLayer.addChild(sprite);
+  building.sims = [];
+}
+
+// ─── Sim creation & schedule helpers ─────────────────────────────────────────
+
+function createSim(room, type) {
+  const sprite = new PIXI.Sprite(simTex);
+  sprite.width = SIM_W; sprite.height = SIM_H;
+  sprite.visible = false;
+  simLayer.addChild(sprite);
+  const sim = {
+    id: building.nextId++,
+    homeRoomId: room.id,
+    type,
+    x: 0, y: 0, floor: 0,
+    destX: 0, destFloor: 0,
+    state: SIM_STATE.WAITING,
+    timer: SIM_WAIT_TIME,
+    elevId: -1, path: null, step: 0,
+    sched: 0, wakeHour: 0, arriveHour: 0,
+    lunchedToday: false,
+    sprite,
+  };
+  building.sims.push(sim);
+  return sim;
+}
+
+function sendSimToRoom(sim, room) {
+  const def = ROOM_DEFS[room.type];
+  const rW = (room.widthCells ?? def.widthCells) * CELL_W;
+  sim.destX = room.col * CELL_W + Math.random() * Math.max(0, rW - SIM_W);
+  sim.destFloor = room.floor;
+  if (sim.floor === room.floor) {
+    sim.path = []; sim.step = 0;
+    sim.state = SIM_STATE.WALK_TO_DEST;
+  } else {
+    const path = astarPath(sim.floor, room.floor);
+    if (!path || path.length === 0) {
+      sim.destX = sim.x; sim.destFloor = sim.floor;
+      sim.path = []; sim.step = 0;
+      sim.state = SIM_STATE.WALK_TO_DEST;
+    } else {
+      sim.path = path; sim.step = 0;
+      sim.state = SIM_STATE.WALK_TO_ELEV;
+    }
   }
 }
 
-function tickSims(dt) {
-  for (let i = 0; i < NUM_SIMS; i++) {
-    const st = simState[i];
+function placeSimInRoom(sim, room) {
+  const def = ROOM_DEFS[room.type];
+  const rW = (room.widthCells ?? def.widthCells) * CELL_W;
+  sim.floor = room.floor;
+  sim.x = room.col * CELL_W + Math.random() * Math.max(0, rW - SIM_W);
+  sim.y = simFloorY(room.floor);
+  sim.state = SIM_STATE.WAITING;
+  sim.timer = SIM_WAIT_TIME;
+  sim.sprite.x = sim.x; sim.sprite.y = sim.y;
+  sim.sprite.visible = true;
+}
 
-    if (st === SIM_STATE.WAITING) {
-      simTimer[i] -= dt;
-      if (simTimer[i] <= 0) {
-        pickSimDest(i);
-        if (simDestFloor[i] === simFloor[i]) {
-          simPath[i] = []; simStep[i] = 0;
-          simState[i] = SIM_STATE.WALK_TO_DEST;
-        } else {
-          const path = astarPath(simFloor[i], simDestFloor[i]);
+function placeSimInLobby(sim) {
+  const lobby = building.rooms.find(r => r.type === 'lobby');
+  const lobbyX = lobby ? lobby.col * CELL_W : 0;
+  const lobbyW = lobby ? (lobby.widthCells ?? ROOM_DEFS.lobby.widthCells) * CELL_W : 8;
+  sim.floor = 0;
+  sim.x = lobbyX + Math.random() * Math.max(0, lobbyW - SIM_W);
+  sim.y = simFloorY(0);
+  sim.state = SIM_STATE.WAITING;
+  sim.timer = 0;
+  sim.sprite.x = sim.x; sim.sprite.y = sim.y;
+  sim.sprite.visible = true;
+}
+
+function initWorkerSim(sim, room, gt) {
+  if (gt < sim.arriveHour || gt >= 18) {
+    sim.sched = SIM_SCHED.WORKER_OUTSIDE;
+    sim.sprite.visible = false;
+  } else if (gt >= sim.arriveHour && gt < 12) {
+    sim.sched = SIM_SCHED.WORKER_ARRIVING;
+    sim.lunchedToday = false;
+    placeSimInLobby(sim);
+    sendSimToRoom(sim, room);
+  } else if (gt >= 12 && gt < 14) {
+    sim.sched = SIM_SCHED.WORKER_AT_WORK;
+    sim.lunchedToday = false;
+    placeSimInRoom(sim, room);
+  } else {
+    sim.sched = SIM_SCHED.WORKER_AT_WORK;
+    sim.lunchedToday = true;
+    placeSimInRoom(sim, room);
+  }
+}
+
+function initResidentSim(sim, room, roomX, roomW, gt) {
+  if (gt >= 21 || gt < sim.wakeHour) {
+    sim.sched = SIM_SCHED.RESIDENT_SLEEPING;
+    sim.sprite.visible = false;
+  } else if (gt >= 7 && gt < 19) {
+    sim.sched = SIM_SCHED.RESIDENT_OUTSIDE;
+    sim.sprite.visible = false;
+  } else {
+    sim.sched = SIM_SCHED.RESIDENT_HOME;
+    sim.floor = room.floor;
+    sim.x = roomX + Math.random() * Math.max(0, roomW - SIM_W);
+    sim.y = simFloorY(room.floor);
+    sim.sprite.x = sim.x; sim.sprite.y = sim.y;
+    sim.sprite.visible = true;
+  }
+}
+
+function generateSimsForRoom(room) {
+  let count = 0, type = null;
+  if (room.type === 'office') { count = 4; type = 'worker'; }
+  else if (room.type === 'condo') { count = 2; type = 'resident'; }
+  else if (room.type === 'single_hotel' || room.type === 'twin_hotel' || room.type === 'suite_hotel') { count = 2; type = 'guest'; }
+  else return;
+
+  const def = ROOM_DEFS[room.type];
+  const roomX = room.col * CELL_W;
+  const roomW = (room.widthCells ?? def.widthCells) * CELL_W;
+  const gt = totalGameHours % 24;
+
+  for (let n = 0; n < count; n++) {
+    const sim = createSim(room, type);
+    if (type === 'worker') {
+      sim.arriveHour = 8 + Math.random();
+      initWorkerSim(sim, room, gt);
+    } else if (type === 'resident') {
+      sim.wakeHour = 5 + Math.random() * 2;
+      initResidentSim(sim, room, roomX, roomW, gt);
+    } else {
+      sim.sched = SIM_SCHED.GUEST_IN_ROOM;
+      sim.floor = room.floor;
+      sim.x = roomX + Math.random() * Math.max(0, roomW - SIM_W);
+      sim.y = simFloorY(room.floor);
+      sim.sprite.x = sim.x; sim.sprite.y = sim.y;
+      sim.sprite.visible = true;
+    }
+  }
+}
+
+function generateSimsForAllRooms() {
+  for (const room of building.rooms) generateSimsForRoom(room);
+}
+
+function removeSimsForRoom(roomId) {
+  const toRemove = building.sims.filter(s => s.homeRoomId === roomId);
+  for (const sim of toRemove) {
+    for (const [, fq] of elevQueues) {
+      for (const floor in fq) {
+        const idx = fq[floor].indexOf(sim);
+        if (idx >= 0) fq[floor].splice(idx, 1);
+      }
+    }
+    sim.sprite.destroy();
+  }
+  building.sims = building.sims.filter(s => s.homeRoomId !== roomId);
+}
+
+// ─── Schedule FSM ─────────────────────────────────────────────────────────────
+
+function tickWorkerSched(sim, gt) {
+  const homeRoom = building.rooms.find(r => r.id === sim.homeRoomId);
+  if (!homeRoom) return;
+
+  switch (sim.sched) {
+    case SIM_SCHED.WORKER_OUTSIDE:
+      if (gt >= sim.arriveHour && gt < 18) {
+        sim.sched = SIM_SCHED.WORKER_ARRIVING;
+        sim.lunchedToday = false;
+        placeSimInLobby(sim);
+        sendSimToRoom(sim, homeRoom);
+      }
+      break;
+
+    case SIM_SCHED.WORKER_ARRIVING:
+      if (gt >= 18) { sim.sched = SIM_SCHED.WORKER_LEAVING; break; }
+      if (sim.state === SIM_STATE.WAITING && sim.floor === homeRoom.floor) {
+        sim.sched = SIM_SCHED.WORKER_AT_WORK;
+      }
+      break;
+
+    case SIM_SCHED.WORKER_AT_WORK:
+      if (gt >= 18) { sim.sched = SIM_SCHED.WORKER_LEAVING; break; }
+      if (gt >= 12 && gt < 14 && !sim.lunchedToday) {
+        const lunch = building.rooms.find(r => r.type === 'restaurant' || r.type === 'cafe');
+        sim.lunchedToday = true;
+        sim.sched = SIM_SCHED.WORKER_GOING_LUNCH;
+        if (lunch) sendSimToRoom(sim, lunch);
+      }
+      break;
+
+    case SIM_SCHED.WORKER_GOING_LUNCH: {
+      if (gt >= 18) { sim.sched = SIM_SCHED.WORKER_LEAVING; break; }
+      const lunchRoom = building.rooms.find(r => r.type === 'restaurant' || r.type === 'cafe');
+      if (!lunchRoom || (sim.state === SIM_STATE.WAITING && sim.floor === (lunchRoom?.floor ?? sim.floor))) {
+        sim.sched = SIM_SCHED.WORKER_AT_LUNCH;
+      }
+      break;
+    }
+
+    case SIM_SCHED.WORKER_AT_LUNCH:
+      if (gt >= 14 || gt >= 18) {
+        sim.sched = SIM_SCHED.WORKER_RETURNING;
+        sendSimToRoom(sim, homeRoom);
+      }
+      break;
+
+    case SIM_SCHED.WORKER_RETURNING:
+      if (gt >= 18) { sim.sched = SIM_SCHED.WORKER_LEAVING; break; }
+      if (sim.state === SIM_STATE.WAITING && sim.floor === homeRoom.floor) {
+        sim.sched = SIM_SCHED.WORKER_AT_WORK;
+      }
+      break;
+
+    case SIM_SCHED.WORKER_LEAVING:
+      if (sim.floor !== 0 || sim.state !== SIM_STATE.WAITING) {
+        if (sim.state === SIM_STATE.WAITING) {
+          sim.destX = sim.x; sim.destFloor = 0;
+          const path = astarPath(sim.floor, 0);
           if (!path || path.length === 0) {
-            simDestFloor[i] = simFloor[i];
-            simPath[i] = []; simStep[i] = 0;
-            simState[i] = SIM_STATE.WALK_TO_DEST;
+            sim.floor = 0; sim.y = simFloorY(0);
+            sim.sprite.visible = false;
+            sim.sched = SIM_SCHED.WORKER_OUTSIDE;
           } else {
-            simPath[i] = path; simStep[i] = 0;
-            simState[i] = SIM_STATE.WALK_TO_ELEV;
+            sim.path = path; sim.step = 0;
+            sim.state = SIM_STATE.WALK_TO_ELEV;
           }
         }
+      } else {
+        sim.sprite.visible = false;
+        sim.sched = SIM_SCHED.WORKER_OUTSIDE;
       }
+      break;
+  }
+}
+
+function tickResidentSched(sim, gt) {
+  const homeRoom = building.rooms.find(r => r.id === sim.homeRoomId);
+  if (!homeRoom) return;
+  const def = ROOM_DEFS[homeRoom.type];
+  const roomX = homeRoom.col * CELL_W;
+  const roomW = (homeRoom.widthCells ?? def.widthCells) * CELL_W;
+
+  switch (sim.sched) {
+    case SIM_SCHED.RESIDENT_SLEEPING:
+      if (gt >= sim.wakeHour && gt < 21) {
+        sim.sched = SIM_SCHED.RESIDENT_HOME;
+        sim.floor = homeRoom.floor;
+        sim.x = roomX + Math.random() * Math.max(0, roomW - SIM_W);
+        sim.y = simFloorY(homeRoom.floor);
+        sim.state = SIM_STATE.WAITING; sim.timer = SIM_WAIT_TIME;
+        sim.sprite.x = sim.x; sim.sprite.y = sim.y;
+        sim.sprite.visible = true;
+      }
+      break;
+
+    case SIM_SCHED.RESIDENT_HOME:
+      if (gt >= 7 && gt < 19) {
+        sim.sched = SIM_SCHED.RESIDENT_OUTSIDE;
+        sim.sprite.visible = false;
+      } else if (gt >= 21 || (gt < sim.wakeHour && gt < 7)) {
+        sim.sched = SIM_SCHED.RESIDENT_SLEEPING;
+        sim.sprite.visible = false;
+      }
+      break;
+
+    case SIM_SCHED.RESIDENT_OUTSIDE:
+      if (gt >= 19 && gt < 21) {
+        sim.sched = SIM_SCHED.RESIDENT_HOME;
+        sim.floor = homeRoom.floor;
+        sim.x = roomX + Math.random() * Math.max(0, roomW - SIM_W);
+        sim.y = simFloorY(homeRoom.floor);
+        sim.state = SIM_STATE.WAITING; sim.timer = SIM_WAIT_TIME;
+        sim.sprite.x = sim.x; sim.sprite.y = sim.y;
+        sim.sprite.visible = true;
+      }
+      break;
+  }
+}
+
+function updateRoomOccupancyFlags() {
+  // Save previous values, then reset current for recompute
+  const prevWorkers = new Map();
+  const prevSleep   = new Map();
+  for (const room of building.rooms) {
+    if (room.type === 'office') { prevWorkers.set(room.id, !!room.hasWorkers); room.hasWorkers = false; }
+    if (room.type === 'condo')  { prevSleep.set(room.id, !!room.residentsAsleep); room._tracked = 0; room._sleeping = 0; }
+  }
+  for (const sim of building.sims) {
+    if (sim.type === 'worker') {
+      const room = building.rooms.find(r => r.id === sim.homeRoomId);
+      if (!room) continue;
+      if (sim.sched === SIM_SCHED.WORKER_AT_WORK || sim.sched === SIM_SCHED.WORKER_ARRIVING || sim.sched === SIM_SCHED.WORKER_RETURNING) {
+        room.hasWorkers = true;
+      }
+    } else if (sim.type === 'resident') {
+      const room = building.rooms.find(r => r.id === sim.homeRoomId);
+      if (!room) continue;
+      room._tracked = (room._tracked || 0) + 1;
+      if (sim.sched === SIM_SCHED.RESIDENT_SLEEPING) room._sleeping = (room._sleeping || 0) + 1;
+    }
+  }
+  for (const room of building.rooms) {
+    if (room.type === 'office') {
+      if (room.hasWorkers !== prevWorkers.get(room.id)) updateRoomTexture(room);
+    }
+    if (room.type === 'condo') {
+      const total = room._tracked || 0;
+      room.residentsAsleep = total > 0 && (room._sleeping || 0) === total;
+      if (room.residentsAsleep !== prevSleep.get(room.id)) updateRoomTexture(room);
+    }
+  }
+}
+
+function tickSchedules() {
+  const gt = totalGameHours % 24;
+  for (const sim of building.sims) {
+    if (sim.type === 'worker') tickWorkerSched(sim, gt);
+    else if (sim.type === 'resident') tickResidentSched(sim, gt);
+  }
+  updateRoomOccupancyFlags();
+}
+
+// ─── Low-level sim movement tick ──────────────────────────────────────────────
+
+function tickSims(dt) {
+  const spd = simWalkSpeed();
+  for (const sim of building.sims) {
+    if (!sim.sprite.visible) continue;
+    const st = sim.state;
+
+    if (st === SIM_STATE.WAITING) {
+      // schedule FSM drives destination; low-level waiting just idles
 
     } else if (st === SIM_STATE.WALK_TO_ELEV) {
-      const step = simPath[i][simStep[i]];
+      const step = sim.path[sim.step];
       const elev = building.rooms.find(r => r.id === step.elevId);
-      if (!elev) { simState[i] = SIM_STATE.WAITING; simTimer[i] = 0; continue; }
+      if (!elev) { sim.state = SIM_STATE.WAITING; sim.timer = 0; continue; }
       const targetX = elev.col * CELL_W - SIM_W;
-      const dx = targetX - simX[i];
-      if (Math.abs(dx) <= SIM_WALK_SPEED * dt) {
-        simX[i] = targetX;
+      const dx = targetX - sim.x;
+      if (Math.abs(dx) <= spd * dt) {
+        sim.x = targetX;
         if (!elevQueues.has(elev.id)) elevQueues.set(elev.id, {});
         const fq = elevQueues.get(elev.id);
         if (!fq[step.boardFloor]) fq[step.boardFloor] = [];
-        fq[step.boardFloor].push(i);
-        simElevId[i] = elev.id;
+        fq[step.boardFloor].push(sim);
+        sim.elevId = elev.id;
         addElevRequest(elev, step.boardFloor);
-        simState[i] = SIM_STATE.QUEUING;
+        sim.state = SIM_STATE.QUEUING;
       } else {
-        simX[i] += Math.sign(dx) * SIM_WALK_SPEED * dt;
+        sim.x += Math.sign(dx) * spd * dt;
       }
 
     } else if (st === SIM_STATE.QUEUING) {
-      const step = simPath[i][simStep[i]];
-      const elev = building.rooms.find(r => r.id === simElevId[i]);
+      const step = sim.path[sim.step];
+      const elev = building.rooms.find(r => r.id === sim.elevId);
       if (!elev) {
-        const fq = elevQueues.get(simElevId[i]);
+        const fq = elevQueues.get(sim.elevId);
         if (fq && fq[step.boardFloor]) {
-          const idx = fq[step.boardFloor].indexOf(i);
+          const idx = fq[step.boardFloor].indexOf(sim);
           if (idx >= 0) fq[step.boardFloor].splice(idx, 1);
         }
-        simElevId[i] = -1; simState[i] = SIM_STATE.WAITING; simTimer[i] = 0; continue;
+        sim.elevId = -1; sim.state = SIM_STATE.WAITING; sim.timer = 0; continue;
       }
       const fq = elevQueues.get(elev.id) || {};
       const queue = fq[step.boardFloor] || [];
-      const qIdx = queue.indexOf(i);
+      const qIdx = queue.indexOf(sim);
       if (qIdx >= 0) {
-        simX[i] = (elev.col + 4) * CELL_W + qIdx * SIM_W;
-        simY[i] = simFloorY(step.boardFloor);
+        sim.x = (elev.col + 4) * CELL_W + qIdx * SIM_W;
+        sim.y = simFloorY(step.boardFloor);
       }
       if (elev.elevState === 'dwelling' && elev.carFloor === step.boardFloor) {
         queue.splice(qIdx, 1);
         addElevRequest(elev, step.exitFloor);
-        simState[i] = SIM_STATE.RIDING;
+        sim.state = SIM_STATE.RIDING;
       }
 
     } else if (st === SIM_STATE.RIDING) {
-      const step = simPath[i][simStep[i]];
-      const elev = building.rooms.find(r => r.id === simElevId[i]);
-      if (!elev) { simElevId[i] = -1; simState[i] = SIM_STATE.WAITING; simTimer[i] = 0; continue; }
-      simX[i] = elev.col * CELL_W + (4 * CELL_W - SIM_W) / 2;
-      simY[i] = WORLD_GROUND_Y - (elev.carFloor + 1) * FLOOR_H + BEAM_H;
+      const step = sim.path[sim.step];
+      const elev = building.rooms.find(r => r.id === sim.elevId);
+      if (!elev) { sim.elevId = -1; sim.state = SIM_STATE.WAITING; sim.timer = 0; continue; }
+      sim.x = elev.col * CELL_W + (4 * CELL_W - SIM_W) / 2;
+      sim.y = WORLD_GROUND_Y - (elev.carFloor + 1) * FLOOR_H + BEAM_H;
       if (elev.elevState === 'dwelling' && elev.carFloor === step.exitFloor) {
-        simFloor[i] = step.exitFloor;
-        simY[i]     = simFloorY(simFloor[i]);
-        simX[i]     = (elev.col + 4) * CELL_W;
-        simElevId[i] = -1;
-        simStep[i]++;
-        simState[i] = (simStep[i] < simPath[i].length) ? SIM_STATE.WALK_TO_ELEV : SIM_STATE.WALK_TO_DEST;
+        sim.floor = step.exitFloor;
+        sim.y = simFloorY(sim.floor);
+        sim.x = (elev.col + 4) * CELL_W;
+        sim.elevId = -1;
+        sim.step++;
+        sim.state = (sim.step < sim.path.length) ? SIM_STATE.WALK_TO_ELEV : SIM_STATE.WALK_TO_DEST;
       }
 
     } else if (st === SIM_STATE.WALK_TO_DEST) {
-      simY[i] = simFloorY(simFloor[i]);
-      const dx = simDestX[i] - simX[i];
-      if (Math.abs(dx) <= SIM_WALK_SPEED * dt) {
-        simX[i]     = simDestX[i];
-        simState[i] = SIM_STATE.WAITING;
-        simTimer[i] = SIM_WAIT_TIME;
+      sim.y = simFloorY(sim.floor);
+      const dx = sim.destX - sim.x;
+      if (Math.abs(dx) <= spd * dt) {
+        sim.x = sim.destX;
+        sim.state = SIM_STATE.WAITING;
+        sim.timer = SIM_WAIT_TIME;
       } else {
-        simX[i] += Math.sign(dx) * SIM_WALK_SPEED * dt;
+        sim.x += Math.sign(dx) * spd * dt;
       }
     }
 
-    simSprites[i].x = simX[i];
-    simSprites[i].y = simY[i];
+    sim.sprite.x = sim.x;
+    sim.sprite.y = sim.y;
   }
 
   // Update elevator passenger counts
   for (const r of building.rooms) {
     if (r.type === 'elevator') r.carPassengers = 0;
   }
-  for (let i = 0; i < NUM_SIMS; i++) {
-    if (simState[i] === SIM_STATE.RIDING && simElevId[i] >= 0) {
-      const r = building.rooms.find(r => r.id === simElevId[i]);
+  for (const sim of building.sims) {
+    if (sim.state === SIM_STATE.RIDING && sim.elevId >= 0) {
+      const r = building.rooms.find(r => r.id === sim.elevId);
       if (r) r.carPassengers++;
     }
   }
@@ -1902,6 +2190,11 @@ function gameLoop(ticker) {
     updateDayNightButton();
     updateClockDisplay();
   }
+  const minInt = Math.floor((totalGameHours % 1) * 60);
+  if (minInt !== prevMinuteInt) {
+    prevMinuteInt = minInt;
+    updateClockDisplay();
+  }
 
   // Animate elevator cars
   const dt = ticker.deltaMS / 1000;
@@ -1910,7 +2203,10 @@ function gameLoop(ticker) {
     tickElevator(room, dt);
   }
 
-  if (clockState !== 'stopped') tickSims(dt);
+  if (clockState !== 'stopped') {
+    tickSchedules();
+    tickSims(dt);
+  }
 }
 
 // ─── Error overlay ────────────────────────────────────────────────────────────
@@ -1990,8 +2286,8 @@ function showError(msg) {
 
     buildScene();
     buildStarGraphics();
-    loadState();
     initSims();
+    loadState();
     refreshVisuals();
 
     attachInput();
