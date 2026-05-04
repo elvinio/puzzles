@@ -116,6 +116,8 @@
     .tool-btn.destroy.active { border-color: #ff6666; background: #551111; color: #ff9999; }
     .tool-btn.daynight { border-color: #667; color: #aab; }
     .tool-btn.daynight.night { border-color: #446; background: #112244; color: #99aaff; }
+    .tool-btn.reset-btn { border-color: #883333; color: #cc6666; grid-column: span 2; height: 32px; }
+    .tool-btn.reset-btn:hover { background: #4a1a1a; border-color: #cc4444; }
     .tool-icon { font-size: 15px; line-height: 1; }
     .tool-label { font-size: 8px; line-height: 1; }
   </style>
@@ -212,6 +214,10 @@
     <button id="daynight-btn" class="tool-btn daynight">
       <span class="tool-icon" id="daynight-icon">☀️</span>
       <span class="tool-label" id="daynight-label">Day</span>
+    </button>
+    <button id="btn-reset" class="tool-btn reset-btn">
+      <span class="tool-icon">🗑</span>
+      <span class="tool-label">Reset Game</span>
     </button>
   </div>
 </div>
@@ -1515,6 +1521,15 @@ function attachToolbar() {
 
   daynightBtn.addEventListener('click', toggleDayNight);
   daynightBtn.addEventListener('touchend', e => { e.preventDefault(); toggleDayNight(); });
+
+  const resetHandler = () => {
+    if (!confirm('Reset the game? All progress will be lost.')) return;
+    localStorage.removeItem(SAVE_KEY);
+    location.reload();
+  };
+  const resetBtn = document.getElementById('btn-reset');
+  resetBtn.addEventListener('click', resetHandler);
+  resetBtn.addEventListener('touchend', e => { e.preventDefault(); resetHandler(); });
 
   ['stop', 'play', 'ff'].forEach(id => {
     const btn = document.getElementById(`btn-${id}`);
