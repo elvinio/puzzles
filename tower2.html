@@ -241,11 +241,12 @@ const WORLD_GROUND_Y = MAX_FLOORS * FLOOR_H + 500; // 2900
 const EL_MAX_SPEED  = 2;   // floors per second (cruising)
 const EL_ACCEL      = 4;   // floors per second² (acceleration & braking)
 const EL_DWELL_TIME = 1;   // seconds to wait at each stop
+const EL_MAX_CAP    = 6;   // max passengers per elevator car
 
 // ─── Sim constants ────────────────────────────────────────────────────────────
 const SIM_W            = 8;    // px (= CELL_W)
 const SIM_H            = 24;   // px (= ROOM_H)
-const SIM_WALK_SPEED   = 16;   // px/sec horizontal (normal speed)
+const SIM_WALK_SPEED   = 40;   // px/sec horizontal (normal speed)
 const SIM_WAIT_TIME    = 5;    // seconds at destination
 const SIM_BOARD_THRESH = 0.2;  // floors — car must be this close to board/disembark
 const SIM_STATE = { WAITING: 0, WALK_TO_ELEV: 1, QUEUING: 2, RIDING: 3, WALK_TO_DEST: 4 };
@@ -1748,7 +1749,10 @@ function astarPath(startFloor, endFloor) {
       if (r.bottomFloor > current || r.topFloor < current) continue;
       for (let nb = r.bottomFloor; nb <= r.topFloor; nb++) {
         if (nb === current) continue;
-        const tg = cg + Math.abs(nb - current);
+        const fq = elevQueues.get(r.id) || {};
+        const qLen = (fq[current] || []).length;
+        const loadPenalty = (r.carPassengers + qLen) * 0.5;
+        const tg = cg + Math.abs(nb - current) + loadPenalty;
         if (tg < (gScore.get(nb) ?? Infinity)) {
           cameFrom.set(nb, { fromFloor: current, elevId: r.id });
           gScore.set(nb, tg);
@@ -1784,7 +1788,7 @@ function createSim(room, type) {
     destX: 0, destFloor: 0,
     state: SIM_STATE.WAITING,
     timer: SIM_WAIT_TIME,
-    elevId: -1, path: null, step: 0,
+    elevId: -1, path: null, step: 0, exitDelay: 0, exitDelaySet: false,
     sched: 0, wakeHour: 0, arriveHour: 0,
     lunchedToday: false,
     sprite,
@@ -2094,6 +2098,7 @@ function tickSchedules() {
 
 function tickSims(dt) {
   const spd = simWalkSpeed();
+  const boardingThisTick = new Map();
   for (const sim of building.sims) {
     if (!sim.sprite.visible) continue;
     const st = sim.state;
@@ -2139,9 +2144,13 @@ function tickSims(dt) {
         sim.y = simFloorY(step.boardFloor);
       }
       if (elev.elevState === 'dwelling' && elev.carFloor === step.boardFloor) {
-        queue.splice(qIdx, 1);
-        addElevRequest(elev, step.exitFloor);
-        sim.state = SIM_STATE.RIDING;
+        const alreadyBoarding = boardingThisTick.get(elev.id) || 0;
+        if (elev.carPassengers + alreadyBoarding < EL_MAX_CAP) {
+          boardingThisTick.set(elev.id, alreadyBoarding + 1);
+          queue.splice(qIdx, 1);
+          addElevRequest(elev, step.exitFloor);
+          sim.state = SIM_STATE.RIDING;
+        }
       }
 
     } else if (st === SIM_STATE.RIDING) {
@@ -2151,12 +2160,20 @@ function tickSims(dt) {
       sim.x = elev.col * CELL_W + (4 * CELL_W - SIM_W) / 2;
       sim.y = WORLD_GROUND_Y - (elev.carFloor + 1) * FLOOR_H + BEAM_H;
       if (elev.elevState === 'dwelling' && elev.carFloor === step.exitFloor) {
-        sim.floor = step.exitFloor;
-        sim.y = simFloorY(sim.floor);
-        sim.x = (elev.col + 4) * CELL_W;
-        sim.elevId = -1;
-        sim.step++;
-        sim.state = (sim.step < sim.path.length) ? SIM_STATE.WALK_TO_ELEV : SIM_STATE.WALK_TO_DEST;
+        if (!sim.exitDelaySet) {
+          sim.exitDelay = Math.random() * 0.4;
+          sim.exitDelaySet = true;
+        }
+        sim.exitDelay -= dt;
+        if (sim.exitDelay <= 0) {
+          sim.exitDelaySet = false;
+          sim.floor = step.exitFloor;
+          sim.y = simFloorY(sim.floor);
+          sim.x = (elev.col + 4) * CELL_W;
+          sim.elevId = -1;
+          sim.step++;
+          sim.state = (sim.step < sim.path.length) ? SIM_STATE.WALK_TO_ELEV : SIM_STATE.WALK_TO_DEST;
+        }
       }
 
     } else if (st === SIM_STATE.WALK_TO_DEST) {
