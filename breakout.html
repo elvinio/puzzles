@@ -1144,6 +1144,7 @@ function initInput() {
   });
 
   ovBtn.addEventListener('click', () => {
+    getAC();
     if (gameState === 'idle' || gameState === 'gameOver') {
       startFreshGame();
       gameState = 'playing';
