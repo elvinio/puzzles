@@ -550,6 +550,7 @@
       }
       // Swap to different hand goblet
       if (state.phase === 'place' && state.selection?.from === 'hand') {
+        if (state.moveCount < 2 && goblet.size !== 'S') return;
         state.selection = { goblet, from: 'hand' };
         render();
         return;
