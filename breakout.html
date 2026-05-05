@@ -112,6 +112,28 @@
     }
     .overlay.hidden { display: none; }
 
+    .pause-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 36px;
+      height: 36px;
+      background: rgba(28,23,48,0.80);
+      border: 1px solid var(--brd);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      z-index: 10;
+      line-height: 1;
+    }
+    .pause-btn.visible { display: flex; }
+    .pause-btn:active { color: var(--p-xl); background: var(--surface); }
+
     .ov-title {
       font-size: clamp(1.6rem, 7vw, 2.4rem);
       font-weight: 900;
@@ -201,6 +223,7 @@
 
   <div class="canvas-wrap">
     <canvas id="cvs"></canvas>
+    <button class="pause-btn" id="pauseBtn" aria-label="Pause">⏸</button>
     <div class="overlay" id="overlay">
       <div class="ov-bricks" id="ovBricks"></div>
       <div class="ov-title" id="ovTitle">Breakout</div>
@@ -305,6 +328,7 @@ const ovScore = document.getElementById('ovScore');
 const ovBestWrap = document.getElementById('ovBestWrap');
 const ovBtn = document.getElementById('ovBtn');
 const ovBricks = document.getElementById('ovBricks');
+const pauseBtn = document.getElementById('pauseBtn');
 const hudScore = document.getElementById('hudScore');
 const hudLevel = document.getElementById('hudLevel');
 const hudBest = document.getElementById('hudBest');
@@ -1042,9 +1066,11 @@ function loop(ts) {
 }
 
 // ── Overlay helpers ───────────────────────────────────────────────────────────
-function hideOverlay() { overlay.classList.add('hidden'); }
+function hideOverlay() { overlay.classList.add('hidden'); pauseBtn.classList.add('visible'); }
+function hidePauseBtn() { pauseBtn.classList.remove('visible'); }
 
 function showIdle() {
+  hidePauseBtn();
   overlay.classList.remove('hidden');
   ovTitle.textContent = 'Breakout';
   ovSub.innerHTML = 'Destroy all the bricks!<br>5 levels of escalating difficulty.';
@@ -1058,6 +1084,7 @@ function showIdle() {
 }
 
 function showLevelClear() {
+  hidePauseBtn();
   overlay.classList.remove('hidden');
   ovBricks.style.display = 'none';
   ovTitle.textContent = `Level ${level} Clear!`;
@@ -1068,6 +1095,7 @@ function showLevelClear() {
 }
 
 function showPaused() {
+  hidePauseBtn();
   overlay.classList.remove('hidden');
   ovBricks.style.display = 'none';
   ovTitle.textContent = 'Paused';
@@ -1079,6 +1107,7 @@ function showPaused() {
 }
 
 function showGameOver() {
+  hidePauseBtn();
   overlay.classList.remove('hidden');
   ovBricks.style.display = 'none';
   ovTitle.textContent = 'Game Over';
@@ -1141,6 +1170,11 @@ function initInput() {
       gameState = 'paused';
       showPaused();
     }
+  });
+
+  pauseBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (gameState === 'playing') { gameState = 'paused'; showPaused(); }
   });
 
   ovBtn.addEventListener('click', () => {
