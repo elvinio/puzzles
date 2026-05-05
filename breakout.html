@@ -112,6 +112,28 @@
     }
     .overlay.hidden { display: none; }
 
+    .pause-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 36px;
+      height: 36px;
+      background: rgba(28,23,48,0.80);
+      border: 1px solid var(--brd);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      z-index: 10;
+      line-height: 1;
+    }
+    .pause-btn.visible { display: flex; }
+    .pause-btn:active { color: var(--p-xl); background: var(--surface); }
+
     .ov-title {
       font-size: clamp(1.6rem, 7vw, 2.4rem);
       font-weight: 900;
@@ -201,6 +223,7 @@
 
   <div class="canvas-wrap">
     <canvas id="cvs"></canvas>
+    <button class="pause-btn" id="pauseBtn" aria-label="Pause">⏸</button>
     <div class="overlay" id="overlay">
       <div class="ov-bricks" id="ovBricks"></div>
       <div class="ov-title" id="ovTitle">Breakout</div>
@@ -257,22 +280,41 @@ const CHECKER_LAYOUT = (() => {
   return L;
 })();
 
+// Indestructible barrier: row 3 is steel with three gaps
+const UNBREAKABLE_LAYOUT = (() => {
+  const GAPS = new Set([2, 5, 8]);
+  const L = [];
+  for (let r = 0; r < 7; r++) {
+    const row = [];
+    for (let c = 0; c < BRICK_COLS; c++) {
+      row.push(r === 3 ? (GAPS.has(c) ? 0 : 2) : 1);
+    }
+    L.push(row);
+  }
+  return L;
+})();
+
 const ALL_POWERUPS = ['widePaddle', 'slowBall', 'multiBall', 'extraLife'];
 
 const LEVELS = [
-  { rows: 5, ballSpeed: 280, paddleW: 90, powerUpRate: 0.12, layout: null, allowedPowerUps: ['widePaddle', 'extraLife'] },
-  { rows: 6, ballSpeed: 305, paddleW: 82, powerUpRate: 0.10, layout: null, allowedPowerUps: ['widePaddle', 'slowBall', 'extraLife'] },
-  { rows: 7, ballSpeed: 330, paddleW: 76, powerUpRate: 0.10, layout: PYRAMID_LAYOUT, allowedPowerUps: ALL_POWERUPS },
-  { rows: 7, ballSpeed: 360, paddleW: 70, powerUpRate: 0.08, layout: CHECKER_LAYOUT, allowedPowerUps: ALL_POWERUPS },
-  { rows: 8, ballSpeed: 395, paddleW: 64, powerUpRate: 0.08, layout: null, allowedPowerUps: ALL_POWERUPS },
+  { name: 'Classic',      rows: 5, ballSpeed: 270, paddleW: 90, layout: null,               allowedPowerUps: ['widePaddle', 'extraLife'] },
+  { name: 'Chaos',        rows: 6, ballSpeed: 295, paddleW: 85, layout: 'random',            allowedPowerUps: ['widePaddle', 'slowBall', 'extraLife'] },
+  { name: 'Pyramid',      rows: 7, ballSpeed: 315, paddleW: 80, layout: PYRAMID_LAYOUT,      allowedPowerUps: ALL_POWERUPS },
+  { name: 'Fortress',     rows: 7, ballSpeed: 335, paddleW: 76, layout: UNBREAKABLE_LAYOUT,  allowedPowerUps: ALL_POWERUPS },
+  { name: 'Checkerboard', rows: 7, ballSpeed: 352, paddleW: 72, layout: CHECKER_LAYOUT,      allowedPowerUps: ALL_POWERUPS },
+  { name: 'Minefield',    rows: 6, ballSpeed: 368, paddleW: 70, layout: null,   explosive: true,               allowedPowerUps: ALL_POWERUPS },
+  { name: 'Drift',        rows: 5, ballSpeed: 352, paddleW: 72, layout: null,   movingRows: [0, 2, 4],         allowedPowerUps: ALL_POWERUPS },
+  { name: 'Boss Fight',   rows: 0, ballSpeed: 335, paddleW: 76, layout: 'boss',                                allowedPowerUps: ALL_POWERUPS },
+  { name: 'Phantom',      rows: 6, ballSpeed: 382, paddleW: 68, layout: null,   ghost: true,                   allowedPowerUps: ALL_POWERUPS },
 ];
 
 function getLevelCfg(lv) {
-  const base = LEVELS[Math.min(lv - 1, LEVELS.length - 1)];
-  if (lv <= LEVELS.length) return base;
+  if (lv <= LEVELS.length) return LEVELS[lv - 1];
   const extra = lv - LEVELS.length;
+  const base = LEVELS[LEVELS.length - 1];
   return {
     ...base,
+    name: undefined,
     ballSpeed: base.ballSpeed + extra * 20,
     paddleW: Math.max(base.paddleW - extra * 4, 44),
     layout: null
@@ -305,6 +347,7 @@ const ovScore = document.getElementById('ovScore');
 const ovBestWrap = document.getElementById('ovBestWrap');
 const ovBtn = document.getElementById('ovBtn');
 const ovBricks = document.getElementById('ovBricks');
+const pauseBtn = document.getElementById('pauseBtn');
 const hudScore = document.getElementById('hudScore');
 const hudLevel = document.getElementById('hudLevel');
 const hudBest = document.getElementById('hudBest');
@@ -478,6 +521,21 @@ function playExtraLifeSound() {
   } catch(e) {}
 }
 
+function playClangSound() {
+  try {
+    const ac = getAC(), t = ac.currentTime;
+    const osc = ac.createOscillator();
+    const g = ac.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(1400, t);
+    osc.frequency.exponentialRampToValueAtTime(500, t + 0.08);
+    g.gain.setValueAtTime(0.18, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+    osc.connect(g); g.connect(ac.destination);
+    osc.start(t); osc.stop(t + 0.11);
+  } catch(e) {}
+}
+
 // ── Score persistence ─────────────────────────────────────────────────────────
 function loadBest() { return parseInt(localStorage.getItem('breakout-best') || '0', 10); }
 function saveScore() {
@@ -506,22 +564,76 @@ function assignPowerUp(r, c, cfg) {
   return allowed[idx % allowed.length];
 }
 
+function makeRandomLayout(rows) {
+  let layout, count;
+  do {
+    layout = []; count = 0;
+    for (let r = 0; r < rows; r++) {
+      const row = [];
+      const prob = 0.95 - (r / rows) * 0.35;
+      for (let c = 0; c < BRICK_COLS; c++) {
+        const v = Math.random() < prob ? 1 : 0;
+        row.push(v); count += v;
+      }
+      layout.push(row);
+    }
+  } while (count < rows * BRICK_COLS * 0.35);
+  return layout;
+}
+
+function makeBrickObj(r, c, maxHp, extra) {
+  return {
+    col: c, row: r,
+    x: BRICK_GRID_LEFT + c * (BRICK_W + BRICK_PAD_X),
+    y: BRICK_GRID_TOP  + r * (BRICK_H + BRICK_PAD_Y),
+    w: BRICK_W, h: BRICK_H,
+    hp: maxHp, maxHp,
+    alive: true,
+    indestructible: false, explosive: false, ghost: false,
+    ghostVisible: true, ghostTimer: 0, vx: 0, isBoss: false,
+    powerUp: null, flashTimer: 0,
+    ...extra
+  };
+}
+
 function initBricks(cfg) {
   bricks = [];
+  if (cfg.layout === 'boss') { createBossLevel(cfg); return; }
+
+  const layout = cfg.layout === 'random' ? makeRandomLayout(cfg.rows) : cfg.layout;
+
   for (let r = 0; r < cfg.rows; r++) {
     for (let c = 0; c < BRICK_COLS; c++) {
-      if (cfg.layout && !cfg.layout[r]?.[c]) continue;
-      const maxHp = r < 2 ? 3 : r < 4 ? 2 : 1;
-      bricks.push({
-        col: c, row: r,
-        x: BRICK_GRID_LEFT + c * (BRICK_W + BRICK_PAD_X),
-        y: BRICK_GRID_TOP  + r * (BRICK_H + BRICK_PAD_Y),
-        w: BRICK_W, h: BRICK_H,
-        hp: maxHp, maxHp,
-        alive: true,
-        powerUp: assignPowerUp(r, c, cfg),
-        flashTimer: 0
-      });
+      const cell = layout ? (layout[r]?.[c] ?? 0) : 1;
+      if (!cell) continue;
+      const indestructible = cell === 2;
+      const maxHp = indestructible ? 99 : (r < 2 ? 3 : r < 4 ? 2 : 1);
+      const movIdx = cfg.movingRows ? cfg.movingRows.indexOf(r) : -1;
+      bricks.push(makeBrickObj(r, c, maxHp, {
+        indestructible,
+        explosive: !indestructible && !!cfg.explosive && (r * BRICK_COLS + c) % 3 === 1,
+        ghost:     !indestructible && !!cfg.ghost,
+        ghostTimer: cfg.ghost ? Math.random() * 2 : 0,
+        vx: movIdx >= 0 ? (movIdx % 2 === 0 ? 55 : -55) : 0,
+        powerUp: indestructible ? null : assignPowerUp(r, c, cfg),
+      }));
+    }
+  }
+}
+
+function createBossLevel(cfg) {
+  const bossW = BRICK_W * 5 + BRICK_PAD_X * 4;
+  const bossH = BRICK_H * 2 + BRICK_PAD_Y;
+  bricks.push(makeBrickObj(1, 2, 15, {
+    x: (CW - bossW) / 2, y: BRICK_GRID_TOP + 10,
+    w: bossW, h: bossH,
+    isBoss: true,
+  }));
+  for (let r = 4; r <= 5; r++) {
+    for (let c = 0; c < BRICK_COLS; c++) {
+      if (r === 5 && c % 4 === 1) continue;
+      const maxHp = r === 4 ? 2 : 1;
+      bricks.push(makeBrickObj(r, c, maxHp, { powerUp: assignPowerUp(r, c, cfg) }));
     }
   }
 }
@@ -740,6 +852,8 @@ function update(dt) {
 
   movePaddle(dt);
   tickPowerUps(dt);
+  tickMovingBricks(dt);
+  tickGhostBricks(dt);
 
   // Update falling power-up capsules
   for (const pu of powerUps) {
@@ -813,6 +927,7 @@ function update(dt) {
       // Brick collisions (one per sub-step)
       for (const brick of bricks) {
         if (!brick.alive) continue;
+        if (brick.ghost && !brick.ghostVisible) continue;
         if (checkBallBrick(ball, brick)) {
           hitBrick(brick);
           enforceMinVx(ball);
@@ -832,7 +947,7 @@ function update(dt) {
   tickParticles(dt);
 
   // Check level clear
-  if (gameState === 'playing' && bricks.every(b => !b.alive)) {
+  if (gameState === 'playing' && bricks.every(b => !b.alive || b.indestructible)) {
     gameState = 'levelClear';
     levelClearTimer = 2.5;
     playLevelClearSound();
@@ -848,27 +963,38 @@ function enforceMinVx(ball) {
 }
 
 function hitBrick(brick) {
+  if (brick.indestructible) { brick.flashTimer = 0.08; playClangSound(); return; }
   brick.hp--;
   brick.flashTimer = 0.08;
   const pointsBase = [0, 10, 20, 30];
-  score += pointsBase[brick.maxHp] || 10;
+  score += pointsBase[Math.min(brick.maxHp, 3)] || 10;
   updateHUD();
   if (brick.hp <= 0) {
     brick.alive = false;
     playBrickSound(0);
     spawnParticles(brick);
+    if (brick.explosive) triggerExplosion(brick);
     if (brick.powerUp) {
-      powerUps.push({
-        x: brick.x + brick.w / 2,
-        y: brick.y + brick.h / 2,
-        type: brick.powerUp,
-        w: 28, h: 16,
-        alive: true
-      });
+      powerUps.push({ x: brick.x + brick.w / 2, y: brick.y + brick.h / 2, type: brick.powerUp, w: 28, h: 16, alive: true });
     }
   } else {
     playBrickSound(brick.hp);
   }
+}
+
+function triggerExplosion(src) {
+  for (const b of bricks) {
+    if (!b.alive || b === src || b.indestructible) continue;
+    if (Math.abs(b.col - src.col) <= 1 && Math.abs(b.row - src.row) <= 1) {
+      b.hp--; b.flashTimer = 0.12;
+      if (b.hp <= 0) {
+        b.alive = false; score += 5;
+        spawnParticles(b); playBrickSound(0);
+        if (b.explosive) triggerExplosion(b);
+      }
+    }
+  }
+  updateHUD();
 }
 
 function movePaddle(dt) {
@@ -888,6 +1014,37 @@ function tickParticles(dt) {
   particles = particles.filter(p => p.t < p.dur);
 }
 
+function tickMovingBricks(dt) {
+  const groups = {};
+  for (const b of bricks) {
+    if (!b.alive || b.vx === 0) continue;
+    (groups[b.row] = groups[b.row] || []).push(b);
+  }
+  for (const rowBricks of Object.values(groups)) {
+    for (const b of rowBricks) b.x += b.vx * dt;
+    const minX = Math.min(...rowBricks.map(b => b.x));
+    const maxX = Math.max(...rowBricks.map(b => b.x + b.w));
+    if (minX < 0) {
+      const off = -minX;
+      for (const b of rowBricks) { b.x += off; b.vx = Math.abs(b.vx); }
+    } else if (maxX > CW) {
+      const off = maxX - CW;
+      for (const b of rowBricks) { b.x -= off; b.vx = -Math.abs(b.vx); }
+    }
+  }
+}
+
+function tickGhostBricks(dt) {
+  for (const b of bricks) {
+    if (!b.alive || !b.ghost) continue;
+    b.ghostTimer -= dt;
+    if (b.ghostTimer <= 0) {
+      b.ghostVisible = !b.ghostVisible;
+      b.ghostTimer = b.ghostVisible ? (1.2 + Math.random() * 0.8) : (0.5 + Math.random() * 0.4);
+    }
+  }
+}
+
 // ── Draw ──────────────────────────────────────────────────────────────────────
 function draw() {
   ctx.clearRect(0, 0, CW, CH);
@@ -905,20 +1062,64 @@ function draw() {
 function drawBricks() {
   for (const b of bricks) {
     if (!b.alive) continue;
-    const alpha = 0.4 + 0.6 * (b.hp / b.maxHp);
-    ctx.globalAlpha = alpha;
+
+    let baseAlpha;
+    if (b.indestructible)    baseAlpha = 1;
+    else if (b.ghost)        baseAlpha = b.ghostVisible ? (0.4 + 0.6 * (b.hp / b.maxHp)) : 0.13;
+    else                     baseAlpha = 0.4 + 0.6 * (b.hp / b.maxHp);
+
+    ctx.globalAlpha = baseAlpha;
+
     if (b.flashTimer > 0) {
       ctx.fillStyle = '#ffffff';
+    } else if (b.indestructible) {
+      ctx.fillStyle = '#64748b';
+    } else if (b.isBoss) {
+      const g = ctx.createLinearGradient(b.x, b.y, b.x, b.y + b.h);
+      g.addColorStop(0, '#ff6b6b'); g.addColorStop(1, '#b91c1c');
+      ctx.fillStyle = g;
     } else {
       ctx.fillStyle = BRICK_COLORS_ROW[b.row % BRICK_COLORS_ROW.length];
     }
-    roundRect(ctx, b.x, b.y, b.w, b.h, 3);
+
+    roundRect(ctx, b.x, b.y, b.w, b.h, b.isBoss ? 6 : 3);
     ctx.fill();
-    // Subtle highlight
-    ctx.globalAlpha = alpha * 0.4;
+
+    // Highlight stripe
+    ctx.globalAlpha = baseAlpha * (b.indestructible ? 0.55 : 0.4);
     ctx.fillStyle = '#ffffff';
     roundRect(ctx, b.x + 1, b.y + 1, b.w - 2, 4, 2);
     ctx.fill();
+
+    // Indestructible: X scratch
+    if (b.indestructible && b.flashTimer <= 0) {
+      ctx.globalAlpha = baseAlpha * 0.45;
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(b.x + 5, b.y + 3); ctx.lineTo(b.x + b.w - 5, b.y + b.h - 3);
+      ctx.moveTo(b.x + b.w - 5, b.y + 3); ctx.lineTo(b.x + 5, b.y + b.h - 3);
+      ctx.stroke();
+    }
+
+    // Explosive: orange dot in corner
+    if (b.explosive && b.flashTimer <= 0) {
+      ctx.globalAlpha = baseAlpha * 0.95;
+      ctx.fillStyle = '#fb923c';
+      ctx.beginPath();
+      ctx.arc(b.x + b.w - 5, b.y + 5, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Boss: HP bar
+    if (b.isBoss && b.flashTimer <= 0) {
+      const bx = b.x + 6, by = b.y + b.h - 7, bw = b.w - 12, bh = 4;
+      ctx.globalAlpha = 0.45; ctx.fillStyle = '#0f0a1e';
+      ctx.fillRect(bx, by, bw, bh);
+      ctx.globalAlpha = 0.9; ctx.fillStyle = '#ef4444';
+      ctx.fillRect(bx, by, bw * (b.hp / b.maxHp), bh);
+    }
+
     ctx.globalAlpha = 1;
   }
 }
@@ -1042,9 +1243,11 @@ function loop(ts) {
 }
 
 // ── Overlay helpers ───────────────────────────────────────────────────────────
-function hideOverlay() { overlay.classList.add('hidden'); }
+function hideOverlay() { overlay.classList.add('hidden'); pauseBtn.classList.add('visible'); }
+function hidePauseBtn() { pauseBtn.classList.remove('visible'); }
 
 function showIdle() {
+  hidePauseBtn();
   overlay.classList.remove('hidden');
   ovTitle.textContent = 'Breakout';
   ovSub.innerHTML = 'Destroy all the bricks!<br>5 levels of escalating difficulty.';
@@ -1058,16 +1261,19 @@ function showIdle() {
 }
 
 function showLevelClear() {
+  hidePauseBtn();
   overlay.classList.remove('hidden');
   ovBricks.style.display = 'none';
   ovTitle.textContent = `Level ${level} Clear!`;
-  ovSub.innerHTML = `Score: ${score}<br>Preparing level ${level + 1}…`;
+  const nextName = getLevelCfg(level + 1).name;
+  ovSub.innerHTML = `Score: ${score}<br>Up next: ${nextName ? `<b>${nextName}</b>` : `Level ${level + 1}`}…`;
   ovScore.style.display = 'none';
   ovBestWrap.style.display = 'none';
   ovBtn.style.display = 'none';
 }
 
 function showPaused() {
+  hidePauseBtn();
   overlay.classList.remove('hidden');
   ovBricks.style.display = 'none';
   ovTitle.textContent = 'Paused';
@@ -1079,6 +1285,7 @@ function showPaused() {
 }
 
 function showGameOver() {
+  hidePauseBtn();
   overlay.classList.remove('hidden');
   ovBricks.style.display = 'none';
   ovTitle.textContent = 'Game Over';
@@ -1143,7 +1350,13 @@ function initInput() {
     }
   });
 
+  pauseBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (gameState === 'playing') { gameState = 'paused'; showPaused(); }
+  });
+
   ovBtn.addEventListener('click', () => {
+    getAC();
     if (gameState === 'idle' || gameState === 'gameOver') {
       startFreshGame();
       gameState = 'playing';
