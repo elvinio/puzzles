@@ -90,32 +90,27 @@
       color: #fff;
     }
 
-    /* ── HUD ── */
-    .hud {
+    /* ── Action buttons ── */
+    .actions {
       display: flex;
-      gap: 24px;
-      align-items: center;
+      gap: 8px;
       flex-shrink: 0;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
-    .hud-cell {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1px;
-    }
-    .hud-label {
-      font-size: 0.65rem;
-      font-weight: 700;
+    .action-btn {
+      padding: 6px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--brd);
+      background: transparent;
       color: var(--muted);
-      letter-spacing: 0.1em;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: all 0.15s;
+      touch-action: manipulation;
     }
-    .hud-val {
-      font-size: 1.4rem;
-      font-weight: 900;
-      color: var(--p-xl);
-      line-height: 1;
-    }
+    .action-btn:hover { border-color: var(--p-lt); color: var(--p-text); }
 
     /* ── Board ── */
     .board-wrap {
@@ -135,7 +130,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(0.85rem, 3.2vw, 1.25rem);
+      font-size: clamp(1.4rem, 5vw, 2rem);
       font-weight: 700;
       cursor: pointer;
       touch-action: manipulation;
@@ -162,6 +157,7 @@
     .cell.match    { background: var(--cell-match); }
     .cell.selected { background: var(--cell-sel); }
     .cell.conflict { background: var(--cell-conf-bg) !important; color: var(--cell-conf-tx) !important; }
+    .cell.solved   { color: var(--muted); }
 
     /* ── Number picker popup ── */
     [hidden] { display: none !important; }
@@ -278,11 +274,9 @@
   <button class="tab" data-level="hard">Hard</button>
 </div>
 
-<div class="hud">
-  <div class="hud-cell">
-    <div class="hud-label">TIME</div>
-    <div class="hud-val" id="timer">0:00</div>
-  </div>
+<div class="actions">
+  <button class="action-btn" id="btnNew">New Puzzle</button>
+  <button class="action-btn" id="btnSolve">Solve</button>
 </div>
 
 <div class="board-wrap">
@@ -313,11 +307,10 @@ let solution      = new Array(81).fill(0);
 let puzzle        = new Array(81).fill(0);
 let board         = new Array(81).fill(0);
 let isClue        = new Array(81).fill(false);
-let selected      = -1;
-let level         = 'easy';
-let seconds       = 0;
-let timerInterval = null;
-let won           = false;
+let selected    = -1;
+let level       = 'easy';
+let won         = false;
+let autoSolved  = false;
 
 /* ── Puzzle generation ───────────────────────────────── */
 function shuffle(arr) {
@@ -410,24 +403,6 @@ function generatePuzzle(clueCount) {
   return { sol, puz };
 }
 
-/* ── Timer ───────────────────────────────────────────── */
-function fmt(s) {
-  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
-}
-function startTimer() {
-  clearInterval(timerInterval);
-  seconds = 0;
-  document.getElementById('timer').textContent = '0:00';
-  timerInterval = setInterval(() => {
-    seconds++;
-    document.getElementById('timer').textContent = fmt(seconds);
-  }, 1000);
-}
-function stopTimer() {
-  clearInterval(timerInterval);
-  timerInterval = null;
-}
-
 /* ── Conflict detection ──────────────────────────────── */
 function getConflicts() {
   const conflicts = new Set();
@@ -485,8 +460,9 @@ function renderBoard() {
     // remove all state classes
     el.classList.remove('clue', 'user', 'peer', 'match', 'selected', 'conflict');
 
-    if (isClue[i])      el.classList.add('clue');
-    else if (v)         el.classList.add('user');
+    if (isClue[i])           el.classList.add('clue');
+    else if (autoSolved && v) el.classList.add('solved');
+    else if (v)               el.classList.add('user');
 
     if (selected >= 0 && i !== selected) {
       const r = Math.floor(i / 9), c = i % 9;
@@ -504,11 +480,11 @@ function checkWin() {
   for (let i = 0; i < 81; i++) if (!board[i]) return;
   if (getConflicts().size > 0) return;
   won = true;
-  stopTimer();
-  if (window.__avatarSave) window.__avatarSave('sudoku-' + level, seconds, true);
+  clearSave();
+  if (window.__avatarSave) window.__avatarSave('sudoku-' + level, 0, true);
   setTimeout(() => {
     document.getElementById('winStats').innerHTML =
-      `Difficulty: <b>${level.charAt(0).toUpperCase() + level.slice(1)}</b><br>Time: <b>${fmt(seconds)}</b>`;
+      `Difficulty: <b>${level.charAt(0).toUpperCase() + level.slice(1)}</b>`;
     document.getElementById('overlay').classList.add('show');
   }, 400);
 }
@@ -548,6 +524,7 @@ function enterDigit(n) {
   selected = -1;
   hidePicker();
   renderBoard();
+  saveState();
   checkWin();
 }
 
@@ -565,12 +542,42 @@ function selectCell(idx) {
   showPicker(idx);
 }
 
+/* ── Autosave ────────────────────────────────────────── */
+function saveState() {
+  try {
+    localStorage.setItem('sudoku_autosave', JSON.stringify({
+      level, board: board.slice(), isClue: isClue.slice(),
+      puzzle: puzzle.slice(), solution: solution.slice()
+    }));
+  } catch {}
+}
+
+function clearSave() {
+  localStorage.removeItem('sudoku_autosave');
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('sudoku_autosave');
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    if (!s.board || s.board.length !== 81) return false;
+    level    = s.level || 'easy';
+    board    = s.board;
+    isClue   = s.isClue;
+    puzzle   = s.puzzle;
+    solution = s.solution;
+    won      = false;
+    return true;
+  } catch { return false; }
+}
+
 /* ── Game init ───────────────────────────────────────── */
 function newGame() {
-  stopTimer();
   hidePicker();
-  selected = -1;
-  won = false;
+  selected   = -1;
+  won        = false;
+  autoSolved = false;
   document.getElementById('overlay').classList.remove('show');
 
   const { sol, puz } = generatePuzzle(CLUES[level]);
@@ -581,7 +588,7 @@ function newGame() {
 
   buildBoard();
   renderBoard();
-  startTimer();
+  saveState();
 }
 
 /* ── Build picker buttons ────────────────────────────── */
@@ -635,8 +642,35 @@ document.addEventListener('pointerdown', e => {
 // Play again button
 document.getElementById('playAgain').addEventListener('click', newGame);
 
+// New Puzzle button
+document.getElementById('btnNew').addEventListener('click', () => {
+  if (!confirm('Start a new puzzle? Your current progress will be lost.')) return;
+  newGame();
+});
+
+// Solve button
+document.getElementById('btnSolve').addEventListener('click', () => {
+  if (won) return;
+  if (!confirm('Reveal the solution? This will end the current game.')) return;
+  autoSolved = true;
+  won        = true;
+  board      = solution.slice();
+  selected   = -1;
+  hidePicker();
+  clearSave();
+  renderBoard();
+});
+
 // Boot
-newGame();
+if (loadState()) {
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.level === level);
+  });
+  buildBoard();
+  renderBoard();
+} else {
+  newGame();
+}
 </script>
 <script src="avatar.js"></script>
 </body>
