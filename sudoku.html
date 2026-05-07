@@ -90,6 +90,28 @@
       color: #fff;
     }
 
+    /* ── Action buttons ── */
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+      margin-bottom: 10px;
+    }
+    .action-btn {
+      padding: 6px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--brd);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: all 0.15s;
+      touch-action: manipulation;
+    }
+    .action-btn:hover { border-color: var(--p-lt); color: var(--p-text); }
+
     /* ── Board ── */
     .board-wrap {
       flex-shrink: 0;
@@ -135,6 +157,7 @@
     .cell.match    { background: var(--cell-match); }
     .cell.selected { background: var(--cell-sel); }
     .cell.conflict { background: var(--cell-conf-bg) !important; color: var(--cell-conf-tx) !important; }
+    .cell.solved   { color: var(--muted); }
 
     /* ── Number picker popup ── */
     [hidden] { display: none !important; }
@@ -251,6 +274,11 @@
   <button class="tab" data-level="hard">Hard</button>
 </div>
 
+<div class="actions">
+  <button class="action-btn" id="btnNew">New Puzzle</button>
+  <button class="action-btn" id="btnSolve">Solve</button>
+</div>
+
 <div class="board-wrap">
   <div class="board" id="board"></div>
 </div>
@@ -279,9 +307,10 @@ let solution      = new Array(81).fill(0);
 let puzzle        = new Array(81).fill(0);
 let board         = new Array(81).fill(0);
 let isClue        = new Array(81).fill(false);
-let selected = -1;
-let level    = 'easy';
-let won      = false;
+let selected    = -1;
+let level       = 'easy';
+let won         = false;
+let autoSolved  = false;
 
 /* ── Puzzle generation ───────────────────────────────── */
 function shuffle(arr) {
@@ -431,8 +460,9 @@ function renderBoard() {
     // remove all state classes
     el.classList.remove('clue', 'user', 'peer', 'match', 'selected', 'conflict');
 
-    if (isClue[i])      el.classList.add('clue');
-    else if (v)         el.classList.add('user');
+    if (isClue[i])           el.classList.add('clue');
+    else if (autoSolved && v) el.classList.add('solved');
+    else if (v)               el.classList.add('user');
 
     if (selected >= 0 && i !== selected) {
       const r = Math.floor(i / 9), c = i % 9;
@@ -545,8 +575,9 @@ function loadState() {
 /* ── Game init ───────────────────────────────────────── */
 function newGame() {
   hidePicker();
-  selected = -1;
-  won = false;
+  selected   = -1;
+  won        = false;
+  autoSolved = false;
   document.getElementById('overlay').classList.remove('show');
 
   const { sol, puz } = generatePuzzle(CLUES[level]);
@@ -610,6 +641,25 @@ document.addEventListener('pointerdown', e => {
 
 // Play again button
 document.getElementById('playAgain').addEventListener('click', newGame);
+
+// New Puzzle button
+document.getElementById('btnNew').addEventListener('click', () => {
+  if (!confirm('Start a new puzzle? Your current progress will be lost.')) return;
+  newGame();
+});
+
+// Solve button
+document.getElementById('btnSolve').addEventListener('click', () => {
+  if (won) return;
+  if (!confirm('Reveal the solution? This will end the current game.')) return;
+  autoSolved = true;
+  won        = true;
+  board      = solution.slice();
+  selected   = -1;
+  hidePicker();
+  clearSave();
+  renderBoard();
+});
 
 // Boot
 if (loadState()) {
