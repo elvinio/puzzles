@@ -349,8 +349,8 @@
   <!-- HUD -->
   <div class="hud">
     <div class="hud-item">
-      <div class="hud-label">Time</div>
-      <div class="hud-value" id="time-val">60</div>
+      <div class="hud-label">Question</div>
+      <div class="hud-value" id="time-val">0 / 20</div>
     </div>
     <div class="hud-item">
       <div class="hud-label">Score</div>
@@ -383,7 +383,7 @@
   <div class="overlay" id="start-overlay">
     <div class="modal">
       <h2>🧮 Math Blitz</h2>
-      <p class="tagline">60 seconds. Answer as fast as you can!<br>Speed bonus: ≤1s = <strong style="color:#4ade80">+2</strong>, else <strong style="color:#60a5fa">+1</strong><br>Wrong answer = <strong style="color:#f87171">−2</strong>&nbsp;&nbsp;4+ in a row → 🌈 ×2, 11+ → ×3, 21+ → ×4!</p>
+      <p class="tagline">20 questions. Answer as fast as you can!<br>Speed bonus: ≤1s = <strong style="color:#4ade80">+2</strong>, else <strong style="color:#60a5fa">+1</strong><br>Wrong answer = <strong style="color:#f87171">−2</strong>&nbsp;&nbsp;4+ in a row → 🌈 ×2, 11+ → ×3, 21+ → ×4!</p>
       <div class="modal-section-label">Difficulty</div>
       <div class="btn-row" id="diff-row">
         <button class="seg-btn active" data-diff="easy">Easy</button>
@@ -408,7 +408,7 @@
   <!-- End overlay -->
   <div class="overlay hidden" id="end-overlay">
     <div class="modal">
-      <h2>⏱ Time's Up!</h2>
+      <h2>🧮 Round Complete!</h2>
       <div class="big-score" id="end-score">0</div>
       <div id="new-best-label"></div>
       <div class="stats-grid">
@@ -557,17 +557,15 @@
     let score           = 0;
     let streak          = 0;
     let bestStreak      = 0;
+    const TOTAL_QUESTIONS = 20;
     let answered        = 0;
     let correct         = 0;
-    let timeLeft        = 60;
     let qStartTime      = 0;
     let currentAns      = 0;
-    let timer           = null;
     let difficulty      = 'easy';
     let opMode          = 'multiply';
     let answerLocked    = false;
     let lastQuestionKey = null;
-    let timeUp          = false;
 
     // ── Helpers ────────────────────────────────────────────────────────────────
     function rand(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
@@ -1130,7 +1128,7 @@
     const answerBtns = [0,1,2,3].map(i => $(`btn-${i}`));
 
     function updateHUD() {
-      $('time-val').textContent  = timeLeft;
+      $('time-val').textContent  = answered + ' / ' + TOTAL_QUESTIONS;
       $('score-val').textContent = score;
       const best = getBest();
       $('best-val').textContent  = best > 0 ? best : '—';
@@ -1262,7 +1260,7 @@
         }
         showScoreFloat(pts);
         updateHUD();
-        setTimeout(() => { timeUp ? endGame() : showQuestion(); }, 320);
+        setTimeout(() => { answered >= TOTAL_QUESTIONS ? endGame() : showQuestion(); }, 320);
       } else {
         btn.classList.add('wrong');
         // reveal correct
@@ -1279,21 +1277,8 @@
         const card = $('question-card');
         card.classList.add('shake');
         card.addEventListener('animationend', () => card.classList.remove('shake'), { once: true });
-        setTimeout(() => { timeUp ? endGame() : showQuestion(); }, 700);
+        setTimeout(() => { answered >= TOTAL_QUESTIONS ? endGame() : showQuestion(); }, 700);
       }
-    }
-
-    // ── Timer ──────────────────────────────────────────────────────────────────
-    function startTimer() {
-      timer = setInterval(() => {
-        timeLeft--;
-        updateHUD();
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          timer = null;
-          timeUp = true;
-        }
-      }, 1000);
     }
 
     // ── Game lifecycle ─────────────────────────────────────────────────────────
@@ -1303,10 +1288,8 @@
       bestStreak      = 0;
       answered        = 0;
       correct         = 0;
-      timeLeft        = 60;
       gameState       = 'playing';
       lastQuestionKey = null;
-      timeUp          = false;
 
       $('start-overlay').classList.add('hidden');
       $('end-overlay').classList.add('hidden');
@@ -1316,7 +1299,6 @@
 
       sfxStart();
       showQuestion();
-      startTimer();
     }
 
     function endGame() {
