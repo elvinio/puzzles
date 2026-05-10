@@ -782,7 +782,7 @@
 
     .char-modal-text.zh {
       font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
-      font-size: 1rem;
+      font-size: 1.3rem;
     }
 
     .char-modal-chips {
@@ -802,7 +802,7 @@
 
     .char-modal-chip.zh {
       font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
-      font-size: 1rem;
+      font-size: 1.3rem;
     }
 
     /* ── Browse Screen ── */
@@ -1190,6 +1190,68 @@
       font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
       margin-top: 2px;
     }
+
+    /* ── Puzzle Mode ── */
+    .puz-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+      width: min(92vw, 380px);
+      aspect-ratio: 1;
+      touch-action: none;
+      flex-shrink: 0;
+    }
+    .puzzle-cell {
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 6px;
+      font-family: "Kaiti SC", "KaiTiRegular", serif;
+      font-size: clamp(1.1rem, 5.5vw, 1.7rem);
+      color: var(--p-text);
+      transition: background 0.15s, color 0.15s;
+      cursor: pointer;
+    }
+    .puzzle-cell.puz-selecting { background: var(--p); color: #fff; }
+    .puzzle-cell.puz-found    { background: var(--ok); color: #fff; transition: none; }
+    .puzzle-cell.puz-wrong    { animation: puz-flash-wrong 0.75s forwards; }
+    @keyframes puz-flash-wrong {
+      0%, 40% { background: var(--err); color: #fff; }
+      100%    { background: var(--surface); color: var(--p-text); }
+    }
+    .puz-wordlist {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center;
+      max-width: 380px; width: 100%;
+      padding: 4px 0;
+    }
+    .puz-chip {
+      padding: 6px 14px;
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 20px;
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      transition: opacity 0.3s;
+    }
+    .puz-chip.found { opacity: 0.35; }
+    .puz-chip-chars { font-size: 1rem; font-weight: 600; color: var(--p-text); }
+    .puz-chip-hint  { font-size: 0.7rem; color: var(--muted); }
+    .puz-chip.found .puz-chip-chars { text-decoration: line-through; }
+    .puz-complete {
+      position: fixed; inset: 0;
+      background: rgba(19,17,28,0.88);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 50;
+    }
+    .puz-complete-box {
+      background: var(--surface);
+      border: 1px solid var(--brd);
+      border-radius: 16px;
+      padding: 32px 40px;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      font-size: 1.2rem; font-weight: 700; color: var(--p-xl);
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -1241,6 +1303,7 @@
       <button class="tab" data-mode="english-chinese">English → 汉字</button>
       <button class="tab" data-mode="word-fill">词语</button>
       <button class="tab" data-mode="mix">Mix All</button>
+      <button class="tab" data-mode="puzzle">🔍 Puzzle</button>
     </div>
 
     <div class="divider"></div>
@@ -1479,6 +1542,27 @@
     <div class="browse-lesson-tabs" id="browse-lesson-tabs"></div>
 
     <div class="browse-word-grid" id="browse-word-grid"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: WORD PUZZLE
+════════════════════════════════════════════════ -->
+  <div id="screen-puzzle" class="screen">
+    <div class="topbar">
+      <button class="back-link" id="puz-back">← Back</button>
+      <h1>Word Puzzle</h1>
+      <div class="topbar-right"></div>
+    </div>
+    <div id="puz-grid" class="puz-grid"></div>
+    <div id="puz-wordlist" class="puz-wordlist"></div>
+    <div id="puz-complete" class="puz-complete" style="display:none">
+      <div class="puz-complete-box">
+        <div style="font-size:2.5rem">🎉</div>
+        <div>All words found!</div>
+        <button class="btn" id="puz-again-btn" style="width:200px">Play Again</button>
+        <button class="btn btn-outline" id="puz-exit-btn" style="width:200px">Back to Setup</button>
+      </div>
+    </div>
   </div>
 
   <!-- Character Card Modal -->
@@ -1961,7 +2045,15 @@
       });
       container.appendChild(testBtn);
     }
-    bindTabs('setup-mode-tabs', tab => { S.mode = tab.dataset.mode; });
+    bindTabs('setup-mode-tabs', tab => {
+      S.mode = tab.dataset.mode;
+      const startBtn = document.getElementById('setup-start');
+      if (S.mode === 'puzzle') {
+        startBtn.disabled = false;
+      } else if (!S.avatarId) {
+        startBtn.disabled = true;
+      }
+    });
 
     document.getElementById('setup-stats-btn').addEventListener('click', () => {
       S.statsPrev = 'setup';
@@ -1979,6 +2071,8 @@
 
       S.wordPool = getWordPool(S.level, S.lessonTest ? 'all' : S.lessons);
       if (S.wordPool.length === 0) { showToast('No words found'); return; }
+
+      if (S.mode === 'puzzle') { startPuzzle(); return; }
 
       const cfg = SESSION_CONFIG[S.level];
       S.progress = loadProgress(S.avatarId);
@@ -2310,7 +2404,7 @@
       sameEl.innerHTML = '';
       (word['same-sounding-character'] || []).forEach(s => {
         const chip = document.createElement('span');
-        chip.className = 'char-modal-chip';
+        chip.className = 'char-modal-chip zh';
         chip.textContent = s;
         sameEl.appendChild(chip);
       });
@@ -2742,6 +2836,196 @@
     document.getElementById('sp-test-end-btn').addEventListener('click', () => showSpellingSubview('sp-list-view'));
     document.getElementById('sp-results-back-btn').addEventListener('click', () => showSpellingSubview('sp-list-view'));
     bindTabs('sp-level-tabs', tab => { SP.level = tab.dataset.level; });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PUZZLE MODE
+    // ═══════════════════════════════════════════════════════════════
+    const P = {};
+    const PUZ_DIRS = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]];
+
+    function extractPuzzleWords(pool) {
+      const seen = new Set();
+      const out = [];
+      for (const w of pool) {
+        for (const wordStr of (w.words || [])) {
+          const m = wordStr.match(/^([一-鿿]+)/);
+          if (!m) continue;
+          const chars = m[1];
+          if (chars.length < 2 || chars.length > 3 || seen.has(chars)) continue;
+          const pm = wordStr.match(/\(([^,]+),\s*(.+?)\)/);
+          seen.add(chars);
+          out.push({ chars, pinyin: pm ? pm[1] : '', english: pm ? pm[2] : '', found: false });
+        }
+      }
+      return shuffle(out).slice(0, 8);
+    }
+
+    function generatePuzGrid(words, pool) {
+      const R = 6, C = 6;
+      const grid = Array(R * C).fill(null);
+      const placed = [];
+      for (const word of words) {
+        const arr = [...word.chars];
+        let success = false;
+        for (const [dr, dc] of shuffle([...PUZ_DIRS])) {
+          const candidates = [];
+          for (let r = 0; r < R; r++)
+            for (let c = 0; c < C; c++) {
+              const er = r + dr * (arr.length - 1), ec = c + dc * (arr.length - 1);
+              if (er >= 0 && er < R && ec >= 0 && ec < C) candidates.push([r, c]);
+            }
+          for (const [sr, sc] of shuffle(candidates)) {
+            let ok = true;
+            for (let i = 0; i < arr.length; i++) {
+              const idx = (sr + dr * i) * C + (sc + dc * i);
+              if (grid[idx] !== null && grid[idx] !== arr[i]) { ok = false; break; }
+            }
+            if (ok) {
+              const cells = [];
+              for (let i = 0; i < arr.length; i++) {
+                const idx = (sr + dr * i) * C + (sc + dc * i);
+                grid[idx] = arr[i];
+                cells.push({ row: sr + dr * i, col: sc + dc * i });
+              }
+              placed.push({ word, cells });
+              success = true; break;
+            }
+          }
+          if (success) break;
+        }
+      }
+      const chars = pool.map(w => w.character);
+      for (let i = 0; i < R * C; i++)
+        if (grid[i] === null) grid[i] = chars[Math.floor(Math.random() * chars.length)];
+      return { grid, placed };
+    }
+
+    function startPuzzle() {
+      const pool = getWordPool(S.level, S.lessonTest ? 'all' : S.lessons);
+      const candidates = extractPuzzleWords(pool);
+      const { grid, placed } = generatePuzGrid(candidates, pool);
+      if (placed.length < 2) { showToast('Not enough words — select more lessons'); return; }
+
+      P.grid = grid;
+      P.words = placed.map(p => p.word);
+      P.foundCells = new Set();
+      P.selecting = false;
+      P.selCells = [];
+      P.selDir = null;
+
+      const gridEl = document.getElementById('puz-grid');
+      gridEl.innerHTML = '';
+      for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 6; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'puzzle-cell';
+          cell.dataset.row = r; cell.dataset.col = c;
+          cell.textContent = grid[r * 6 + c];
+          gridEl.appendChild(cell);
+        }
+      }
+
+      const listEl = document.getElementById('puz-wordlist');
+      listEl.innerHTML = '';
+      for (const w of P.words) {
+        const chip = document.createElement('div');
+        chip.className = 'puz-chip';
+        chip.dataset.word = w.chars;
+        chip.innerHTML = `<span class="puz-chip-chars">${w.pinyin}</span><span class="puz-chip-hint">${w.english}</span>`;
+        listEl.appendChild(chip);
+      }
+
+      document.getElementById('puz-complete').style.display = 'none';
+      showScreen('screen-puzzle');
+      bindPuzInteraction(gridEl);
+    }
+
+    function bindPuzInteraction(gridEl) {
+      const clone = gridEl.cloneNode(true);
+      gridEl.parentNode.replaceChild(clone, gridEl);
+      const el = document.getElementById('puz-grid');
+
+      function getCellAt(x, y) {
+        const target = document.elementFromPoint(x, y);
+        if (!target) return null;
+        const c = target.closest ? target.closest('.puzzle-cell') : null;
+        return c ? { row: +c.dataset.row, col: +c.dataset.col, el: c } : null;
+      }
+
+      function startSel(x, y) {
+        document.querySelectorAll('.puzzle-cell.puz-selecting').forEach(c => c.classList.remove('puz-selecting'));
+        P.selCells = []; P.selDir = null; P.selecting = true;
+        const cell = getCellAt(x, y);
+        if (cell) { P.selCells.push(cell); cell.el.classList.add('puz-selecting'); }
+      }
+
+      function moveSel(x, y) {
+        if (!P.selecting || !P.selCells.length) return;
+        const cell = getCellAt(x, y);
+        if (!cell) return;
+        const last = P.selCells[P.selCells.length - 1];
+        if (cell.row === last.row && cell.col === last.col) return;
+        if (!P.selDir) {
+          const dr = cell.row - P.selCells[0].row, dc = cell.col - P.selCells[0].col;
+          if (Math.abs(dr) <= 1 && Math.abs(dc) <= 1 && (dr || dc)) {
+            P.selDir = { dr: Math.sign(dr), dc: Math.sign(dc) };
+            P.selCells.push(cell); cell.el.classList.add('puz-selecting');
+          }
+        } else {
+          const exp = { row: last.row + P.selDir.dr, col: last.col + P.selDir.dc };
+          if (cell.row === exp.row && cell.col === exp.col) {
+            P.selCells.push(cell); cell.el.classList.add('puz-selecting');
+          }
+        }
+      }
+
+      function endSel() {
+        P.selecting = false;
+        if (P.selCells.length < 2) {
+          P.selCells.forEach(c => c.el.classList.remove('puz-selecting'));
+          P.selCells = []; return;
+        }
+        evaluatePuzSel();
+      }
+
+      el.addEventListener('touchstart', e => { e.preventDefault(); startSel(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+      el.addEventListener('touchmove',  e => { e.preventDefault(); moveSel(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+      el.addEventListener('touchend',   e => { e.preventDefault(); endSel(); }, { passive: false });
+      el.addEventListener('mousedown',  e => startSel(e.clientX, e.clientY));
+      window.addEventListener('mousemove', e => { if (P.selecting) moveSel(e.clientX, e.clientY); });
+      window.addEventListener('mouseup',   () => { if (P.selecting) endSel(); });
+    }
+
+    function evaluatePuzSel() {
+      const chars = P.selCells.map(c => P.grid[c.row * 6 + c.col]).join('');
+      const charsRev = [...chars].reverse().join('');
+      const matched = P.words.find(w => !w.found && (w.chars === chars || w.chars === charsRev));
+      if (matched) {
+        P.selCells.forEach(c => {
+          c.el.classList.remove('puz-selecting');
+          c.el.classList.add('puz-found');
+          P.foundCells.add(`${c.row}-${c.col}`);
+        });
+        matched.found = true;
+        const chip = document.querySelector(`.puz-chip[data-word="${matched.chars}"]`);
+        if (chip) chip.classList.add('found');
+        if (P.words.every(w => w.found))
+          setTimeout(() => { document.getElementById('puz-complete').style.display = 'flex'; }, 400);
+      } else {
+        P.selCells.forEach(c => {
+          c.el.classList.remove('puz-selecting');
+          if (!P.foundCells.has(`${c.row}-${c.col}`)) {
+            c.el.classList.add('puz-wrong');
+            setTimeout(() => c.el.classList.remove('puz-wrong'), 750);
+          }
+        });
+      }
+      P.selCells = []; P.selDir = null;
+    }
+
+    document.getElementById('puz-back').addEventListener('click', () => showScreen('screen-setup'));
+    document.getElementById('puz-again-btn').addEventListener('click', startPuzzle);
+    document.getElementById('puz-exit-btn').addEventListener('click', () => showScreen('screen-setup'));
 
     // ═══════════════════════════════════════════════════════════════
     // INIT
