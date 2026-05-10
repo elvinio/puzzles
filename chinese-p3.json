@@ -522,7 +522,7 @@
       "english": "single, alone, simple, list",
       "pinyin": "dān",
       "same-sounding-character": ["担 (carry/worry)", "胆 (courage)", "丹 (red/cinnabar)"],
-      "words": ["单独 (dān dú, alone)", "菜单 (cài dān, menu)", "单词 (dān cí, vocabulary word)"],
+      "words": ["床单 (chuáng dān, bed sheet)", "菜单 (cài dān, menu)", "单词 (dān cí, vocabulary word)"],
       "definition-english": "Single; alone; simple; a list or form",
       "definition-chinese": "单独；简单；名单"
     },
@@ -531,7 +531,7 @@
       "english": "exceed, surpass, super",
       "pinyin": "chāo",
       "same-sounding-character": ["钞 (paper money)", "抄 (copy)", "朝 (dynasty/toward)"],
-      "words": ["超市 (chāo shì, supermarket)", "超过 (chāo guò, exceed/surpass)", "超级 (chāo jí, super)"],
+      "words": ["超市 (chāo shì, supermarket)", "超过 (chāo guò, exceed)", "超人 (chāo rén, superman)"],
       "definition-english": "To exceed; to surpass; super-",
       "definition-chinese": "超过；超级"
     },
@@ -549,7 +549,7 @@
       "english": "cover, lid, build",
       "pinyin": "gài",
       "same-sounding-character": ["概 (general)", "改 (change)", "钙 (calcium)"],
-      "words": ["盖子 (gài zi, lid/cover)", "盖房子 (gài fáng zi, build a house)", "覆盖 (fù gài, cover)"],
+      "words": ["盖子 (gài zi, lid/cover)", "覆盖 (fù gài, cover)"],
       "definition-english": "A lid or cover; to cover; to build",
       "definition-chinese": "盖子；覆盖；建造"
     },
@@ -639,7 +639,7 @@
       "english": "late, slow",
       "pinyin": "chí",
       "same-sounding-character": ["持 (hold)", "池 (pond)", "驰 (gallop)"],
-      "words": ["迟到 (chí dào, arrive late)", "迟早 (chí zǎo, sooner or later)", "延迟 (yán chí, delay)"],
+      "words": ["迟到 (chí dào, late)", "迟早 (chí zǎo, sooner or later)", "延迟 (yán chí, delay)"],
       "definition-english": "Late; slow; tardy",
       "definition-chinese": "迟到；缓慢；延迟"
     },
@@ -648,7 +648,7 @@
       "english": "habit, accustomed to",
       "pinyin": "guàn",
       "same-sounding-character": ["灌 (pour/irrigate)", "贯 (pierce through)", "冠 (crown)"],
-      "words": ["习惯 (xí guàn, habit/be used to)", "惯用 (guàn yòng, habitual use)", "惯例 (guàn lì, convention)"],
+      "words": ["习惯 (xí guàn, habit)", "惯例 (guàn lì, convention)"],
       "definition-english": "A habit; to be accustomed to",
       "definition-chinese": "习惯；惯例"
     },
@@ -657,7 +657,7 @@
       "english": "blue",
       "pinyin": "lán",
       "same-sounding-character": ["篮 (basket)", "兰 (orchid)", "拦 (block)"],
-      "words": ["蓝色 (lán sè, blue color)", "蓝天 (lán tiān, blue sky)", "海蓝 (hǎi lán, ocean blue)"],
+      "words": ["蓝色 (lán sè, blue color)", "蓝天 (lán tiān, blue sky)"],
       "definition-english": "Blue; the color blue",
       "definition-chinese": "蓝色"
     },
@@ -749,7 +749,7 @@
       "english": "inside, inner, within",
       "pinyin": "nèi",
       "same-sounding-character": ["馁 (discouraged/hungry)", "氖 (neon gas)"],
-      "words": ["内容 (nèi róng, content)", "国内 (guó nèi, domestic)", "室内 (shì nèi, indoor)"],
+      "words": ["内容 (nèi róng, content)", "室内 (shì nèi, indoor)"],
       "definition-english": "Inside; inner; within",
       "definition-chinese": "里面；内部"
     },
