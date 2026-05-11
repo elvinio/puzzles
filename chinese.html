@@ -2944,6 +2944,14 @@
       const clone = gridEl.cloneNode(true);
       gridEl.parentNode.replaceChild(clone, gridEl);
       const el = document.getElementById('puz-grid');
+      let audioInitialized = false;
+
+      function initAudio() {
+        if (audioInitialized) return;
+        audioInitialized = true;
+        const silent = new Audio('data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAA==');
+        silent.play().catch(() => {});
+      }
 
       function getCellAt(x, y) {
         const target = document.elementFromPoint(x, y);
@@ -2988,10 +2996,10 @@
         evaluatePuzSel();
       }
 
-      el.addEventListener('touchstart', e => { e.preventDefault(); startSel(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+      el.addEventListener('touchstart', e => { e.preventDefault(); initAudio(); startSel(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
       el.addEventListener('touchmove',  e => { e.preventDefault(); moveSel(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
       el.addEventListener('touchend',   e => { e.preventDefault(); endSel(); }, { passive: false });
-      el.addEventListener('mousedown',  e => startSel(e.clientX, e.clientY));
+      el.addEventListener('mousedown',  e => { initAudio(); startSel(e.clientX, e.clientY); });
       window.addEventListener('mousemove', e => { if (P.selecting) moveSel(e.clientX, e.clientY); });
       window.addEventListener('mouseup',   () => { if (P.selecting) endSel(); });
     }
@@ -3020,6 +3028,7 @@
             setTimeout(() => c.el.classList.remove('puz-wrong'), 750);
           }
         });
+        speakChinese(chars);
       }
       P.selCells = []; P.selDir = null;
     }
