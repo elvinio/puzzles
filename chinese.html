@@ -3009,6 +3009,7 @@
         matched.found = true;
         const chip = document.querySelector(`.puz-chip[data-word="${matched.chars}"]`);
         if (chip) chip.classList.add('found');
+        speakChinese(matched.pinyin);
         if (P.words.every(w => w.found))
           setTimeout(() => { document.getElementById('puz-complete').style.display = 'flex'; }, 400);
       } else {
