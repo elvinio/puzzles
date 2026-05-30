@@ -1,0 +1,160 @@
+/* ============================================================================
+   Shared design tokens + reusable components for the Puzzles PWA.
+   Additive: each page may also define its own :root / layout CSS. The tokens
+   below match the canonical purple palette used across pages, so linking this
+   file never changes an existing page's appearance.
+   ========================================================================== */
+
+:root {
+  --bg:      #13111c;
+  --surface: #1c1730;
+  --brd:     #4c1d95;
+  --p:       #6d28d9;
+  --p-lt:    #7c3aed;
+  --p-xl:    #a78bfa;
+  --p-text:  #e2d9f3;
+  --muted:   #7c6fa0;
+  --match:   #16a34a;
+  --danger:  #dc2626;
+  --gold:    #f59e0b;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.pz-btn {
+  font: inherit;
+  font-weight: 600;
+  color: var(--p-text);
+  background: var(--p);
+  border: 1px solid var(--p-lt);
+  border-radius: 12px;
+  padding: 11px 16px;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform .1s, background .15s, opacity .15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.pz-btn:hover    { background: var(--p-lt); }
+.pz-btn:active   { transform: scale(.97); }
+.pz-btn:disabled { opacity: .5; cursor: default; }
+.pz-btn.pz-btn-ghost {
+  background: transparent;
+  border-color: var(--brd);
+  color: var(--p-xl);
+}
+.pz-btn.pz-btn-ghost:hover { background: rgba(124,58,237,.12); }
+.pz-btn.pz-btn-danger {
+  background: transparent;
+  border-color: var(--danger);
+  color: #f8b4b4;
+}
+.pz-btn.pz-btn-danger:hover { background: rgba(220,38,38,.14); }
+
+/* ── Modal ───────────────────────────────────────────────────────────────── */
+.pz-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(8, 6, 16, .62);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  animation: pz-fade-in .18s ease;
+}
+.pz-modal-card {
+  width: 100%;
+  max-width: 360px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--brd);
+  border-radius: 20px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .55);
+  padding: 20px;
+  color: var(--p-text);
+  animation: pz-pop-in .26s cubic-bezier(.34, 1.56, .64, 1);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@keyframes pz-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pz-pop-in {
+  0%   { opacity: 0; transform: translateY(14px) scale(.94); }
+  100% { opacity: 1; transform: translateY(0)    scale(1);  }
+}
+
+/* ── Sync / settings menu internals ──────────────────────────────────────── */
+.pz-sync-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.pz-sync-head svg {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pz-sync-name { font-size: 18px; font-weight: 700; }
+.pz-sync-sub  { font-size: 12px; color: var(--muted); }
+
+.pz-sync-section { margin-top: 14px; }
+.pz-sync-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+  margin: 0 0 7px 2px;
+}
+.pz-sync-row { display: flex; flex-direction: column; gap: 9px; }
+
+.pz-input {
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--p-text);
+  background: rgba(0, 0, 0, .28);
+  border: 1px solid var(--brd);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.pz-input::placeholder { color: var(--muted); }
+.pz-input:focus { outline: none; border-color: var(--p-xl); }
+
+.pz-hint { font-size: 11px; line-height: 1.4; color: var(--muted); margin: 4px 2px 0; }
+.pz-hint a { color: var(--p-xl); }
+
+.pz-status {
+  font-size: 12.5px;
+  min-height: 18px;
+  margin-top: 4px;
+  color: var(--muted);
+}
+.pz-status.pz-ok    { color: var(--match); }
+.pz-status.pz-err   { color: #f8b4b4; }
+.pz-status.pz-busy  { color: var(--p-xl); }
+
+.pz-sync-divider {
+  height: 1px;
+  background: var(--brd);
+  opacity: .5;
+  margin: 16px 0 4px;
+}
+
+.pz-close {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 0 2px;
+}
+.pz-close:hover { color: var(--p-text); }

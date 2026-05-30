@@ -300,7 +300,11 @@
         '<span id="avatar-badge-name">' + escapeHtml(avatar.nickname) + '</span>';
 
       badge.addEventListener('click', function () {
-        window.location.href = 'avatar.html';
+        if (window.PZSyncUI && typeof window.PZSyncUI.openMenu === 'function') {
+          window.PZSyncUI.openMenu();
+        } else {
+          window.location.href = 'avatar.html';
+        }
       });
 
       document.body.appendChild(badge);
