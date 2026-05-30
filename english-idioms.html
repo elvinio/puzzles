@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#13111c">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
   <title>English Idioms</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -497,7 +502,12 @@
 
 <div id="toast"></div>
 
+<script src="sync-registry.js"></script>
+<script src="sync-merge.js"></script>
+<script src="sync-drive.js"></script>
+<script src="sync-ui.js"></script>
 <script src="avatar.js"></script>
+<script src="app.js"></script>
 <script>
 'use strict';
 
