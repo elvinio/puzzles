@@ -504,6 +504,31 @@
       touch-action: none;
     }
 
+    .fc-hint {
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+      padding: 6px 16px;
+      border: 2px dashed var(--brd);
+      border-radius: 20px;
+      user-select: none;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+
+    .fc-hint:hover {
+      background: var(--surface);
+    }
+
+    .fc-hint.revealed {
+      border-style: solid;
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--p-text);
+      padding: 4px 20px;
+    }
+
     /* ═══════════════════════════════════════
        SUMMARY SCREEN
     ═══════════════════════════════════════ */
@@ -1515,6 +1540,7 @@
     <div class="fc-sentence-wrap" id="fc-sentence-wrap" style="display:none"></div>
     <div class="fc-feedback" id="fc-feedback" style="display:none"></div>
     <div class="fc-write-panel" id="fc-write-panel">
+      <div class="fc-hint" id="fc-hint">💡 Tap for hint</div>
       <div class="fc-writer-target" id="fc-writer-target"></div>
       <div class="btn-row" id="fc-reveal-row" style="display:none">
         <button class="btn btn-outline btn-sm" id="fc-reveal-btn">Show Answer</button>
@@ -2429,12 +2455,30 @@
 
       span.classList.add('fc-marked');
       FC.step = 'write';
-      document.getElementById('fc-feedback').textContent = `Now write ${card.correctChar}`;
+      document.getElementById('fc-feedback').textContent = 'Now write the correct character';
       fcStartWriting(card);
+    });
+
+    function fcResetHint() {
+      const hint = document.getElementById('fc-hint');
+      hint.classList.remove('revealed');
+      hint.textContent = '💡 Tap for hint';
+    }
+
+    document.getElementById('fc-hint').addEventListener('click', () => {
+      if (!FC) return;
+      const hint = document.getElementById('fc-hint');
+      if (hint.classList.contains('revealed')) {
+        fcResetHint();
+      } else {
+        hint.classList.add('revealed');
+        hint.textContent = FC.card.correctChar;
+      }
     });
 
     function fcStartWriting(card) {
       document.getElementById('fc-write-panel').classList.add('open');
+      fcResetHint();
       const target = document.getElementById('fc-writer-target');
 
       fcCharDataLoader(card.correctChar, () => {
@@ -2469,9 +2513,9 @@
 
     // Fallback when a character has no self-hosted stroke data (or the fetch fails)
     function fcMissingData(card) {
-      document.getElementById('fc-feedback').textContent = `No stroke data for ${card.correctChar} — write it on paper, then check yourself`;
+      document.getElementById('fc-feedback').textContent = 'No stroke data for this character — write it on paper, then check yourself';
       const target = document.getElementById('fc-writer-target');
-      target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:0.9rem;text-align:center;padding:8px">✍️ Write ${esc(card.correctChar)}</div>`;
+      target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:0.9rem;text-align:center;padding:8px">✍️ Write the character</div>`;
       // The SVG this instance owned is now detached from the DOM — force a fresh
       // create() next time rather than reusing an instance bound to a removed node.
       fcWriter = null;
