@@ -1763,10 +1763,10 @@
     const SIMILAR_FINALS = {
       an: ['ang', 'en', 'uan'], ang: ['an', 'eng', 'uang'],
       en: ['an', 'eng', 'in'], eng: ['en', 'ang', 'ing'],
-      in: ['ing', 'en'], ing: ['in', 'eng'],
-      un: ['ong', 'en'], ong: ['un', 'eng'],
-      ian: ['iang', 'an'], iang: ['ian', 'ang'],
-      uan: ['an', 'uang'], uang: ['uan', 'ang'],
+      in: ['ing', 'en', 'un'], ing: ['in', 'eng'],
+      un: ['ong', 'en', 'in', 'uan'], ong: ['un', 'eng'],
+      ian: ['iang', 'an', 'uan'], iang: ['ian', 'ang'],
+      uan: ['an', 'uang', 'un', 'ian'], uang: ['uan', 'ang'],
       ie: ['e', 'ue'], ue: ['ie', 'e'],
       ao: ['ou', 'iao'], ou: ['ao', 'iou'],
       iao: ['ao', 'iou'], iou: ['iao', 'ou'],
@@ -1775,7 +1775,45 @@
       i: ['ü', 'u'], u: ['ü', 'i'],
       ü: ['u', 'i'],
     };
+    // Phonetically similar initials for distractor generation
+    const SIMILAR_INITIALS = {
+      b: ['p'], p: ['b'], d: ['t'], t: ['d'], g: ['k'], k: ['g'],
+      z: ['zh', 'c'], c: ['ch', 'z'], zh: ['z', 'ch'], ch: ['c', 'zh'],
+      s: ['sh'], sh: ['s'],
+      j: ['q', 'x', 'z'], q: ['j', 'c'], x: ['s', 'sh'],
+      n: ['l'], l: ['n'], f: ['h'], h: ['f'], r: ['l'],
+    };
     const INITIALS = ['zh', 'ch', 'sh', 'b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'k', 'h', 'j', 'q', 'x', 'r', 'z', 'c', 's', 'y', 'w'];
+    // Every base syllable (tone-free, ü written as v) with recorded audio — the canonical
+    // set of valid Mandarin syllables, sourced from pinyin_audio/*.mp3 filenames.
+    const VALID_SYLLABLES = new Set([
+      'a', 'ai', 'an', 'ang', 'ao', 'ba', 'bai', 'ban', 'bang', 'bao', 'bei', 'ben', 'beng', 'bi', 'bian', 'biao',
+      'bie', 'bin', 'bing', 'bo', 'ca', 'cai', 'can', 'cang', 'cao', 'ce', 'cen', 'ceng', 'cha', 'chai', 'chan',
+      'chang', 'chao', 'che', 'chen', 'cheng', 'chi', 'chong', 'chou', 'chu', 'chua', 'chuai', 'chuan', 'chuang',
+      'chui', 'chun', 'chuo', 'ci', 'cong', 'cou', 'cu', 'cuan', 'cui', 'cun', 'cuo', 'da', 'dai', 'dan', 'dang',
+      'dao', 'de', 'dei', 'den', 'deng', 'di', 'dian', 'diao', 'die', 'ding', 'diu', 'dong', 'dou', 'duan', 'dui',
+      'dun', 'duo', 'e', 'en', 'eng', 'er', 'fa', 'fan', 'fang', 'fei', 'fen', 'feng', 'fo', 'fou', 'ga', 'gai',
+      'gan', 'gang', 'gao', 'ge', 'gei', 'gen', 'geng', 'gong', 'gou', 'gua', 'guai', 'guan', 'guang', 'gui', 'gun',
+      'guo', 'ha', 'hai', 'han', 'hang', 'hao', 'he', 'hei', 'hen', 'heng', 'hong', 'hou', 'hua', 'huai', 'huan',
+      'huang', 'hui', 'hun', 'huo', 'ji', 'jia', 'jian', 'jiao', 'jie', 'jin', 'jing', 'jiong', 'jiu', 'ju', 'juan',
+      'jue', 'jun', 'ka', 'kai', 'kan', 'kang', 'kao', 'ke', 'ken', 'keng', 'kong', 'kou', 'kua', 'kuai', 'kuan',
+      'kuang', 'kui', 'kun', 'kuo', 'la', 'lai', 'lan', 'lang', 'lao', 'le', 'lei', 'leng', 'li', 'lian', 'liao',
+      'lie', 'lin', 'ling', 'liu', 'long', 'lou', 'luan', 'lun', 'luo', 'lv', 'lve', 'ma', 'mai', 'man', 'mang',
+      'mao', 'me', 'mei', 'men', 'meng', 'mi', 'mian', 'miao', 'mie', 'min', 'ming', 'miu', 'mo', 'mou', 'na', 'nai',
+      'nan', 'nang', 'nao', 'ne', 'nei', 'nen', 'neng', 'ni', 'nian', 'niao', 'nie', 'nin', 'ning', 'niu', 'nong',
+      'nou', 'nuan', 'nv', 'nve', 'o', 'ou', 'pa', 'pai', 'pan', 'pang', 'pao', 'pei', 'pen', 'peng', 'pi', 'pian',
+      'piao', 'pie', 'pin', 'ping', 'po', 'pou', 'qi', 'qia', 'qian', 'qiao', 'qie', 'qin', 'qing', 'qiong', 'qiu',
+      'qu', 'quan', 'que', 'qun', 'ran', 'rang', 'rao', 're', 'ren', 'reng', 'ri', 'rong', 'rou', 'ru', 'rua', 'ruan',
+      'rui', 'run', 'ruo', 'sa', 'sai', 'san', 'sang', 'sao', 'se', 'sen', 'seng', 'sha', 'shai', 'shan', 'shang',
+      'shao', 'she', 'shei', 'shen', 'sheng', 'shi', 'shou', 'shu', 'shua', 'shuai', 'shuan', 'shuang', 'shui',
+      'shun', 'shuo', 'si', 'song', 'sou', 'su', 'suan', 'sui', 'sun', 'suo', 'ta', 'tai', 'tan', 'tang', 'tao', 'te',
+      'teng', 'ti', 'tian', 'tiao', 'tie', 'ting', 'tong', 'tou', 'tuan', 'tui', 'tun', 'tuo', 'wa', 'wai', 'wan',
+      'wang', 'wei', 'wen', 'weng', 'wo', 'wu', 'xi', 'xia', 'xian', 'xiao', 'xie', 'xin', 'xing', 'xiong', 'xiu',
+      'xu', 'xuan', 'xue', 'xun', 'ya', 'yan', 'yang', 'yao', 'ye', 'yin', 'ying', 'yong', 'you', 'yu', 'yuan', 'yue',
+      'yun', 'za', 'zai', 'zan', 'zang', 'zao', 'ze', 'zei', 'zen', 'zeng', 'zha', 'zhai', 'zhan', 'zhang', 'zhao',
+      'zhe', 'zhei', 'zhen', 'zheng', 'zhi', 'zhong', 'zhou', 'zhu', 'zhua', 'zhuai', 'zhuan', 'zhuang', 'zhui',
+      'zhun', 'zhuo', 'zi', 'zong', 'zou', 'zu', 'zuan', 'zui', 'zun', 'zuo',
+    ]);
 
     function stripTones(p) {
       return [...(p || '')].map(c => TONED_TO_BASE[c] || c).join('');
@@ -1819,6 +1857,56 @@
           const pFinal = extractFinal(stripTones(p));
           return similar.includes(pFinal);
         });
+    }
+
+    function extractInitial(pinyinBase) {
+      return INITIALS.find(init => pinyinBase.startsWith(init)) || '';
+    }
+
+    // Standard Hanyu Pinyin tone-mark placement: a > o > e > last of i/u/ü.
+    function toneMarkIndex(base) {
+      if (base.includes('a')) return base.indexOf('a');
+      if (base.includes('o')) return base.indexOf('o');
+      if (base.includes('e')) return base.indexOf('e');
+      for (let i = base.length - 1; i >= 0; i--) {
+        if (base[i] === 'i' || base[i] === 'u' || base[i] === 'ü') return i;
+      }
+      return -1;
+    }
+
+    function addToneMark(base, toneNum) {
+      const idx = toneMarkIndex(base);
+      if (idx < 0) return base;
+      const tones = BASE_TO_TONES[base[idx]];
+      if (!tones) return base;
+      return base.slice(0, idx) + tones[toneNum - 1] + base.slice(idx + 1);
+    }
+
+    // Synthesizes phonetically-confusable, real Mandarin syllables for a target pinyin
+    // by swapping the initial, swapping the final, or swapping the tone — independent
+    // of what happens to be in the current lesson pool.
+    function synthesizeConfusables(pinyin) {
+      const base = stripTones(pinyin);
+      const initial = extractInitial(base);
+      const final = base.slice(initial.length);
+      const toneChar = [...pinyin].find(c => TONE_NUMBER[c]);
+      const toneNum = toneChar ? TONE_NUMBER[toneChar] : null;
+
+      const buildCandidate = candBase => {
+        if (candBase === base) return null;
+        if (!VALID_SYLLABLES.has(candBase.replace(/ü/g, 'v'))) return null;
+        return toneNum ? addToneMark(candBase, toneNum) : candBase;
+      };
+
+      const finalCands = (SIMILAR_FINALS[final] || [])
+        .map(f => buildCandidate(initial + f))
+        .filter(Boolean);
+      const initialCands = (SIMILAR_INITIALS[initial] || [])
+        .map(i => buildCandidate(i + final))
+        .filter(Boolean);
+      const toneCands = toneNum ? getToneVariants(pinyin) : [];
+
+      return { final: finalCands, initial: initialCands, tone: toneCands };
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -1955,12 +2043,23 @@
       const exclude = new Set([correct]);
       const distractors = [];
 
-      // Step 1: same-base different tones
-      for (const v of getToneVariants(correct)) {
-        if (distractors.length >= 3) break;
-        if (!exclude.has(v)) { distractors.push(v); exclude.add(v); }
+      // Step 1: synthesize confusable syllables — final swap, initial swap, tone swap —
+      // round-robining across categories so options are varied rather than 3 tone variants
+      // of the same syllable or 3 unrelated pool syllables.
+      const { final: finalCands, initial: initialCands, tone: toneCands } = synthesizeConfusables(correct);
+      const categories = [shuffle(finalCands), shuffle(initialCands), shuffle(toneCands)];
+      let progress = true;
+      while (distractors.length < 3 && progress) {
+        progress = false;
+        for (const cat of categories) {
+          if (distractors.length >= 3) break;
+          while (cat.length) {
+            const v = cat.shift();
+            if (!exclude.has(v)) { distractors.push(v); exclude.add(v); progress = true; break; }
+          }
+        }
       }
-      // Step 2: similar-sounding from pool
+      // Step 2: similar-sounding from pool (fallback for syllables with no synthesized confusables)
       if (distractors.length < 3) {
         for (const v of shuffle(getSimilarFromPool(correct, pool, exclude))) {
           if (distractors.length >= 3) break;
