@@ -142,11 +142,6 @@
 
   <h1>Puzzles</h1>
 
-  <div class="section" id="favourites-section">
-    <div class="section-header favourites-header">Favourites</div>
-    <div class="grid" id="favourites-grid"></div>
-  </div>
-
   <div class="section">
     <div class="section-header">Admin</div>
     <div class="grid">
@@ -310,23 +305,6 @@
       localStorage.setItem(FAVS_KEY, JSON.stringify(favs));
     }
 
-    function renderFavsSection() {
-      const favs = getFavs();
-      const section = document.getElementById('favourites-section');
-      const grid = document.getElementById('favourites-grid');
-      if (!favs.length) { section.style.display = 'none'; return; }
-      section.style.display = 'block';
-      grid.innerHTML = '';
-      favs.forEach(function(href) {
-        const original = document.querySelector('a.card[href="' + href + '"]');
-        if (!original) return;
-        const clone = original.cloneNode(true);
-        const btn = clone.querySelector('.fav-btn');
-        if (btn) btn.addEventListener('click', onHeartClick);
-        grid.appendChild(clone);
-      });
-    }
-
     function onHeartClick(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -345,7 +323,6 @@
         b.classList.toggle('faved', isFaved);
         b.innerHTML = isFaved ? HEART_FILLED : HEART_EMPTY;
       });
-      renderFavsSection();
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -360,7 +337,6 @@
         btn.addEventListener('click', onHeartClick);
         card.appendChild(btn);
       });
-      renderFavsSection();
     });
   </script>
 
