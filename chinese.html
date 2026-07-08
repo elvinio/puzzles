@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#13111c">
+  <meta name="theme-color" content="#f5f2fb">
   <link rel="icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="styles.css">
@@ -25,19 +25,19 @@
     }
 
     :root {
-      --bg: #13111c;
-      --surface: #1c1730;
-      --brd: #4c1d95;
+      --bg: #f5f2fb;
+      --surface: #ffffff;
+      --brd: #d7c9f2;
       --p: #6d28d9;
       --p-lt: #7c3aed;
-      --p-xl: #a78bfa;
-      --p-text: #e2d9f3;
-      --muted: #7c6fa0;
+      --p-xl: #5b21b6;
+      --p-text: #241b35;
+      --muted: #756a91;
       --ok: #16a34a;
-      --ok-lt: #22c55e;
+      --ok-lt: #15803d;
       --err: #dc2626;
-      --err-lt: #ef4444;
-      --warn: #f59e0b;
+      --err-lt: #b91c1c;
+      --warn: #b45309;
     }
 
     body {
@@ -400,7 +400,7 @@
 
     .opt-btn:hover {
       border-color: var(--p-lt);
-      background: #241a45;
+      background: #ede7fb;
     }
 
     .opt-btn:active {
@@ -409,21 +409,21 @@
 
     .opt-btn.flash-correct {
       border-color: var(--ok-lt);
-      background: #0a2016;
+      background: #dcfce7;
       color: var(--ok-lt);
       pointer-events: none;
     }
 
     .opt-btn.flash-wrong {
       border-color: var(--err-lt);
-      background: #1a0a0a;
+      background: #fee2e2;
       color: var(--err-lt);
       pointer-events: none;
     }
 
     .opt-btn.flash-reveal {
       border-color: var(--ok-lt);
-      background: #0f2d1a;
+      background: #dcfce7;
       color: var(--ok-lt);
       pointer-events: none;
     }
@@ -469,7 +469,7 @@
     }
 
     .fc-char.fc-marked {
-      background: #0a2016;
+      background: #dcfce7;
       color: var(--ok-lt);
       pointer-events: none;
     }
@@ -1001,7 +1001,7 @@
       transform: translateX(-50%) translateY(16px);
       background: #261c48;
       border: 1.5px solid var(--p-lt);
-      color: var(--p-text);
+      color: #f0eafc;
       border-radius: 20px;
       padding: 9px 22px;
       font-size: 0.85rem;
