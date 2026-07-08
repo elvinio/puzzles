@@ -325,6 +325,14 @@
       position: relative;
     }
 
+    /* Find & Correct mode has no question text — keep this wrap from
+       flex-growing to fill the screen, which would push the sentence down
+       and make it shift whenever the write panel below opens/closes. */
+    .question-wrap.fc-compact {
+      flex: 0 0 auto;
+      min-height: 0;
+    }
+
     .source-key {
       position: absolute;
       bottom: 0;
@@ -2413,6 +2421,7 @@
       qText.onclick = null;
       qText.style.cursor = '';
       qText.style.display = '';
+      qWrap.classList.remove('fc-compact');
       document.getElementById('options-grid').style.display = '';
       document.getElementById('fc-sentence-wrap').style.display = 'none';
       document.getElementById('fc-feedback').style.display = 'none';
@@ -2422,6 +2431,7 @@
       if (card.type === 'find-correct') {
         typeLabel.textContent = '找错字';
         qText.style.display = 'none';
+        qWrap.classList.add('fc-compact');
         renderFindCorrect(card);
         document.getElementById('options-grid').innerHTML = '';
         document.getElementById('options-grid').style.display = 'none';
