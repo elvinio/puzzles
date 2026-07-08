@@ -1,0 +1,1 @@
+Stroke data in this directory is vendored from npm package `hanzi-writer-data@2.0.1` (https://www.npmjs.com/package/hanzi-writer-data), derived from the Make Me a Hanzi project (https://github.com/skishore/makemeahanzi), licensed under the Arphic Public License.

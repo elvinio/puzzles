@@ -432,6 +432,78 @@
       pointer-events: none;
     }
 
+    /* ── Find & Correct mode (找错字) ── */
+    .fc-sentence-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: baseline;
+      gap: 2px;
+      width: 100%;
+      max-width: 620px;
+      padding: 8px 4px;
+    }
+
+    .fc-char {
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      font-size: clamp(1.8rem, 8vw, 2.6rem);
+      font-weight: 900;
+      color: var(--p-text);
+      cursor: pointer;
+      padding: 2px 3px;
+      border-radius: 6px;
+      transition: background 0.12s, color 0.12s;
+      touch-action: manipulation;
+    }
+
+    .fc-char:hover {
+      background: var(--surface);
+    }
+
+    .fc-char.fc-wrong-tap {
+      animation: fc-flash-wrong 0.6s forwards;
+    }
+    @keyframes fc-flash-wrong {
+      0%, 40% { background: var(--err); color: #fff; }
+      100%    { background: transparent; color: var(--p-text); }
+    }
+
+    .fc-char.fc-marked {
+      background: #0a2016;
+      color: var(--ok-lt);
+      pointer-events: none;
+    }
+
+    .fc-feedback {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      min-height: 1.2em;
+    }
+
+    .fc-write-panel {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .fc-write-panel.open {
+      display: flex;
+    }
+
+    .fc-writer-target {
+      width: min(70vw, 280px);
+      height: min(70vw, 280px);
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      touch-action: none;
+    }
+
     /* ═══════════════════════════════════════
        SUMMARY SCREEN
     ═══════════════════════════════════════ */
@@ -1307,6 +1379,7 @@
       <button class="tab" data-mode="chinese-pinyin">汉字 → Pinyin</button>
       <button class="tab" data-mode="english-chinese">English → 汉字</button>
       <button class="tab" data-mode="word-fill">词语</button>
+      <button class="tab" data-mode="find-correct">找错字</button>
       <button class="tab" data-mode="mix">Mix All</button>
       <button class="tab" data-mode="puzzle">🔍 Puzzle</button>
     </div>
@@ -1438,6 +1511,19 @@
     </div>
 
     <div class="options-grid" id="options-grid"></div>
+
+    <div class="fc-sentence-wrap" id="fc-sentence-wrap" style="display:none"></div>
+    <div class="fc-feedback" id="fc-feedback" style="display:none"></div>
+    <div class="fc-write-panel" id="fc-write-panel">
+      <div class="fc-writer-target" id="fc-writer-target"></div>
+      <div class="btn-row" id="fc-reveal-row" style="display:none">
+        <button class="btn btn-outline btn-sm" id="fc-reveal-btn">Show Answer</button>
+      </div>
+      <div class="btn-row" id="fc-self-check-row" style="display:none">
+        <button class="btn btn-sm" id="fc-self-correct">✓ Got it right</button>
+        <button class="btn btn-outline btn-sm" id="fc-self-wrong">✗ Got it wrong</button>
+      </div>
+    </div>
 
     <div class="btn-row" id="continue-row" style="display:none">
       <button class="btn" id="continue-btn">Continue →</button>
@@ -1606,6 +1692,7 @@
 <script src="sync-ui.js"></script>
 <script src="avatar.js"></script>
 <script src="app.js"></script>
+<script src="hanzi-data/hanzi-writer.min.js"></script>
   <script>
     'use strict';
 
@@ -1925,11 +2012,37 @@
       };
     }
 
+    function makeFindCorrect(word, pool) {
+      if (!word['same-sounding-character'] || word['same-sounding-character'].length === 0) return null;
+
+      const { chinese } = parseSentence(word.sentence);
+      if (!chinese || chinese.indexOf(word.character) === -1) return null;
+
+      const wrongIndex = chinese.indexOf(word.character);
+
+      const distractorStr = word['same-sounding-character'][Math.floor(Math.random() * word['same-sounding-character'].length)];
+      const distractorMatch = distractorStr.match(/^([^\s(]+)/);
+      const distractorChar = distractorMatch ? distractorMatch[1] : distractorStr;
+
+      const chars = Array.from(chinese);
+      chars[wrongIndex] = distractorChar;
+
+      return {
+        type: 'find-correct',
+        chars,
+        wrongIndex,
+        correctChar: word.character,
+        distractorChar,
+        word
+      };
+    }
+
     function makeCard(word, pool, mode) {
       if (mode === 'mix') mode = ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'word-fill'][Math.floor(Math.random() * 4)];
       if (mode === 'pinyin-chinese') return makePinyinChinese(word, pool);
       if (mode === 'chinese-pinyin') return makeChinesePinyin(word, pool);
       if (mode === 'word-fill') return makeWordFill(word, pool);
+      if (mode === 'find-correct') return makeFindCorrect(word, pool);
       return makeEnglishChinese(word, pool);
     }
 
@@ -2162,9 +2275,31 @@
       const oldKey = qWrap.querySelector('.source-key');
       if (oldKey) oldKey.remove();
 
+      // Add source key in bottom right
+      const keyEl = document.createElement('div');
+      keyEl.className = 'source-key';
+      keyEl.textContent = sourceKey;
+      qWrap.appendChild(keyEl);
+
       qText.onclick = null;
       qText.style.cursor = '';
-      if (card.type === 'pinyin-chinese') {
+      qText.style.display = '';
+      document.getElementById('options-grid').style.display = '';
+      document.getElementById('fc-sentence-wrap').style.display = 'none';
+      document.getElementById('fc-feedback').style.display = 'none';
+      document.getElementById('fc-write-panel').classList.remove('open');
+      FC = null;
+
+      if (card.type === 'find-correct') {
+        typeLabel.textContent = '找错字';
+        qText.style.display = 'none';
+        renderFindCorrect(card);
+        document.getElementById('options-grid').innerHTML = '';
+        document.getElementById('options-grid').style.display = 'none';
+        document.getElementById('continue-row').style.display = 'none';
+        S.cardStart = Date.now();
+        return;
+      } else if (card.type === 'pinyin-chinese') {
         typeLabel.textContent = 'Which character matches this sound?';
         qText.textContent = card.prompt;
         qText.className = 'question-text is-pinyin';
@@ -2186,12 +2321,6 @@
         qText.textContent = card.prompt;
         qText.className = 'question-text is-english';
       }
-
-      // Add source key in bottom right
-      const keyEl = document.createElement('div');
-      keyEl.className = 'source-key';
-      keyEl.textContent = sourceKey;
-      qWrap.appendChild(keyEl);
 
       const grid = document.getElementById('options-grid');
       grid.innerHTML = '';
@@ -2241,6 +2370,149 @@
       } else {
         document.getElementById('continue-row').style.display = 'flex';
       }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // FIND & CORRECT MODE (找错字) — tap-then-write interaction
+    // ═══════════════════════════════════════════════════════════════
+    let FC = null; // { card, step: 'tap'|'write', mistakes }
+    let fcWriter = null; // single reused HanziWriter instance (see fcStartWriting)
+
+    function fcCharDataLoader(char, onComplete, onError) {
+      fetch(`hanzi-data/chars/${encodeURIComponent(char)}.json`)
+        .then(r => { if (!r.ok) throw new Error('missing hanzi data'); return r.json(); })
+        .then(onComplete)
+        .catch(onError);
+    }
+
+    function renderFindCorrect(card) {
+      FC = { card, step: 'tap', mistakes: 0 };
+
+      const sentWrap = document.getElementById('fc-sentence-wrap');
+      const feedback = document.getElementById('fc-feedback');
+      sentWrap.style.display = 'flex';
+      feedback.style.display = 'block';
+      document.getElementById('fc-write-panel').classList.remove('open');
+      document.getElementById('fc-reveal-row').style.display = 'none';
+      document.getElementById('fc-self-check-row').style.display = 'none';
+      // Only clear the writer target if no HanziWriter instance owns it yet — once
+      // created, it's reused via setCharacter() across cards (see fcStartWriting),
+      // and wiping its innerHTML here would detach the SVG that instance manipulates.
+      if (!fcWriter) document.getElementById('fc-writer-target').innerHTML = '';
+
+      sentWrap.innerHTML = '';
+      card.chars.forEach((ch, idx) => {
+        const span = document.createElement('span');
+        span.className = 'fc-char';
+        span.textContent = ch;
+        span.dataset.idx = String(idx);
+        sentWrap.appendChild(span);
+      });
+
+      feedback.textContent = 'Tap the character that looks wrong';
+    }
+
+    // Delegated tap handler — bound once, works for every card
+    document.getElementById('fc-sentence-wrap').addEventListener('click', (e) => {
+      const span = e.target.closest('.fc-char');
+      if (!span || !FC || FC.step !== 'tap') return;
+      const idx = Number(span.dataset.idx);
+      const card = FC.card;
+
+      if (idx !== card.wrongIndex) {
+        span.classList.remove('fc-wrong-tap');
+        void span.offsetWidth; // restart animation if tapped again
+        span.classList.add('fc-wrong-tap');
+        setTimeout(() => span.classList.remove('fc-wrong-tap'), 600);
+        return;
+      }
+
+      span.classList.add('fc-marked');
+      FC.step = 'write';
+      document.getElementById('fc-feedback').textContent = `Now write ${card.correctChar}`;
+      fcStartWriting(card);
+    });
+
+    function fcStartWriting(card) {
+      document.getElementById('fc-write-panel').classList.add('open');
+      const target = document.getElementById('fc-writer-target');
+
+      fcCharDataLoader(card.correctChar, () => {
+        // HanziWriter attaches its pointer listeners to the target div once, at
+        // construction — re-running .create() on every card would stack duplicate
+        // listeners, so a single instance is created lazily and reused via
+        // setCharacter() from then on.
+        if (!fcWriter) {
+          fcWriter = HanziWriter.create(target, card.correctChar, {
+            width: target.clientWidth || 280,
+            height: target.clientHeight || 280,
+            padding: 12,
+            showOutline: false,
+            showCharacter: false,
+            showHintAfterMisses: 3,
+            markStrokeCorrectAfterMisses: 3,
+            charDataLoader: fcCharDataLoader
+          });
+        } else {
+          fcWriter.setCharacter(card.correctChar);
+        }
+        fcWriter.quiz({
+          onMistake: () => {
+            if (!FC) return;
+            FC.mistakes++;
+            if (FC.mistakes >= 8) document.getElementById('fc-reveal-row').style.display = 'flex';
+          },
+          onComplete: () => fcFinish(true, card)
+        });
+      }, () => fcMissingData(card));
+    }
+
+    // Fallback when a character has no self-hosted stroke data (or the fetch fails)
+    function fcMissingData(card) {
+      document.getElementById('fc-feedback').textContent = `No stroke data for ${card.correctChar} — write it on paper, then check yourself`;
+      const target = document.getElementById('fc-writer-target');
+      target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:0.9rem;text-align:center;padding:8px">✍️ Write ${esc(card.correctChar)}</div>`;
+      // The SVG this instance owned is now detached from the DOM — force a fresh
+      // create() next time rather than reusing an instance bound to a removed node.
+      fcWriter = null;
+      document.getElementById('fc-self-check-row').style.display = 'flex';
+    }
+
+    document.getElementById('fc-reveal-btn').addEventListener('click', () => {
+      if (!FC) return;
+      const card = FC.card;
+      const target = document.getElementById('fc-writer-target');
+      target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:'Kaiti SC','KaiTiRegular','STKaiti',serif;font-size:5rem;color:var(--ok-lt)">${esc(card.correctChar)}</div>`;
+      fcWriter = null; // SVG this instance owned was just replaced — force a fresh create() next time
+      document.getElementById('fc-reveal-row').style.display = 'none';
+      document.getElementById('fc-feedback').textContent = 'Did you write it correctly?';
+      document.getElementById('fc-self-check-row').style.display = 'flex';
+    });
+
+    document.getElementById('fc-self-correct').addEventListener('click', () => { if (FC) fcFinish(true, FC.card); });
+    document.getElementById('fc-self-wrong').addEventListener('click', () => { if (FC) fcFinish(false, FC.card); });
+
+    function fcFinish(correct, card) {
+      if (!card) return;
+      const timeMs = Date.now() - S.cardStart;
+      document.getElementById('fc-self-check-row').style.display = 'none';
+      document.getElementById('fc-reveal-row').style.display = 'none';
+      document.getElementById('fc-feedback').textContent = correct ? '✓ Correct!' : `✗ The answer was ${card.correctChar}`;
+
+      let rec = S.progress[card.word.key] || freshRecord();
+      rec = updateRecord(rec, correct, timeMs);
+      S.progress[card.word.key] = rec;
+      saveProgress(S.avatarId, S.progress);
+
+      S.results.push({ word: card.word, correct, timeMs, type: card.type });
+      FC = null;
+
+      setTimeout(() => {
+        S.cardIndex++;
+        const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
+        if (done) { stopTimer(); showSummary(); }
+        else renderCard();
+      }, correct ? 1200 : 2200);
     }
 
     // Game → end session manually
