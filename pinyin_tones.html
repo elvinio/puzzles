@@ -4,18 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#13111c">
+  <meta name="theme-color" content="#f5f2fb">
   <link rel="icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="styles.css">
 <title>Pinyin Tones</title>
 <style>
   :root {
-    --bg: #13111a; --surface: #1e1b2e; --border: #2e2a45;
-    --text: #e8e3f8; --muted: #7c7a99;
-    --p-xl: #a78bfa; --p-lt: rgba(167,139,250,0.15);
-    --tone1: #60a5fa; --tone2: #34d399; --tone3: #f59e0b; --tone4: #f87171;
-    --active: rgba(167,139,250,0.25);
+    --bg: #f5f2fb; --surface: #ffffff; --border: #d7c9f2;
+    --text: #241b35; --muted: #756a91;
+    --p-xl: #5b21b6; --p-lt: #ede8fb;
+    --tone1: #2563eb; --tone2: #059669; --tone3: #b45309; --tone4: #dc2626;
+    --active: #ede8fb;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: system-ui,-apple-system,sans-serif; min-height: 100vh; }
@@ -36,7 +36,7 @@
     font-size: 0.75rem; font-weight: 600; transition: background 0.15s, color 0.15s;
     background: transparent; color: var(--muted);
   }
-  .mode-toggle button.active { background: var(--p-xl); color: #13111a; }
+  .mode-toggle button.active { background: var(--p-xl); color: #fff; }
 
   .initial-nav {
     position: sticky; top: 0; z-index: 11;
@@ -159,7 +159,7 @@ const GROUPS = [
   { label: 'z', syllables: ['za','ze','zi','zai','zao','zou','zan','zen','zang','zeng','zong','zu','zuan','zui','zun','zuo'] },
   { label: 'c', syllables: ['ca','ce','ci','cai','cao','cou','can','cen','cang','ceng','cong','cu','cuan','cui','cun','cuo'] },
   { label: 's', syllables: ['sa','se','si','sai','sao','sou','san','sen','sang','seng','song','su','suan','sui','sun','suo'] },
-  { label: 'y', syllables: ['ya','ye','yao','you','yan','yin','yang','ying','yong','yu','yue','yuan','yun'] },
+  { label: 'y', syllables: ['yi','ya','ye','yao','you','yan','yin','yang','ying','yong','yu','yue','yuan','yun'] },
   { label: 'w', syllables: ['wa','wo','wai','wei','wan','wen','wang','weng','wu'] },
 ];
 
@@ -350,6 +350,7 @@ const TONE_CHAR = {
   song: ['松',null,'耸','送'],   su:   ['苏','俗',null,'塑'],
   suan: ['酸',null,'蒜',null],   sui:  ['虽','随',null,'岁'],
   sun:  ['孙',null,'损','笋'],   suo:  ['缩','索','锁',null],
+  yi:   ['一','姨','以','意'],
   ya:   ['压','牙','哑','亚'],   yo:   [null,null,null,null],
   ye:   ['耶','爷','也','夜'],   yao:  ['腰','摇','咬','要'],
   you:  ['忧','游','有','又'],   yan:  ['烟','盐','眼','验'],

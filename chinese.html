@@ -69,6 +69,8 @@
       width: 100%;
       max-width: 620px;
       display: flex;
+      flex-wrap: wrap;
+      row-gap: 4px;
       align-items: center;
       justify-content: space-between;
       flex-shrink: 0;
@@ -101,6 +103,8 @@
     .topbar-right {
       min-width: 60px;
       display: flex;
+      flex-wrap: wrap;
+      row-gap: 6px;
       justify-content: flex-end;
     }
 
@@ -1365,9 +1369,9 @@
   <div id="screen-setup" class="screen active">
     <div class="topbar">
       <a class="back-link" href="index.html">← Games</a>
-      <h1>Chinese Practice</h1>
       <div class="topbar-right" style="display:flex;gap:6px">
         <a class="btn btn-outline btn-sm" href="chinese-cards.html">Cards</a>
+        <a class="btn btn-outline btn-sm" href="pinyin_tones.html">Pinyin</a>
         <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
         <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
         <button class="btn btn-outline btn-sm" id="setup-spelling-btn">默写</button>
