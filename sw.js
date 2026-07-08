@@ -8,7 +8,7 @@
 
    Bump VERSION on deploy to hard-reset caches.
    ========================================================================== */
-const VERSION = 'pz-v1';
+const VERSION = 'pz-v2';
 const SHELL   = 'shell-' + VERSION;
 const RUNTIME = 'runtime-' + VERSION;
 const AUDIO   = 'audio-' + VERSION;
@@ -26,6 +26,7 @@ const PRECACHE = [
   // shared js/css
   'styles.css', 'app.js', 'avatar.js',
   'sync-registry.js', 'sync-merge.js', 'sync-drive.js', 'sync-ui.js',
+  'hanzi-data/hanzi-writer.min.js',
   // JSON data (small)
   'chinese-p1.json', 'chinese-p2.json', 'chinese-p3.json',
   'chinese-idioms-p1.json', 'chinese-idioms-p3.json',
@@ -61,7 +62,8 @@ function isHeavy(url)  {
   return /\.(ttf|otf|woff2?)$/i.test(url.pathname)
       || /\/science\//.test(url.pathname)
       || /\/tower\//.test(url.pathname)
-      || /\/fonts\//.test(url.pathname);
+      || /\/fonts\//.test(url.pathname)
+      || /\/hanzi-data\/chars\//.test(url.pathname);
 }
 
 // Cache-first; on miss fetch and store. Used for shell + heavy static assets.
