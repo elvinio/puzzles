@@ -494,6 +494,142 @@
       min-height: 1.2em;
     }
 
+    /* ── Pronunciation mode (🎤 Speak) ── */
+    .pr-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .pr-mic-btn {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 3px solid var(--brd);
+      background: var(--surface);
+      font-size: 3rem;
+      cursor: pointer;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      transition: transform 0.12s, border-color 0.12s, background 0.12s;
+    }
+
+    .pr-mic-btn:active {
+      transform: scale(0.96);
+    }
+
+    .pr-mic-btn.recording {
+      border-color: var(--err);
+      background: #fef2f2;
+      animation: pr-pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pr-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45); }
+      50%      { box-shadow: 0 0 0 16px rgba(220, 38, 38, 0); }
+    }
+
+    .pr-mic-btn[disabled] {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .pr-status {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      min-height: 1.3em;
+    }
+
+    .pr-score-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .pr-score-stars { font-size: 1.4rem; }
+
+    .pr-score-num {
+      font-size: 2.6rem;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .pr-score-num.pr-good { color: var(--ok); }
+    .pr-score-num.pr-mid  { color: var(--warn); }
+    .pr-score-num.pr-bad  { color: var(--err); }
+
+    .pr-score-best {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      min-height: 1.1em;
+    }
+
+    .pr-syllables {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pr-syl {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 18px;
+      border: 2px solid var(--brd);
+      font-size: 1rem;
+      font-weight: 700;
+      background: var(--surface);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .pr-syl.ok {
+      border-color: var(--ok);
+      color: var(--ok-lt);
+      background: #f0fdf4;
+    }
+
+    .pr-syl.weak {
+      border-color: var(--err);
+      color: var(--err-lt);
+      background: #fef2f2;
+    }
+
+    .pr-unconfigured {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.5;
+      padding: 12px;
+    }
+
+    .ss-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid var(--brd);
+      border-radius: 10px;
+      background: var(--bg, #fff);
+      color: var(--p-text);
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
     .fc-write-panel {
       display: none;
       flex-direction: column;
@@ -1383,6 +1519,7 @@
         <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
         <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
         <button class="btn btn-outline btn-sm" id="setup-spelling-btn">默写</button>
+        <button class="btn btn-outline btn-sm" id="setup-speech-settings-btn" title="Speech settings">⚙</button>
       </div>
     </div>
 
@@ -1418,6 +1555,7 @@
       <button class="tab" data-mode="word-fill">词语</button>
       <button class="tab" data-mode="find-correct">找错字</button>
       <button class="tab" data-mode="mix">Mix All</button>
+      <button class="tab" data-mode="pronunciation">🎤 Speak</button>
       <button class="tab" data-mode="puzzle">🔍 Puzzle</button>
     </div>
 
@@ -1560,6 +1698,26 @@
       <div class="btn-row" id="fc-self-check-row" style="display:none">
         <button class="btn btn-sm" id="fc-self-correct">✓ Got it right</button>
         <button class="btn btn-outline btn-sm" id="fc-self-wrong">✗ Got it wrong</button>
+      </div>
+    </div>
+
+    <div class="pr-panel" id="pr-panel" style="display:none">
+      <div class="pr-score-wrap" id="pr-score-wrap" style="display:none">
+        <div class="pr-score-stars" id="pr-score-stars"></div>
+        <div class="pr-score-num" id="pr-score-num"></div>
+        <div class="pr-score-best" id="pr-score-best"></div>
+      </div>
+      <div class="pr-syllables" id="pr-syllables"></div>
+      <div class="pr-status" id="pr-status"></div>
+      <button class="pr-mic-btn" id="pr-mic-btn">🎤</button>
+      <div class="btn-row" id="pr-action-row">
+        <button class="btn" id="pr-next-btn" style="display:none">Next →</button>
+        <button class="btn btn-outline btn-sm" id="pr-skip-btn">Skip</button>
+      </div>
+      <div class="pr-unconfigured" id="pr-unconfigured" style="display:none">
+        <div style="font-size:2rem">🔑</div>
+        <div>Speaking practice needs a one-time setup.<br>Ask a parent to add the Azure Speech key.</div>
+        <button class="btn btn-sm" id="pr-open-settings">⚙ Set up</button>
       </div>
     </div>
 
@@ -1719,6 +1877,55 @@
         <div class="char-modal-sec-label">Same Sound</div>
         <div class="char-modal-chips" id="cm-same"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- Speech (Azure) Settings Modal -->
+  <div id="speech-settings-modal" class="char-modal-overlay">
+    <div class="char-modal">
+      <button class="char-modal-close" id="ss-close">✕</button>
+      <div class="char-modal-section" style="gap:4px">
+        <div style="font-size:1.1rem;font-weight:800;color:var(--p-text)">🎤 Speech Settings</div>
+        <div style="font-size:0.8rem;color:var(--muted)">Powers the 🎤 Speak mode using Microsoft Azure pronunciation scoring.</div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Azure Speech Key</div>
+        <input type="password" id="ss-key" class="ss-input" placeholder="Paste Key 1 here" autocomplete="off">
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Region</div>
+        <select id="ss-region" class="ss-input">
+          <option value="southeastasia">Southeast Asia (Singapore)</option>
+          <option value="eastasia">East Asia (Hong Kong)</option>
+          <option value="japaneast">Japan East</option>
+          <option value="australiaeast">Australia East</option>
+          <option value="eastus">East US</option>
+          <option value="westus">West US</option>
+          <option value="westeurope">West Europe</option>
+          <option value="uksouth">UK South</option>
+        </select>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Pass Score (0–100)</div>
+        <input type="number" id="ss-threshold" class="ss-input" min="1" max="100" step="5" value="70">
+        <div style="font-size:0.75rem;color:var(--muted)">Below this score the word is marked wrong and comes back for review sooner.</div>
+      </div>
+      <div class="btn-row" style="justify-content:flex-start">
+        <button class="btn btn-sm" id="ss-save">Save</button>
+        <button class="btn btn-outline btn-sm" id="ss-test">Test connection</button>
+      </div>
+      <div id="ss-test-status" style="font-size:0.85rem;font-weight:700;min-height:1.2em"></div>
+      <details class="char-modal-section" style="font-size:0.8rem;color:var(--muted)">
+        <summary style="cursor:pointer;font-weight:700;color:var(--p-text)">How do I get a key? (free)</summary>
+        <ol style="margin:8px 0 0 18px;display:flex;flex-direction:column;gap:6px;line-height:1.5">
+          <li>Create a free account at <a href="https://portal.azure.com" target="_blank" rel="noopener" style="color:var(--p-xl)">portal.azure.com</a></li>
+          <li>Click <b>Create a resource</b> → search <b>Speech</b> → Create</li>
+          <li>Choose the <b>Free (F0)</b> tier — 5 hours of audio per month, no charge</li>
+          <li>Pick a region near you (e.g. Southeast Asia)</li>
+          <li>After it deploys, open <b>Keys and Endpoint</b>, copy <b>Key 1</b> and the <b>Region</b> into the boxes above</li>
+        </ol>
+        <div style="margin-top:8px">The key is stored only in this browser (localStorage) — anyone using this device can use it, so keep the free tier to cap any cost.</div>
+      </details>
     </div>
   </div>
 
@@ -1969,6 +2176,23 @@
       catch { }
     }
 
+    const AZURE_CONFIG_KEY = 'chinese-azure-speech';
+
+    function getAzureConfig() {
+      let cfg = {};
+      try { cfg = JSON.parse(localStorage.getItem(AZURE_CONFIG_KEY) || '{}'); } catch { }
+      return { key: cfg.key || '', region: cfg.region || 'southeastasia', threshold: cfg.threshold || 70 };
+    }
+
+    function saveAzureConfig(cfg) {
+      try { localStorage.setItem(AZURE_CONFIG_KEY, JSON.stringify(cfg)); } catch { }
+    }
+
+    function isAzureConfigured() {
+      const cfg = getAzureConfig();
+      return !!(cfg.key && cfg.region);
+    }
+
     function freshRecord() {
       return { correct: 0, wrong: 0, totalTimeMs: 0, attempts: 0, interval: 1, easeFactor: 2.5, dueDate: todayStr(), lastTested: null };
     }
@@ -2174,12 +2398,33 @@
       };
     }
 
+    // "衣服 (yī fu, clothes)" → { hanzi:'衣服', pinyin:'yī fu', english:'clothes' }
+    function parseExampleWord(word) {
+      const raw = (word.words && word.words[0]) || '';
+      const m = raw.match(/^([^\s(]+)\s*\(([^,)]+),\s*([^)]*)\)/);
+      if (m) return { hanzi: m[1], pinyin: m[2].trim(), english: m[3].trim() };
+      return { hanzi: word.character, pinyin: word.pinyin, english: word.english };
+    }
+
+    function makePronunciation(word) {
+      const ref = parseExampleWord(word);
+      return {
+        type: 'pronunciation',
+        word,
+        refHanzi: ref.hanzi,
+        refPinyin: ref.pinyin,
+        refEnglish: ref.english,
+        refPinyinSyllables: ref.pinyin.trim().split(/\s+/).filter(Boolean),
+      };
+    }
+
     function makeCard(word, pool, mode) {
       if (mode === 'mix') mode = ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'word-fill'][Math.floor(Math.random() * 4)];
       if (mode === 'pinyin-chinese') return makePinyinChinese(word, pool);
       if (mode === 'chinese-pinyin') return makeChinesePinyin(word, pool);
       if (mode === 'word-fill') return makeWordFill(word, pool);
       if (mode === 'find-correct') return makeFindCorrect(word, pool);
+      if (mode === 'pronunciation') return makePronunciation(word);
       return makeEnglishChinese(word, pool);
     }
 
@@ -2313,6 +2558,9 @@
       } else if (!S.avatarId) {
         startBtn.disabled = true;
       }
+      if (S.mode === 'pronunciation' && !isAzureConfigured()) {
+        showToast('Ask a parent to set up the speech key ⚙');
+      }
     });
 
     document.getElementById('setup-stats-btn').addEventListener('click', () => {
@@ -2426,9 +2674,31 @@
       document.getElementById('fc-sentence-wrap').style.display = 'none';
       document.getElementById('fc-feedback').style.display = 'none';
       document.getElementById('fc-write-panel').classList.remove('open');
+      document.getElementById('pr-panel').style.display = 'none';
       FC = null;
+      PR = null;
 
-      if (card.type === 'find-correct') {
+      if (card.type === 'pronunciation') {
+        typeLabel.textContent = 'Say this word out loud';
+        const pinyinHint = `<div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.refPinyin)}</div>`;
+        qText.innerHTML = `<div>${esc(card.refHanzi)}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.refEnglish)}</div>`;
+        qText.className = 'question-text';
+        const hintEl = qText.querySelector('div:nth-child(2)');
+        if (hintEl) {
+          const btn = document.createElement('button');
+          btn.className = 'speak-btn';
+          btn.title = 'Listen';
+          btn.textContent = '🔊';
+          btn.addEventListener('click', e => { e.stopPropagation(); azureSpeak(card.refHanzi, card.refPinyin); });
+          hintEl.appendChild(btn);
+        }
+        document.getElementById('options-grid').innerHTML = '';
+        document.getElementById('options-grid').style.display = 'none';
+        document.getElementById('continue-row').style.display = 'none';
+        renderPronunciation(card);
+        S.cardStart = Date.now();
+        return;
+      } else if (card.type === 'find-correct') {
         typeLabel.textContent = '';
         qText.style.display = 'none';
         qWrap.classList.add('fc-compact');
@@ -2672,8 +2942,303 @@
       }, correct ? 1200 : 2200);
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // PRONUNCIATION MODE (🎤 Speak) — hold-to-record, Azure scoring
+    // ═══════════════════════════════════════════════════════════════
+    let PR = null; // { card, attempts, bestScore, recording, busy, recStart }
+    let prStream = null;
+    let prRecorder = null;
+    let prChunks = [];
+    let prMaxTimer = null;
+    let prAudioCtx = null;
+
+    function renderPronunciation(card) {
+      PR = { card, attempts: 0, bestScore: -1, recording: false, busy: false, recStart: 0 };
+      const panel = document.getElementById('pr-panel');
+      panel.style.display = 'flex';
+      document.getElementById('pr-score-wrap').style.display = 'none';
+      document.getElementById('pr-syllables').innerHTML = '';
+      document.getElementById('pr-next-btn').style.display = 'none';
+      document.getElementById('pr-mic-btn').classList.remove('recording');
+
+      const configured = isAzureConfigured();
+      document.getElementById('pr-mic-btn').style.display = configured ? '' : 'none';
+      document.getElementById('pr-unconfigured').style.display = configured ? 'none' : 'flex';
+      document.getElementById('pr-status').textContent = configured ? 'Hold the mic and say it!' : '';
+    }
+
+    function prSetStatus(msg) {
+      document.getElementById('pr-status').textContent = msg;
+    }
+
+    function prReleaseMic() {
+      if (prRecorder && prRecorder.state !== 'inactive') { try { prRecorder.stop(); } catch { } }
+      prRecorder = null;
+      if (prStream) { prStream.getTracks().forEach(t => t.stop()); prStream = null; }
+      clearTimeout(prMaxTimer);
+    }
+
+    async function prStartRecording() {
+      if (!PR || PR.busy || PR.recording || !isAzureConfigured()) return;
+      // Create/resume the AudioContext inside the user gesture (required on iOS)
+      if (!prAudioCtx) { try { prAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch { } }
+      if (prAudioCtx && prAudioCtx.state === 'suspended') prAudioCtx.resume().catch(() => { });
+
+      if (!prStream) {
+        try {
+          prStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+        } catch {
+          prSetStatus('Microphone blocked — allow it in browser settings');
+          return;
+        }
+      }
+      if (!PR || PR.busy || PR.recording) return; // state may have changed while awaiting
+
+      prChunks = [];
+      try { prRecorder = new MediaRecorder(prStream); } catch {
+        prSetStatus('Recording not supported in this browser');
+        return;
+      }
+      prRecorder.ondataavailable = e => { if (e.data && e.data.size) prChunks.push(e.data); };
+      prRecorder.onstop = () => {
+        document.getElementById('pr-mic-btn').classList.remove('recording');
+        if (!PR) return;
+        PR.recording = false;
+        const durMs = Date.now() - PR.recStart;
+        const blob = new Blob(prChunks, { type: prRecorder && prRecorder.mimeType || 'audio/webm' });
+        prChunks = [];
+        if (durMs < 400 || !blob.size) {
+          prSetStatus('Too short — hold the button while you speak');
+          return;
+        }
+        prProcessAttempt(blob);
+      };
+      PR.recording = true;
+      PR.recStart = Date.now();
+      prRecorder.start();
+      document.getElementById('pr-mic-btn').classList.add('recording');
+      prSetStatus('Listening… release when done');
+      clearTimeout(prMaxTimer);
+      prMaxTimer = setTimeout(prStopRecording, 6000);
+    }
+
+    function prStopRecording() {
+      clearTimeout(prMaxTimer);
+      if (!PR || !PR.recording || !prRecorder || prRecorder.state === 'inactive') return;
+      try { prRecorder.stop(); } catch { }
+    }
+
+    async function prProcessAttempt(blob) {
+      PR.busy = true;
+      const mic = document.getElementById('pr-mic-btn');
+      mic.disabled = true;
+      prSetStatus('Checking… 🤔');
+      try {
+        const wav = await blobToWav16kMono(blob);
+        const json = await assessPronunciation(wav, PR.card.refHanzi);
+        const result = parsePronResult(json, PR.card);
+        if (result.noSpeech) {
+          prSetStatus("I couldn't hear you — try again!");
+        } else {
+          prShowScore(result);
+        }
+      } catch (err) {
+        if (err && err.kind === 'auth') prSetStatus('Speech key problem — ask a parent to check settings ⚙');
+        else if (err && err.kind === 'network') prSetStatus('No internet — try again in a moment');
+        else prSetStatus('Something went wrong — try again');
+      } finally {
+        if (PR) PR.busy = false;
+        mic.disabled = false;
+      }
+    }
+
+    function prShowScore(result) {
+      PR.attempts++;
+      PR.bestScore = Math.max(PR.bestScore, result.score);
+      const threshold = getAzureConfig().threshold;
+
+      const wrap = document.getElementById('pr-score-wrap');
+      const numEl = document.getElementById('pr-score-num');
+      const starsEl = document.getElementById('pr-score-stars');
+      wrap.style.display = 'flex';
+      numEl.textContent = Math.round(result.score);
+      let stars, cls;
+      if (result.score >= 85) { stars = '🌟🌟🌟 Amazing!'; cls = 'pr-good'; }
+      else if (result.score >= threshold) { stars = '🌟🌟 Good!'; cls = 'pr-good'; }
+      else if (result.score >= 50) { stars = '🌟 Almost — try again!'; cls = 'pr-mid'; }
+      else { stars = 'Keep trying! 💪'; cls = 'pr-bad'; }
+      starsEl.textContent = stars;
+      numEl.className = `pr-score-num ${cls}`;
+      document.getElementById('pr-score-best').textContent =
+        PR.attempts > 1 ? `Best: ${Math.round(PR.bestScore)} (attempt ${PR.attempts})` : '';
+
+      const sylWrap = document.getElementById('pr-syllables');
+      sylWrap.innerHTML = '';
+      result.syllables.forEach(syl => {
+        const chip = document.createElement('button');
+        const weak = syl.score < 70 || (syl.errorType && syl.errorType !== 'None');
+        chip.className = `pr-syl ${weak ? 'weak' : 'ok'}`;
+        chip.innerHTML = `${esc(syl.pinyin)} <span>${weak ? '✗ 🔊' : '✓'}</span>`;
+        chip.title = weak ? 'Tap to hear this syllable' : `${Math.round(syl.score)}/100`;
+        chip.addEventListener('click', () => speakChinese(syl.pinyin));
+        sylWrap.appendChild(chip);
+      });
+
+      document.getElementById('pr-next-btn').style.display = '';
+      prSetStatus(PR.bestScore >= threshold ? 'Great — tap Next, or try to beat your score!' : 'Hold the mic to try again, or tap Next');
+    }
+
+    function prFinish() {
+      if (!PR || !PR.card) return;
+      const card = PR.card;
+      const timeMs = Date.now() - S.cardStart;
+      const correct = PR.bestScore >= getAzureConfig().threshold;
+
+      let rec = S.progress[card.word.key] || freshRecord();
+      rec = updateRecord(rec, correct, timeMs);
+      S.progress[card.word.key] = rec;
+      saveProgress(S.avatarId, S.progress);
+
+      S.results.push({ word: card.word, correct, timeMs, type: 'pronunciation', score: Math.round(PR.bestScore) });
+      prAdvance();
+    }
+
+    function prAdvance() {
+      PR = null;
+      S.cardIndex++;
+      const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
+      if (done) { stopTimer(); showSummary(); }
+      else renderCard();
+    }
+
+    // Tap-and-hold wiring (bound once)
+    {
+      const micBtn = document.getElementById('pr-mic-btn');
+      micBtn.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        try { micBtn.setPointerCapture(e.pointerId); } catch { }
+        prStartRecording();
+      });
+      micBtn.addEventListener('pointerup', prStopRecording);
+      micBtn.addEventListener('pointercancel', prStopRecording);
+      micBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+      document.getElementById('pr-next-btn').addEventListener('click', () => {
+        if (!PR) return;
+        if (PR.attempts === 0) prAdvance(); // nothing scored — neutral skip
+        else prFinish();
+      });
+      document.getElementById('pr-skip-btn').addEventListener('click', () => { if (PR) prAdvance(); });
+      document.getElementById('pr-open-settings').addEventListener('click', openSpeechSettings);
+    }
+
+    // ── Audio: MediaRecorder blob → 16 kHz mono PCM WAV ──
+    async function blobToWav16kMono(blob) {
+      const buf = await blob.arrayBuffer();
+      if (!prAudioCtx) prAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const decoded = await prAudioCtx.decodeAudioData(buf);
+      const rate = 16000;
+      const offline = new OfflineAudioContext(1, Math.max(1, Math.ceil(decoded.duration * rate)), rate);
+      const src = offline.createBufferSource();
+      src.buffer = decoded;
+      src.connect(offline.destination);
+      src.start();
+      const rendered = await offline.startRendering();
+      return encodeWavPcm16(rendered);
+    }
+
+    function encodeWavPcm16(audioBuffer) {
+      const samples = audioBuffer.getChannelData(0);
+      const rate = audioBuffer.sampleRate;
+      const out = new DataView(new ArrayBuffer(44 + samples.length * 2));
+      const writeStr = (off, s) => { for (let i = 0; i < s.length; i++) out.setUint8(off + i, s.charCodeAt(i)); };
+      writeStr(0, 'RIFF');
+      out.setUint32(4, 36 + samples.length * 2, true);
+      writeStr(8, 'WAVE');
+      writeStr(12, 'fmt ');
+      out.setUint32(16, 16, true);      // fmt chunk size
+      out.setUint16(20, 1, true);       // PCM
+      out.setUint16(22, 1, true);       // mono
+      out.setUint32(24, rate, true);
+      out.setUint32(28, rate * 2, true); // byte rate
+      out.setUint16(32, 2, true);       // block align
+      out.setUint16(34, 16, true);      // bits per sample
+      writeStr(36, 'data');
+      out.setUint32(40, samples.length * 2, true);
+      for (let i = 0; i < samples.length; i++) {
+        const s = Math.max(-1, Math.min(1, samples[i]));
+        out.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      }
+      return new Blob([out.buffer], { type: 'audio/wav' });
+    }
+
+    // ── Azure Pronunciation Assessment (REST) ──
+    function b64Utf8(str) {
+      return btoa(String.fromCharCode(...new TextEncoder().encode(str)));
+    }
+
+    async function assessPronunciation(wavBlob, referenceText) {
+      const cfg = getAzureConfig();
+      const params = b64Utf8(JSON.stringify({
+        ReferenceText: referenceText,
+        GradingSystem: 'HundredMark',
+        Granularity: 'Phoneme',
+        Dimension: 'Comprehensive',
+      }));
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 10000);
+      let res;
+      try {
+        res = await fetch(`https://${cfg.region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=zh-CN&format=detailed`, {
+          method: 'POST',
+          headers: {
+            'Ocp-Apim-Subscription-Key': cfg.key,
+            'Pronunciation-Assessment': params,
+            'Content-Type': 'audio/wav; codecs=audio/pcm; samplerate=16000',
+            'Accept': 'application/json',
+          },
+          body: wavBlob,
+          signal: ctrl.signal,
+        });
+      } catch {
+        throw { kind: 'network' };
+      } finally {
+        clearTimeout(timer);
+      }
+      if (res.status === 401 || res.status === 403) throw { kind: 'auth' };
+      if (!res.ok) throw { kind: 'server' };
+      return res.json();
+    }
+
+    function parsePronResult(json, card) {
+      if (!json || json.RecognitionStatus !== 'Success' || !json.NBest || !json.NBest.length) {
+        return { noSpeech: true };
+      }
+      const nb = json.NBest[0];
+      // Detailed REST responses may put scores at NBest level or under PronunciationAssessment
+      const score = nb.PronunciationAssessment?.AccuracyScore ?? nb.AccuracyScore ?? 0;
+
+      // One syllable per hanzi for zh-CN; align to reference pinyin by index
+      const units = [];
+      (nb.Words || []).forEach(w => {
+        const sylls = w.Syllables && w.Syllables.length ? w.Syllables : [w];
+        sylls.forEach(s => units.push({
+          score: s.PronunciationAssessment?.AccuracyScore ?? s.AccuracyScore ?? score,
+          errorType: s.PronunciationAssessment?.ErrorType ?? s.ErrorType ?? w.PronunciationAssessment?.ErrorType ?? w.ErrorType ?? 'None',
+        }));
+      });
+      const syllables = card.refPinyinSyllables.map((pinyin, i) => ({
+        pinyin,
+        score: units[i] ? units[i].score : 0,
+        errorType: units[i] ? units[i].errorType : 'Omission',
+      }));
+      return { score, syllables };
+    }
+
     // Game → end session manually
     document.getElementById('game-end-btn').addEventListener('click', () => {
+      prReleaseMic();
+      PR = null;
       stopTimer();
       showSummary();
     });
@@ -2690,6 +3255,8 @@
     // SUMMARY SCREEN
     // ═══════════════════════════════════════════════════════════════
     function showSummary() {
+      prReleaseMic();
+      PR = null;
       const elapsed = Date.now() - S.sessionStart;
       const correct = S.results.filter(r => r.correct).length;
       const wrong = S.results.length - correct;
@@ -2716,7 +3283,7 @@
         <div class="result-pinyin" style="display:flex;align-items:center;gap:4px"><span>${r.word.pinyin}</span></div>
         <div class="result-english">${esc(r.word.english)}</div>
       </div>
-      <div class="result-time">${(r.timeMs / 1000).toFixed(1)}s ${r.correct ? '✓' : '✗'}</div>`);
+      <div class="result-time">${r.type === 'pronunciation' ? `${r.score} pts ` : `${(r.timeMs / 1000).toFixed(1)}s `}${r.correct ? '✓' : '✗'}</div>`);
         item.querySelector('.result-pinyin').appendChild(makeSpeakBtn(r.word.character, r.word.pinyin));
         list.appendChild(item);
       });
@@ -2858,6 +3425,57 @@
       document.getElementById('char-modal').classList.remove('open');
     });
 
+    // ── Speech (Azure) settings modal ──
+    function openSpeechSettings() {
+      const cfg = getAzureConfig();
+      document.getElementById('ss-key').value = cfg.key;
+      document.getElementById('ss-region').value = cfg.region;
+      document.getElementById('ss-threshold').value = cfg.threshold;
+      document.getElementById('ss-test-status').textContent = '';
+      document.getElementById('speech-settings-modal').classList.add('open');
+    }
+
+    function readSpeechSettingsForm() {
+      return {
+        key: document.getElementById('ss-key').value.trim(),
+        region: document.getElementById('ss-region').value,
+        threshold: Math.min(100, Math.max(1, parseInt(document.getElementById('ss-threshold').value, 10) || 70)),
+      };
+    }
+
+    document.getElementById('setup-speech-settings-btn').addEventListener('click', openSpeechSettings);
+    document.getElementById('speech-settings-modal').addEventListener('click', e => {
+      if (e.target.id === 'speech-settings-modal') document.getElementById('speech-settings-modal').classList.remove('open');
+    });
+    document.getElementById('ss-close').addEventListener('click', () => {
+      document.getElementById('speech-settings-modal').classList.remove('open');
+    });
+    document.getElementById('ss-save').addEventListener('click', () => {
+      saveAzureConfig(readSpeechSettingsForm());
+      document.getElementById('speech-settings-modal').classList.remove('open');
+      showToast('Speech settings saved');
+      // Refresh the current card if it was waiting for a key
+      if (PR && PR.card) renderCard();
+    });
+    document.getElementById('ss-test').addEventListener('click', async () => {
+      const cfg = readSpeechSettingsForm();
+      const status = document.getElementById('ss-test-status');
+      if (!cfg.key) { status.textContent = '✗ Enter a key first'; status.style.color = 'var(--err)'; return; }
+      status.textContent = 'Testing…';
+      status.style.color = 'var(--muted)';
+      try {
+        const res = await fetch(`https://${cfg.region}.api.cognitive.microsoft.com/sts/v1.0/issueToken`, {
+          method: 'POST',
+          headers: { 'Ocp-Apim-Subscription-Key': cfg.key },
+        });
+        if (res.ok) { status.textContent = '✓ Key works!'; status.style.color = 'var(--ok)'; }
+        else { status.textContent = '✗ Wrong key or region'; status.style.color = 'var(--err)'; }
+      } catch {
+        status.textContent = '✗ Could not reach Azure — check internet';
+        status.style.color = 'var(--err)';
+      }
+    });
+
     // Stats table: speak button and click td-char to open character modal
     document.getElementById('stats-tbody').addEventListener('click', e => {
       const speakBtn = e.target.closest('.speak-btn[data-char]');
@@ -2918,6 +3536,40 @@
       btn.textContent = '🔊';
       btn.addEventListener('click', e => { e.stopPropagation(); speakChinese(pinyin || character); });
       return btn;
+    }
+
+    // Natural-voice TTS via Azure (zh-CN-XiaoxiaoNeural); falls back to local
+    // pinyin mp3s / speechSynthesis when no key or the request fails.
+    const _ttsCache = new Map(); // text → object URL
+    let _ttsAudio = null;
+
+    async function azureSpeak(hanzi, pinyinFallback) {
+      const fallback = () => speakChinese(pinyinFallback || hanzi);
+      if (!isAzureConfigured()) { fallback(); return; }
+      try {
+        let url = _ttsCache.get(hanzi);
+        if (!url) {
+          const cfg = getAzureConfig();
+          const ssml = `<speak version='1.0' xml:lang='zh-CN'><voice name='zh-CN-XiaoxiaoNeural'><prosody rate='-15%'>${esc(hanzi)}</prosody></voice></speak>`;
+          const res = await fetch(`https://${cfg.region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
+            method: 'POST',
+            headers: {
+              'Ocp-Apim-Subscription-Key': cfg.key,
+              'Content-Type': 'application/ssml+xml',
+              'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
+            },
+            body: ssml,
+          });
+          if (!res.ok) throw new Error(`tts ${res.status}`);
+          url = URL.createObjectURL(await res.blob());
+          _ttsCache.set(hanzi, url);
+        }
+        if (_ttsAudio) _ttsAudio.pause();
+        _ttsAudio = new Audio(url);
+        _ttsAudio.play().catch(fallback);
+      } catch {
+        fallback();
+      }
     }
 
     // ═══════════════════════════════════════════════════════════════
