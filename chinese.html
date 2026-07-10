@@ -1716,7 +1716,7 @@
       </div>
       <div class="pr-unconfigured" id="pr-unconfigured" style="display:none">
         <div style="font-size:2rem">🔑</div>
-        <div>Speaking practice needs a one-time setup.<br>Ask a parent to add the Azure Speech key.</div>
+        <div>Speaking practice needs a one-time setup.<br>Ask a parent to add the speech proxy details.</div>
         <button class="btn btn-sm" id="pr-open-settings">⚙ Set up</button>
       </div>
     </div>
@@ -1880,30 +1880,21 @@
     </div>
   </div>
 
-  <!-- Speech (Azure) Settings Modal -->
+  <!-- Speech (Azure via Modal proxy) Settings Modal -->
   <div id="speech-settings-modal" class="char-modal-overlay">
     <div class="char-modal">
       <button class="char-modal-close" id="ss-close">✕</button>
       <div class="char-modal-section" style="gap:4px">
         <div style="font-size:1.1rem;font-weight:800;color:var(--p-text)">🎤 Speech Settings</div>
-        <div style="font-size:0.8rem;color:var(--muted)">Powers the 🎤 Speak mode using Microsoft Azure pronunciation scoring.</div>
+        <div style="font-size:0.8rem;color:var(--muted)">Powers the 🎤 Speak mode using Microsoft Azure pronunciation scoring, via a Modal proxy that keeps the Azure key off this device.</div>
       </div>
       <div class="char-modal-section">
-        <div class="char-modal-sec-label">Azure Speech Key</div>
-        <input type="password" id="ss-key" class="ss-input" placeholder="Paste Key 1 here" autocomplete="off">
+        <div class="char-modal-sec-label">Modal Proxy URL</div>
+        <input type="text" id="ss-proxy-url" class="ss-input" placeholder="https://your-app--azure-speech-proxy-fastapi-app.modal.run" autocomplete="off">
       </div>
       <div class="char-modal-section">
-        <div class="char-modal-sec-label">Region</div>
-        <select id="ss-region" class="ss-input">
-          <option value="southeastasia">Southeast Asia (Singapore)</option>
-          <option value="eastasia">East Asia (Hong Kong)</option>
-          <option value="japaneast">Japan East</option>
-          <option value="australiaeast">Australia East</option>
-          <option value="eastus">East US</option>
-          <option value="westus">West US</option>
-          <option value="westeurope">West Europe</option>
-          <option value="uksouth">UK South</option>
-        </select>
+        <div class="char-modal-sec-label">API Key</div>
+        <input type="password" id="ss-api-key" class="ss-input" placeholder="Proxy API key" autocomplete="off">
       </div>
       <div class="char-modal-section">
         <div class="char-modal-sec-label">Pass Score (0–100)</div>
@@ -1916,15 +1907,13 @@
       </div>
       <div id="ss-test-status" style="font-size:0.85rem;font-weight:700;min-height:1.2em"></div>
       <details class="char-modal-section" style="font-size:0.8rem;color:var(--muted)">
-        <summary style="cursor:pointer;font-weight:700;color:var(--p-text)">How do I get a key? (free)</summary>
+        <summary style="cursor:pointer;font-weight:700;color:var(--p-text)">Where do I get these?</summary>
         <ol style="margin:8px 0 0 18px;display:flex;flex-direction:column;gap:6px;line-height:1.5">
-          <li>Create a free account at <a href="https://portal.azure.com" target="_blank" rel="noopener" style="color:var(--p-xl)">portal.azure.com</a></li>
-          <li>Click <b>Create a resource</b> → search <b>Speech</b> → Create</li>
-          <li>Choose the <b>Free (F0)</b> tier — 5 hours of audio per month, no charge</li>
-          <li>Pick a region near you (e.g. Southeast Asia)</li>
-          <li>After it deploys, open <b>Keys and Endpoint</b>, copy <b>Key 1</b> and the <b>Region</b> into the boxes above</li>
+          <li>Deploy <code>modal/azure_speech_proxy.py</code> from the health repo to <a href="https://modal.com" target="_blank" rel="noopener" style="color:var(--p-xl)">Modal</a> (it auto-deploys on push, or run <code>modal deploy modal/azure_speech_proxy.py</code>)</li>
+          <li>Create the <code>azure-speech-proxy-secrets</code> Modal secret with an Azure Speech key, region, and a proxy token you choose (see the file's docstring)</li>
+          <li>Paste the URL Modal prints into the box above, and the proxy token into API Key</li>
         </ol>
-        <div style="margin-top:8px">The key is stored only in this browser (localStorage) — anyone using this device can use it, so keep the free tier to cap any cost.</div>
+        <div style="margin-top:8px">Only the proxy URL and proxy token are stored in this browser (localStorage) — the real Azure key stays server-side in the Modal secret.</div>
       </details>
     </div>
   </div>
@@ -2181,7 +2170,7 @@
     function getAzureConfig() {
       let cfg = {};
       try { cfg = JSON.parse(localStorage.getItem(AZURE_CONFIG_KEY) || '{}'); } catch { }
-      return { key: cfg.key || '', region: cfg.region || 'southeastasia', threshold: cfg.threshold || 70 };
+      return { proxyUrl: (cfg.proxyUrl || '').replace(/\/+$/, ''), apiKey: cfg.apiKey || '', threshold: cfg.threshold || 70 };
     }
 
     function saveAzureConfig(cfg) {
@@ -2190,7 +2179,7 @@
 
     function isAzureConfigured() {
       const cfg = getAzureConfig();
-      return !!(cfg.key && cfg.region);
+      return !!(cfg.proxyUrl && cfg.apiKey);
     }
 
     function freshRecord() {
@@ -3189,10 +3178,9 @@
       const timer = setTimeout(() => ctrl.abort(), 10000);
       let res;
       try {
-        res = await fetch(`https://${cfg.region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=zh-CN&format=detailed`, {
+        res = await fetch(`${cfg.proxyUrl}/?action=STT&language=zh-CN&format=detailed&token=${encodeURIComponent(cfg.apiKey)}`, {
           method: 'POST',
           headers: {
-            'Ocp-Apim-Subscription-Key': cfg.key,
             'Pronunciation-Assessment': params,
             'Content-Type': 'audio/wav; codecs=audio/pcm; samplerate=16000',
             'Accept': 'application/json',
@@ -3428,8 +3416,8 @@
     // ── Speech (Azure) settings modal ──
     function openSpeechSettings() {
       const cfg = getAzureConfig();
-      document.getElementById('ss-key').value = cfg.key;
-      document.getElementById('ss-region').value = cfg.region;
+      document.getElementById('ss-proxy-url').value = cfg.proxyUrl;
+      document.getElementById('ss-api-key').value = cfg.apiKey;
       document.getElementById('ss-threshold').value = cfg.threshold;
       document.getElementById('ss-test-status').textContent = '';
       document.getElementById('speech-settings-modal').classList.add('open');
@@ -3437,8 +3425,8 @@
 
     function readSpeechSettingsForm() {
       return {
-        key: document.getElementById('ss-key').value.trim(),
-        region: document.getElementById('ss-region').value,
+        proxyUrl: document.getElementById('ss-proxy-url').value.trim().replace(/\/+$/, ''),
+        apiKey: document.getElementById('ss-api-key').value.trim(),
         threshold: Math.min(100, Math.max(1, parseInt(document.getElementById('ss-threshold').value, 10) || 70)),
       };
     }
@@ -3460,18 +3448,17 @@
     document.getElementById('ss-test').addEventListener('click', async () => {
       const cfg = readSpeechSettingsForm();
       const status = document.getElementById('ss-test-status');
-      if (!cfg.key) { status.textContent = '✗ Enter a key first'; status.style.color = 'var(--err)'; return; }
+      if (!cfg.proxyUrl || !cfg.apiKey) { status.textContent = '✗ Enter proxy URL and API key first'; status.style.color = 'var(--err)'; return; }
       status.textContent = 'Testing…';
       status.style.color = 'var(--muted)';
       try {
-        const res = await fetch(`https://${cfg.region}.api.cognitive.microsoft.com/sts/v1.0/issueToken`, {
-          method: 'POST',
-          headers: { 'Ocp-Apim-Subscription-Key': cfg.key },
-        });
-        if (res.ok) { status.textContent = '✓ Key works!'; status.style.color = 'var(--ok)'; }
-        else { status.textContent = '✗ Wrong key or region'; status.style.color = 'var(--err)'; }
+        const res = await fetch(`${cfg.proxyUrl}/?action=Test&token=${encodeURIComponent(cfg.apiKey)}`);
+        if (res.status === 403) { status.textContent = '✗ Wrong API key'; status.style.color = 'var(--err)'; return; }
+        const data = res.ok ? await res.json().catch(() => null) : null;
+        if (res.ok && data && data.ok) { status.textContent = '✓ Key works!'; status.style.color = 'var(--ok)'; }
+        else { status.textContent = '✗ Proxy reachable, but Azure key/region is wrong'; status.style.color = 'var(--err)'; }
       } catch {
-        status.textContent = '✗ Could not reach Azure — check internet';
+        status.textContent = '✗ Could not reach proxy — check the URL and internet';
         status.style.color = 'var(--err)';
       }
     });
@@ -3551,10 +3538,9 @@
         if (!url) {
           const cfg = getAzureConfig();
           const ssml = `<speak version='1.0' xml:lang='zh-CN'><voice name='zh-CN-XiaoxiaoNeural'><prosody rate='-15%'>${esc(hanzi)}</prosody></voice></speak>`;
-          const res = await fetch(`https://${cfg.region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
+          const res = await fetch(`${cfg.proxyUrl}/?action=TTS&token=${encodeURIComponent(cfg.apiKey)}`, {
             method: 'POST',
             headers: {
-              'Ocp-Apim-Subscription-Key': cfg.key,
               'Content-Type': 'application/ssml+xml',
               'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
             },
