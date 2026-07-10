@@ -2933,6 +2933,7 @@
       document.getElementById('pr-score-wrap').style.display = 'none';
       document.getElementById('pr-syllables').innerHTML = '';
       document.getElementById('pr-next-btn').style.display = 'none';
+      document.getElementById('pr-skip-btn').style.display = '';
       document.getElementById('pr-mic-btn').classList.remove('recording');
 
       const configured = isAzureConfigured();
@@ -3083,6 +3084,7 @@
       });
 
       document.getElementById('pr-next-btn').style.display = '';
+      document.getElementById('pr-skip-btn').style.display = 'none';
       prSetStatus('');
     }
 
@@ -3136,8 +3138,9 @@
         try { micBtn.setPointerCapture(e.pointerId); } catch { }
         prStartRecording();
       });
-      micBtn.addEventListener('pointerup', prStopRecording);
-      micBtn.addEventListener('pointercancel', prStopRecording);
+      const releasePointer = e => { try { micBtn.releasePointerCapture(e.pointerId); } catch { } };
+      micBtn.addEventListener('pointerup', e => { releasePointer(e); prStopRecording(); });
+      micBtn.addEventListener('pointercancel', e => { releasePointer(e); prStopRecording(); });
       micBtn.addEventListener('contextmenu', e => e.preventDefault());
 
       document.getElementById('pr-next-btn').addEventListener('click', () => {
