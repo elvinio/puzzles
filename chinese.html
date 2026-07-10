@@ -1649,15 +1649,7 @@
      SCREEN: GAME
 ════════════════════════════════════════════════ -->
   <div id="screen-game" class="screen">
-    <div class="topbar">
-      <div style="width:60px"></div>
-      <h1>Chinese Practice</h1>
-      <div class="topbar-right">
-        <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
-      </div>
-    </div>
-
-    <div class="hud">
+    <div class="hud" style="justify-content:space-between">
       <div class="hud-cell">
         <div class="hud-label">REMAINING</div>
         <div class="hud-val" id="hud-timer">—</div>
@@ -1674,6 +1666,7 @@
         <div class="hud-label">WRONG</div>
         <div class="hud-val" style="color:var(--err-lt)" id="hud-wrong">0</div>
       </div>
+      <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
     </div>
 
     <div class="progress-bar-wrap">
@@ -1703,8 +1696,10 @@
 
     <div class="pr-panel" id="pr-panel" style="display:none">
       <div class="pr-score-wrap" id="pr-score-wrap" style="display:none">
-        <div class="pr-score-stars" id="pr-score-stars"></div>
-        <div class="pr-score-num" id="pr-score-num"></div>
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <div class="pr-score-num" id="pr-score-num"></div>
+          <div class="pr-score-stars" id="pr-score-stars"></div>
+        </div>
         <div class="pr-score-best" id="pr-score-best"></div>
       </div>
       <div class="pr-syllables" id="pr-syllables"></div>
@@ -2668,19 +2663,9 @@
       PR = null;
 
       if (card.type === 'pronunciation') {
-        typeLabel.textContent = 'Say this word out loud';
-        const pinyinHint = `<div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.refPinyin)}</div>`;
-        qText.innerHTML = `<div>${esc(card.refHanzi)}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.refEnglish)}</div>`;
+        typeLabel.textContent = '';
+        qText.innerHTML = `<div>${esc(card.refHanzi)}</div>`;
         qText.className = 'question-text';
-        const hintEl = qText.querySelector('div:nth-child(2)');
-        if (hintEl) {
-          const btn = document.createElement('button');
-          btn.className = 'speak-btn';
-          btn.title = 'Listen';
-          btn.textContent = '🔊';
-          btn.addEventListener('click', e => { e.stopPropagation(); azureSpeak(card.refHanzi, card.refPinyin); });
-          hintEl.appendChild(btn);
-        }
         document.getElementById('options-grid').innerHTML = '';
         document.getElementById('options-grid').style.display = 'none';
         document.getElementById('continue-row').style.display = 'none';
@@ -2942,7 +2927,7 @@
     let prAudioCtx = null;
 
     function renderPronunciation(card) {
-      PR = { card, attempts: 0, bestScore: -1, recording: false, busy: false, recStart: 0 };
+      PR = { card, attempts: 0, bestScore: -1, firstScore: null, recording: false, busy: false, recStart: 0 };
       const panel = document.getElementById('pr-panel');
       panel.style.display = 'flex';
       document.getElementById('pr-score-wrap').style.display = 'none';
@@ -3041,9 +3026,33 @@
       }
     }
 
+    function revealPronunciationAnswer(card) {
+      const qText = document.getElementById('question-text');
+      if (qText.querySelector('.pr-answer-reveal')) return; // already revealed
+      const reveal = document.createElement('div');
+      reveal.className = 'pr-answer-reveal';
+      const pinyinHint = document.createElement('div');
+      pinyinHint.style.cssText = 'font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em;display:flex;align-items:center;justify-content:center;gap:4px';
+      pinyinHint.textContent = card.refPinyin;
+      const listenBtn = document.createElement('button');
+      listenBtn.className = 'speak-btn';
+      listenBtn.title = 'Listen';
+      listenBtn.textContent = '🔊';
+      listenBtn.addEventListener('click', e => { e.stopPropagation(); azureSpeak(card.refHanzi, card.refPinyin); });
+      pinyinHint.appendChild(listenBtn);
+      const englishHint = document.createElement('div');
+      englishHint.style.cssText = 'font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif';
+      englishHint.textContent = card.refEnglish;
+      reveal.appendChild(pinyinHint);
+      reveal.appendChild(englishHint);
+      qText.appendChild(reveal);
+    }
+
     function prShowScore(result) {
       PR.attempts++;
+      if (PR.firstScore === null) PR.firstScore = result.score;
       PR.bestScore = Math.max(PR.bestScore, result.score);
+      revealPronunciationAnswer(PR.card);
       const threshold = getAzureConfig().threshold;
 
       const wrap = document.getElementById('pr-score-wrap');
@@ -3059,7 +3068,7 @@
       starsEl.textContent = stars;
       numEl.className = `pr-score-num ${cls}`;
       document.getElementById('pr-score-best').textContent =
-        PR.attempts > 1 ? `Best: ${Math.round(PR.bestScore)} (attempt ${PR.attempts})` : '';
+        PR.attempts > 1 ? `First (counts for SRS): ${Math.round(PR.firstScore)} · Best: ${Math.round(PR.bestScore)} (attempt ${PR.attempts})` : '';
 
       const sylWrap = document.getElementById('pr-syllables');
       sylWrap.innerHTML = '';
@@ -3074,21 +3083,40 @@
       });
 
       document.getElementById('pr-next-btn').style.display = '';
-      prSetStatus(PR.bestScore >= threshold ? 'Great — tap Next, or try to beat your score!' : 'Hold the mic to try again, or tap Next');
+      prSetStatus('');
     }
 
     function prFinish() {
       if (!PR || !PR.card) return;
       const card = PR.card;
       const timeMs = Date.now() - S.cardStart;
-      const correct = PR.bestScore >= getAzureConfig().threshold;
+      // Only the first submission's score counts toward the word's SRS record —
+      // later retries just let the student practice, they don't change what's registered.
+      const score = PR.firstScore === null ? 0 : PR.firstScore;
+      const correct = score >= getAzureConfig().threshold;
 
       let rec = S.progress[card.word.key] || freshRecord();
       rec = updateRecord(rec, correct, timeMs);
       S.progress[card.word.key] = rec;
       saveProgress(S.avatarId, S.progress);
 
-      S.results.push({ word: card.word, correct, timeMs, type: 'pronunciation', score: Math.round(PR.bestScore) });
+      S.results.push({ word: card.word, correct, timeMs, type: 'pronunciation', score: Math.round(score) });
+      prAdvance();
+    }
+
+    // Skipping without attempting counts the word as wrong for its SRS record.
+    function prRegisterSkip() {
+      if (!PR || !PR.card) return;
+      const card = PR.card;
+      const timeMs = Date.now() - S.cardStart;
+      revealPronunciationAnswer(PR.card);
+
+      let rec = S.progress[card.word.key] || freshRecord();
+      rec = updateRecord(rec, false, timeMs);
+      S.progress[card.word.key] = rec;
+      saveProgress(S.avatarId, S.progress);
+
+      S.results.push({ word: card.word, correct: false, timeMs, type: 'pronunciation', score: 0 });
       prAdvance();
     }
 
@@ -3114,10 +3142,14 @@
 
       document.getElementById('pr-next-btn').addEventListener('click', () => {
         if (!PR) return;
-        if (PR.attempts === 0) prAdvance(); // nothing scored — neutral skip
+        if (PR.attempts === 0) prRegisterSkip(); // moved on without attempting — counts as wrong
         else prFinish();
       });
-      document.getElementById('pr-skip-btn').addEventListener('click', () => { if (PR) prAdvance(); });
+      document.getElementById('pr-skip-btn').addEventListener('click', () => {
+        if (!PR) return;
+        if (PR.attempts === 0) prRegisterSkip(); // counts as wrong
+        else prFinish(); // already attempted — register the first-attempt score as usual
+      });
       document.getElementById('pr-open-settings').addEventListener('click', openSpeechSettings);
     }
 
