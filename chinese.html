@@ -3086,6 +3086,10 @@
       document.getElementById('pr-next-btn').style.display = '';
       document.getElementById('pr-skip-btn').style.display = 'none';
       prSetStatus('');
+
+      // Play the correct pronunciation so the student hears the right tones
+      // right after seeing their score.
+      azureSpeak(PR.card.refHanzi, PR.card.refPinyin);
     }
 
     function prFinish() {
@@ -3562,8 +3566,78 @@
 
     // Natural-voice TTS via Azure (zh-CN-XiaoxiaoNeural); falls back to local
     // pinyin mp3s / speechSynthesis when no key or the request fails.
-    const _ttsCache = new Map(); // text → object URL
+    const _ttsCache = new Map(); // text → object URL (this page load only)
     let _ttsAudio = null;
+
+    // Persistent TTS cache (IndexedDB) — Azure's neural TTS output is
+    // deterministic for a fixed (voice, rate, text), so once synthesized it
+    // never goes stale. Cache indefinitely, same policy as the local
+    // pinyin_audio mp3s the service worker caches forever; just cap entry
+    // count so it can't grow unbounded.
+    const TTS_DB_NAME = 'chinese-tts-cache';
+    const TTS_STORE = 'audio';
+    const TTS_DB_MAX = 300;
+
+    let _ttsDbPromise = null;
+    function openTtsDb() {
+      if (!('indexedDB' in window)) return Promise.reject(new Error('no indexedDB'));
+      if (!_ttsDbPromise) {
+        _ttsDbPromise = new Promise((resolve, reject) => {
+          const req = indexedDB.open(TTS_DB_NAME, 1);
+          req.onupgradeneeded = () => {
+            const store = req.result.createObjectStore(TTS_STORE, { keyPath: 'hanzi' });
+            store.createIndex('ts', 'ts');
+          };
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      }
+      return _ttsDbPromise;
+    }
+
+    async function ttsDbGet(hanzi) {
+      try {
+        const db = await openTtsDb();
+        return await new Promise((resolve, reject) => {
+          const req = db.transaction(TTS_STORE, 'readonly').objectStore(TTS_STORE).get(hanzi);
+          req.onsuccess = () => resolve(req.result ? req.result.blob : null);
+          req.onerror = () => reject(req.error);
+        });
+      } catch { return null; }
+    }
+
+    async function ttsDbPut(hanzi, blob) {
+      try {
+        const db = await openTtsDb();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(TTS_STORE, 'readwrite');
+          tx.objectStore(TTS_STORE).put({ hanzi, blob, ts: Date.now() });
+          tx.oncomplete = resolve;
+          tx.onerror = () => reject(tx.error);
+        });
+        ttsDbEvictOverflow();
+      } catch { }
+    }
+
+    // FIFO-evict oldest entries once the cache grows past TTS_DB_MAX.
+    async function ttsDbEvictOverflow() {
+      try {
+        const db = await openTtsDb();
+        const store = db.transaction(TTS_STORE, 'readwrite').objectStore(TTS_STORE);
+        store.count().onsuccess = function () {
+          const over = this.result - TTS_DB_MAX;
+          if (over <= 0) return;
+          let deleted = 0;
+          store.index('ts').openCursor().onsuccess = e => {
+            const cursor = e.target.result;
+            if (!cursor || deleted >= over) return;
+            cursor.delete();
+            deleted++;
+            cursor.continue();
+          };
+        };
+      } catch { }
+    }
 
     async function azureSpeak(hanzi, pinyinFallback) {
       const fallback = () => speakChinese(pinyinFallback || hanzi);
@@ -3571,18 +3645,23 @@
       try {
         let url = _ttsCache.get(hanzi);
         if (!url) {
-          const cfg = getAzureConfig();
-          const ssml = `<speak version='1.0' xml:lang='zh-CN'><voice name='zh-CN-XiaoxiaoNeural'><prosody rate='-15%'>${esc(hanzi)}</prosody></voice></speak>`;
-          const res = await fetch(`${cfg.proxyUrl}/?action=TTS&token=${encodeURIComponent(cfg.apiKey)}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/ssml+xml',
-              'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
-            },
-            body: ssml,
-          });
-          if (!res.ok) throw new Error(`tts ${res.status}`);
-          url = URL.createObjectURL(await res.blob());
+          let blob = await ttsDbGet(hanzi);
+          if (!blob) {
+            const cfg = getAzureConfig();
+            const ssml = `<speak version='1.0' xml:lang='zh-CN'><voice name='zh-CN-XiaoxiaoNeural'><prosody rate='-15%'>${esc(hanzi)}</prosody></voice></speak>`;
+            const res = await fetch(`${cfg.proxyUrl}/?action=TTS&token=${encodeURIComponent(cfg.apiKey)}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/ssml+xml',
+                'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
+              },
+              body: ssml,
+            });
+            if (!res.ok) throw new Error(`tts ${res.status}`);
+            blob = await res.blob();
+            ttsDbPut(hanzi, blob); // fire-and-forget persist for future sessions
+          }
+          url = URL.createObjectURL(blob);
           _ttsCache.set(hanzi, url);
         }
         if (_ttsAudio) _ttsAudio.pause();
