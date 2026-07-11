@@ -408,6 +408,26 @@
       flex-shrink: 0;
     }
 
+    /* ── "Think first" beat: shown for THINK_BEAT_MS before options render ── */
+    .think-beat {
+      grid-column: 1 / -1;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: system-ui, -apple-system, sans-serif;
+      letter-spacing: 0.02em;
+      animation: think-pulse 1.1s ease-in-out infinite;
+    }
+
+    @keyframes think-pulse {
+      0%, 100% { opacity: 0.4; }
+      50%      { opacity: 1; }
+    }
+
     .opt-btn {
       padding: 14px 8px;
       border-radius: 14px;
@@ -2472,6 +2492,13 @@
       return a;
     }
 
+    // Guess-rate mitigation: a 4-option MCQ (1 right + 3 distractors) is
+    // beatable by chance 25% of the time. P2/P3 get 6 options (down to
+    // ~17%); P1 stays at 4 since younger learners already juggle plenty.
+    function mcqDistractorCount(word) {
+      return (word.level || S.level) === 'p1' ? 3 : 5;
+    }
+
     function pickChars(pool, excludeChars, count) {
       const seen = new Set(excludeChars);
       const candidates = shuffle(pool.filter(w => !seen.has(w.character)));
@@ -2485,32 +2512,34 @@
 
     function makePinyinChinese(word, pool) {
       const targetBase = stripTones(word.pinyin);
+      const n = mcqDistractorCount(word);
       // Wrong options: characters whose base pinyin differs from the target
       const filtered = pool.filter(w => stripTones(w.pinyin) !== targetBase && w.character !== word.character);
-      let distractors = pickChars(filtered, [word.character], 3);
+      let distractors = pickChars(filtered, [word.character], n);
       // Fallback: any different character
-      if (distractors.length < 3) {
-        const extra = pickChars(pool, [word.character, ...distractors], 3 - distractors.length);
+      if (distractors.length < n) {
+        const extra = pickChars(pool, [word.character, ...distractors], n - distractors.length);
         distractors.push(...extra);
       }
-      return { type: 'pinyin-chinese', prompt: word.pinyin, answer: word.character, options: shuffle([word.character, ...distractors.slice(0, 3)]), word };
+      return { type: 'pinyin-chinese', prompt: word.pinyin, answer: word.character, options: shuffle([word.character, ...distractors.slice(0, n)]), word };
     }
 
     function makeChinesePinyin(word, pool) {
       const correct = word.pinyin;
+      const n = mcqDistractorCount(word);
       const exclude = new Set([correct]);
       const distractors = [];
 
       // Step 1: synthesize confusable syllables — final swap, initial swap, tone swap —
-      // round-robining across categories so options are varied rather than 3 tone variants
-      // of the same syllable or 3 unrelated pool syllables.
+      // round-robining across categories so options are varied rather than n tone variants
+      // of the same syllable or n unrelated pool syllables.
       const { final: finalCands, initial: initialCands, tone: toneCands } = synthesizeConfusables(correct);
       const categories = [shuffle(finalCands), shuffle(initialCands), shuffle(toneCands)];
       let progress = true;
-      while (distractors.length < 3 && progress) {
+      while (distractors.length < n && progress) {
         progress = false;
         for (const cat of categories) {
-          if (distractors.length >= 3) break;
+          if (distractors.length >= n) break;
           while (cat.length) {
             const v = cat.shift();
             if (!exclude.has(v)) { distractors.push(v); exclude.add(v); progress = true; break; }
@@ -2518,26 +2547,27 @@
         }
       }
       // Step 2: similar-sounding from pool (fallback for syllables with no synthesized confusables)
-      if (distractors.length < 3) {
+      if (distractors.length < n) {
         for (const v of shuffle(getSimilarFromPool(correct, pool, exclude))) {
-          if (distractors.length >= 3) break;
+          if (distractors.length >= n) break;
           if (!exclude.has(v)) { distractors.push(v); exclude.add(v); }
         }
       }
       // Step 3: random pinyin from pool
-      if (distractors.length < 3) {
+      if (distractors.length < n) {
         for (const v of shuffle([...new Set(pool.map(w => w.pinyin))].filter(p => !exclude.has(p)))) {
-          if (distractors.length >= 3) break;
+          if (distractors.length >= n) break;
           distractors.push(v); exclude.add(v);
         }
       }
 
-      return { type: 'chinese-pinyin', prompt: word.character, answer: correct, options: shuffle([correct, ...distractors.slice(0, 3)]), word };
+      return { type: 'chinese-pinyin', prompt: word.character, answer: correct, options: shuffle([correct, ...distractors.slice(0, n)]), word };
     }
 
     function makeEnglishChinese(word, pool) {
-      const distractors = pickChars(pool, [word.character], 3);
-      return { type: 'english-chinese', prompt: word.english, answer: word.character, options: shuffle([word.character, ...distractors.slice(0, 3)]), word };
+      const n = mcqDistractorCount(word);
+      const distractors = pickChars(pool, [word.character], n);
+      return { type: 'english-chinese', prompt: word.english, answer: word.character, options: shuffle([word.character, ...distractors.slice(0, n)]), word };
     }
 
     function makeWordFill(word, pool) {
@@ -2570,8 +2600,9 @@
       const blankPos = phrase.indexOf(word.character);
       const prompt = phrase.slice(0, blankPos) + '_' + phrase.slice(blankPos + 1);
 
-      // Generate 3 distractors
-      const distractors = pickChars(pool, [word.character], 3);
+      // Generate distractors
+      const n = mcqDistractorCount(word);
+      const distractors = pickChars(pool, [word.character], n);
 
       // Mask the pinyin syllable that is being tested
       let maskedPinyin = phraseP;
@@ -2587,7 +2618,7 @@
         type: 'word-fill',
         prompt,
         answer: word.character,
-        options: shuffle([word.character, ...distractors.slice(0, 3)]),
+        options: shuffle([word.character, ...distractors.slice(0, n)]),
         word,
         phrase,
         english: englishFromPhrase,
@@ -2674,15 +2705,16 @@
     function makeSentenceFill(word, pool) {
       const blank = makeSentenceBlank(word);
       if (!blank) return null;
+      const n = mcqDistractorCount(word);
       // A distractor already visible in the sentence would be obviously wrong
       const filtered = pool.filter(w => !blank.chinese.includes(w.character));
-      const distractors = pickChars(filtered, [word.character], 3);
-      if (distractors.length < 3) {
-        distractors.push(...pickChars(pool, [word.character, ...distractors], 3 - distractors.length));
+      const distractors = pickChars(filtered, [word.character], n);
+      if (distractors.length < n) {
+        distractors.push(...pickChars(pool, [word.character, ...distractors], n - distractors.length));
       }
       return {
         type: 'sentence-fill', prompt: blank.prompt, answer: word.character,
-        options: shuffle([word.character, ...distractors.slice(0, 3)]),
+        options: shuffle([word.character, ...distractors.slice(0, n)]),
         word, english: blank.english,
         speakAfter: { hanzi: blank.chinese, pinyin: word.pinyin },
       };
@@ -2694,19 +2726,20 @@
       if (!word['same-sounding-character'] || word['same-sounding-character'].length === 0) return null;
       const blank = makeSentenceBlank(word);
       if (!blank) return null;
+      const n = mcqDistractorCount(word);
       const sameSound = [...new Set(
         word['same-sounding-character']
           .map(s => (s.match(/^([^\s(]+)/) || [])[1])
           .filter(c => c && c !== word.character && !blank.chinese.includes(c))
       )];
       if (sameSound.length === 0) return null;
-      const distractors = shuffle(sameSound).slice(0, 3);
-      if (distractors.length < 3) {
-        distractors.push(...pickChars(pool, [word.character, ...distractors], 3 - distractors.length));
+      const distractors = shuffle(sameSound).slice(0, n);
+      if (distractors.length < n) {
+        distractors.push(...pickChars(pool, [word.character, ...distractors], n - distractors.length));
       }
       return {
         type: 'choose-char', prompt: blank.prompt, answer: word.character,
-        options: shuffle([word.character, ...distractors.slice(0, 3)]),
+        options: shuffle([word.character, ...distractors.slice(0, n)]),
         word, english: blank.english, pinyinHint: word.pinyin,
         speakAfter: { hanzi: blank.chinese, pinyin: word.pinyin },
       };
@@ -2815,6 +2848,7 @@
     // format); otherwise fall back to single characters that sound different.
     function makeListening(word, pool) {
       const ref = parseExampleWord(word);
+      const n = mcqDistractorCount(word);
       const sameSound = [...new Set(
         (word['same-sounding-character'] || [])
           .map(s => (s.match(/^([^\s(]+)/) || [])[1])
@@ -2822,16 +2856,16 @@
       )];
 
       if (ref.hanzi.length > 1 && ref.hanzi.includes(word.character) && sameSound.length) {
-        const variants = shuffle(sameSound).slice(0, 3)
+        const variants = shuffle(sameSound).slice(0, n)
           .map(c => ref.hanzi.replace(word.character, c));
-        if (variants.length < 3) {
-          for (const c of pickChars(pool, [word.character, ...sameSound], 3 - variants.length)) {
+        if (variants.length < n) {
+          for (const c of pickChars(pool, [word.character, ...sameSound], n - variants.length)) {
             variants.push(ref.hanzi.replace(word.character, c));
           }
         }
         return {
           type: 'listening', prompt: '', answer: ref.hanzi,
-          options: shuffle([ref.hanzi, ...variants.slice(0, 3)]),
+          options: shuffle([ref.hanzi, ...variants.slice(0, n)]),
           word, refHanzi: ref.hanzi, refPinyin: ref.pinyin,
         };
       }
@@ -2840,13 +2874,13 @@
       // audio alone couldn't distinguish the right answer.
       const targetBase = stripTones(word.pinyin);
       const filtered = pool.filter(w => stripTones(w.pinyin) !== targetBase && w.character !== word.character);
-      const distractors = pickChars(filtered, [word.character], 3);
-      if (distractors.length < 3) {
-        distractors.push(...pickChars(pool, [word.character, ...distractors], 3 - distractors.length));
+      const distractors = pickChars(filtered, [word.character], n);
+      if (distractors.length < n) {
+        distractors.push(...pickChars(pool, [word.character, ...distractors], n - distractors.length));
       }
       return {
         type: 'listening', prompt: '', answer: word.character,
-        options: shuffle([word.character, ...distractors.slice(0, 3)]),
+        options: shuffle([word.character, ...distractors.slice(0, n)]),
         word, refHanzi: word.character, refPinyin: word.pinyin,
       };
     }
@@ -2904,6 +2938,7 @@
       results: [],
       sessionStart: 0,
       cardStart: 0,
+      renderToken: 0,
       timerInterval: null,
       timeLimitReached: false,
       timeLimitMs: 0,
@@ -3154,9 +3189,15 @@
     // ═══════════════════════════════════════════════════════════════
     // RENDER CARD
     // ═══════════════════════════════════════════════════════════════
+    // Guess-rate mitigation: pause this long on the question alone before
+    // MCQ options render, so the learner retrieves an answer instead of
+    // just recognizing it among the choices.
+    const THINK_BEAT_MS = 900;
+
     function renderCard() {
       const card = S.cards[S.cardIndex];
       const total = S.cards.length;
+      S.renderToken++; // invalidates any think-beat timeout still pending from the previous card
 
       document.getElementById('hud-card').textContent = `${S.cardIndex + 1}/${total}`;
       document.getElementById('progress-fill').style.width = `${(S.cardIndex / total) * 100}%`;
@@ -3274,16 +3315,28 @@
       const isPinyinOpt = card.type === 'chinese-pinyin';
       const isToneOpt = card.type === 'tone-tap';
 
-      card.options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'opt-btn' + (isPinyinOpt ? ' is-pinyin-opt' : '') + (isToneOpt ? ' is-tone-opt' : '') + (opt.length > 1 && !isPinyinOpt && !isToneOpt ? ' is-phrase-opt' : '');
-        btn.textContent = opt;
-        btn.addEventListener('click', () => handleAnswer(opt, card));
-        grid.appendChild(btn);
-      });
-
       document.getElementById('continue-row').style.display = 'none';
-      S.cardStart = Date.now();
+
+      // Retrieval-before-recognition: hold the options back for a short beat
+      // so the question is met with recall first, not a scan of the choices.
+      const token = S.renderToken;
+      const think = document.createElement('div');
+      think.className = 'think-beat';
+      think.textContent = 'Think…';
+      grid.appendChild(think);
+
+      setTimeout(() => {
+        if (token !== S.renderToken) return; // a newer card has since rendered
+        grid.innerHTML = '';
+        card.options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'opt-btn' + (isPinyinOpt ? ' is-pinyin-opt' : '') + (isToneOpt ? ' is-tone-opt' : '') + (opt.length > 1 && !isPinyinOpt && !isToneOpt ? ' is-phrase-opt' : '');
+          btn.textContent = opt;
+          btn.addEventListener('click', () => handleAnswer(opt, card));
+          grid.appendChild(btn);
+        });
+        S.cardStart = Date.now();
+      }, THINK_BEAT_MS);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -3319,7 +3372,13 @@
       const grade = timeMs < 5000 ? 'easy' : timeMs < 10000 ? 'good' : 'hard';
       registerResult(card, correct, timeMs, grade);
 
-      if (correct) {
+      if (correct && card.type === 'sentence-fill') {
+        // 句子填空 doesn't auto-advance: pause on a Continue button so the
+        // tested character (tappable into the full character card) stays
+        // on screen instead of flashing past.
+        showAnswerFeedback(card.word);
+        document.getElementById('continue-row').style.display = 'flex';
+      } else if (correct) {
         // Reinforce a correct answer with the sound of what was tested
         // (wrong answers already get audio via showAnswerFeedback).
         if (card.speakAfter) azureSpeak(card.speakAfter.hanzi, card.speakAfter.pinyin);
@@ -3335,9 +3394,10 @@
       }
     }
 
-    // Turn a wrong answer into a learning moment during the Continue pause:
-    // show the tested word with pinyin and meaning, play its audio, and open
-    // the full character card on tap.
+    // Turn a correct 句子填空 answer or a wrong answer (any mode) into a
+    // learning moment during the Continue pause: show the tested word with
+    // pinyin and meaning, play its audio, and open the full character card
+    // on tap.
     function showAnswerFeedback(word) {
       const el = document.getElementById('answer-feedback');
       el.innerHTML = `<span class="af-char">${esc(word.character)}</span><span class="af-pinyin">${esc(word.pinyin)}</span><span class="af-eng">${esc(word.english)}</span><span class="af-more">ⓘ</span>`;
