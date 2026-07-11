@@ -62,6 +62,48 @@
   }
 
   // ── Spaced-repetition map (chinese/english/typing progress) ───────────────
+  // Merge two versions of one SR record. Monotone and commutative (up to
+  // tie-breaks on equal lastTested) so repeated merges converge. The optional
+  // `skills` (per-group schedules) and `byMode` (per-group counters) blocks
+  // exist only on chinese records — english/typing records pass through with
+  // the original flat semantics.
+  function mergeSrRecord(a, b) {
+    // scheduling state follows the record tested more recently
+    var at = String(a.lastTested || ''), bt = String(b.lastTested || '');
+    var newer = at >= bt ? a : b;
+    var out = Object.assign({}, newer, {
+      attempts:    Math.max(a.attempts    || 0, b.attempts    || 0),
+      correct:     Math.max(a.correct     || 0, b.correct     || 0),
+      wrong:       Math.max(a.wrong       || 0, b.wrong       || 0),
+      totalTimeMs: Math.max(a.totalTimeMs || 0, b.totalTimeMs || 0)
+    });
+    if (a.skills || b.skills) {
+      out.skills = {};
+      ['recognition', 'writing', 'speaking'].forEach(function (g) {
+        var sa = a.skills && a.skills[g], sb = b.skills && b.skills[g];
+        var pick = !sa ? sb : !sb ? sa
+                 : (String(sa.lastTested || '') >= String(sb.lastTested || '') ? sa : sb);
+        if (pick) out.skills[g] = pick;
+      });
+    }
+    if (a.byMode || b.byMode) {
+      out.byMode = {};
+      var groups = {};
+      Object.keys(a.byMode || {}).concat(Object.keys(b.byMode || {})).forEach(function (g) { groups[g] = 1; });
+      Object.keys(groups).forEach(function (g) {
+        var ma = (a.byMode || {})[g], mb = (b.byMode || {})[g];
+        if (!ma || !mb) { out.byMode[g] = ma || mb; return; }
+        out.byMode[g] = {
+          correct: Math.max(ma.correct || 0, mb.correct || 0),
+          wrong:   Math.max(ma.wrong   || 0, mb.wrong   || 0),
+          timeMs:  Math.max(ma.timeMs  || 0, mb.timeMs  || 0),
+          timed:   Math.max(ma.timed   || 0, mb.timed   || 0)
+        };
+      });
+    }
+    return out;
+  }
+
   function mergeSrMap(local, remote) {
     local = local || {}; remote = remote || {};
     var out = {};
@@ -70,15 +112,7 @@
       var a = local[k], b = remote[k];
       if (!a) { out[k] = b; return; }
       if (!b) { out[k] = a; return; }
-      // scheduling state follows the record tested more recently
-      var at = String(a.lastTested || ''), bt = String(b.lastTested || '');
-      var newer = at >= bt ? a : b;
-      out[k] = Object.assign({}, newer, {
-        attempts:    Math.max(a.attempts    || 0, b.attempts    || 0),
-        correct:     Math.max(a.correct     || 0, b.correct     || 0),
-        wrong:       Math.max(a.wrong       || 0, b.wrong       || 0),
-        totalTimeMs: Math.max(a.totalTimeMs || 0, b.totalTimeMs || 0)
-      });
+      out[k] = mergeSrRecord(a, b);
     });
     return out;
   }
@@ -145,6 +179,8 @@
   window.PZSyncMerge = {
     snapshotLocal: snapshotLocal,
     mergeSnapshots: mergeSnapshots,
-    applySnapshot: applySnapshot
+    applySnapshot: applySnapshot,
+    // shared with chinese.html's progress migration (key-collision folding)
+    mergeSrRecord: mergeSrRecord
   };
 })();
