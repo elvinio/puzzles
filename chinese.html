@@ -1137,6 +1137,16 @@
       text-overflow: ellipsis;
     }
 
+    .browse-word-card.compact {
+      padding: 6px 8px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .browse-word-card.compact .browse-word-char {
+      font-size: 1.4rem;
+    }
+
     .browse-empty {
       color: var(--muted);
       font-size: 0.9rem;
@@ -1541,7 +1551,7 @@
     <!-- Lessons -->
     <div class="section-label">Lessons</div>
     <div class="tab-row" id="setup-lesson-tabs"></div>
-    <div class="browse-word-grid" id="setup-lesson-words" style="flex:0 0 auto;max-height:280px"></div>
+    <div class="browse-word-grid" id="setup-lesson-words" style="flex:0 0 auto;max-height:280px;grid-template-columns:repeat(auto-fill, minmax(64px, 1fr))"></div>
 
     <!-- Test mode -->
     <div class="section-label">Test Mode</div>
@@ -2553,14 +2563,8 @@
       container.innerHTML = '';
       words.forEach(w => {
         const card = document.createElement('div');
-        card.className = 'browse-word-card';
-        card.innerHTML = `
-      <div class="browse-word-char">${w.character}</div>
-      <div style="display:flex;align-items:center;gap:4px">
-        <div class="browse-word-pinyin">${w.pinyin}</div>
-      </div>
-      <div class="browse-word-eng">${esc(w.english)}</div>`;
-        card.querySelector('.browse-word-pinyin').after(makeSpeakBtn(w.character, w.pinyin));
+        card.className = 'browse-word-card compact';
+        card.innerHTML = `<div class="browse-word-char">${w.character}</div>`;
         card.addEventListener('click', () => showCharModal(w));
         container.appendChild(card);
       });
