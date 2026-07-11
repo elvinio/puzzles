@@ -1560,6 +1560,7 @@
       <button class="tab" data-mode="chinese-pinyin">汉字 → Pinyin</button>
       <button class="tab" data-mode="english-chinese">English → 汉字</button>
       <button class="tab" data-mode="word-fill">词语</button>
+      <button class="tab" data-mode="word-write">写词</button>
       <button class="tab" data-mode="find-correct">找错字</button>
       <button class="tab" data-mode="mix">Mix All</button>
       <button class="tab" data-mode="pronunciation">🎤 Speak</button>
@@ -2364,6 +2365,46 @@
       };
     }
 
+    function makeWordWrite(word, pool) {
+      if (!word.words || word.words.length === 0) return null;
+
+      // Pick a random phrase from words array (e.g., "衣服 (yī fu, clothes)")
+      const phraseStr = word.words[Math.floor(Math.random() * word.words.length)];
+      const phraseMatch = phraseStr.match(/^([^\s(]+)/);
+      const phrase = phraseMatch ? phraseMatch[1] : phraseStr;
+
+      const englishMatch = phraseStr.match(/\(([^)]+)\)/);
+      let englishFromPhrase = word.english;
+      let phraseP = null;
+      if (englishMatch) {
+        const content = englishMatch[1];
+        const commaIdx = content.search(/[,，]/);
+        if (commaIdx !== -1) {
+          phraseP = content.slice(0, commaIdx).trim();
+          englishFromPhrase = content.slice(commaIdx + 1).trim();
+        } else {
+          englishFromPhrase = content;
+        }
+      }
+
+      if (phrase.length === 0 || !phrase.includes(word.character)) return null;
+
+      // Find the position of the main character to blank out
+      const blankPos = phrase.indexOf(word.character);
+      const prompt = phrase.slice(0, blankPos) + '_' + phrase.slice(blankPos + 1);
+
+      return {
+        type: 'word-write',
+        prompt,
+        answer: word.character,
+        correctChar: word.character, // shared field name used by the fc- writer panel helpers
+        word,
+        phrase,
+        english: englishFromPhrase,
+        phrasePinyin: phraseP // unmasked — the student needs the full pinyin to know what to write
+      };
+    }
+
     function makeFindCorrect(word, pool) {
       if (!word['same-sounding-character'] || word['same-sounding-character'].length === 0) return null;
 
@@ -2410,10 +2451,11 @@
     }
 
     function makeCard(word, pool, mode) {
-      if (mode === 'mix') mode = ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'word-fill'][Math.floor(Math.random() * 4)];
+      if (mode === 'mix') mode = ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'word-fill', 'word-write'][Math.floor(Math.random() * 5)];
       if (mode === 'pinyin-chinese') return makePinyinChinese(word, pool);
       if (mode === 'chinese-pinyin') return makeChinesePinyin(word, pool);
       if (mode === 'word-fill') return makeWordFill(word, pool);
+      if (mode === 'word-write') return makeWordWrite(word, pool);
       if (mode === 'find-correct') return makeFindCorrect(word, pool);
       if (mode === 'pronunciation') return makePronunciation(word);
       return makeEnglishChinese(word, pool);
@@ -2717,6 +2759,17 @@
         document.getElementById('continue-row').style.display = 'none';
         S.cardStart = Date.now();
         return;
+      } else if (card.type === 'word-write') {
+        typeLabel.textContent = '';
+        const pinyinHint = card.phrasePinyin ? `<div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.phrasePinyin)}</div>` : '';
+        qText.innerHTML = `<div>${card.prompt}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.english)}</div>`;
+        qText.className = 'question-text';
+        document.getElementById('options-grid').innerHTML = '';
+        document.getElementById('options-grid').style.display = 'none';
+        document.getElementById('continue-row').style.display = 'none';
+        renderWordWrite(card);
+        S.cardStart = Date.now();
+        return;
       } else if (card.type === 'pinyin-chinese') {
         typeLabel.textContent = 'Which character matches this sound?';
         qText.textContent = card.prompt;
@@ -2828,6 +2881,22 @@
       });
 
       feedback.textContent = 'Tap the character that looks wrong';
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // WORD WRITE MODE (写词) — fill-in-the-blank, straight to writing
+    // (no tap step, since there's no wrong character to find — reuses
+    // the same fc- writer panel/state as 找错字)
+    // ═══════════════════════════════════════════════════════════════
+    function renderWordWrite(card) {
+      FC = { card, step: 'write', mistakes: 0 };
+      document.getElementById('fc-sentence-wrap').style.display = 'none';
+      document.getElementById('fc-feedback').style.display = 'block';
+      document.getElementById('fc-feedback').textContent = 'Write the missing character';
+      document.getElementById('fc-reveal-row').style.display = 'none';
+      document.getElementById('fc-self-check-row').style.display = 'none';
+      if (!fcWriter) document.getElementById('fc-writer-target').innerHTML = '';
+      fcStartWriting(card);
     }
 
     // Delegated tap handler — bound once, works for every card
