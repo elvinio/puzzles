@@ -2410,7 +2410,11 @@
     }
 
     function makeCard(word, pool, mode) {
-      if (mode === 'mix') mode = ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'word-fill'][Math.floor(Math.random() * 4)];
+      if (mode === 'mix') {
+        const mixModes = ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'word-fill', 'find-correct'];
+        if (isAzureConfigured()) mixModes.push('pronunciation');
+        mode = mixModes[Math.floor(Math.random() * mixModes.length)];
+      }
       if (mode === 'pinyin-chinese') return makePinyinChinese(word, pool);
       if (mode === 'chinese-pinyin') return makeChinesePinyin(word, pool);
       if (mode === 'word-fill') return makeWordFill(word, pool);
