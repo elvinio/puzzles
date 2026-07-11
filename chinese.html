@@ -1780,7 +1780,7 @@
         <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
         <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
         <button class="btn btn-outline btn-sm" id="setup-spelling-btn">默写</button>
-        <button class="btn btn-outline btn-sm" id="setup-speech-settings-btn" title="Speech settings">⚙</button>
+        <button class="btn btn-outline btn-sm" id="setup-speech-settings-btn" title="Settings">⚙</button>
       </div>
     </div>
 
@@ -2149,13 +2149,13 @@
     </div>
   </div>
 
-  <!-- Speech (Azure via Modal proxy) Settings Modal -->
+  <!-- Settings Modal (speech + danger zone) -->
   <div id="speech-settings-modal" class="char-modal-overlay">
     <div class="char-modal">
       <button class="char-modal-close" id="ss-close">✕</button>
       <div class="char-modal-section" style="gap:4px">
-        <div style="font-size:1.1rem;font-weight:800;color:var(--p-text)">🎤 Speech Settings</div>
-        <div style="font-size:0.8rem;color:var(--muted)">Powers the 🎤 Speak mode using Microsoft Azure pronunciation scoring, via a Modal proxy that keeps the Azure key off this device.</div>
+        <div style="font-size:1.1rem;font-weight:800;color:var(--p-text)">⚙ Settings</div>
+        <div style="font-size:0.8rem;color:var(--muted)">Speech settings power the 🎤 Speak mode using Microsoft Azure pronunciation scoring, via a Modal proxy that keeps the Azure key off this device.</div>
       </div>
       <div class="char-modal-section">
         <div class="char-modal-sec-label">Modal Proxy URL</div>
@@ -2184,6 +2184,26 @@
         </ol>
         <div style="margin-top:8px">Only the proxy URL and proxy token are stored in this browser (localStorage) — the real Azure key stays server-side in the Modal secret.</div>
       </details>
+      <div class="char-modal-section" style="border-top:2px solid var(--err);padding-top:10px">
+        <div class="char-modal-sec-label" style="color:var(--err)">Danger Zone</div>
+        <div id="reset-step0">
+          <button class="btn btn-outline btn-sm" id="reset-progress-btn">Reset progress…</button>
+        </div>
+        <div id="reset-step1" style="display:none;flex-direction:column;gap:8px">
+          <div style="font-size:0.85rem;color:var(--p-text)" id="reset-warn-text"></div>
+          <div class="btn-row" style="justify-content:flex-start">
+            <button class="btn btn-sm" id="reset-continue-btn">Continue</button>
+            <button class="btn btn-outline btn-sm" id="reset-cancel1-btn">Cancel</button>
+          </div>
+        </div>
+        <div id="reset-step2" style="display:none;flex-direction:column;gap:8px">
+          <div style="font-size:0.85rem;font-weight:700;color:var(--err)" id="reset-final-text"></div>
+          <div class="btn-row" style="justify-content:flex-start">
+            <button class="btn btn-sm" id="reset-confirm-btn" style="background:var(--err);border-color:var(--err)">Erase everything</button>
+            <button class="btn btn-outline btn-sm" id="reset-cancel2-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2446,10 +2466,17 @@
     // anything changed so sync snapshots upload migrated data.
     function migrateProgress(avatarId, map) {
       let changed = false;
+      // A reset stores a `_resetAt` tombstone instead of just wiping the map —
+      // the sync merge unions keys, so a bare wipe would be resurrected by the
+      // next snapshot. Records last tested before the reset day are dropped
+      // here and in mergeSrMap. (Records from the reset day itself survive a
+      // cross-device merge — acceptable soft edge.)
+      const resetDay = String((map._resetAt && map._resetAt.lastTested) || '').slice(0, 10);
       const out = {};
       for (const [key, rec] of Object.entries(map)) {
         if (key.charAt(0) === '_') { out[key] = rec; continue; }  // meta keys (e.g. reset tombstone)
         if (!rec || typeof rec !== 'object') { changed = true; continue; }
+        if (resetDay && rec.lastTested && String(rec.lastTested).slice(0, 10) < resetDay) { changed = true; continue; }
         let r = rec;
         if (!r.skills) { r = { ...r, skills: seedSkills(r) }; changed = true; }
         const legacy = key.match(LEGACY_KEY_RE);
@@ -2461,6 +2488,16 @@
       }
       if (changed) saveProgress(avatarId, out);
       return out;
+    }
+
+    // Erase an avatar's SRS history, leaving a tombstone that propagates the
+    // reset through Drive sync. The tombstone is shaped like a record on
+    // purpose: devices running older merge code treat it as one and keep the
+    // newest lastTested, so the reset time survives round-trips through
+    // un-updated devices instead of being corrupted.
+    function resetProgress(avatarId) {
+      saveProgress(avatarId, { _resetAt: { lastTested: new Date().toISOString() } });
+      if (S.avatarId === avatarId) S.progress = loadProgress(avatarId);
     }
 
     function saveProgress(avatarId, progress) {
@@ -4520,15 +4557,50 @@
       document.getElementById('char-modal').classList.remove('open');
     });
 
-    // ── Speech (Azure) settings modal ──
+    // ── Settings modal (speech + danger zone) ──
     function openSpeechSettings() {
       const cfg = getAzureConfig();
       document.getElementById('ss-proxy-url').value = cfg.proxyUrl;
       document.getElementById('ss-api-key').value = cfg.apiKey;
       document.getElementById('ss-threshold').value = cfg.threshold;
       document.getElementById('ss-test-status').textContent = '';
+      resetConfirmStep(0);
       document.getElementById('speech-settings-modal').classList.add('open');
     }
+
+    // Reset progress: deliberately two explicit confirmations after the
+    // initial tap — this erases a child's whole SRS history on every device.
+    function resetConfirmStep(step) {
+      document.getElementById('reset-step0').style.display = step === 0 ? '' : 'none';
+      document.getElementById('reset-step1').style.display = step === 1 ? 'flex' : 'none';
+      document.getElementById('reset-step2').style.display = step === 2 ? 'flex' : 'none';
+    }
+
+    document.getElementById('reset-progress-btn').addEventListener('click', () => {
+      const avatar = window.__avatarGetActive ? window.__avatarGetActive() : null;
+      if (!avatar) { showToast('No avatar selected'); return; }
+      document.getElementById('reset-warn-text').textContent =
+        `This erases ALL practice history for ${avatar.nickname} — every schedule, score and time, on all synced devices. There is no undo.`;
+      resetConfirmStep(1);
+    });
+    document.getElementById('reset-continue-btn').addEventListener('click', () => {
+      const avatar = window.__avatarGetActive ? window.__avatarGetActive() : null;
+      if (!avatar) { resetConfirmStep(0); return; }
+      document.getElementById('reset-final-text').textContent =
+        `Really erase everything for ${avatar.nickname}?`;
+      resetConfirmStep(2);
+    });
+    document.getElementById('reset-cancel1-btn').addEventListener('click', () => resetConfirmStep(0));
+    document.getElementById('reset-cancel2-btn').addEventListener('click', () => resetConfirmStep(0));
+    document.getElementById('reset-confirm-btn').addEventListener('click', () => {
+      const avatar = window.__avatarGetActive ? window.__avatarGetActive() : null;
+      if (!avatar) { resetConfirmStep(0); return; }
+      resetProgress(avatar.id);
+      resetConfirmStep(0);
+      renderSetupLessonTabs();
+      document.getElementById('speech-settings-modal').classList.remove('open');
+      showToast(`Progress reset for ${avatar.nickname}`);
+    });
 
     function readSpeechSettingsForm() {
       return {

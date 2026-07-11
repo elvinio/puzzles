@@ -104,15 +104,24 @@
     return out;
   }
 
+  // A `_resetAt` meta key (chinese progress only) is the tombstone left by
+  // "Reset progress": records last tested before the newest reset day are
+  // dropped instead of resurrected by the key union. It is shaped like a
+  // record ({lastTested: iso}) so even this function's older versions merge it
+  // as newest-wins rather than corrupting it.
   function mergeSrMap(local, remote) {
     local = local || {}; remote = remote || {};
+    var ra = (local._resetAt && local._resetAt.lastTested) || '';
+    var rb = (remote._resetAt && remote._resetAt.lastTested) || '';
+    var resetDay = String(ra >= rb ? ra : rb).slice(0, 10);
     var out = {};
     Object.keys(local).concat(Object.keys(remote)).forEach(function (k) {
       if (k in out) return;
       var a = local[k], b = remote[k];
-      if (!a) { out[k] = b; return; }
-      if (!b) { out[k] = a; return; }
-      out[k] = mergeSrRecord(a, b);
+      var v = !a ? b : !b ? a : mergeSrRecord(a, b);
+      if (resetDay && k.charAt(0) !== '_' && v && v.lastTested &&
+          String(v.lastTested).slice(0, 10) < resetDay) return;
+      out[k] = v;
     });
     return out;
   }
