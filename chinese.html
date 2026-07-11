@@ -689,6 +689,13 @@
       color: var(--p-text);
     }
 
+    /* Correct-sentence reveal on a wrong 连词成句 answer — same size as the
+       scrambled word chips (.ro-chip) it's being compared against. */
+    .question-text.ro-reveal {
+      font-size: clamp(1.3rem, 5.5vw, 1.9rem);
+      font-weight: 900;
+    }
+
     /* ── Pronunciation mode (🎤 Speak) ── */
     .pr-panel {
       display: flex;
@@ -1300,9 +1307,15 @@
       color: var(--p-text);
     }
 
-    .char-modal-chip.zh {
+    .char-modal-chip .chip-zh {
       font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
       font-size: 1.3rem;
+    }
+
+    .char-modal-chip .chip-meta {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
     }
 
     /* ── Browse Screen ── */
@@ -3732,7 +3745,7 @@
       } else {
         const qt = document.getElementById('question-text');
         qt.innerHTML = `<div>${esc(card.chinese)}${esc(card.punct)}</div>`;
-        qt.className = 'question-text';
+        qt.className = 'question-text ro-reveal';
         document.getElementById('ro-feedback').textContent = '✗ Not quite — correct sentence above';
         showAnswerFeedback(card.word);
         document.getElementById('continue-row').style.display = 'flex';
@@ -4269,6 +4282,24 @@
       return null;
     }
 
+    // Splits a "汉字 (pinyin, english)" / "汉字 (english)" chip string into a
+    // Kaiti hanzi span and a sans-serif span for the pinyin/english part.
+    function chipContent(text) {
+      const frag = document.createDocumentFragment();
+      const m = text.match(/^(\S+)\s*(\(.*\))$/);
+      const zh = document.createElement('span');
+      zh.className = 'chip-zh';
+      zh.textContent = m ? m[1] : text;
+      frag.appendChild(zh);
+      if (m) {
+        const meta = document.createElement('span');
+        meta.className = 'chip-meta';
+        meta.textContent = ' ' + m[2];
+        frag.appendChild(meta);
+      }
+      return frag;
+    }
+
     function showCharModal(word) {
       document.getElementById('cm-lesson').textContent = word.lessonKey || (word.level ? `${word.level}-${word.lessonNum}` : '');
       document.getElementById('cm-pinyin').textContent = word.pinyin;
@@ -4284,8 +4315,8 @@
       wordsEl.innerHTML = '';
       (word.words || []).forEach(w => {
         const chip = document.createElement('span');
-        chip.className = 'char-modal-chip zh';
-        chip.textContent = w;
+        chip.className = 'char-modal-chip';
+        chip.appendChild(chipContent(w));
         const m = w.match(/^([^\s(]+)\s*\(([^,)]+)/);
         chip.style.cursor = 'pointer';
         chip.title = 'Listen';
@@ -4297,8 +4328,8 @@
       sameEl.innerHTML = '';
       (word['same-sounding-character'] || []).forEach(s => {
         const chip = document.createElement('span');
-        chip.className = 'char-modal-chip zh';
-        chip.textContent = s;
+        chip.className = 'char-modal-chip';
+        chip.appendChild(chipContent(s));
         const ch = (s.match(/^([^\s(]+)/) || [])[1];
         chip.style.cursor = 'pointer';
         chip.title = 'Open this character';
