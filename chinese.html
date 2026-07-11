@@ -852,6 +852,14 @@
       padding: 4px 20px;
     }
 
+    .fc-hint.revealed.is-text {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-style: italic;
+      font-size: clamp(1rem, 4vw, 1.4rem);
+      font-weight: 700;
+      color: var(--p-xl);
+    }
+
     /* ═══════════════════════════════════════
        SUMMARY SCREEN
     ═══════════════════════════════════════ */
@@ -1128,7 +1136,7 @@
       border-radius: 22px;
       padding: 28px 22px 22px;
       width: 100%;
-      max-width: 380px;
+      max-width: 570px;
       max-height: 88dvh;
       overflow-y: auto;
       position: relative;
@@ -1164,13 +1172,60 @@
       gap: 6px;
       padding-bottom: 16px;
       border-bottom: 1px solid rgba(76, 29, 149, 0.4);
+      position: relative;
     }
 
-    .char-modal-big {
-      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
-      font-size: 5.5rem;
-      line-height: 1;
-      color: var(--p-text);
+    .char-modal-lesson {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .char-modal-writer-wrap {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+
+    .char-modal-writer {
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      border: 2px solid var(--brd);
+      border-radius: 12px;
+    }
+
+    .char-modal-play-btn {
+      position: absolute;
+      bottom: -8px;
+      right: -8px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--p);
+      border: none;
+      color: #fff;
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+      transition: background 0.15s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+    }
+
+    .char-modal-play-btn:hover {
+      background: var(--p-lt);
+    }
+
+    .char-modal-play-btn:active {
+      transform: scale(0.92);
     }
 
     .char-modal-pinyin-lg {
@@ -2047,17 +2102,16 @@
     <div class="char-modal">
       <button class="char-modal-close" id="cm-close">✕</button>
       <div class="char-modal-header">
-        <div class="char-modal-big" id="cm-char"></div>
+        <div class="char-modal-lesson" id="cm-lesson"></div>
+        <div class="char-modal-writer-wrap">
+          <div id="cm-stroke-target" class="char-modal-writer"></div>
+          <button class="char-modal-play-btn" id="cm-play-btn" title="Play stroke order">▶</button>
+        </div>
         <div style="display:flex;align-items:center;gap:8px">
           <div class="char-modal-pinyin-lg" id="cm-pinyin"></div>
           <button class="speak-btn" id="cm-speak-btn" title="Listen">🔊</button>
         </div>
         <div class="char-modal-eng" id="cm-eng"></div>
-      </div>
-      <div class="char-modal-section">
-        <div class="char-modal-sec-label">Strokes</div>
-        <button class="btn btn-outline btn-sm" id="cm-stroke-btn" style="align-self:flex-start">▶ Watch strokes</button>
-        <div id="cm-stroke-target" style="display:none;width:180px;height:180px;align-self:center;background:var(--bg);border:2px solid var(--brd);border-radius:12px"></div>
       </div>
       <div class="char-modal-section">
         <div class="char-modal-sec-label">Definition</div>
@@ -3214,8 +3268,8 @@
         return;
       } else if (card.type === 'reorder') {
         typeLabel.textContent = '连词成句 — put the words in order';
-        qText.textContent = card.english;
-        qText.className = 'question-text is-english';
+        qText.innerHTML = '<div class="fc-hint" id="ro-hint">💡 Tap for hint</div>';
+        qText.className = 'question-text';
         document.getElementById('options-grid').innerHTML = '';
         document.getElementById('options-grid').style.display = 'none';
         document.getElementById('continue-row').style.display = 'none';
@@ -3606,6 +3660,7 @@
       registerResult(card, correct, timeMs, grade);
 
       if (correct) {
+        document.getElementById('question-text').innerHTML = '';
         document.getElementById('ro-feedback').textContent = '✓ Correct!';
         azureSpeak(card.chinese + card.punct, card.word.pinyin);
         setTimeout(() => {
@@ -3615,7 +3670,10 @@
           else renderCard();
         }, 1500);
       } else {
-        document.getElementById('ro-feedback').textContent = `✗ ${card.chinese}${card.punct}`;
+        const qt = document.getElementById('question-text');
+        qt.innerHTML = `<div>${esc(card.chinese)}${esc(card.punct)}</div>`;
+        qt.className = 'question-text';
+        document.getElementById('ro-feedback').textContent = '✗ Not quite — correct sentence above';
         showAnswerFeedback(card.word);
         document.getElementById('continue-row').style.display = 'flex';
       }
@@ -3625,6 +3683,20 @@
       if (!RO || RO.done) return;
       RO.placed = [];
       roRender();
+    });
+
+    // Hint button is re-created inside #question-text on every reorder card,
+    // so bind the handler once via delegation on the persistent wrapper.
+    document.getElementById('question-wrap').addEventListener('click', e => {
+      const hint = e.target.closest('#ro-hint');
+      if (!hint || !RO || RO.done) return;
+      if (hint.classList.contains('revealed')) {
+        hint.classList.remove('revealed', 'is-text');
+        hint.textContent = '💡 Tap for hint';
+      } else {
+        hint.classList.add('revealed', 'is-text');
+        hint.textContent = RO.card.english;
+      }
     });
 
     // ═══════════════════════════════════════════════════════════════
@@ -4138,7 +4210,7 @@
     }
 
     function showCharModal(word) {
-      document.getElementById('cm-char').textContent = word.character;
+      document.getElementById('cm-lesson').textContent = word.lessonKey || (word.level ? `${word.level}-${word.lessonNum}` : '');
       document.getElementById('cm-pinyin').textContent = word.pinyin;
       const cmSpeak = document.getElementById('cm-speak-btn');
       cmSpeak.onclick = e => { e.stopPropagation(); speakChinese(word.pinyin || word.character); };
@@ -4146,12 +4218,7 @@
       document.getElementById('cm-def-en').textContent = word['definition-english'] || '';
       document.getElementById('cm-def-zh').textContent = word['definition-chinese'] || '';
 
-      // Reset the stroke area for the new character
-      document.getElementById('cm-stroke-btn').style.display = '';
-      const strokeTarget = document.getElementById('cm-stroke-target');
-      strokeTarget.style.display = 'none';
-      if (cmWriter) { try { cmWriter.pauseAnimation(); } catch { } }
-      else strokeTarget.innerHTML = '';
+      cmShowWriter(word.character);
 
       const wordsEl = document.getElementById('cm-words');
       wordsEl.innerHTML = '';
@@ -4186,14 +4253,16 @@
       document.getElementById('char-modal').classList.add('open');
     }
 
-    // Stroke-order animation in the modal — same singleton pattern as fcWriter
+    // Stroke-order writer in the modal — same singleton pattern as fcWriter
     // (HanziWriter binds to the target div once; setCharacter() reuses it).
+    // Freshly created/set, it shows the character fully drawn; the play
+    // button then replays the stroke-by-stroke animation on top of that.
     let cmWriter = null;
-    document.getElementById('cm-stroke-btn').addEventListener('click', () => {
-      const char = document.getElementById('cm-char').textContent;
+    function cmShowWriter(char) {
       const target = document.getElementById('cm-stroke-target');
-      document.getElementById('cm-stroke-btn').style.display = 'none';
-      target.style.display = '';
+      document.getElementById('cm-play-btn').style.display = '';
+      if (cmWriter) { try { cmWriter.pauseAnimation(); } catch { } }
+      else target.innerHTML = '';
 
       fcCharDataLoader(char, () => {
         if (!cmWriter) {
@@ -4207,11 +4276,15 @@
         } else {
           cmWriter.setCharacter(char);
         }
-        cmWriter.loopCharacterAnimation();
       }, () => {
         target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:0.8rem;text-align:center;padding:8px">No stroke data for this character</div>`;
         cmWriter = null; // its SVG was just replaced — recreate next time
+        document.getElementById('cm-play-btn').style.display = 'none';
       });
+    }
+
+    document.getElementById('cm-play-btn').addEventListener('click', () => {
+      if (cmWriter) cmWriter.loopCharacterAnimation();
     });
 
     document.getElementById('char-modal').addEventListener('click', e => {
