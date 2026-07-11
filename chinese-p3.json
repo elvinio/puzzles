@@ -2426,5 +2426,2031 @@
       "definition-chinese": "儿童；童年；童话",
       "sentence": "爷爷常常跟我们讲他的童年故事。(Grandpa often tells us stories about his childhood.)"
     }
+  ],
+  "p3-10": [
+    {
+      "character": "垃",
+      "english": "rubbish, garbage",
+      "pinyin": "lā",
+      "same-sounding-character": ["拉 (pull)", "喇 (horn/trumpet)", "腊 (cured meat)"],
+      "words": ["垃圾 (lā jī, rubbish)", "垃圾桶 (lā jī tǒng, rubbish bin)", "垃圾车 (lā jī chē, garbage truck)"],
+      "definition-english": "Used only in the word 垃圾, meaning rubbish or garbage",
+      "definition-chinese": "垃圾；废弃的东西",
+      "sentence": "我们应该把垃圾丢进垃圾桶。(We should throw rubbish into the rubbish bin.)"
+    },
+    {
+      "character": "圾",
+      "english": "rubbish, garbage",
+      "pinyin": "jī",
+      "same-sounding-character": ["机 (machine)", "鸡 (chicken)", "基 (foundation)"],
+      "words": ["垃圾 (lā jī, rubbish)", "垃圾场 (lā jī chǎng, rubbish dump)", "垃圾袋 (lā jī dài, rubbish bag)"],
+      "definition-english": "Used only in the word 垃圾, meaning rubbish or garbage",
+      "definition-chinese": "垃圾；废弃的东西",
+      "sentence": "校工每天早上清理垃圾场。(The school worker cleans the rubbish dump every morning.)"
+    },
+    {
+      "character": "蚊",
+      "english": "mosquito",
+      "pinyin": "wén",
+      "same-sounding-character": ["文 (writing)", "闻 (smell/hear)", "纹 (pattern)"],
+      "words": ["蚊子 (wén zi, mosquito)", "蚊帐 (wén zhàng, mosquito net)", "灭蚊 (miè wén, kill mosquitoes)"],
+      "definition-english": "A mosquito, a small flying insect that bites",
+      "definition-chinese": "蚊子；会叮咬人的小昆虫",
+      "sentence": "积水的地方容易滋生蚊子。(Places with stagnant water easily breed mosquitoes.)"
+    },
+    {
+      "character": "鸦",
+      "english": "crow",
+      "pinyin": "yā",
+      "same-sounding-character": ["压 (press)", "呀 (exclamation)", "牙 (tooth)"],
+      "words": ["乌鸦 (wū yā, crow)", "鸦雀无声 (yā què wú shēng, dead silent)", "寒鸦 (hán yā, jackdaw)"],
+      "definition-english": "A crow, a black bird known for its harsh cry",
+      "definition-chinese": "乌鸦；一种黑色的鸟",
+      "sentence": "一只乌鸦停在垃圾桶上找食物。(A crow stopped on the rubbish bin looking for food.)"
+    },
+    {
+      "character": "随",
+      "english": "follow, as one wishes, anywhere",
+      "pinyin": "suí",
+      "same-sounding-character": ["岁 (age/years)", "遂 (fulfil)", "隋 (Sui dynasty)"],
+      "words": ["随地 (suí dì, anywhere/on the ground)", "随便 (suí biàn, as one wishes)", "跟随 (gēn suí, follow)"],
+      "definition-english": "To follow; to do as one pleases; anywhere",
+      "definition-chinese": "随地；随便；跟从",
+      "sentence": "我们不可以随地丢垃圾。(We must not litter anywhere.)"
+    },
+    {
+      "character": "痰",
+      "english": "phlegm, sputum",
+      "pinyin": "tán",
+      "same-sounding-character": ["谈 (talk)", "坛 (altar)", "潭 (deep pool)"],
+      "words": ["吐痰 (tǔ tán, spit phlegm)", "随地吐痰 (suí dì tǔ tán, spit on the ground anywhere)", "痰盂 (tán yú, spittoon)"],
+      "definition-english": "Phlegm or sputum from the throat",
+      "definition-chinese": "喉咙里咳出的东西；吐痰",
+      "sentence": "随地吐痰是不讲卫生的行为。(Spitting phlegm on the ground is an unhygienic behaviour.)"
+    },
+    {
+      "character": "环",
+      "english": "ring, loop, surround",
+      "pinyin": "huán",
+      "same-sounding-character": ["还 (return/still)", "换 (exchange)", "缓 (slow)"],
+      "words": ["环境 (huán jìng, environment)", "环保 (huán bǎo, environmental protection)", "花环 (huā huán, garland)"],
+      "definition-english": "A ring or loop; to surround; environment",
+      "definition-chinese": "环境；环绕；环保",
+      "sentence": "保护环境是每个人的责任。(Protecting the environment is everyone's responsibility.)"
+    },
+    {
+      "character": "境",
+      "english": "boundary, condition, environment",
+      "pinyin": "jìng",
+      "same-sounding-character": ["静 (quiet)", "敬 (respect)", "竟 (unexpectedly)"],
+      "words": ["环境 (huán jìng, environment)", "境地 (jìng dì, situation)", "边境 (biān jìng, border)"],
+      "definition-english": "A boundary or condition; environment; situation",
+      "definition-chinese": "环境；境地；边境",
+      "sentence": "干净的环境让人心情愉快。(A clean environment makes people feel happy.)"
+    },
+    {
+      "character": "厨",
+      "english": "kitchen",
+      "pinyin": "chú",
+      "same-sounding-character": ["除 (remove)", "橱 (cupboard)", "锄 (hoe)"],
+      "words": ["厨房 (chú fáng, kitchen)", "厨师 (chú shī, chef)", "下厨 (xià chú, cook)"],
+      "definition-english": "A kitchen; place for cooking food",
+      "definition-chinese": "煮食的地方；厨房",
+      "sentence": "妈妈每天都在厨房里做饭。(Mom cooks in the kitchen every day.)"
+    },
+    {
+      "character": "脏",
+      "english": "dirty",
+      "pinyin": "zāng",
+      "same-sounding-character": ["赃 (stolen goods)", "臧 (surname)", "葬 (bury)"],
+      "words": ["脏乱 (zāng luàn, dirty and messy)", "弄脏 (nòng zāng, make dirty)", "肮脏 (āng zāng, filthy)"],
+      "definition-english": "Dirty; unclean; not tidy",
+      "definition-chinese": "不干净；肮脏",
+      "sentence": "他把衣服弄脏了,需要重新洗一次。(He got his clothes dirty and needs to wash them again.)"
+    },
+    {
+      "character": "橱",
+      "english": "cupboard, cabinet",
+      "pinyin": "chú",
+      "same-sounding-character": ["厨 (kitchen)", "除 (remove)", "锄 (hoe)"],
+      "words": ["橱柜 (chú guì, cupboard)", "书橱 (shū chú, bookcase)", "衣橱 (yī chú, wardrobe)"],
+      "definition-english": "A cupboard or cabinet for storing things",
+      "definition-chinese": "放东西用的柜子；橱柜",
+      "sentence": "妹妹把玩具收进了衣橱里。(My little sister put her toys away in the wardrobe.)"
+    },
+    {
+      "character": "仔",
+      "english": "careful, attentive",
+      "pinyin": "zǐ",
+      "same-sounding-character": ["子 (child)", "紫 (purple)", "字 (character/word)"],
+      "words": ["仔细 (zǐ xì, careful)", "仔细检查 (zǐ xì jiǎn chá, examine carefully)", "仔细观察 (zǐ xì guān chá, observe carefully)"],
+      "definition-english": "Careful; attentive; detailed",
+      "definition-chinese": "细心；认真",
+      "sentence": "老师提醒我们做事要仔细一点。(The teacher reminded us to be a bit more careful when doing things.)"
+    },
+    {
+      "character": "招",
+      "english": "beckon, recruit, move (in a game)",
+      "pinyin": "zhāo",
+      "same-sounding-character": ["朝 (morning)", "昭 (bright)", "着 (particle)"],
+      "words": ["招手 (zhāo shǒu, wave/beckon)", "招呼 (zhāo hu, greet)", "招牌 (zhāo pái, signboard)"],
+      "definition-english": "To beckon; to wave; to recruit or attract",
+      "definition-chinese": "招手；打招呼；招引",
+      "sentence": "看到朋友,我立刻招手打招呼。(When I saw my friend, I immediately waved to greet him.)"
+    },
+    {
+      "character": "决",
+      "english": "decide, determine",
+      "pinyin": "jué",
+      "same-sounding-character": ["绝 (absolute)", "觉 (feel/sleep)", "掘 (dig)"],
+      "words": ["决定 (jué dìng, decide)", "解决 (jiě jué, resolve/solve)", "决心 (jué xīn, determination)"],
+      "definition-english": "To decide; to determine; to resolve",
+      "definition-chinese": "决定；解决；决心",
+      "sentence": "我们决定一起去清理公园里的垃圾。(We decided to go clean up the rubbish in the park together.)"
+    },
+    {
+      "character": "惊",
+      "english": "startle, frighten, surprise",
+      "pinyin": "jīng",
+      "same-sounding-character": ["京 (capital)", "经 (pass through)", "精 (essence/spirit)"],
+      "words": ["惊讶 (jīng yà, surprised)", "吃惊 (chī jīng, shocked)", "惊叫 (jīng jiào, cry out in fright)"],
+      "definition-english": "To startle; to frighten; to be surprised",
+      "definition-chinese": "害怕；吃惊；惊讶",
+      "sentence": "突然跳出来的青蛙让她大吃一惊。(The frog that suddenly jumped out gave her a big fright.)"
+    },
+    {
+      "character": "缩",
+      "english": "shrink, contract, withdraw",
+      "pinyin": "suō",
+      "same-sounding-character": ["梭 (shuttle)", "唆 (instigate)", "所 (place)"],
+      "words": ["缩小 (suō xiǎo, shrink)", "退缩 (tuì suō, shrink back)", "缩短 (suō duǎn, shorten)"],
+      "definition-english": "To shrink; to contract; to pull back",
+      "definition-chinese": "变小；收缩；退缩",
+      "sentence": "小猫受惊后缩成了一团。(The kitten curled up into a ball after being startled.)"
+    },
+    {
+      "character": "扔",
+      "english": "throw, toss, discard",
+      "pinyin": "rēng",
+      "same-sounding-character": ["仍 (still/yet)", "认 (recognize)", "任 (task/duty)"],
+      "words": ["扔掉 (rēng diào, throw away)", "乱扔 (luàn rēng, litter carelessly)", "扔垃圾 (rēng lā jī, throw rubbish)"],
+      "definition-english": "To throw; to toss; to discard",
+      "definition-chinese": "丢弃；抛出",
+      "sentence": "请不要把垃圾乱扔在地上。(Please do not throw rubbish carelessly on the ground.)"
+    },
+    {
+      "character": "保",
+      "english": "protect, keep, guarantee",
+      "pinyin": "bǎo",
+      "same-sounding-character": ["宝 (treasure)", "饱 (full/satiated)", "抱 (hug)"],
+      "words": ["保护 (bǎo hù, protect)", "保持 (bǎo chí, maintain)", "环保 (huán bǎo, environmental protection)"],
+      "definition-english": "To protect; to keep; to guarantee",
+      "definition-chinese": "保护；保持；保证",
+      "sentence": "大家应该一起保护环境。(Everyone should work together to protect the environment.)"
+    },
+    {
+      "character": "持",
+      "english": "hold, maintain, sustain",
+      "pinyin": "chí",
+      "same-sounding-character": ["迟 (late)", "池 (pond)", "驰 (gallop)"],
+      "words": ["保持 (bǎo chí, maintain)", "坚持 (jiān chí, persist)", "持续 (chí xù, continue)"],
+      "definition-english": "To hold; to maintain; to sustain",
+      "definition-chinese": "保持；维持；坚持",
+      "sentence": "我们要保持环境的整洁。(We must keep the environment clean and tidy.)"
+    },
+    {
+      "character": "卫",
+      "english": "guard, protect",
+      "pinyin": "wèi",
+      "same-sounding-character": ["位 (position)", "味 (taste)", "未 (not yet)"],
+      "words": ["保卫 (bǎo wèi, defend)", "卫生 (wèi shēng, hygiene)", "卫生间 (wèi shēng jiān, toilet/restroom)"],
+      "definition-english": "To guard; to protect; hygiene, defense",
+      "definition-chinese": "保护；防卫；卫生",
+      "sentence": "保持个人卫生可以减少生病的机会。(Keeping personal hygiene can reduce the chance of falling sick.)"
+    },
+    {
+      "character": "护",
+      "english": "protect, guard, shield",
+      "pinyin": "hù",
+      "same-sounding-character": ["户 (household)", "互 (mutual)", "沪 (Shanghai)"],
+      "words": ["保护 (bǎo hù, protect)", "护士 (hù shi, nurse)", "爱护 (ài hù, cherish/take care of)"],
+      "definition-english": "To protect; to guard; to shield",
+      "definition-chinese": "保护；爱护；守护",
+      "sentence": "我们要爱护校园里的花草树木。(We should take care of the flowers, plants and trees in our school.)"
+    },
+    {
+      "character": "周",
+      "english": "week, all around, surrounding",
+      "pinyin": "zhōu",
+      "same-sounding-character": ["州 (state/prefecture)", "洲 (continent)", "粥 (porridge)"],
+      "words": ["周末 (zhōu mò, weekend)", "四周 (sì zhōu, surroundings)", "周围 (zhōu wéi, vicinity)"],
+      "definition-english": "A week; all around; surrounding",
+      "definition-chinese": "星期；四周；周围",
+      "sentence": "他环顾四周,发现地上有很多垃圾。(He looked around and found a lot of rubbish on the ground.)"
+    },
+    {
+      "character": "末",
+      "english": "end, tip, last",
+      "pinyin": "mò",
+      "same-sounding-character": ["莫 (do not)", "沫 (foam)", "陌 (unfamiliar)"],
+      "words": ["周末 (zhōu mò, weekend)", "末尾 (mò wěi, ending)", "期末 (qī mò, end of term)"],
+      "definition-english": "The end; the tip; the last part",
+      "definition-chinese": "结尾；最后",
+      "sentence": "周末我们一家人去公园野餐。(Over the weekend, our family went for a picnic in the park.)"
+    },
+    {
+      "character": "啊",
+      "english": "ah, oh (exclamation particle)",
+      "pinyin": "a",
+      "same-sounding-character": ["呀 (ah/oh)", "阿 (prefix for names)", "吖 (exclamation)"],
+      "words": ["好啊 (hǎo a, okay!)", "是啊 (shì a, that's right!)", "快点啊 (kuài diǎn a, hurry up!)"],
+      "definition-english": "A sentence-final particle used to express exclamation, surprise or emphasis",
+      "definition-chinese": "语气词,表示惊讶或加强语气",
+      "sentence": "地上怎么这么多垃圾啊。(Why is there so much rubbish on the ground!)"
+    },
+    {
+      "character": "转",
+      "english": "turn, rotate; spin",
+      "pinyin": "zhuǎn / zhuàn",
+      "same-sounding-character": ["专 (specialized)", "赚 (earn)", "传 (pass on)"],
+      "words": ["转身 (zhuǎn shēn, turn around)", "转动 (zhuàn dòng, rotate/spin)", "转变 (zhuǎn biàn, change/transform)"],
+      "definition-english": "To turn; to rotate; to change direction",
+      "definition-chinese": "转身；转动；改变",
+      "sentence": "他转身一看,发现乌鸦在垃圾桶旁边。(He turned around and saw a crow next to the rubbish bin.)"
+    },
+    {
+      "character": "怎",
+      "english": "how, why",
+      "pinyin": "zěn",
+      "same-sounding-character": ["枕 (pillow)", "斟 (pour)", "疹 (rash)"],
+      "words": ["怎么 (zěn me, how/why)", "怎样 (zěn yàng, how)", "怎么办 (zěn me bàn, what to do)"],
+      "definition-english": "How; why (used mainly in 怎么)",
+      "definition-chinese": "怎么；如何",
+      "sentence": "地上的垃圾到底是怎么来的?(Where on earth did the rubbish on the ground come from?)"
+    },
+    {
+      "character": "追",
+      "english": "chase, pursue",
+      "pinyin": "zhuī",
+      "same-sounding-character": ["锥 (cone/awl)", "缀 (adorn/link)", "坠 (fall/drop)"],
+      "words": ["追赶 (zhuī gǎn, chase after)", "追问 (zhuī wèn, question closely)", "追上 (zhuī shàng, catch up with)"],
+      "definition-english": "To chase; to pursue; to run after",
+      "definition-chinese": "追赶；追逐",
+      "sentence": "他大声追问是谁乱扔垃圾。(He loudly questioned who had littered carelessly.)"
+    }
+  ],
+  "p3-11": [
+    {
+      "character": "袋",
+      "english": "bag, sack",
+      "pinyin": "dài",
+      "same-sounding-character": ["代 (substitute, generation)", "待 (to wait, to treat)", "带 (to bring, belt)"],
+      "words": ["塑料袋 (sù liào dài, plastic bag)", "口袋 (kǒu dài, pocket)", "布袋 (bù dài, cloth bag)"],
+      "definition-english": "A bag or sack used to hold or carry things.",
+      "definition-chinese": "塑料袋；口袋；布袋",
+      "sentence": "妈妈出门买菜,记得带上环保袋。(Mom remembers to bring a reusable bag when she goes out to buy groceries.)"
+    },
+    {
+      "character": "代",
+      "english": "to replace, substitute, generation, era",
+      "pinyin": "dài",
+      "same-sounding-character": ["袋 (bag)", "待 (to wait, to treat)", "带 (to bring, belt)"],
+      "words": ["代替 (dài tì, to replace)", "现代 (xiàn dài, modern era)", "一代 (yí dài, a generation)"],
+      "definition-english": "To take the place of something; a period of time or generation.",
+      "definition-chinese": "代替；现代；一代",
+      "sentence": "我们要用环保袋代替塑料袋。(We should use reusable bags to replace plastic bags.)"
+    },
+    {
+      "character": "替",
+      "english": "to replace, substitute, on behalf of",
+      "pinyin": "tì",
+      "same-sounding-character": ["剃 (to shave)", "涕 (tears, mucus)", "屉 (drawer)"],
+      "words": ["代替 (dài tì, to replace)", "替换 (tì huàn, to substitute)", "替代品 (tì dài pǐn, substitute item)"],
+      "definition-english": "To take the place of someone or something.",
+      "definition-chinese": "代替；替换；替代品",
+      "sentence": "布袋可以替代塑料袋。(Cloth bags can replace plastic bags.)"
+    },
+    {
+      "character": "塑",
+      "english": "plastic, to mold",
+      "pinyin": "sù",
+      "same-sounding-character": ["素 (plain, vegetarian)", "诉 (to tell, to sue)", "速 (speed)"],
+      "words": ["塑料 (sù liào, plastic)", "塑料袋 (sù liào dài, plastic bag)", "塑造 (sù zào, to mold, to shape)"],
+      "definition-english": "A synthetic material, plastic; to mold or shape.",
+      "definition-chinese": "塑料；塑料袋；塑造",
+      "sentence": "塑料袋对环境有害。(Plastic bags are harmful to the environment.)"
+    },
+    {
+      "character": "刹",
+      "english": "to brake, to stop a vehicle",
+      "pinyin": "shā",
+      "same-sounding-character": ["沙 (sand)", "杀 (to kill)", "纱 (gauze, yarn)"],
+      "words": ["刹车 (shā chē, to brake)", "急刹车 (jí shā chē, to brake suddenly)", "刹车片 (shā chē piàn, brake pad)"],
+      "definition-english": "To apply the brakes to stop a moving vehicle.",
+      "definition-chinese": "刹车；急刹车；刹车片",
+      "sentence": "骑脚踏车时,要记得用刹车减速。(When riding a bicycle, remember to use the brakes to slow down.)"
+    },
+    {
+      "character": "使",
+      "english": "to use, to make/cause, envoy",
+      "pinyin": "shǐ",
+      "same-sounding-character": ["史 (history)", "驶 (to drive)", "始 (to begin)"],
+      "words": ["使用 (shǐ yòng, to use)", "使用者 (shǐ yòng zhě, user)", "即使 (jí shǐ, even if)"],
+      "definition-english": "To use something, or to cause something to happen.",
+      "definition-chinese": "使用；使用者；即使",
+      "sentence": "我们应该少使用塑料制品。(We should use fewer plastic products.)"
+    },
+    {
+      "character": "废",
+      "english": "waste, useless, to abolish",
+      "pinyin": "fèi",
+      "same-sounding-character": ["费 (fee, to spend)", "肺 (lungs)", "沸 (to boil)"],
+      "words": ["废物 (fèi wù, waste, rubbish)", "废纸 (fèi zhǐ, waste paper)", "废物利用 (fèi wù lì yòng, to reuse waste)"],
+      "definition-english": "Something discarded or no longer useful; to waste.",
+      "definition-chinese": "废物；废纸；废物利用",
+      "sentence": "旧报纸也可以废物利用。(Old newspapers can also be reused and recycled.)"
+    },
+    {
+      "character": "瓶",
+      "english": "bottle",
+      "pinyin": "píng",
+      "same-sounding-character": ["平 (flat, level)", "苹 (apple, as in 苹果)", "屏 (screen)"],
+      "words": ["瓶子 (píng zi, bottle)", "水瓶 (shuǐ píng, water bottle)", "花瓶 (huā píng, vase)"],
+      "definition-english": "A container, usually made of glass or plastic, for holding liquids.",
+      "definition-chinese": "瓶子；水瓶；花瓶",
+      "sentence": "喝完水后,请把瓶子放进回收桶。(After drinking the water, please put the bottle into the recycling bin.)"
+    },
+    {
+      "character": "并",
+      "english": "and, moreover, to combine",
+      "pinyin": "bìng",
+      "same-sounding-character": ["病 (illness)", "冰 (ice)", "饼 (cake, biscuit)"],
+      "words": ["并且 (bìng qiě, moreover)", "合并 (hé bìng, to merge)", "并不 (bìng bù, not at all)"],
+      "definition-english": "Used to join two related actions or ideas; to combine or merge.",
+      "definition-chinese": "并且；合并；并不",
+      "sentence": "我们要环保,并且节省用水。(We should protect the environment, and also save water.)"
+    },
+    {
+      "character": "洋",
+      "english": "ocean, foreign",
+      "pinyin": "yáng",
+      "same-sounding-character": ["阳 (sun, yang)", "羊 (sheep)", "杨 (willow, surname Yang)"],
+      "words": ["海洋 (hǎi yáng, ocean)", "洋流 (yáng liú, ocean current)", "太平洋 (tài píng yáng, Pacific Ocean)"],
+      "definition-english": "The vast ocean; a large body of sea water.",
+      "definition-chinese": "海洋；洋流；太平洋",
+      "sentence": "垃圾污染了海洋,伤害了海洋生物。(Rubbish pollutes the ocean and harms marine life.)"
+    },
+    {
+      "character": "品",
+      "english": "product, item, goods",
+      "pinyin": "pǐn",
+      "same-sounding-character": ["聘 (to hire)", "拼 (to piece together)", "贫 (poor)"],
+      "words": ["产品 (chǎn pǐn, product)", "用品 (yòng pǐn, daily items, supplies)", "物品 (wù pǐn, object, item)"],
+      "definition-english": "An item or product; goods made or sold.",
+      "definition-chinese": "产品；用品；物品",
+      "sentence": "购买日常用品时,要选择环保的产品。(When buying daily necessities, choose environmentally friendly products.)"
+    },
+    {
+      "character": "责",
+      "english": "responsibility, duty, to blame",
+      "pinyin": "zé",
+      "same-sounding-character": ["择 (to choose)", "泽 (pond, moist)", "则 (rule, then)"],
+      "words": ["责任 (zé rèn, responsibility)", "负责 (fù zé, to be responsible)", "责怪 (zé guài, to blame)"],
+      "definition-english": "A duty or obligation one must fulfil; to blame.",
+      "definition-chinese": "责任；负责；责怪",
+      "sentence": "保护环境是每个人的责任。(Protecting the environment is everyone's responsibility.)"
+    },
+    {
+      "character": "任",
+      "english": "duty, task, to allow, to appoint",
+      "pinyin": "rèn",
+      "same-sounding-character": ["认 (to recognize)", "韧 (tough, tenacious)", "刃 (blade edge)"],
+      "words": ["责任 (zé rèn, responsibility)", "任务 (rèn wu, task)", "任何 (rèn hé, any)"],
+      "definition-english": "A duty, task, or responsibility given to someone.",
+      "definition-chinese": "责任；任务；任何",
+      "sentence": "老师给我们一个任务,要减少浪费。(The teacher gave us a task to reduce waste.)"
+    },
+    {
+      "character": "如",
+      "english": "if, such as, to be like",
+      "pinyin": "rú",
+      "same-sounding-character": ["儒 (Confucian scholar)", "乳 (milk)", "辱 (disgrace)"],
+      "words": ["如果 (rú guǒ, if)", "如何 (rú hé, how)", "比如 (bǐ rú, for example)"],
+      "definition-english": "Used to mean 'if' when introducing a condition, or 'like/such as' when giving an example.",
+      "definition-chinese": "如果；如何；比如",
+      "sentence": "如果每个人都节约用水,环境就会更好。(If everyone saves water, the environment will be better.)"
+    },
+    {
+      "character": "尽",
+      "english": "utmost, to exhaust, to the greatest extent",
+      "pinyin": "jìn / jǐn",
+      "same-sounding-character": ["近 (near)", "进 (to enter, to advance)", "劲 (strength, energy)"],
+      "words": ["尽力 (jìn lì, to try one's best)", "尽一份力 (jìn yí fèn lì, to do one's part)", "尽量 (jǐn liàng, as much as possible)"],
+      "definition-english": "To use up all of one's effort; to do one's utmost.",
+      "definition-chinese": "尽力；尽一份力；尽量",
+      "sentence": "为了保护环境,大家要尽一份力。(To protect the environment, everyone should do their part.)"
+    },
+    {
+      "character": "份",
+      "english": "portion, share, copy",
+      "pinyin": "fèn",
+      "same-sounding-character": ["分 (to divide, minute)", "奋 (to strive)", "愤 (indignant)"],
+      "words": ["一份 (yí fèn, a portion, a copy)", "部份 (bù fèn, a part)", "尽一份力 (jìn yí fèn lì, to do one's part)"],
+      "definition-english": "A portion, share, or copy of something.",
+      "definition-chinese": "一份；部份；尽一份力",
+      "sentence": "每个人都应该尽一份力,爱护环境。(Everyone should do their part to take care of the environment.)"
+    },
+    {
+      "character": "环",
+      "english": "ring, loop, environment",
+      "pinyin": "huán",
+      "same-sounding-character": ["还 (to return)", "换 (to exchange)", "缓 (slow)"],
+      "words": ["环保 (huán bǎo, environmental protection)", "环境 (huán jìng, environment)", "循环 (xún huán, to recycle, cycle)"],
+      "definition-english": "Relating to the environment; a ring or loop shape.",
+      "definition-chinese": "环保；环境；循环",
+      "sentence": "环保从我做起。(Environmental protection starts with me.)"
+    },
+    {
+      "character": "装",
+      "english": "to pack, to install, to pretend, clothing",
+      "pinyin": "zhuāng",
+      "same-sounding-character": ["庄 (village, serious)", "妆 (makeup)", "桩 (stake, pile)"],
+      "words": ["包装 (bāo zhuāng, packaging)", "装满 (zhuāng mǎn, filled up)", "假装 (jiǎ zhuāng, to pretend)"],
+      "definition-english": "To pack or wrap something, or to install; packaging.",
+      "definition-chinese": "包装；装满；假装",
+      "sentence": "买东西时,过多的包装会造成浪费。(When shopping, excessive packaging causes waste.)"
+    },
+    {
+      "character": "报",
+      "english": "to report, newspaper, to repay",
+      "pinyin": "bào",
+      "same-sounding-character": ["抱 (to hug)", "暴 (violent, sudden)", "爆 (to explode)"],
+      "words": ["报纸 (bào zhǐ, newspaper)", "回报 (huí bào, to repay, to return)", "举报 (jǔ bào, to report an offence)"],
+      "definition-english": "To announce or report information; a newspaper.",
+      "definition-chinese": "报纸；回报；举报",
+      "sentence": "看完的旧报纸,可以拿去回收。(Old newspapers that have been read can be taken for recycling.)"
+    },
+    {
+      "character": "组",
+      "english": "group, to organize",
+      "pinyin": "zǔ",
+      "same-sounding-character": ["祖 (ancestor)", "阻 (to block)", "族 (clan, ethnic group)"],
+      "words": ["组织 (zǔ zhī, to organize, organization)", "小组 (xiǎo zǔ, small group)", "组成 (zǔ chéng, to form, to compose)"],
+      "definition-english": "A group of people or things; to organize or form.",
+      "definition-chinese": "组织；小组；组成",
+      "sentence": "老师把我们分成几个小组,一起做环保海报。(The teacher divided us into several small groups to make environmental posters together.)"
+    },
+    {
+      "character": "屋",
+      "english": "house, room",
+      "pinyin": "wū",
+      "same-sounding-character": ["乌 (crow, black)", "污 (dirty, pollution)", "巫 (witch)"],
+      "words": ["屋子 (wū zi, room, house)", "房屋 (fáng wū, house, building)", "屋顶 (wū dǐng, roof)"],
+      "definition-english": "A house or room where people live.",
+      "definition-chinese": "屋子；房屋；屋顶",
+      "sentence": "我们要保持屋子干净,减少垃圾。(We should keep our house clean and reduce rubbish.)"
+    },
+    {
+      "character": "场",
+      "english": "place, field, venue",
+      "pinyin": "chǎng",
+      "same-sounding-character": ["长 (long)", "唱 (to sing)", "尝 (to taste)"],
+      "words": ["场所 (chǎng suǒ, a place, venue)", "广场 (guǎng chǎng, square, plaza)", "市场 (shì chǎng, market)"],
+      "definition-english": "A place or venue where an activity takes place.",
+      "definition-chinese": "场所；广场；市场",
+      "sentence": "学校设立了一个回收场所,方便大家丢旧物。(The school set up a recycling place, making it convenient for everyone to dispose of old items.)"
+    },
+    {
+      "character": "辆",
+      "english": "measure word for vehicles",
+      "pinyin": "liàng",
+      "same-sounding-character": ["量 (measure, quantity)", "亮 (bright)", "谅 (to forgive)"],
+      "words": ["一辆车 (yí liàng chē, one vehicle)", "车辆 (chē liàng, vehicles)", "两辆自行车 (liǎng liàng zì xíng chē, two bicycles)"],
+      "definition-english": "A measure word used for counting vehicles.",
+      "definition-chinese": "一辆车；车辆；两辆自行车",
+      "sentence": "校门口停了好几辆脚踏车。(Several bicycles are parked at the school gate.)"
+    },
+    {
+      "character": "浪",
+      "english": "wave, wasteful",
+      "pinyin": "làng",
+      "same-sounding-character": ["郎 (young man)", "狼 (wolf)", "朗 (bright, clear)"],
+      "words": ["浪费 (làng fèi, to waste)", "海浪 (hǎi làng, sea wave)", "流浪 (liú làng, to wander, homeless)"],
+      "definition-english": "A wave in water; to waste something needlessly.",
+      "definition-chinese": "浪费；海浪；流浪",
+      "sentence": "我们不应该浪费食物。(We should not waste food.)"
+    },
+    {
+      "character": "费",
+      "english": "fee, to spend, to waste",
+      "pinyin": "fèi",
+      "same-sounding-character": ["废 (waste, useless)", "肺 (lungs)", "沸 (to boil)"],
+      "words": ["浪费 (làng fèi, to waste)", "费用 (fèi yòng, cost, fee)", "免费 (miǎn fèi, free of charge)"],
+      "definition-english": "A fee or cost; to spend or use up resources wastefully.",
+      "definition-chinese": "浪费；费用；免费",
+      "sentence": "随手关灯可以节省电费,减少浪费。(Turning off lights when not needed can save electricity costs and reduce waste.)"
+    },
+    {
+      "character": "所",
+      "english": "place, therefore, that which",
+      "pinyin": "suǒ",
+      "same-sounding-character": ["索 (rope, to search)", "锁 (lock)", "缩 (to shrink)"],
+      "words": ["所以 (suǒ yǐ, therefore)", "场所 (chǎng suǒ, place, venue)", "厕所 (cè suǒ, toilet)"],
+      "definition-english": "Used to mean 'therefore'; also refers to a place.",
+      "definition-chinese": "所以；场所；厕所",
+      "sentence": "因为塑料袋会污染环境,所以我们要少用。(Because plastic bags pollute the environment, we should use them less.)"
+    },
+    {
+      "character": "认",
+      "english": "to recognize, to think/believe, to admit",
+      "pinyin": "rèn",
+      "same-sounding-character": ["任 (duty)", "韧 (tough, tenacious)", "刃 (blade edge)"],
+      "words": ["认为 (rèn wéi, to think, to believe)", "认识 (rèn shi, to know, to recognize)", "承认 (chéng rèn, to admit)"],
+      "definition-english": "To hold an opinion or belief; to recognize or acknowledge.",
+      "definition-chinese": "认为；认识；承认",
+      "sentence": "我认为每个人都应该爱护环境。(I believe everyone should take care of the environment.)"
+    }
+  ],
+  "p3-12": [
+    {
+      "character": "设",
+      "english": "design, set up, establish",
+      "pinyin": "shè",
+      "same-sounding-character": ["舍 (give up)", "社 (society)", "射 (shoot)"],
+      "words": ["设计 (shè jì, design)", "设备 (shè bèi, equipment)", "建设 (jiàn shè, construction)"],
+      "definition-english": "To design, arrange, or set something up.",
+      "definition-chinese": "设计；设备；建设",
+      "sentence": "我们正在设计一面新的旗子。(We are designing a new flag.)"
+    },
+    {
+      "character": "计",
+      "english": "plan, count, calculate",
+      "pinyin": "jì",
+      "same-sounding-character": ["记 (remember/record)", "季 (season)", "继 (continue)"],
+      "words": ["计划 (jì huà, plan)", "设计 (shè jì, design)", "计算 (jì suàn, calculate)"],
+      "definition-english": "To plan, count, or calculate.",
+      "definition-chinese": "计划；设计；计算",
+      "sentence": "我计划画一幅漂亮的国旗。(I plan to draw a beautiful national flag.)"
+    },
+    {
+      "character": "旗",
+      "english": "flag",
+      "pinyin": "qí",
+      "same-sounding-character": ["骑 (ride)", "棋 (chess)", "齐 (neat/together)"],
+      "words": ["旗子 (qí zi, flag)", "国旗 (guó qí, national flag)", "红旗 (hóng qí, red flag)"],
+      "definition-english": "A flag, a piece of cloth with a design representing a country or group.",
+      "definition-chinese": "旗子；国旗；红旗",
+      "sentence": "国庆节那天,操场上挂满了红旗。(On National Day, the playground is filled with red flags.)"
+    },
+    {
+      "character": "颗",
+      "english": "measure word for small round things",
+      "pinyin": "kē",
+      "same-sounding-character": ["棵 (measure word for trees)", "科 (subject/branch)", "磕 (knock)"],
+      "words": ["一颗星 (yì kē xīng, one star)", "一颗心 (yì kē xīn, one heart)", "颗粒 (kē lì, grain/granule)"],
+      "definition-english": "A measure word used for small round objects like stars, hearts, or grains.",
+      "definition-chinese": "一颗星；一颗心；颗粒",
+      "sentence": "夜空中有一颗又大又亮的星星。(There is a big bright star in the night sky.)"
+    },
+    {
+      "character": "世",
+      "english": "world, generation",
+      "pinyin": "shì",
+      "same-sounding-character": ["是 (to be)", "事 (matter/affair)", "市 (city/market)"],
+      "words": ["世界 (shì jiè, world)", "世纪 (shì jì, century)", "去世 (qù shì, to pass away)"],
+      "definition-english": "The world; a generation or era.",
+      "definition-chinese": "世界；世纪",
+      "sentence": "世界上有很多不同的国家和民族。(There are many different countries and ethnic groups in the world.)"
+    },
+    {
+      "character": "界",
+      "english": "boundary, world, realm",
+      "pinyin": "jiè",
+      "same-sounding-character": ["借 (borrow)", "介 (introduce)", "戒 (quit/ring)"],
+      "words": ["世界 (shì jiè, world)", "边界 (biān jiè, border)", "界限 (jiè xiàn, boundary/limit)"],
+      "definition-english": "A boundary or realm; the world.",
+      "definition-chinese": "世界；边界；界限",
+      "sentence": "世界上有两百多个国家。(There are more than two hundred countries in the world.)"
+    },
+    {
+      "character": "族",
+      "english": "ethnic group, clan",
+      "pinyin": "zú",
+      "same-sounding-character": ["足 (foot)", "组 (group)", "租 (rent)"],
+      "words": ["民族 (mín zú, ethnic group)", "家族 (jiā zú, family clan)", "汉族 (hàn zú, Han ethnicity)"],
+      "definition-english": "An ethnic group or clan of people sharing common ancestry.",
+      "definition-chinese": "民族；家族",
+      "sentence": "新加坡有华族,马来族和印度族。(Singapore has the Chinese, Malay, and Indian ethnic groups.)"
+    },
+    {
+      "character": "印",
+      "english": "print, stamp, imprint",
+      "pinyin": "yìn",
+      "same-sounding-character": ["引 (lead/attract)", "隐 (hide)", "阴 (overcast/shady)"],
+      "words": ["印度 (yìn dù, India)", "印刷 (yìn shuā, printing)", "手印 (shǒu yìn, handprint)"],
+      "definition-english": "To print or stamp; also part of the country name India.",
+      "definition-chinese": "印度；印刷；手印",
+      "sentence": "他在纸上盖了一个红色的印。(He stamped a red mark on the paper.)"
+    },
+    {
+      "character": "度",
+      "english": "degree, measure",
+      "pinyin": "dù",
+      "same-sounding-character": ["渡 (cross/ferry)", "肚 (belly)", "妒 (jealous)"],
+      "words": ["印度 (yìn dù, India)", "温度 (wēn dù, temperature)", "态度 (tài dù, attitude)"],
+      "definition-english": "A degree or measure; also used in country names like India.",
+      "definition-chinese": "印度；温度；态度",
+      "sentence": "印度是世界上人口很多的国家。(India is a country with a very large population.)"
+    },
+    {
+      "character": "夹",
+      "english": "clip, pinch, sandwich",
+      "pinyin": "jiā",
+      "same-sounding-character": ["家 (home/family)", "加 (add)", "佳 (good/fine)"],
+      "words": ["夹子 (jiā zi, clip)", "夹住 (jiā zhù, to clip/pinch)", "夹心 (jiā xīn, filled/sandwiched)"],
+      "definition-english": "To clip, pinch, or hold something between two surfaces.",
+      "definition-chinese": "夹子；夹住",
+      "sentence": "妈妈用夹子把衣服夹在绳子上。(Mother used clips to clip the clothes onto the line.)"
+    },
+    {
+      "character": "其",
+      "english": "other, among, it/its",
+      "pinyin": "qí",
+      "same-sounding-character": ["骑 (ride)", "棋 (chess)", "奇 (strange/odd)"],
+      "words": ["其他 (qí tā, other)", "其中 (qí zhōng, among/within)", "其实 (qí shí, actually/in fact)"],
+      "definition-english": "Other; among; used to refer to something previously mentioned.",
+      "definition-chinese": "其他；其中",
+      "sentence": "班上有三十个学生,其中一半是女生。(There are thirty students in the class, half of them are girls.)"
+    },
+    {
+      "character": "竖",
+      "english": "vertical, stand upright",
+      "pinyin": "shù",
+      "same-sounding-character": ["树 (tree)", "数 (number)", "束 (bundle)"],
+      "words": ["竖起 (shù qǐ, to stand upright/raise)", "竖立 (shù lì, to erect)", "竖直 (shù zhí, vertical)"],
+      "definition-english": "To stand something upright; vertical.",
+      "definition-chinese": "竖起；竖立",
+      "sentence": "他竖起大拇指,夸我做得好。(He gave a thumbs up, praising me for doing well.)"
+    },
+    {
+      "character": "拇",
+      "english": "thumb",
+      "pinyin": "mǔ",
+      "same-sounding-character": ["母 (mother)", "亩 (mu, a unit of area)", "姆 (nanny/governess)"],
+      "words": ["拇指 (mǔ zhǐ, thumb)", "大拇指 (dà mǔ zhǐ, thumb)", "拇指印 (mǔ zhǐ yìn, thumbprint)"],
+      "definition-english": "The thumb, the first and thickest finger.",
+      "definition-chinese": "拇指；大拇指",
+      "sentence": "他竖起大拇指为我加油。(He gave me a thumbs up to cheer me on.)"
+    },
+    {
+      "character": "谜",
+      "english": "riddle, mystery",
+      "pinyin": "mí",
+      "same-sounding-character": ["迷 (be fascinated/lost)", "米 (rice)", "密 (dense/secret)"],
+      "words": ["谜语 (mí yǔ, riddle)", "猜谜 (cāi mí, guess riddle)", "谜团 (mí tuán, mystery/puzzle)"],
+      "definition-english": "A riddle or mystery that needs to be solved.",
+      "definition-chinese": "谜语；猜谜；谜团",
+      "sentence": "老师给我们出了一个有趣的谜语。(The teacher gave us an interesting riddle.)"
+    },
+    {
+      "character": "团",
+      "english": "group, unite, round mass",
+      "pinyin": "tuán",
+      "same-sounding-character": ["湍 (rapid current)", "抟 (to roll into a ball)", "疃 (village)"],
+      "words": ["团结 (tuán jié, unity)", "团圆 (tuán yuán, reunion)", "团体 (tuán tǐ, group/team)"],
+      "definition-english": "To unite or group together; a round mass or organization.",
+      "definition-chinese": "团结；团圆；团体",
+      "sentence": "国庆节让我们的国家更加团结。(National Day makes our country more united.)"
+    },
+    {
+      "character": "奋",
+      "english": "excited, strive",
+      "pinyin": "fèn",
+      "same-sounding-character": ["分 (divide/minute)", "粉 (powder/pink)", "份 (portion/copy)"],
+      "words": ["兴奋 (xīng fèn, excited)", "奋斗 (fèn dòu, strive)", "勤奋 (qín fèn, diligent)"],
+      "definition-english": "Excited; to strive energetically.",
+      "definition-chinese": "兴奋；奋斗；勤奋",
+      "sentence": "国庆节那天,大家都很兴奋。(Everyone is very excited on National Day.)"
+    },
+    {
+      "character": "晶",
+      "english": "crystal, sparkling",
+      "pinyin": "jīng",
+      "same-sounding-character": ["京 (capital)", "经 (pass through/classic)", "精 (essence/refined)"],
+      "words": ["水晶 (shuǐ jīng, crystal)", "晶亮 (jīng liàng, sparkling bright)", "结晶 (jié jīng, crystallize)"],
+      "definition-english": "Crystal; sparkling and clear.",
+      "definition-chinese": "水晶；晶亮",
+      "sentence": "晚上的星星像水晶一样闪闪发亮。(The stars at night sparkle like crystals.)"
+    },
+    {
+      "character": "狮",
+      "english": "lion",
+      "pinyin": "shī",
+      "same-sounding-character": ["师 (teacher)", "诗 (poem)", "湿 (wet)"],
+      "words": ["狮子 (shī zi, lion)", "狮子座 (shī zi zuò, Leo constellation)", "舞狮 (wǔ shī, lion dance)"],
+      "definition-english": "A lion, a large wild cat known as the king of animals.",
+      "definition-chinese": "狮子；舞狮",
+      "sentence": "新加坡的国徽上有一只狮子。(Singapore's national emblem has a lion on it.)"
+    },
+    {
+      "character": "虎",
+      "english": "tiger",
+      "pinyin": "hǔ",
+      "same-sounding-character": ["户 (household)", "互 (mutual)", "乎 (question particle)"],
+      "words": ["老虎 (lǎo hǔ, tiger)", "虎年 (hǔ nián, Year of the Tiger)", "虎头 (hǔ tóu, tiger head)"],
+      "definition-english": "A tiger, a large striped wild cat.",
+      "definition-chinese": "老虎；虎年",
+      "sentence": "动物园里的老虎又大又凶猛。(The tiger at the zoo is big and fierce.)"
+    },
+    {
+      "character": "华",
+      "english": "China, Chinese, splendid",
+      "pinyin": "huá",
+      "same-sounding-character": ["花 (flower)", "划 (plan/stroke)", "话 (speech/words)"],
+      "words": ["中华 (zhōng huá, China)", "华人 (huá rén, ethnic Chinese person)", "华语 (huá yǔ, Chinese language)"],
+      "definition-english": "Relating to China or the Chinese people; splendid.",
+      "definition-chinese": "中华；华人；华语",
+      "sentence": "很多华人庆祝中华文化的节日。(Many Chinese people celebrate festivals of Chinese culture.)"
+    },
+    {
+      "character": "庆",
+      "english": "celebrate",
+      "pinyin": "qìng",
+      "same-sounding-character": ["请 (please/invite)", "青 (green/young)", "轻 (light in weight)"],
+      "words": ["庆祝 (qìng zhù, celebrate)", "国庆 (guó qìng, National Day)", "庆典 (qìng diǎn, celebration ceremony)"],
+      "definition-english": "To celebrate a happy or important occasion.",
+      "definition-chinese": "庆祝；国庆",
+      "sentence": "我们一起庆祝国庆节。(We celebrate National Day together.)"
+    },
+    {
+      "character": "指",
+      "english": "finger, point",
+      "pinyin": "zhǐ",
+      "same-sounding-character": ["只 (only/measure word)", "纸 (paper)", "址 (address/site)"],
+      "words": ["手指 (shǒu zhǐ, finger)", "指着 (zhǐ zhe, pointing at)", "戒指 (jiè zhi, ring)"],
+      "definition-english": "A finger; to point at something.",
+      "definition-chinese": "手指；指着",
+      "sentence": "他用手指着国旗,骄傲地笑了。(He pointed at the national flag and smiled proudly.)"
+    },
+    {
+      "character": "弯",
+      "english": "bend, curved",
+      "pinyin": "wān",
+      "same-sounding-character": ["湾 (bay)", "玩 (play)", "完 (finish)"],
+      "words": ["弯曲 (wān qū, curved/bent)", "转弯 (zhuǎn wān, turn a corner)", "弯腰 (wān yāo, bend over)"],
+      "definition-english": "Bent or curved; not straight.",
+      "definition-chinese": "弯曲；转弯",
+      "sentence": "河水弯弯曲曲地流向大海。(The river winds and bends its way to the sea.)"
+    },
+    {
+      "character": "座",
+      "english": "seat, measure word for mountains/buildings",
+      "pinyin": "zuò",
+      "same-sounding-character": ["做 (do/make)", "坐 (sit)", "昨 (yesterday)"],
+      "words": ["座位 (zuò wèi, seat)", "一座山 (yí zuò shān, one mountain)", "星座 (xīng zuò, constellation/star sign)"],
+      "definition-english": "A seat; a measure word used for mountains, buildings, or bridges.",
+      "definition-chinese": "座位；星座",
+      "sentence": "请大家回到自己的座位坐好。(Please everyone return to your own seat and sit down.)"
+    },
+    {
+      "character": "唱",
+      "english": "sing",
+      "pinyin": "chàng",
+      "same-sounding-character": ["场 (field/scene)", "长 (long)", "尝 (taste)"],
+      "words": ["唱歌 (chàng gē, sing songs)", "歌唱 (gē chàng, to sing)", "合唱 (hé chàng, chorus/sing together)"],
+      "definition-english": "To sing.",
+      "definition-chinese": "唱歌；歌唱；合唱",
+      "sentence": "国庆节那天,我们一起唱歌庆祝。(On National Day, we sing together to celebrate.)"
+    },
+    {
+      "character": "歌",
+      "english": "song",
+      "pinyin": "gē",
+      "same-sounding-character": ["哥 (elder brother)", "割 (cut)", "戈 (spear/weapon)"],
+      "words": ["唱歌 (chàng gē, sing songs)", "歌曲 (gē qǔ, song)", "国歌 (guó gē, national anthem)"],
+      "definition-english": "A song.",
+      "definition-chinese": "唱歌；歌曲；国歌",
+      "sentence": "升旗的时候,大家一起唱国歌。(While the flag is being raised, everyone sings the national anthem together.)"
+    },
+    {
+      "character": "贴",
+      "english": "stick, paste",
+      "pinyin": "tiē",
+      "same-sounding-character": ["铁 (iron)", "帖 (invitation card)", "跌 (fall/trip)"],
+      "words": ["贴纸 (tiē zhǐ, sticker)", "张贴 (zhāng tiē, to put up/post)", "粘贴 (zhān tiē, to paste/stick)"],
+      "definition-english": "To stick, paste, or affix something onto a surface.",
+      "definition-chinese": "贴纸；张贴；粘贴",
+      "sentence": "我们把画好的国旗贴在墙上。(We stuck the flag we drew onto the wall.)"
+    }
+  ],
+  "p3-13": [
+    {
+      "character": "养",
+      "english": "to raise, rear, nurture",
+      "pinyin": "yǎng",
+      "same-sounding-character": ["氧 (oxygen)", "痒 (itchy)", "样 (appearance, kind)"],
+      "words": ["养虾 (yǎng xiā, prawn farming)", "饲养 (sì yǎng, to raise animals)", "养鱼 (yǎng yú, to raise fish)"],
+      "definition-english": "To raise, rear, or take care of animals or plants.",
+      "definition-chinese": "饲养；养鱼；养虾",
+      "sentence": "爷爷在湖边养虾,每天都去看看。(Grandpa raises prawns by the lake and goes to check on them every day.)"
+    },
+    {
+      "character": "虾",
+      "english": "shrimp, prawn",
+      "pinyin": "xiā",
+      "same-sounding-character": ["瞎 (blind)", "侠 (hero, knight)", "峡 (gorge, strait)"],
+      "words": ["养虾 (yǎng xiā, prawn farming)", "虾米 (xiā mǐ, dried shrimp)", "龙虾 (lóng xiā, lobster)"],
+      "definition-english": "A small aquatic animal with a long body and many legs, often eaten as food.",
+      "definition-chinese": "养虾；虾米；龙虾",
+      "sentence": "他们家养虾,虾长得又大又肥。(Their family raises prawns, and the prawns grow big and plump.)"
+    },
+    {
+      "character": "湖",
+      "english": "lake",
+      "pinyin": "hú",
+      "same-sounding-character": ["蝴 (butterfly)", "糊 (blurry, paste)", "壶 (kettle, pot)"],
+      "words": ["湖边 (hú biān, lakeside)", "湖水 (hú shuǐ, lake water)", "西湖 (xī hú, West Lake)"],
+      "definition-english": "A large body of water surrounded by land.",
+      "definition-chinese": "湖边；湖水；西湖",
+      "sentence": "我们沿着湖边散步,看到很多小鱼。(We walked along the lakeside and saw many little fish.)"
+    },
+    {
+      "character": "狐",
+      "english": "fox",
+      "pinyin": "hú",
+      "same-sounding-character": ["湖 (lake)", "壶 (kettle, pot)", "糊 (blurry, paste)"],
+      "words": ["狐狸 (hú li, fox)", "白狐 (bái hú, white fox)", "狐疑 (hú yí, suspicious)"],
+      "definition-english": "A small wild animal with a pointed nose and bushy tail, often described as cunning.",
+      "definition-chinese": "狐狸；白狐；狐疑",
+      "sentence": "森林里住着一只聪明的狐狸。(A clever fox lives in the forest.)"
+    },
+    {
+      "character": "狸",
+      "english": "a fox-like or cat-like wild animal (as in 狐狸)",
+      "pinyin": "lí",
+      "same-sounding-character": ["离 (leave, apart)", "梨 (pear)", "篱 (fence)"],
+      "words": ["狐狸 (hú li, fox)", "狸猫 (lí māo, civet cat)", "果子狸 (guǒ zi lí, masked palm civet)"],
+      "definition-english": "Used mainly in the word 狐狸 (fox); also refers to civet-like animals.",
+      "definition-chinese": "狐狸；狸猫",
+      "sentence": "狐狸和狸猫都是森林里常见的动物。(Foxes and civet cats are both common animals in the forest.)"
+    },
+    {
+      "character": "狼",
+      "english": "wolf",
+      "pinyin": "láng",
+      "same-sounding-character": ["郎 (young man)", "廊 (corridor)", "榔 (mallet, as in 榔头)"],
+      "words": ["狼群 (láng qún, wolf pack)", "大灰狼 (dà huī láng, big bad wolf)", "狼狈 (láng bèi, in a difficult situation)"],
+      "definition-english": "A wild animal similar to a dog, known for hunting in packs.",
+      "definition-chinese": "狼群；大灰狼",
+      "sentence": "湖边突然出现了一只狼,大家都吓了一跳。(A wolf suddenly appeared by the lake, and everyone was startled.)"
+    },
+    {
+      "character": "猩",
+      "english": "orangutan, ape (as in 猩猩)",
+      "pinyin": "xīng",
+      "same-sounding-character": ["星 (star)", "兴 (interested, as in 高兴)", "惺 (as in 惺忪, drowsy)"],
+      "words": ["猩猩 (xīng xing, orangutan)", "黑猩猩 (hēi xīng xing, chimpanzee)", "猩红 (xīng hóng, scarlet)"],
+      "definition-english": "Used mainly in 猩猩, referring to apes such as orangutans and chimpanzees.",
+      "definition-chinese": "猩猩；黑猩猩",
+      "sentence": "动物园里的猩猩很喜欢爬树。(The orangutan at the zoo loves climbing trees.)"
+    },
+    {
+      "character": "沿",
+      "english": "along, alongside",
+      "pinyin": "yán",
+      "same-sounding-character": ["言 (speech, words)", "严 (strict)", "盐 (salt)"],
+      "words": ["沿着 (yán zhe, along)", "沿岸 (yán àn, along the bank)", "沿路 (yán lù, along the way)"],
+      "definition-english": "Along, alongside, or following the edge of something.",
+      "definition-chinese": "沿着；沿岸；沿路",
+      "sentence": "我们沿着沙滩走,一路上拍了很多照片。(We walked along the beach, taking many photos along the way.)"
+    },
+    {
+      "character": "滩",
+      "english": "beach, shoal, sandbank",
+      "pinyin": "tān",
+      "same-sounding-character": ["摊 (stall, spread out)", "贪 (greedy)", "谈 (talk)"],
+      "words": ["沙滩 (shā tān, sandy beach)", "海滩 (hǎi tān, seaside beach)", "河滩 (hé tān, riverside flat)"],
+      "definition-english": "A flat stretch of sand or land beside water, such as a beach.",
+      "definition-chinese": "沙滩；海滩；河滩",
+      "sentence": "小朋友们在沙滩上快乐地奔跑。(The children happily ran on the beach.)"
+    },
+    {
+      "character": "封",
+      "english": "to seal, close; measure word for letters",
+      "pinyin": "fēng",
+      "same-sounding-character": ["风 (wind)", "蜂 (bee)", "丰 (abundant)"],
+      "words": ["信封 (xìn fēng, envelope)", "封闭 (fēng bì, to seal, close off)", "封面 (fēng miàn, cover of a book)"],
+      "definition-english": "To seal or close something; also a measure word for letters.",
+      "definition-chinese": "信封；封闭；封面",
+      "sentence": "他把信放进信封,封好后寄了出去。(He put the letter into the envelope, sealed it, and sent it off.)"
+    },
+    {
+      "character": "必",
+      "english": "must, surely, necessarily",
+      "pinyin": "bì",
+      "same-sounding-character": ["币 (currency)", "闭 (close)", "毕 (finish, as in 毕业)"],
+      "words": ["必须 (bì xū, must)", "必要 (bì yào, necessary)", "未必 (wèi bì, not necessarily)"],
+      "definition-english": "Must; necessarily; certainly.",
+      "definition-chinese": "必须；必要；未必",
+      "sentence": "过桥的时候,我们必须小心。(When crossing the bridge, we must be careful.)"
+    },
+    {
+      "character": "须",
+      "english": "must, have to; whiskers, beard",
+      "pinyin": "xū",
+      "same-sounding-character": ["需 (need)", "虚 (empty, false)", "徐 (slowly, surname)"],
+      "words": ["必须 (bì xū, must)", "须要 (xū yào, need to)", "胡须 (hú xū, beard, mustache)"],
+      "definition-english": "Must, have to; also refers to whiskers or a beard.",
+      "definition-chinese": "必须；胡须",
+      "sentence": "过山洞前,我们必须先讨论安全问题。(Before entering the cave, we must first discuss safety issues.)"
+    },
+    {
+      "character": "论",
+      "english": "to discuss; theory, opinion",
+      "pinyin": "lùn",
+      "same-sounding-character": ["伦 (human relations, ethics)", "抡 (to swing)", "轮 (wheel, take turns)"],
+      "words": ["讨论 (tǎo lùn, discuss)", "无论 (wú lùn, no matter what)", "结论 (jié lùn, conclusion)"],
+      "definition-english": "To discuss, talk over, or a theory or opinion about something.",
+      "definition-chinese": "讨论；结论；无论",
+      "sentence": "大家坐在桥边讨论去哪里拍照。(Everyone sat by the bridge discussing where to take photos.)"
+    },
+    {
+      "character": "领",
+      "english": "to lead, guide; collar",
+      "pinyin": "lǐng",
+      "same-sounding-character": ["岭 (mountain ridge)", "令 (order, command)", "铃 (bell)"],
+      "words": ["带领 (dài lǐng, to lead)", "领导 (lǐng dǎo, leader, to lead)", "衣领 (yī lǐng, collar)"],
+      "definition-english": "To lead or guide; also refers to the collar of clothing.",
+      "definition-chinese": "带领；领导；衣领",
+      "sentence": "猩猩带领大家沿着小路走进森林。(The orangutan led everyone along the path into the forest.)"
+    },
+    {
+      "character": "务",
+      "english": "task, affairs; service",
+      "pinyin": "wù",
+      "same-sounding-character": ["雾 (fog)", "物 (object, thing)", "误 (mistake)"],
+      "words": ["任务 (rèn wù, task)", "服务 (fú wù, service)", "务必 (wù bì, must, be sure to)"],
+      "definition-english": "A task, duty, or job; also relates to providing service.",
+      "definition-chinese": "任务；服务；务必",
+      "sentence": "这次的任务是拍照记录湖边的动物。(This task is to take photos to record the animals by the lake.)"
+    },
+    {
+      "character": "虽",
+      "english": "although, even though",
+      "pinyin": "suī",
+      "same-sounding-character": ["随 (follow)", "岁 (year of age)", "碎 (broken)"],
+      "words": ["虽然 (suī rán, although)", "虽说 (suī shuō, although)", "虽则 (suī zé, although)"],
+      "definition-english": "Although; even though.",
+      "definition-chinese": "虽然；虽说",
+      "sentence": "狐狸虽然聪明,但还是被大家发现了。(Although the fox was clever, it was still discovered by everyone.)"
+    },
+    {
+      "character": "仍",
+      "english": "still, yet, as before",
+      "pinyin": "réng",
+      "same-sounding-character": ["扔 (to throw)", "认 (recognize)", "任 (task, allow)"],
+      "words": ["仍然 (réng rán, still)", "仍旧 (réng jiù, still, as before)", "仍需 (réng xū, still need to)"],
+      "definition-english": "Still; as before; yet.",
+      "definition-chinese": "仍然；仍旧",
+      "sentence": "天色虽然暗了,狼群仍然没有离开。(Although the sky had darkened, the wolf pack still hadn't left.)"
+    },
+    {
+      "character": "森",
+      "english": "forest, dense",
+      "pinyin": "sēn",
+      "same-sounding-character": ["深 (deep)", "身 (body)", "申 (to state, apply)"],
+      "words": ["森林 (sēn lín, forest)", "阴森 (yīn sēn, gloomy, eerie)", "森严 (sēn yán, strict, solemn)"],
+      "definition-english": "A forest; also describes something dense, dark, or gloomy.",
+      "definition-chinese": "森林；阴森",
+      "sentence": "森林里有一个山洞,里面住着一只狼。(There is a cave in the forest, inhabited by a wolf.)"
+    },
+    {
+      "character": "洞",
+      "english": "cave, hole, hollow",
+      "pinyin": "dòng",
+      "same-sounding-character": ["动 (move)", "冻 (freeze)", "栋 (measure word for buildings)"],
+      "words": ["山洞 (shān dòng, mountain cave)", "洞穴 (dòng xué, cave, cavern)", "树洞 (shù dòng, tree hollow)"],
+      "definition-english": "A cave, hole, or hollow space.",
+      "definition-chinese": "山洞；洞穴；树洞",
+      "sentence": "狐狸躲进了山洞,不敢出来。(The fox hid in the cave and didn't dare to come out.)"
+    },
+    {
+      "character": "桥",
+      "english": "bridge",
+      "pinyin": "qiáo",
+      "same-sounding-character": ["乔 (tall, surname)", "瞧 (to look, glance)", "侨 (overseas Chinese)"],
+      "words": ["桥梁 (qiáo liáng, bridge)", "过桥 (guò qiáo, cross a bridge)", "天桥 (tiān qiáo, footbridge, overpass)"],
+      "definition-english": "A structure built over a river, road, or valley for crossing.",
+      "definition-chinese": "桥梁；过桥；天桥",
+      "sentence": "我们走过一座小桥,来到了湖的另一边。(We walked across a small bridge and arrived at the other side of the lake.)"
+    },
+    {
+      "character": "沙",
+      "english": "sand",
+      "pinyin": "shā",
+      "same-sounding-character": ["杀 (kill)", "纱 (gauze, yarn)", "傻 (silly)"],
+      "words": ["沙滩 (shā tān, sandy beach)", "沙子 (shā zi, sand)", "沙漠 (shā mò, desert)"],
+      "definition-english": "Sand; fine loose grains of rock found on beaches and deserts.",
+      "definition-chinese": "沙滩；沙子；沙漠",
+      "sentence": "我们在沙滩上堆了一座沙子做的城堡。(We built a castle out of sand on the beach.)"
+    },
+    {
+      "character": "拍",
+      "english": "to pat, clap; to take a photo",
+      "pinyin": "pāi",
+      "same-sounding-character": ["排 (line up)", "牌 (sign, card)", "派 (send, faction)"],
+      "words": ["拍照 (pāi zhào, take a photo)", "拍手 (pāi shǒu, clap hands)", "拍打 (pāi dǎ, to pat, beat)"],
+      "definition-english": "To pat, clap, or take a photograph.",
+      "definition-chinese": "拍照；拍手；拍打",
+      "sentence": "大家在桥上拍照,笑得很开心。(Everyone took photos on the bridge, laughing happily.)"
+    },
+    {
+      "character": "照",
+      "english": "photo; to shine; according to",
+      "pinyin": "zhào",
+      "same-sounding-character": ["罩 (cover)", "兆 (omen, mega-)", "召 (summon)"],
+      "words": ["拍照 (pāi zhào, take a photo)", "照片 (zhào piàn, photograph)", "照顾 (zhào gù, to take care of)"],
+      "definition-english": "A photograph; to shine light on something; or to take care of someone.",
+      "definition-chinese": "拍照；照片；照顾",
+      "sentence": "他把这张照片拍得很漂亮。(He took this photo very beautifully.)"
+    },
+    {
+      "character": "讨",
+      "english": "to discuss, ask for, dislike",
+      "pinyin": "tǎo",
+      "same-sounding-character": ["涛 (waves)", "桃 (peach)", "淘 (naughty, wash)"],
+      "words": ["讨论 (tǎo lùn, discuss)", "讨厌 (tǎo yàn, annoying, dislike)", "讨教 (tǎo jiào, ask for advice)"],
+      "definition-english": "To discuss or talk something over; to ask for or seek something; also to dislike.",
+      "definition-chinese": "讨论；讨厌",
+      "sentence": "他们讨论了很久,才决定去湖边拍照。(They discussed for a long time before deciding to go take photos by the lake.)"
+    },
+    {
+      "character": "漂",
+      "english": "to float, drift; pretty",
+      "pinyin": "piāo / piào",
+      "same-sounding-character": ["飘 (to flutter, drift)", "票 (ticket)", "瓢 (ladle, scoop)"],
+      "words": ["漂流 (piāo liú, to drift, float)", "漂浮 (piāo fú, to float)", "漂亮 (piào liang, pretty)"],
+      "definition-english": "To float or drift on water; also means pretty or beautiful.",
+      "definition-chinese": "漂浮；漂流；漂亮",
+      "sentence": "湖面上漂着几片叶子,风景很漂亮。(A few leaves floated on the lake's surface, and the scenery was very pretty.)"
+    },
+    {
+      "character": "但",
+      "english": "but, however",
+      "pinyin": "dàn",
+      "same-sounding-character": ["淡 (light, bland)", "蛋 (egg)", "旦 (dawn, day)"],
+      "words": ["但是 (dàn shì, but, however)", "不但 (bù dàn, not only)", "但愿 (dàn yuàn, wish, hope that)"],
+      "definition-english": "But; however; used to introduce a contrast.",
+      "definition-chinese": "但是；不但",
+      "sentence": "狼很凶,但猩猩一点也不怕。(The wolf was fierce, but the orangutan wasn't afraid at all.)"
+    }
+  ],
+  "p3-14": [
+    {
+      "character": "假",
+      "english": "fake, pretend, holiday",
+      "pinyin": "jiǎ / jià",
+      "same-sounding-character": ["甲 (armor, first)", "价 (price)", "架 (frame, shelf)"],
+      "words": ["假装 (jiǎ zhuāng, pretend)", "假期 (jià qī, holiday)", "放假 (fàng jià, be on vacation)"],
+      "definition-english": "Not real; to pretend; also a holiday or break from school",
+      "definition-chinese": "假装；假期；放假",
+      "sentence": "他假装生病,想请假不上学。(He pretended to be sick, wanting to take leave from school.)"
+    },
+    {
+      "character": "强",
+      "english": "strong, powerful",
+      "pinyin": "qiáng",
+      "same-sounding-character": ["墙 (wall)", "抢 (rob, grab)", "枪 (gun)"],
+      "words": ["强壮 (qiáng zhuàng, strong)", "坚强 (jiān qiáng, strong-willed)", "强大 (qiáng dà, powerful)"],
+      "definition-english": "Strong; powerful; better than",
+      "definition-chinese": "强壮；坚强；强大",
+      "sentence": "大象的力气很强,可以搬动大石头。(The elephant's strength is great; it can move big rocks.)"
+    },
+    {
+      "character": "弱",
+      "english": "weak, feeble",
+      "pinyin": "ruò",
+      "same-sounding-character": ["若 (if, like)", "偌 (so, such)", "箬 (a kind of bamboo leaf)"],
+      "words": ["弱小 (ruò xiǎo, weak and small)", "软弱 (ruǎn ruò, weak, soft)", "虚弱 (xū ruò, feeble, weak)"],
+      "definition-english": "Weak; feeble; lacking strength",
+      "definition-chinese": "弱小；软弱；虚弱",
+      "sentence": "小猫生病了,身体变得很弱。(The kitten got sick and became very weak.)"
+    },
+    {
+      "character": "吞",
+      "english": "swallow",
+      "pinyin": "tūn",
+      "same-sounding-character": ["屯 (station, village)", "豚 (piglet)", "饨 (as in wonton)"],
+      "words": ["吞下 (tūn xià, swallow)", "吞咽 (tūn yàn, swallow)", "狼吞虎咽 (láng tūn hǔ yàn, wolf down food)"],
+      "definition-english": "To swallow, especially quickly or whole",
+      "definition-chinese": "吞下；吞咽；狼吞虎咽",
+      "sentence": "熊懒洋洋地把鱼一口吞了下去。(The bear lazily swallowed the fish in one gulp.)"
+    },
+    {
+      "character": "慢",
+      "english": "slow",
+      "pinyin": "màn",
+      "same-sounding-character": ["漫 (overflow, casual)", "曼 (graceful)", "蔓 (vine)"],
+      "words": ["慢慢 (màn màn, slowly)", "缓慢 (huǎn màn, slow)", "慢吞吞 (màn tūn tūn, sluggish)"],
+      "definition-english": "Slow; not fast; unhurried",
+      "definition-chinese": "缓慢；慢吞吞",
+      "sentence": "他做事总是慢吞吞的,一点也不着急。(He always does things slowly, not in a hurry at all.)"
+    },
+    {
+      "character": "懒",
+      "english": "lazy",
+      "pinyin": "lǎn",
+      "same-sounding-character": ["览 (view, read)", "缆 (cable)", "揽 (embrace, take on)"],
+      "words": ["懒惰 (lǎn duò, lazy)", "偷懒 (tōu lǎn, slack off)", "懒散 (lǎn sǎn, lazy, sluggish)"],
+      "definition-english": "Lazy; unwilling to work or move",
+      "definition-chinese": "懒惰；偷懒；懒散",
+      "sentence": "那只熊很懒惰,整天只想睡觉。(That bear is very lazy; it only wants to sleep all day.)"
+    },
+    {
+      "character": "咸",
+      "english": "salty",
+      "pinyin": "xián",
+      "same-sounding-character": ["闲 (idle)", "弦 (string)", "贤 (virtuous)"],
+      "words": ["咸淡 (xián dàn, saltiness, flavor)", "咸味 (xián wèi, salty taste)", "咸鱼 (xián yú, salted fish)"],
+      "definition-english": "Salty in taste",
+      "definition-chinese": "咸味；咸淡；咸鱼",
+      "sentence": "这道汤有点咸,我们再加些水吧。(This soup is a bit salty; let's add some water.)"
+    },
+    {
+      "character": "淡",
+      "english": "bland, light, weak",
+      "pinyin": "dàn",
+      "same-sounding-character": ["但 (but)", "蛋 (egg)", "旦 (dawn, day)"],
+      "words": ["咸淡 (xián dàn, saltiness, flavor)", "清淡 (qīng dàn, light, bland)", "淡水 (dàn shuǐ, fresh water)"],
+      "definition-english": "Bland or light in taste; weak in strength or color",
+      "definition-chinese": "咸淡；清淡；淡水",
+      "sentence": "妈妈煮的粥味道很淡,很适合生病的人吃。(The porridge Mom cooked tastes very bland, suitable for someone who is sick.)"
+    },
+    {
+      "character": "滑",
+      "english": "slippery, smooth",
+      "pinyin": "huá",
+      "same-sounding-character": ["华 (splendid)", "划 (row, paddle)", "化 (transform)"],
+      "words": ["滑倒 (huá dǎo, slip and fall)", "光滑 (guāng huá, smooth)", "滑梯 (huá tī, slide)"],
+      "definition-english": "Slippery; smooth; to slide",
+      "definition-chinese": "滑倒；光滑；滑梯",
+      "sentence": "地板很滑,小心不要滑倒。(The floor is very slippery; be careful not to slip and fall.)"
+    },
+    {
+      "character": "灰",
+      "english": "grey, ash, dust",
+      "pinyin": "huī",
+      "same-sounding-character": ["挥 (wave)", "辉 (brightness)", "恢 (restore)"],
+      "words": ["灰色 (huī sè, grey color)", "灰尘 (huī chén, dust)", "灰熊 (huī xióng, grizzly bear)"],
+      "definition-english": "Grey in color; ash; dust",
+      "definition-chinese": "灰色；灰尘；灰熊",
+      "sentence": "灰熊的毛是灰褐色的,力气很大。(The grizzly bear's fur is greyish-brown, and it is very strong.)"
+    },
+    {
+      "character": "散",
+      "english": "scatter, loose",
+      "pinyin": "sàn / sǎn",
+      "same-sounding-character": ["伞 (umbrella)", "洒 (sprinkle)", "三 (three)"],
+      "words": ["散步 (sàn bù, take a walk)", "分散 (fēn sàn, scatter, disperse)", "松散 (sōng sǎn, loose, slack)"],
+      "definition-english": "To scatter or break up; loose and disorderly",
+      "definition-chinese": "散步；分散；松散",
+      "sentence": "熊把玩具弄得到处都是,房间变得很散乱。(The bear scattered the toys everywhere, and the room became very messy.)"
+    },
+    {
+      "character": "耍",
+      "english": "play, fool around",
+      "pinyin": "shuǎ",
+      "same-sounding-character": ["刷 (brush)", "唰 (swishing sound)", "甩 (swing, throw)"],
+      "words": ["玩耍 (wán shuǎ, play)", "耍赖 (shuǎ lài, act unreasonably, whine)", "耍脾气 (shuǎ pí qi, throw a tantrum)"],
+      "definition-english": "To play; to fool around; to act unreasonably",
+      "definition-chinese": "玩耍；耍赖；耍脾气",
+      "sentence": "弟弟输了棋就耍赖,不肯认输。(My younger brother acted unreasonably when he lost the chess game and refused to admit defeat.)"
+    },
+    {
+      "character": "笨",
+      "english": "clumsy, stupid, foolish",
+      "pinyin": "bèn",
+      "same-sounding-character": ["本 (root, origin)", "苯 (benzene)", "奔 (run, rush)"],
+      "words": ["笨重 (bèn zhòng, clumsy and heavy)", "笨拙 (bèn zhuō, clumsy)", "笨蛋 (bèn dàn, fool, idiot)"],
+      "definition-english": "Clumsy; stupid; slow to learn",
+      "definition-chinese": "笨重；笨拙；笨蛋",
+      "sentence": "熊的身体笨重,跑起来一点也不快。(The bear's body is clumsy and heavy; it doesn't run fast at all.)"
+    },
+    {
+      "character": "滚",
+      "english": "roll",
+      "pinyin": "gǔn",
+      "same-sounding-character": ["棍 (stick, rod)", "辊 (roller)", "磙 (stone roller)"],
+      "words": ["打滚 (dǎ gǔn, roll around)", "滚动 (gǔn dòng, roll, rotate)", "滚开 (gǔn kāi, go away, roll away)"],
+      "definition-english": "To roll; to turn over and over",
+      "definition-chinese": "打滚；滚动；滚开",
+      "sentence": "小熊喜欢在草地上打滚。(The little bear likes to roll around on the grass.)"
+    },
+    {
+      "character": "咬",
+      "english": "bite",
+      "pinyin": "yǎo",
+      "same-sounding-character": ["要 (want)", "腰 (waist)", "药 (medicine)"],
+      "words": ["咬人 (yǎo rén, bite people)", "撕咬 (sī yǎo, bite and tear)", "咬伤 (yǎo shāng, bite injury)"],
+      "definition-english": "To bite; to clamp down with teeth",
+      "definition-chinese": "咬人；撕咬；咬伤",
+      "sentence": "小狗生气的时候会咬人,要小心。(The puppy may bite people when it's angry, so be careful.)"
+    },
+    {
+      "character": "够",
+      "english": "enough, be able to",
+      "pinyin": "gòu",
+      "same-sounding-character": ["狗 (dog)", "购 (purchase)", "沟 (ditch)"],
+      "words": ["够了 (gòu le, enough)", "能够 (néng gòu, be able to)", "不够 (bú gòu, not enough)"],
+      "definition-english": "Enough; sufficient; to be able to",
+      "definition-chinese": "够了；能够；不够",
+      "sentence": "我吃饱了,不能再吃了,已经够了。(I'm full and can't eat anymore, it's already enough.)"
+    },
+    {
+      "character": "躺",
+      "english": "lie down",
+      "pinyin": "tǎng",
+      "same-sounding-character": ["倘 (if, supposing)", "淌 (flow, drip)", "烫 (hot, scald)"],
+      "words": ["躺下 (tǎng xià, lie down)", "躺着 (tǎng zhe, lying down)", "平躺 (píng tǎng, lie flat)"],
+      "definition-english": "To lie down",
+      "definition-chinese": "躺下；躺着；平躺",
+      "sentence": "熊吃饱了以后就躺在地上睡觉。(After the bear ate its fill, it lay down on the ground to sleep.)"
+    },
+    {
+      "character": "硬",
+      "english": "hard, solid, firm",
+      "pinyin": "yìng",
+      "same-sounding-character": ["应 (respond)", "映 (reflect)", "影 (shadow)"],
+      "words": ["硬币 (yìng bì, coin)", "坚硬 (jiān yìng, hard, solid)", "生硬 (shēng yìng, stiff, rigid)"],
+      "definition-english": "Hard; solid; firm; stiff",
+      "definition-chinese": "坚硬；硬币；生硬",
+      "sentence": "这块石头非常硬,敲不碎。(This stone is extremely hard; it can't be broken by knocking.)"
+    },
+    {
+      "character": "软",
+      "english": "soft",
+      "pinyin": "ruǎn",
+      "same-sounding-character": ["暖 (warm)", "阮 (surname)", "远 (far)"],
+      "words": ["柔软 (róu ruǎn, soft, supple)", "软弱 (ruǎn ruò, weak, soft)", "软绵绵 (ruǎn mián mián, soft and squishy)"],
+      "definition-english": "Soft; not hard or firm",
+      "definition-chinese": "柔软；软弱；软绵绵",
+      "sentence": "这个枕头摸起来软绵绵的,很舒服。(This pillow feels soft and squishy; it's very comfortable.)"
+    },
+    {
+      "character": "苦",
+      "english": "bitter, hard, suffering",
+      "pinyin": "kǔ",
+      "same-sounding-character": ["库 (warehouse)", "裤 (pants)", "哭 (cry)"],
+      "words": ["苦味 (kǔ wèi, bitter taste)", "吃苦 (chī kǔ, endure hardship)", "苦瓜 (kǔ guā, bitter gourd)"],
+      "definition-english": "Bitter in taste; hard, difficult, or full of suffering",
+      "definition-chinese": "苦味；吃苦；苦瓜",
+      "sentence": "这种药很苦,但是可以治病。(This medicine is very bitter, but it can cure illness.)"
+    },
+    {
+      "character": "嘴",
+      "english": "mouth",
+      "pinyin": "zuǐ",
+      "same-sounding-character": ["最 (most)", "醉 (drunk)", "罪 (crime)"],
+      "words": ["嘴巴 (zuǐ ba, mouth)", "张嘴 (zhāng zuǐ, open mouth)", "多嘴 (duō zuǐ, talk too much, nosy)"],
+      "definition-english": "The mouth",
+      "definition-chinese": "嘴巴；张嘴；多嘴",
+      "sentence": "熊张开大嘴,一口把鱼吞了下去。(The bear opened its big mouth and swallowed the fish in one gulp.)"
+    },
+    {
+      "character": "饿",
+      "english": "hungry",
+      "pinyin": "è",
+      "same-sounding-character": ["恶 (evil)", "鹅 (goose)", "俄 (Russia)"],
+      "words": ["饿了 (è le, hungry)", "饥饿 (jī è, hunger, starvation)", "饿肚子 (è dù zi, have an empty stomach)"],
+      "definition-english": "Hungry; wanting food",
+      "definition-chinese": "饿了；饥饿；饿肚子",
+      "sentence": "我肚子饿了,想吃点东西。(My stomach is hungry, I want to eat something.)"
+    },
+    {
+      "character": "饱",
+      "english": "full, well-fed",
+      "pinyin": "bǎo",
+      "same-sounding-character": ["宝 (treasure)", "保 (protect)", "抱 (hug)"],
+      "words": ["吃饱 (chī bǎo, eat until full)", "饱了 (bǎo le, full, satiated)", "温饱 (wēn bǎo, adequately fed and clothed)"],
+      "definition-english": "Full; having eaten enough",
+      "definition-chinese": "吃饱；饱了；温饱",
+      "sentence": "我已经吃饱了,不能再吃了。(I'm already full and can't eat anymore.)"
+    },
+    {
+      "character": "熊",
+      "english": "bear",
+      "pinyin": "xióng",
+      "same-sounding-character": ["胸 (chest)", "兄 (elder brother)", "凶 (fierce)"],
+      "words": ["熊猫 (xióng māo, panda)", "灰熊 (huī xióng, grizzly bear)", "熊掌 (xióng zhǎng, bear paw)"],
+      "definition-english": "A bear; also used to describe someone clumsy or foolish",
+      "definition-chinese": "熊猫；灰熊；笨熊",
+      "sentence": "那只笨熊懒洋洋地躺在树荫下睡觉。(That clumsy bear lay lazily under the tree shade, sleeping.)"
+    },
+    {
+      "character": "趣",
+      "english": "interesting, interest, fun",
+      "pinyin": "qù",
+      "same-sounding-character": ["去 (go)", "取 (take)", "曲 (tune, song)"],
+      "words": ["有趣 (yǒu qù, interesting)", "兴趣 (xìng qù, interest)", "趣味 (qù wèi, fun, interest)"],
+      "definition-english": "Interesting; fun; a feeling of interest",
+      "definition-chinese": "有趣；兴趣；趣味",
+      "sentence": "我觉得观察小熊的生活习惯很有趣。(I find observing the bear's living habits very interesting.)"
+    }
+  ],
+  "p3-15": [
+    {
+      "character": "偷",
+      "english": "steal, do something secretly",
+      "pinyin": "tōu",
+      "same-sounding-character": ["头 (head)", "投 (throw)", "透 (penetrate, transparent)"],
+      "words": ["偷偷 (tōu tōu, secretly)", "小偷 (xiǎo tōu, thief)", "偷看 (tōu kàn, peek)"],
+      "definition-english": "To take something secretly without permission, or to do something quietly without being noticed.",
+      "definition-chinese": "偷偷地拿走；小偷；偷看",
+      "sentence": "他趁没人的时候,偷偷地拿走了一块饼干。(He secretly took a biscuit when no one was around.)"
+    },
+    {
+      "character": "吓",
+      "english": "scare, frighten",
+      "pinyin": "xià",
+      "same-sounding-character": ["下 (down)", "夏 (summer)", "虾 (shrimp)"],
+      "words": ["吓一跳 (xià yī tiào, be startled)", "吓人 (xià rén, scary)", "惊吓 (jīng xià, fright)"],
+      "definition-english": "To frighten or scare someone.",
+      "definition-chinese": "使害怕；吓一跳；惊吓",
+      "sentence": "那只黑猫突然跳出来,吓了他一跳。(The black cat suddenly jumped out and gave him a fright.)"
+    },
+    {
+      "character": "逃",
+      "english": "flee, escape, run away",
+      "pinyin": "táo",
+      "same-sounding-character": ["桃 (peach)", "陶 (pottery)", "淘 (naughty, wash)"],
+      "words": ["逃跑 (táo pǎo, run away)", "逃走 (táo zǒu, flee)", "逃学 (táo xué, skip school)"],
+      "definition-english": "To run away or escape from danger or trouble.",
+      "definition-chinese": "逃跑；逃走；逃学",
+      "sentence": "小偷看到警察,就马上逃跑了。(The thief ran away as soon as he saw the police.)"
+    },
+    {
+      "character": "痛",
+      "english": "pain, ache",
+      "pinyin": "tòng",
+      "same-sounding-character": ["通 (through)", "桶 (bucket)", "统 (unite, govern)"],
+      "words": ["痛苦 (tòng kǔ, suffering)", "头痛 (tóu tòng, headache)", "疼痛 (téng tòng, pain)"],
+      "definition-english": "A feeling of physical or emotional pain.",
+      "definition-chinese": "疼痛；头痛；痛苦",
+      "sentence": "他不小心摔倒了,膝盖很痛。(He accidentally fell down, and his knee hurt a lot.)"
+    },
+    {
+      "character": "冒",
+      "english": "emerge, risk",
+      "pinyin": "mào",
+      "same-sounding-character": ["帽 (hat)", "貌 (appearance)", "茂 (lush, flourishing)"],
+      "words": ["冒险 (mào xiǎn, take a risk)", "冒出 (mào chū, emerge)", "感冒 (gǎn mào, catch a cold)"],
+      "definition-english": "To emerge or rise up suddenly, or to take a risk despite danger.",
+      "definition-chinese": "冒险；冒出",
+      "sentence": "他决定冒险爬进那个黑黑的洞里。(He decided to take a risk and climb into the dark hole.)"
+    },
+    {
+      "character": "抖",
+      "english": "shake, tremble, shiver",
+      "pinyin": "dǒu",
+      "same-sounding-character": ["斗 (fight)", "豆 (bean)", "陡 (steep)"],
+      "words": ["发抖 (fā dǒu, tremble, shiver)", "抖动 (dǒu dòng, shake)", "颤抖 (chàn dǒu, tremble)"],
+      "definition-english": "To shake or tremble, usually from fear or cold.",
+      "definition-chinese": "发抖；颤抖；抖动",
+      "sentence": "他吓得全身发抖。(He was so scared that his whole body trembled.)"
+    },
+    {
+      "character": "敢",
+      "english": "dare, have courage",
+      "pinyin": "gǎn",
+      "same-sounding-character": ["感 (feel)", "赶 (hurry, catch up)", "干 (do)"],
+      "words": ["勇敢 (yǒng gǎn, brave)", "不敢 (bù gǎn, dare not)", "敢于 (gǎn yú, dare to)"],
+      "definition-english": "To have the courage to do something.",
+      "definition-chinese": "勇敢；不敢；敢于",
+      "sentence": "他很勇敢,敢一个人走进黑暗的教室。(He was very brave and dared to walk into the dark classroom alone.)"
+    },
+    {
+      "character": "钻",
+      "english": "drill, bore into; diamond",
+      "pinyin": "zuān / zuàn",
+      "same-sounding-character": ["转 (turn)", "赚 (earn money)", "尊 (respect)"],
+      "words": ["钻洞 (zuān dòng, drill/bore a hole)", "钻研 (zuān yán, study intensively)", "钻石 (zuàn shí, diamond)"],
+      "definition-english": "To bore or drill into something (zuān), or a diamond/drilling tool (zuàn).",
+      "definition-chinese": "钻洞；钻研；钻石",
+      "sentence": "老鼠在墙角钻了一个洞。(The mouse drilled a hole in the corner of the wall.)"
+    },
+    {
+      "character": "怀",
+      "english": "bosom, cherish, miss",
+      "pinyin": "huái",
+      "same-sounding-character": ["淮 (Huai river)", "徊 (hover, linger)", "坏 (bad)"],
+      "words": ["怀念 (huái niàn, miss, reminisce)", "怀里 (huái lǐ, in one's arms)", "关怀 (guān huái, care, concern)"],
+      "definition-english": "To cherish or miss someone or something, or one's chest/embrace.",
+      "definition-chinese": "怀念；怀里；关怀",
+      "sentence": "奶奶把小猫抱在怀里。(Grandma held the kitten in her arms.)"
+    },
+    {
+      "character": "朱",
+      "english": "surname Zhu; vermillion red",
+      "pinyin": "zhū",
+      "same-sounding-character": ["猪 (pig)", "珠 (pearl, bead)", "蛛 (spider)"],
+      "words": ["朱先生 (zhū xiān shēng, Mr. Zhu)", "姓朱 (xìng zhū, surnamed Zhu)", "朱红 (zhū hóng, vermillion red)"],
+      "definition-english": "A Chinese surname; also a bright red (vermillion) colour.",
+      "definition-chinese": "姓朱；朱红",
+      "sentence": "班里有个同学姓朱,大家都叫他小朱。(There's a classmate in the class surnamed Zhu, and everyone calls him Little Zhu.)"
+    },
+    {
+      "character": "简",
+      "english": "simple, brief",
+      "pinyin": "jiǎn",
+      "same-sounding-character": ["减 (subtract)", "检 (inspect)", "捡 (pick up)"],
+      "words": ["简单 (jiǎn dān, simple)", "简短 (jiǎn duǎn, brief)", "简笔画 (jiǎn bǐ huà, simple line drawing)"],
+      "definition-english": "Simple, easy, or not complicated.",
+      "definition-chinese": "简单；简短",
+      "sentence": "这道数学题很简单,他一下子就做完了。(This math question was very simple, and he finished it right away.)"
+    },
+    {
+      "character": "漫",
+      "english": "comic; wander freely",
+      "pinyin": "màn",
+      "same-sounding-character": ["慢 (slow)", "满 (full)", "蔓 (vine)"],
+      "words": ["漫画 (màn huà, comic)", "漫步 (màn bù, stroll)", "动漫 (dòng màn, anime, comics)"],
+      "definition-english": "Relating to comics or cartoons, or to wander freely without a fixed plan.",
+      "definition-chinese": "漫画；动漫",
+      "sentence": "他最喜欢在课余时间看漫画。(He loves reading comics in his free time.)"
+    },
+    {
+      "character": "忍",
+      "english": "endure, bear, hold back",
+      "pinyin": "rěn",
+      "same-sounding-character": ["认 (recognize)", "任 (task, let)", "韧 (tough, tenacious)"],
+      "words": ["忍不住 (rěn bú zhù, can't help)", "忍耐 (rěn nài, endure)", "忍住 (rěn zhù, hold back)"],
+      "definition-english": "To endure or hold back a feeling or urge.",
+      "definition-chinese": "忍耐；忍不住；忍住",
+      "sentence": "他疼得忍不住叫了出来。(He was in so much pain that he couldn't help crying out.)"
+    },
+    {
+      "character": "哈",
+      "english": "sound of laughter, haha",
+      "pinyin": "hā",
+      "same-sounding-character": ["蛤 (clam)", "喀 (clicking sound)", "呵 (breathe out, ha)"],
+      "words": ["哈哈 (hā hā, sound of laughter)", "哈欠 (hā qian, yawn)", "哈气 (hā qì, breathe out, pant)"],
+      "definition-english": "An exclamation imitating the sound of laughter.",
+      "definition-chinese": "哈哈；笑声",
+      "sentence": "看到滑稽的漫画,大家都哈哈大笑起来。(Seeing the funny comic, everyone burst into laughter.)"
+    },
+    {
+      "character": "哎",
+      "english": "oh, exclamation of surprise or regret",
+      "pinyin": "āi",
+      "same-sounding-character": ["唉 (sigh)", "挨 (next to, suffer)", "埃 (dust)"],
+      "words": ["哎呀 (āi yā, oh no, oops)", "哎哟 (āi yō, ouch, oh dear)", "哎呀呀 (āi yā ya, oh dear, emphatic)"],
+      "definition-english": "An exclamation expressing surprise, regret, or mild pain.",
+      "definition-chinese": "哎呀；哎哟",
+      "sentence": "哎,我忘记带课本了!(Oh no, I forgot to bring my textbook!)"
+    },
+    {
+      "character": "呀",
+      "english": "exclamatory particle, oh",
+      "pinyin": "ya",
+      "same-sounding-character": ["压 (press)", "鸦 (crow)", "芽 (sprout)"],
+      "words": ["哎呀 (āi yā, oh no)", "好呀 (hǎo ya, sure, great)", "是呀 (shì ya, yes indeed)"],
+      "definition-english": "An exclamatory particle expressing surprise, or used at the end of a sentence for emphasis.",
+      "definition-chinese": "哎呀；是呀；好呀",
+      "sentence": "这幅漫画真有趣呀!(This comic is really funny!)"
+    },
+    {
+      "character": "室",
+      "english": "room",
+      "pinyin": "shì",
+      "same-sounding-character": ["是 (is, yes)", "事 (matter, affair)", "试 (try, test)"],
+      "words": ["教室 (jiào shì, classroom)", "室内 (shì nèi, indoor)", "办公室 (bàn gōng shì, office)"],
+      "definition-english": "A room, especially an indoor space used for a specific purpose.",
+      "definition-chinese": "教室；室内；办公室",
+      "sentence": "上课铃响了,同学们都跑回教室。(The bell rang, and the students all ran back to the classroom.)"
+    },
+    {
+      "character": "班",
+      "english": "class, group; shift",
+      "pinyin": "bān",
+      "same-sounding-character": ["斑 (spot, speckle)", "般 (kind, sort)", "搬 (move, carry)"],
+      "words": ["班级 (bān jí, class)", "上班 (shàng bān, go to work)", "同班 (tóng bān, same class)"],
+      "definition-english": "A class or group of students, or one's shift at work.",
+      "definition-chinese": "班级；同班",
+      "sentence": "我们班的同学都喜欢看漫画书。(The students in our class all like reading comic books.)"
+    },
+    {
+      "character": "单",
+      "english": "simple, single, alone",
+      "pinyin": "dān",
+      "same-sounding-character": ["但 (but)", "淡 (bland)", "蛋 (egg)"],
+      "words": ["简单 (jiǎn dān, simple)", "单独 (dān dú, alone)", "单人 (dān rén, single person)"],
+      "definition-english": "Simple, single, or alone; not complicated.",
+      "definition-chinese": "简单；单独",
+      "sentence": "他单独一个人留在教室里做作业。(He stayed alone in the classroom to do his homework.)"
+    },
+    {
+      "character": "挖",
+      "english": "dig, excavate",
+      "pinyin": "wā",
+      "same-sounding-character": ["蛙 (frog)", "娃 (baby, doll)", "洼 (low-lying, hollow)"],
+      "words": ["挖洞 (wā dòng, dig a hole)", "挖土 (wā tǔ, dig earth)", "挖掘 (wā jué, excavate, dig up)"],
+      "definition-english": "To dig or excavate, making a hole in the ground.",
+      "definition-chinese": "挖洞；挖土；挖掘",
+      "sentence": "小狗在花园里挖了一个洞。(The puppy dug a hole in the garden.)"
+    }
+  ],
+  "p3-16": [
+    {
+      "character": "无",
+      "english": "none, without, nothing",
+      "pinyin": "wú",
+      "same-sounding-character": ["五 (five)", "吴 (surname Wu)", "午 (noon)"],
+      "words": ["无穷 (wú qióng, endless, infinite)", "无论 (wú lùn, no matter, regardless)", "无聊 (wú liáo, bored, boring)"],
+      "definition-english": "Not having something; without; none.",
+      "definition-chinese": "没有；无穷；无论",
+      "sentence": "传说里,白蛇的法力无穷,谁都比不过她。(In the legend, the white snake's magical power was boundless, no one could compare.)"
+    },
+    {
+      "character": "终",
+      "english": "end, finally, finish",
+      "pinyin": "zhōng",
+      "same-sounding-character": ["中 (middle)", "钟 (clock, bell)", "忠 (loyal)"],
+      "words": ["终于 (zhōng yú, finally)", "始终 (shǐ zhōng, from beginning to end)", "终点 (zhōng diǎn, finish line, endpoint)"],
+      "definition-english": "The end or final point; at last.",
+      "definition-chinese": "终于；始终；终点",
+      "sentence": "白娘子和许仙终于在西湖边相遇了。(The white snake and Xu Xian finally met by West Lake.)"
+    },
+    {
+      "character": "蛇",
+      "english": "snake",
+      "pinyin": "shé",
+      "same-sounding-character": ["舌 (tongue)", "奢 (extravagant)", "赦 (pardon)"],
+      "words": ["白蛇 (bái shé, white snake)", "毒蛇 (dú shé, poisonous snake)", "蛇皮 (shé pí, snake skin)"],
+      "definition-english": "A snake, a long limbless reptile.",
+      "definition-chinese": "白蛇；毒蛇；蛇皮",
+      "sentence": "传说中,白蛇修炼千年后变成了美丽的姑娘。(According to legend, the white snake, after cultivating for a thousand years, turned into a beautiful young woman.)"
+    },
+    {
+      "character": "途",
+      "english": "way, route, journey",
+      "pinyin": "tú",
+      "same-sounding-character": ["图 (picture, map)", "徒 (apprentice, on foot)", "涂 (smear, paint)"],
+      "words": ["途中 (tú zhōng, on the way)", "路途 (lù tú, journey, distance)", "前途 (qián tú, future prospects)"],
+      "definition-english": "A road or route; the course of a journey.",
+      "definition-chinese": "途中；路途；前途",
+      "sentence": "他们俩在游西湖的途中认识了彼此。(The two of them got to know each other while touring West Lake.)"
+    },
+    {
+      "character": "勤",
+      "english": "diligent, hardworking",
+      "pinyin": "qín",
+      "same-sounding-character": ["琴 (musical instrument)", "秦 (surname Qin)", "芹 (celery)"],
+      "words": ["勤劳 (qín láo, diligent, hardworking)", "勤快 (qín kuài, hardworking)", "勤奋 (qín fèn, diligent, studious)"],
+      "definition-english": "Hardworking; diligent; putting in a lot of effort.",
+      "definition-chinese": "勤劳；勤快；勤奋",
+      "sentence": "白娘子既勤劳又善良,深受大家喜爱。(The white snake was both hardworking and kind, and was deeply loved by everyone.)"
+    },
+    {
+      "character": "俩",
+      "english": "the two of them, a couple",
+      "pinyin": "liǎ",
+      "same-sounding-character": ["两 (two)", "亮 (bright)", "量 (quantity)"],
+      "words": ["他们俩 (tā men liǎ, the two of them)", "咱俩 (zán liǎ, the two of us)", "姐妹俩 (jiě mèi liǎ, the two sisters)"],
+      "definition-english": "A colloquial way of saying 'two people', used after a pronoun or noun.",
+      "definition-chinese": "他们俩；咱俩；姐妹俩",
+      "sentence": "许仙和白娘子俩一见钟情,很快就相爱了。(Xu Xian and the white snake fell in love at first sight and soon fell for each other.)"
+    },
+    {
+      "character": "轮",
+      "english": "wheel, take turns",
+      "pinyin": "lún",
+      "same-sounding-character": ["论 (discuss)", "伦 (human relations)", "抡 (swing)"],
+      "words": ["轮流 (lún liú, take turns)", "车轮 (chē lún, wheel)", "轮船 (lún chuán, steamship)"],
+      "definition-english": "A wheel; to take turns doing something in order.",
+      "definition-chinese": "轮流；车轮；轮船",
+      "sentence": "他们轮流划船,一起游遍了西湖。(They took turns rowing the boat and toured all around West Lake together.)"
+    },
+    {
+      "character": "钓",
+      "english": "to fish (with a hook)",
+      "pinyin": "diào",
+      "same-sounding-character": ["掉 (fall, drop)", "吊 (hang)", "调 (transfer)"],
+      "words": ["钓鱼 (diào yú, fishing)", "钓竿 (diào gān, fishing rod)", "垂钓 (chuí diào, angling)"],
+      "definition-english": "To catch fish using a hook and line.",
+      "definition-chinese": "钓鱼；钓竿；垂钓",
+      "sentence": "老爷爷每天早上都在湖边钓鱼。(Grandpa goes fishing by the lake every morning.)"
+    },
+    {
+      "character": "数",
+      "english": "number, count, several",
+      "pinyin": "shù / shǔ",
+      "same-sounding-character": ["树 (tree)", "束 (bundle)", "属 (belong to)"],
+      "words": ["数学 (shù xué, mathematics)", "数量 (shù liàng, quantity)", "数一数 (shǔ yi shǔ, to count)"],
+      "definition-english": "A number or amount; to count things one by one.",
+      "definition-chinese": "数学；数量；数一数",
+      "sentence": "白蛇传的故事已经流传了数百年。(The story of the Legend of the White Snake has already been passed down for several hundred years.)"
+    },
+    {
+      "character": "却",
+      "english": "but, however",
+      "pinyin": "què",
+      "same-sounding-character": ["确 (indeed, certain)", "缺 (lack)", "雀 (sparrow)"],
+      "words": ["冷却 (lěng què, to cool down)", "却步 (què bù, to hesitate, hold back)", "忘却 (wàng què, to forget)"],
+      "definition-english": "A word meaning 'but' or 'however', showing a turn in meaning.",
+      "definition-chinese": "但是；然而；却步",
+      "sentence": "法海和尚想拆散他们,许仙却始终相信白娘子。(Monk Fahai wanted to separate them, but Xu Xian always trusted the white snake.)"
+    },
+    {
+      "character": "念",
+      "english": "to miss, to read aloud, to study",
+      "pinyin": "niàn",
+      "same-sounding-character": ["年 (year)", "粘 (sticky)", "撵 (drive away)"],
+      "words": ["想念 (xiǎng niàn, to miss someone)", "念书 (niàn shū, to study, read)", "念经 (niàn jīng, to chant scriptures)"],
+      "definition-english": "To miss someone; to read aloud; to study.",
+      "definition-chinese": "想念；念书；念经",
+      "sentence": "法海和尚每天都在寺庙里念经。(Monk Fahai chants scriptures in the temple every day.)"
+    },
+    {
+      "character": "传",
+      "english": "to pass on, to spread, legend",
+      "pinyin": "chuán",
+      "same-sounding-character": ["船 (boat)", "穿 (wear, pass through)", "川 (river)"],
+      "words": ["传说 (chuán shuō, legend)", "流传 (liú chuán, to spread, circulate)", "传统 (chuán tǒng, tradition)"],
+      "definition-english": "To pass something on; to spread; a legend or tale.",
+      "definition-chinese": "传说；流传；传统",
+      "sentence": "白蛇传的故事流传至今,大家都爱听。(The story of the Legend of the White Snake has been passed down to this day, and everyone loves hearing it.)"
+    },
+    {
+      "character": "感",
+      "english": "to feel, to sense",
+      "pinyin": "gǎn",
+      "same-sounding-character": ["敢 (dare)", "赶 (rush, hurry)", "干 (do, dry)"],
+      "words": ["感动 (gǎn dòng, moved, touched)", "感情 (gǎn qíng, feelings)", "感觉 (gǎn jué, to feel, sense)"],
+      "definition-english": "To feel or sense something; an emotion.",
+      "definition-chinese": "感动；感情；感觉",
+      "sentence": "白娘子对许仙的感情十分真挚。(The white snake's feelings for Xu Xian were very sincere.)"
+    },
+    {
+      "character": "抬",
+      "english": "to lift, to raise",
+      "pinyin": "tái",
+      "same-sounding-character": ["台 (platform, stage)", "苔 (moss)", "太 (too, very)"],
+      "words": ["抬头 (tái tóu, raise one's head)", "抬起 (tái qǐ, lift up)", "抬高 (tái gāo, raise, elevate)"],
+      "definition-english": "To lift or raise something up.",
+      "definition-chinese": "抬头；抬起；抬高",
+      "sentence": "她慢慢抬起头,看见了许仙温柔的笑容。(She slowly raised her head and saw Xu Xian's gentle smile.)"
+    },
+    {
+      "character": "于",
+      "english": "at, in, than (formal)",
+      "pinyin": "yú",
+      "same-sounding-character": ["鱼 (fish)", "雨 (rain)", "余 (remaining)"],
+      "words": ["终于 (zhōng yú, finally)", "于是 (yú shì, thereupon, so)", "关于 (guān yú, about, regarding)"],
+      "definition-english": "A formal word meaning 'at' or 'in', often used to link ideas together.",
+      "definition-chinese": "终于；于是；关于",
+      "sentence": "白娘子于西湖边等了许仙很久。(The white snake waited for Xu Xian by West Lake for a long time.)"
+    },
+    {
+      "character": "舞",
+      "english": "to dance, dance",
+      "pinyin": "wǔ",
+      "same-sounding-character": ["五 (five)", "武 (martial)", "午 (noon)"],
+      "words": ["跳舞 (tiào wǔ, to dance)", "舞蹈 (wǔ dǎo, dance)", "舞台 (wǔ tái, stage)"],
+      "definition-english": "To dance; a dance performance.",
+      "definition-chinese": "跳舞；舞蹈；舞台",
+      "sentence": "节日里,村民们在广场上快乐地跳舞。(During the festival, the villagers danced happily in the square.)"
+    },
+    {
+      "character": "泡",
+      "english": "bubble, to soak",
+      "pinyin": "pào",
+      "same-sounding-character": ["炮 (cannon)", "抛 (throw)", "跑 (run)"],
+      "words": ["泡泡 (pào pao, bubble)", "泡水 (pào shuǐ, soak in water)", "泡茶 (pào chá, brew tea)"],
+      "definition-english": "A bubble; to soak or steep something in liquid.",
+      "definition-chinese": "泡泡；泡水；泡茶",
+      "sentence": "洪水泡了金山寺,法海和白娘子展开了一场大战。(The flood soaked Jinshan Temple, and Fahai and the white snake fought a great battle.)"
+    },
+    {
+      "character": "结",
+      "english": "to tie, knot, result",
+      "pinyin": "jié",
+      "same-sounding-character": ["姐 (older sister)", "街 (street)", "洁 (clean)"],
+      "words": ["打结 (dǎ jié, tie a knot)", "结果 (jié guǒ, result)", "结婚 (jié hūn, get married)"],
+      "definition-english": "To tie a knot; an outcome or result.",
+      "definition-chinese": "打结；结果；结婚",
+      "sentence": "许仙和白娘子结婚后,一起开了一家药店。(After Xu Xian and the white snake got married, they opened a medicine shop together.)"
+    },
+    {
+      "character": "圈",
+      "english": "circle, ring",
+      "pinyin": "quān",
+      "same-sounding-character": ["全 (whole, complete)", "权 (power, right)", "拳 (fist)"],
+      "words": ["圆圈 (yuán quān, circle)", "圈子 (quān zi, circle, social group)", "圈起来 (quān qǐ lái, to circle, mark)"],
+      "definition-english": "A round shape like a ring; to mark something with a circle.",
+      "definition-chinese": "圆圈；圈子；圈起来",
+      "sentence": "法海把白娘子困在雷峰塔下的法术圈里。(Fahai trapped the white snake in a magic circle beneath Leifeng Pagoda.)"
+    },
+    {
+      "character": "识",
+      "english": "to recognize, to know",
+      "pinyin": "shí",
+      "same-sounding-character": ["十 (ten)", "时 (time)", "石 (stone)"],
+      "words": ["认识 (rèn shi, to know, recognize)", "知识 (zhī shi, knowledge)", "常识 (cháng shí, common sense)"],
+      "definition-english": "To recognize or be familiar with someone or something; knowledge.",
+      "definition-chinese": "认识；知识；常识",
+      "sentence": "小青最先认识了许仙,便把他介绍给白娘子。(Xiaoqing was the first to get to know Xu Xian, so she introduced him to the white snake.)"
+    },
+    {
+      "character": "代",
+      "english": "to replace, generation",
+      "pinyin": "dài",
+      "same-sounding-character": ["待 (wait, treat)", "带 (bring, belt)", "袋 (bag)"],
+      "words": ["代替 (dài tì, to replace)", "现代 (xiàn dài, modern)", "古代 (gǔ dài, ancient times)"],
+      "definition-english": "To take the place of something; a generation or era.",
+      "definition-chinese": "代替；现代；古代",
+      "sentence": "古代流传下来的传说,现代人依然很喜欢。(Legends passed down from ancient times are still loved by people today.)"
+    },
+    {
+      "character": "替",
+      "english": "to substitute, to replace",
+      "pinyin": "tì",
+      "same-sounding-character": ["剃 (shave)", "屉 (drawer)", "涕 (tears, mucus)"],
+      "words": ["代替 (dài tì, to replace)", "替换 (tì huàn, to substitute)", "替身 (tì shēn, stand-in, substitute)"],
+      "definition-english": "To take the place of someone or something; to substitute.",
+      "definition-chinese": "代替；替换；替身",
+      "sentence": "小青愿意替白娘子挡下这场劫难。(Xiaoqing was willing to take this disaster in the white snake's place.)"
+    },
+    {
+      "character": "低",
+      "english": "low",
+      "pinyin": "dī",
+      "same-sounding-character": ["滴 (drip)", "堤 (embankment)", "提 (carry, mention)"],
+      "words": ["低头 (dī tóu, lower one's head)", "高低 (gāo dī, high and low)", "降低 (jiàng dī, lower, reduce)"],
+      "definition-english": "Low in position or level; to lower something.",
+      "definition-chinese": "低头；高低；降低",
+      "sentence": "白娘子低着头,静静地等待许仙的原谅。(The white snake lowered her head, quietly waiting for Xu Xian's forgiveness.)"
+    }
+  ],
+  "p3-17": [
+    {
+      "character": "农",
+      "english": "farming, agriculture",
+      "pinyin": "nóng",
+      "same-sounding-character": ["浓 (thick/concentrated)", "脓 (pus)", "弄 (do/make)"],
+      "words": ["农夫 (nóng fū, farmer)", "农民 (nóng mín, farmer/peasant)", "农田 (nóng tián, farmland)"],
+      "definition-english": "A person who works the land; relating to farming",
+      "definition-chinese": "农夫；农民；农田",
+      "sentence": "农夫每天在田里辛勤地工作。(The farmer works hard in the fields every day.)"
+    },
+    {
+      "character": "夫",
+      "english": "man, husband, laborer",
+      "pinyin": "fū",
+      "same-sounding-character": ["肤 (skin)", "孵 (hatch)", "服 (clothes/serve)"],
+      "words": ["农夫 (nóng fū, farmer)", "丈夫 (zhàng fu, husband)", "夫妻 (fū qī, husband and wife)"],
+      "definition-english": "A man; a husband; a laborer",
+      "definition-chinese": "农夫；丈夫；夫妻",
+      "sentence": "妈妈的丈夫是我的爸爸。(Mom's husband is my dad.)"
+    },
+    {
+      "character": "劳",
+      "english": "labor, toil, work",
+      "pinyin": "láo",
+      "same-sounding-character": ["牢 (prison/sturdy)", "唠 (chat)", "老 (old)"],
+      "words": ["劳动 (láo dòng, labor/work)", "辛劳 (xīn láo, toil)", "劳累 (láo lèi, tired from work)"],
+      "definition-english": "Work; labor; toil",
+      "definition-chinese": "劳动；辛劳；劳累",
+      "sentence": "农夫每天辛勤劳动,从不偷懒。(The farmer labors diligently every day and never slacks off.)"
+    },
+    {
+      "character": "渔",
+      "english": "fishing",
+      "pinyin": "yú",
+      "same-sounding-character": ["鱼 (fish)", "于 (at/in)", "娱 (entertainment)"],
+      "words": ["渔夫 (yú fū, fisherman)", "打渔 (dǎ yú, go fishing)", "渔船 (yú chuán, fishing boat)"],
+      "definition-english": "Relating to fishing",
+      "definition-chinese": "渔夫；打渔；渔船",
+      "sentence": "渔夫每天划船出海打渔。(The fisherman rows his boat out to sea to fish every day.)"
+    },
+    {
+      "character": "仙",
+      "english": "immortal, fairy",
+      "pinyin": "xiān",
+      "same-sounding-character": ["先 (first)", "鲜 (fresh)", "掀 (lift/flip)"],
+      "words": ["神仙 (shén xiān, immortal/deity)", "仙女 (xiān nǚ, fairy)", "仙人 (xiān rén, immortal being)"],
+      "definition-english": "An immortal being or deity with magical powers",
+      "definition-chinese": "神仙；仙女；仙人",
+      "sentence": "故事里的神仙帮助了善良的渔夫。(The immortal in the story helped the kind fisherman.)"
+    },
+    {
+      "character": "捞",
+      "english": "scoop, fish out of water",
+      "pinyin": "lāo",
+      "same-sounding-character": ["劳 (work)", "牢 (prison)", "老 (old)"],
+      "words": ["捞起 (lāo qǐ, scoop up)", "打捞 (dǎ lāo, salvage/fish out)", "捞鱼 (lāo yú, scoop up fish)"],
+      "definition-english": "To scoop or fish something out of water",
+      "definition-chinese": "捞起；打捞；捞鱼",
+      "sentence": "渔夫从河里捞起了一条金鱼。(The fisherman scooped a goldfish out of the river.)"
+    },
+    {
+      "character": "精",
+      "english": "spirit, essence, energetic",
+      "pinyin": "jīng",
+      "same-sounding-character": ["京 (capital)", "惊 (startle)", "经 (pass through/classic)"],
+      "words": ["精灵 (jīng líng, spirit/elf)", "精神 (jīng shén, spirit/energy)", "精彩 (jīng cǎi, wonderful/exciting)"],
+      "definition-english": "Spirit; essence; energetic and lively",
+      "definition-chinese": "精灵；精神；精彩",
+      "sentence": "河里住着一个神奇的水精灵。(A magical water spirit lived in the river.)"
+    },
+    {
+      "character": "铁",
+      "english": "iron",
+      "pinyin": "tiě",
+      "same-sounding-character": ["贴 (stick/paste)", "帖 (note/invitation)", "跌 (fall down)"],
+      "words": ["铁棒 (tiě bàng, iron rod)", "铁块 (tiě kuài, iron block)", "生铁 (shēng tiě, pig iron)"],
+      "definition-english": "Iron, a hard grey metal",
+      "definition-chinese": "铁棒；铁块；生铁",
+      "sentence": "那根铁棒掉进了河里。(That iron rod fell into the river.)"
+    },
+    {
+      "character": "银",
+      "english": "silver",
+      "pinyin": "yín",
+      "same-sounding-character": ["因 (because)", "阴 (overcast)", "引 (lead/guide)"],
+      "words": ["银子 (yín zi, silver)", "银行 (yín háng, bank)", "银色 (yín sè, silver color)"],
+      "definition-english": "Silver; relating to money or banking",
+      "definition-chinese": "银子；银行；银色",
+      "sentence": "铁棒碰到水后竟然变成了银子。(The iron rod, upon touching the water, actually turned into silver.)"
+    },
+    {
+      "character": "牌",
+      "english": "sign, plate, brand",
+      "pinyin": "pái",
+      "same-sounding-character": ["排 (line up)", "派 (send/faction)", "拍 (clap/pat)"],
+      "words": ["牌子 (pái zi, sign/brand)", "招牌 (zhāo pái, signboard)", "门牌 (mén pái, house number plate)"],
+      "definition-english": "A sign, plate, or brand",
+      "definition-chinese": "牌子；招牌；门牌",
+      "sentence": "店门口挂着一块写着字的牌子。(A sign with writing on it hung at the shop entrance.)"
+    },
+    {
+      "character": "签",
+      "english": "sign one's name, label",
+      "pinyin": "qiān",
+      "same-sounding-character": ["千 (thousand)", "铅 (lead metal)", "牵 (lead/pull)"],
+      "words": ["签名 (qiān míng, sign one's name)", "签字 (qiān zì, sign)", "抽签 (chōu qiān, draw lots)"],
+      "definition-english": "To sign one's name; a label or ticket",
+      "definition-chinese": "签名；签字；抽签",
+      "sentence": "渔夫在纸上签了自己的名字。(The fisherman signed his own name on the paper.)"
+    },
+    {
+      "character": "万",
+      "english": "ten thousand, very many",
+      "pinyin": "wàn",
+      "same-sounding-character": ["腕 (wrist)", "晚 (evening/late)", "玩 (play)"],
+      "words": ["一万 (yī wàn, ten thousand)", "万一 (wàn yī, in case)", "千万 (qiān wàn, absolutely/ten million)"],
+      "definition-english": "Ten thousand; a very large number",
+      "definition-chinese": "一万；万一；千万",
+      "sentence": "这批银子的数量超过了一万两。(The amount of silver exceeded ten thousand taels.)"
+    },
+    {
+      "character": "千",
+      "english": "thousand",
+      "pinyin": "qiān",
+      "same-sounding-character": ["签 (sign)", "牵 (pull)", "铅 (lead metal)"],
+      "words": ["一千 (yī qiān, one thousand)", "千万 (qiān wàn, absolutely/must)", "成千上万 (chéng qiān shàng wàn, thousands upon thousands)"],
+      "definition-english": "Thousand; a large number",
+      "definition-chinese": "一千；千万；成千上万",
+      "sentence": "妈妈说,千万不要靠近河边。(Mom said we must never go near the riverbank.)"
+    },
+    {
+      "character": "减",
+      "english": "subtract, reduce",
+      "pinyin": "jiǎn",
+      "same-sounding-character": ["剪 (cut/scissors)", "简 (simple)", "捡 (pick up)"],
+      "words": ["减少 (jiǎn shǎo, reduce)", "加减 (jiā jiǎn, addition and subtraction)", "减法 (jiǎn fǎ, subtraction)"],
+      "definition-english": "To subtract; to reduce or decrease",
+      "definition-chinese": "减少；加减；减法",
+      "sentence": "老师教我们做加减法算术题。(The teacher taught us to do addition and subtraction math problems.)"
+    },
+    {
+      "character": "算",
+      "english": "calculate, plan",
+      "pinyin": "suàn",
+      "same-sounding-character": ["蒜 (garlic)", "酸 (sour)", "涮 (rinse/hot pot)"],
+      "words": ["计算 (jì suàn, calculate)", "打算 (dǎ suàn, plan/intend)", "算术 (suàn shù, arithmetic)"],
+      "definition-english": "To calculate; to plan or intend",
+      "definition-chinese": "计算；打算；算术",
+      "sentence": "渔夫打算把捡到的银子分给大家。(The fisherman planned to share the silver he found with everyone.)"
+    },
+    {
+      "character": "检",
+      "english": "check, inspect",
+      "pinyin": "jiǎn",
+      "same-sounding-character": ["减 (subtract)", "剪 (scissors)", "捡 (pick up)"],
+      "words": ["检查 (jiǎn chá, check/inspect)", "体检 (tǐ jiǎn, physical checkup)", "安检 (ān jiǎn, security check)"],
+      "definition-english": "To check, inspect, or examine",
+      "definition-chinese": "检查；体检；安检",
+      "sentence": "神仙检查了渔夫是不是诚实的人。(The immortal checked whether the fisherman was an honest person.)"
+    },
+    {
+      "character": "查",
+      "english": "check, investigate",
+      "pinyin": "chá",
+      "same-sounding-character": ["茶 (tea)", "察 (observe/inspect)", "插 (insert)"],
+      "words": ["检查 (jiǎn chá, check/inspect)", "调查 (diào chá, investigate)", "查看 (chá kàn, look into/check)"],
+      "definition-english": "To check, examine, or investigate",
+      "definition-chinese": "检查；调查；查看",
+      "sentence": "神仙仔细查看渔夫捞起来的东西。(The immortal carefully examined what the fisherman had scooped up.)"
+    },
+    {
+      "character": "摘",
+      "english": "pick, take off",
+      "pinyin": "zhāi",
+      "same-sounding-character": ["斋 (vegetarian/fast)", "债 (debt)", "窄 (narrow)"],
+      "words": ["摘下 (zhāi xià, take off/pick)", "摘花 (zhāi huā, pick flowers)", "摘果子 (zhāi guǒ zi, pick fruit)"],
+      "definition-english": "To pick or take off, such as fruit or glasses",
+      "definition-chinese": "摘下；摘花；摘果子",
+      "sentence": "渔夫弯下腰摘下了河边的野花。(The fisherman bent down and picked wildflowers by the riverbank.)"
+    },
+    {
+      "character": "失",
+      "english": "lose",
+      "pinyin": "shī",
+      "same-sounding-character": ["师 (teacher)", "诗 (poem)", "湿 (wet)"],
+      "words": ["失去 (shī qù, lose)", "消失 (xiāo shī, disappear)", "失望 (shī wàng, disappointed)"],
+      "definition-english": "To lose; to be missing",
+      "definition-chinese": "失去；消失；失望",
+      "sentence": "他一不小心,失去了心爱的鱼竿。(He carelessly lost his beloved fishing rod.)"
+    },
+    {
+      "character": "金",
+      "english": "gold",
+      "pinyin": "jīn",
+      "same-sounding-character": ["今 (now/today)", "巾 (cloth/towel)", "斤 (catty, unit of weight)"],
+      "words": ["金子 (jīn zi, gold)", "金鱼 (jīn yú, goldfish)", "金色 (jīn sè, golden color)"],
+      "definition-english": "Gold; golden in color",
+      "definition-chinese": "金子；金鱼；金色",
+      "sentence": "渔夫捞到了一条美丽的金鱼。(The fisherman caught a beautiful goldfish.)"
+    },
+    {
+      "character": "试",
+      "english": "try, test",
+      "pinyin": "shì",
+      "same-sounding-character": ["是 (is)", "事 (matter)", "式 (style/type)"],
+      "words": ["试试 (shì shi, try)", "考试 (kǎo shì, exam)", "试验 (shì yàn, experiment/test)"],
+      "definition-english": "To try or attempt; a test",
+      "definition-chinese": "试试；考试；试验",
+      "sentence": "渔夫决定试一试,把铁棒放进水里。(The fisherman decided to give it a try and put the iron rod into the water.)"
+    },
+    {
+      "character": "消",
+      "english": "disappear, vanish",
+      "pinyin": "xiāo",
+      "same-sounding-character": ["销 (sell/melt)", "宵 (night)", "小 (small)"],
+      "words": ["消失 (xiāo shī, disappear)", "消息 (xiāo xi, news)", "取消 (qǔ xiāo, cancel)"],
+      "definition-english": "To disappear or vanish",
+      "definition-chinese": "消失；消息；取消",
+      "sentence": "神仙说完话就突然消失了。(The immortal vanished suddenly after finishing speaking.)"
+    },
+    {
+      "character": "等",
+      "english": "wait",
+      "pinyin": "děng",
+      "same-sounding-character": ["灯 (lamp)", "登 (ascend/climb)", "凳 (stool)"],
+      "words": ["等待 (děng dài, wait)", "等等 (děng děng, etc./wait a moment)", "等候 (děng hòu, wait for)"],
+      "definition-english": "To wait; to await",
+      "definition-chinese": "等待；等等；等候",
+      "sentence": "渔夫每天在河边耐心地等待。(The fisherman waited patiently by the riverbank every day.)"
+    },
+    {
+      "character": "案",
+      "english": "case, plan, pattern",
+      "pinyin": "àn",
+      "same-sounding-character": ["岸 (shore/bank)", "暗 (dark)", "按 (press)"],
+      "words": ["案件 (àn jiàn, court case)", "图案 (tú àn, pattern/design)", "答案 (dá àn, answer)"],
+      "definition-english": "A case (legal); a plan; a pattern",
+      "definition-chinese": "案件；图案；答案",
+      "sentence": "法官正在调查一起奇怪的案件。(The judge was investigating a strange court case.)"
+    },
+    {
+      "character": "刻",
+      "english": "moment, carve",
+      "pinyin": "kè",
+      "same-sounding-character": ["客 (guest)", "课 (lesson)", "克 (gram/overcome)"],
+      "words": ["一刻 (yī kè, a moment)", "刻苦 (kè kǔ, hardworking/diligent)", "立刻 (lì kè, immediately)"],
+      "definition-english": "A moment; to carve; diligent",
+      "definition-chinese": "一刻；刻苦；立刻",
+      "sentence": "渔夫刻苦劳动,从不休息片刻。(The fisherman worked diligently and never rested for even a moment.)"
+    },
+    {
+      "character": "感",
+      "english": "feel, be moved",
+      "pinyin": "gǎn",
+      "same-sounding-character": ["赶 (hurry)", "敢 (dare)", "杆 (pole)"],
+      "words": ["感觉 (gǎn jué, feel)", "感动 (gǎn dòng, be moved/touched)", "感谢 (gǎn xiè, thank)"],
+      "definition-english": "To feel; to be moved or touched",
+      "definition-chinese": "感觉；感动；感谢",
+      "sentence": "渔夫的诚实感动了神仙。(The fisherman's honesty touched the immortal.)"
+    }
   ]
 }
