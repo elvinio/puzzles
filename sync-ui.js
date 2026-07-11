@@ -51,6 +51,11 @@
           '<button class="pz-close" aria-label="Close" data-act="close">&times;</button>' +
         '</div>' +
 
+        '<div class="pz-sync-section">' +
+          '<div class="pz-sync-label">Switch avatar</div>' +
+          '<div class="pz-avatar-strip" id="pz-avatar-strip"></div>' +
+        '</div>' +
+
         '<div class="pz-sync-row">' +
           '<button class="pz-btn pz-btn-ghost" data-act="avatars">Edit avatars</button>' +
         '</div>' +
@@ -68,14 +73,42 @@
 
     overlay.addEventListener('click', function (e) {
       if (e.target === overlay) close();
-      var act = e.target.getAttribute && e.target.getAttribute('data-act');
-      if (act) handleAct(act, e.target);
+      var actEl = e.target.closest && e.target.closest('[data-act]');
+      if (actEl) handleAct(actEl.getAttribute('data-act'), actEl);
     });
     document.addEventListener('keydown', onKey);
     document.body.appendChild(overlay);
 
+    renderAvatarStrip();
     renderDriveArea();
     renderSettings();
+  }
+
+  function renderAvatarStrip() {
+    var strip = overlay && overlay.querySelector('#pz-avatar-strip');
+    if (!strip) return;
+    var list = (window.__avatarLoadAvatars && window.__avatarLoadAvatars()) || [];
+    var activeId = window.__avatarGetActiveId && window.__avatarGetActiveId();
+
+    strip.innerHTML = list.map(function (a) {
+      var isActive = a.id === activeId;
+      var svg = window.__avatarRender ? window.__avatarRender(a, '40') : '';
+      return '<button class="pz-avatar-chip' + (isActive ? ' is-active' : '') + '" ' +
+        'data-act="switch-avatar" data-id="' + a.id + '" ' +
+        'aria-label="Switch to ' + esc(a.nickname || 'avatar') + '" ' +
+        (isActive ? 'aria-current="true"' : '') + '>' + svg + '</button>';
+    }).join('') +
+      '<a class="pz-avatar-chip pz-avatar-chip-add" href="avatar.html" aria-label="Create new avatar">+</a>';
+  }
+
+  function updateHead() {
+    var head = overlay && overlay.querySelector('.pz-sync-head');
+    if (!head) return;
+    var av = (window.__avatarGetActive && window.__avatarGetActive()) || null;
+    var svgHolder = head.querySelector('div');
+    var nameHolder = head.querySelector('.pz-sync-name');
+    if (svgHolder) svgHolder.innerHTML = (av && window.__avatarRender) ? window.__avatarRender(av, '48') : '';
+    if (nameHolder) nameHolder.textContent = av ? (av.nickname || 'Player') : 'No avatar';
   }
 
   function statusEl() { return overlay && overlay.querySelector('#pz-status'); }
@@ -129,6 +162,15 @@
     var D = Drive();
     if (act === 'close')   return close();
     if (act === 'avatars') { window.location.href = 'avatar.html'; return; }
+
+    if (act === 'switch-avatar') {
+      var id = el.getAttribute('data-id');
+      if (!id) return;
+      if (window.__avatarSetActiveId) window.__avatarSetActiveId(id);
+      updateHead();
+      renderAvatarStrip();
+      return;
+    }
 
     if (act === 'save-id') {
       var input = overlay.querySelector('#pz-clientid');

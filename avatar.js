@@ -41,6 +41,11 @@
   window.__avatarGetActiveId = getActiveId;
   window.__avatarGetActive   = getActiveAvatar;
 
+  window.__avatarSetActiveId = function (id) {
+    try { localStorage.setItem('puzzles-avatar-active', id); } catch (e) {}
+    updateBadge();
+  };
+
   // ── Migration from old single-avatar schema ───────────────────────────────
 
   (function migrate() {
@@ -275,6 +280,21 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+
+  function updateBadge() {
+    try {
+      var badge = document.getElementById('avatar-badge');
+      if (!badge) return;
+      var avatar = getActiveAvatar();
+      if (!avatar) return;
+      var svgHolder = document.getElementById('avatar-badge-svg');
+      var nameHolder = document.getElementById('avatar-badge-name');
+      if (svgHolder) svgHolder.innerHTML = renderAvatarSVG(avatar, '36');
+      if (nameHolder) nameHolder.textContent = avatar.nickname || '';
+    } catch (e) {}
+  }
+
+  window.__avatarUpdateBadge = updateBadge;
 
   function init() {
     try {
