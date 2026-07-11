@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#13111c">
+  <meta name="theme-color" content="#f5f2fb">
   <link rel="icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="styles.css">
@@ -17,18 +17,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #13111c;
-      --surface: #1c1730;
-      --brd:     #4c1d95;
+      --bg:      #f5f2fb;
+      --surface: #ffffff;
+      --brd:     #d7c9f2;
       --p:       #6d28d9;
       --p-lt:    #7c3aed;
-      --p-xl:    #a78bfa;
-      --p-text:  #e2d9f3;
-      --muted:   #7c6fa0;
+      --p-xl:    #5b21b6;
+      --p-text:  #241b35;
+      --muted:   #756a91;
       --ok:      #16a34a;
-      --ok-lt:   #22c55e;
+      --ok-lt:   #15803d;
       --err:     #dc2626;
-      --err-lt:  #ef4444;
+      --err-lt:  #b91c1c;
     }
 
     body {
@@ -161,7 +161,7 @@
       transition: border-color 0.15s, background 0.15s, transform 0.1s;
       touch-action: manipulation;
     }
-    .char-card:hover { border-color: var(--p-lt); background: #241a45; }
+    .char-card:hover { border-color: var(--p-lt); }
     .char-card:active { transform: scale(0.97); }
 
     .char-card-big {
