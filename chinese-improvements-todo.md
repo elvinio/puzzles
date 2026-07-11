@@ -46,9 +46,8 @@ the char modal, tappable modal chips, and per-lesson mastery bars.
 
 - [x] **Per-skill scheduling split**: shipped — records carry `rec.skills` with a full
   interval/ease/due/lastTested schedule per group (recognition / writing / speaking); queues,
-  mastery, and stats are group-aware, the flat fields mirror the last-graded skill for old
-  devices, and `loadProgress` migrates on read (idempotent, sync-safe). `mergeSrRecord` in
-  sync-merge.js merges schedules per group.
+  mastery, and stats are group-aware, and `loadProgress` migrates legacy flat records on read
+  (idempotent). `mergeSrRecord` in sync-merge.js merges schedules per group.
 - [x] **Deduplicate characters across lessons**: shipped — records are keyed by character alone;
   legacy `p*-N-char` keys fold on read via `mergeSrRecord`. Known trade-off: polyphones
   (为 wèi/wéi) share one schedule.

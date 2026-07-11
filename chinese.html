@@ -2471,14 +2471,25 @@
       // next snapshot. Records last tested before the reset day are dropped
       // here and in mergeSrMap. (Records from the reset day itself survive a
       // cross-device merge — acceptable soft edge.)
-      const resetDay = String((map._resetAt && map._resetAt.lastTested) || '').slice(0, 10);
+      const resetDay = String(map._resetAt || '').slice(0, 10);
       const out = {};
       for (const [key, rec] of Object.entries(map)) {
         if (key.charAt(0) === '_') { out[key] = rec; continue; }  // meta keys (e.g. reset tombstone)
         if (!rec || typeof rec !== 'object') { changed = true; continue; }
         if (resetDay && rec.lastTested && String(rec.lastTested).slice(0, 10) < resetDay) { changed = true; continue; }
         let r = rec;
-        if (!r.skills) { r = { ...r, skills: seedSkills(r) }; changed = true; }
+        // Records once kept a single flat schedule; seed every group from it,
+        // then drop the flat fields.
+        if (!r.skills || 'interval' in r) {
+          r = { ...r };
+          if (!r.skills) {
+            const sched = { interval: r.interval || 1, easeFactor: r.easeFactor || 2.5, dueDate: r.dueDate || todayStr(), lastTested: r.lastTested || null };
+            r.skills = {};
+            SKILL_GROUPS.forEach(g => r.skills[g] = { ...sched });
+          }
+          delete r.interval; delete r.easeFactor; delete r.dueDate;
+          changed = true;
+        }
         const legacy = key.match(LEGACY_KEY_RE);
         const newKey = legacy ? legacy[1] : key;
         if (newKey !== key) changed = true;
@@ -2491,12 +2502,10 @@
     }
 
     // Erase an avatar's SRS history, leaving a tombstone that propagates the
-    // reset through Drive sync. The tombstone is shaped like a record on
-    // purpose: devices running older merge code treat it as one and keep the
-    // newest lastTested, so the reset time survives round-trips through
-    // un-updated devices instead of being corrupted.
+    // reset through Drive sync (a bare wipe would be resurrected by the merge's
+    // key union).
     function resetProgress(avatarId) {
-      saveProgress(avatarId, { _resetAt: { lastTested: new Date().toISOString() } });
+      saveProgress(avatarId, { _resetAt: new Date().toISOString() });
       if (S.avatarId === avatarId) S.progress = loadProgress(avatarId);
     }
 
@@ -2523,30 +2532,27 @@
     }
 
     // Each record carries one schedule per skill group (rec.skills) so
-    // recognition success can't postpone writing practice. The flat top-level
-    // interval/easeFactor/dueDate/lastTested mirror the last-graded skill —
-    // devices running older code keep working on them, and the sync merge's
-    // newest-lastTested pick stays meaningful.
+    // recognition success can't postpone writing practice. The top-level
+    // lastTested tracks the most recent practice in any group (used by the
+    // sync merge and the reset tombstone).
     const SKILL_GROUPS = ['recognition', 'writing', 'speaking'];
 
-    function seedSkill(rec) {
-      return { interval: rec.interval, easeFactor: rec.easeFactor, dueDate: rec.dueDate, lastTested: rec.lastTested };
+    function freshSkill() {
+      return { interval: 1, easeFactor: 2.5, dueDate: todayStr(), lastTested: null };
     }
 
-    function seedSkills(rec) {
+    function freshSkills() {
       const s = {};
-      SKILL_GROUPS.forEach(g => s[g] = seedSkill(rec));
+      SKILL_GROUPS.forEach(g => s[g] = freshSkill());
       return s;
     }
 
     function getSkill(rec, group) {
-      return (rec.skills && rec.skills[group]) || rec;
+      return rec.skills[group];
     }
 
     function freshRecord() {
-      const rec = { correct: 0, wrong: 0, totalTimeMs: 0, attempts: 0, interval: 1, easeFactor: 2.5, dueDate: todayStr(), lastTested: null };
-      rec.skills = seedSkills(rec);
-      return rec;
+      return { correct: 0, wrong: 0, totalTimeMs: 0, attempts: 0, lastTested: null, skills: freshSkills() };
     }
 
     function todayStr() { return new Date().toISOString().slice(0, 10); }
@@ -2617,7 +2623,7 @@
     function updateRecord(rec, correct, timeMs, grade = 'good', modeGroup = null) {
       rec = { ...rec };
       const group = modeGroup || 'recognition';
-      rec.skills = { ...(rec.skills || seedSkills(rec)) };
+      rec.skills = { ...rec.skills };
       rec.attempts++;
       rec.lastTested = todayStr();
       rec.totalTimeMs += timeMs;
@@ -2625,16 +2631,11 @@
       rec.byMode = { ...(rec.byMode || {}) };
       const m = rec.byMode[group] = { ...(rec.byMode[group] || { correct: 0, wrong: 0 }) };
       correct ? m.correct++ : m.wrong++;
-      // `timed` counts only attempts that contributed time — legacy byMode
-      // counts predate timeMs, so correct+wrong would understate averages.
+      // `timed` counts only attempts that contributed time — byMode counts
+      // recorded before timeMs existed would understate averages otherwise.
       m.timeMs = (m.timeMs || 0) + timeMs;
       m.timed = (m.timed || 0) + 1;
-      const sched = gradeSched(rec.skills[group] || seedSkill(rec), correct, grade);
-      rec.skills[group] = sched;
-      // Flat mirror = last-graded skill (kept for old devices + sync merge)
-      rec.interval = sched.interval;
-      rec.easeFactor = sched.easeFactor;
-      rec.dueDate = sched.dueDate;
+      rec.skills[group] = gradeSched(rec.skills[group], correct, grade);
       return rec;
     }
 
@@ -3221,8 +3222,8 @@
         const m = rec.byMode && rec.byMode[g];
         return m && (m.correct + m.wrong) > 0;
       });
-      if (!attempted.length || !rec.skills) return rec.interval;
-      return Math.min(...attempted.map(g => getSkill(rec, g).interval));
+      const groups = attempted.length ? attempted : SKILL_GROUPS;
+      return Math.min(...groups.map(g => getSkill(rec, g).interval));
     }
 
     function lessonMastery(level, lessonNum) {
@@ -4404,7 +4405,9 @@
     }
 
     // Recognition-only average when per-mode time exists — the overall average
-    // mixes 3s MCQ taps with 40s writing sessions and means little.
+    // mixes 3s MCQ taps with 40s writing sessions and means little. Records
+    // graded only before per-mode time was tracked fall back to the lifetime
+    // average.
     function avgTimeMs(rec) {
       const m = rec.byMode && rec.byMode.recognition;
       if (m && m.timed) return m.timeMs / m.timed;
@@ -4431,12 +4434,10 @@
 
     function statsDueDate(rec) {
       const groups = attemptedGroups(rec);
-      if (!groups.length || !rec.skills) return rec.dueDate || '';
-      return soonestDue(rec, groups);
+      return soonestDue(rec, groups.length ? groups : SKILL_GROUPS);
     }
 
     function dueTooltip(rec) {
-      if (!rec.skills) return '';
       return attemptedGroups(rec)
         .map(g => `${g} ${getSkill(rec, g).dueDate || '—'}`)
         .join(' · ');
