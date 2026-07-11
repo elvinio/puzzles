@@ -2433,7 +2433,7 @@
       "english": "rubbish, garbage",
       "pinyin": "lā",
       "same-sounding-character": ["拉 (pull)", "喇 (horn/trumpet)", "腊 (cured meat)"],
-      "words": ["垃圾 (lā jī, rubbish)", "垃圾桶 (lā jī tǒng, rubbish bin)", "垃圾车 (lā jī chē, garbage truck)"],
+      "words": ["垃圾 (lā jī, rubbish)", "垃圾桶 (lā jī tǒng, rubbish bin)", "垃圾车 (lā jī chē, garbage truck)", "乱扔垃圾 (luàn rēng lā jī, litter rubbish carelessly)"],
       "definition-english": "Used only in the word 垃圾, meaning rubbish or garbage",
       "definition-chinese": "垃圾；废弃的东西",
       "sentence": "我们应该把垃圾丢进垃圾桶。(We should throw rubbish into the rubbish bin.)"
@@ -2443,7 +2443,7 @@
       "english": "rubbish, garbage",
       "pinyin": "jī",
       "same-sounding-character": ["机 (machine)", "鸡 (chicken)", "基 (foundation)"],
-      "words": ["垃圾 (lā jī, rubbish)", "垃圾场 (lā jī chǎng, rubbish dump)", "垃圾袋 (lā jī dài, rubbish bag)"],
+      "words": ["垃圾 (lā jī, rubbish)", "垃圾场 (lā jī chǎng, rubbish dump)", "垃圾袋 (lā jī dài, rubbish bag)", "乱扔垃圾 (luàn rēng lā jī, litter rubbish carelessly)"],
       "definition-english": "Used only in the word 垃圾, meaning rubbish or garbage",
       "definition-chinese": "垃圾；废弃的东西",
       "sentence": "校工每天早上清理垃圾场。(The school worker cleans the rubbish dump every morning.)"
@@ -2493,7 +2493,7 @@
       "english": "ring, loop, surround",
       "pinyin": "huán",
       "same-sounding-character": ["还 (return/still)", "换 (exchange)", "缓 (slow)"],
-      "words": ["环境 (huán jìng, environment)", "环保 (huán bǎo, environmental protection)", "花环 (huā huán, garland)"],
+      "words": ["环境 (huán jìng, environment)", "环保 (huán bǎo, environmental protection)", "花环 (huā huán, garland)", "保护环境 (bǎo hù huán jìng, protect the environment)"],
       "definition-english": "A ring or loop; to surround; environment",
       "definition-chinese": "环境；环绕；环保",
       "sentence": "保护环境是每个人的责任。(Protecting the environment is everyone's responsibility.)"
@@ -2503,7 +2503,7 @@
       "english": "boundary, condition, environment",
       "pinyin": "jìng",
       "same-sounding-character": ["静 (quiet)", "敬 (respect)", "竟 (unexpectedly)"],
-      "words": ["环境 (huán jìng, environment)", "境地 (jìng dì, situation)", "边境 (biān jìng, border)"],
+      "words": ["环境 (huán jìng, environment)", "境地 (jìng dì, situation)", "边境 (biān jìng, border)", "保护环境 (bǎo hù huán jìng, protect the environment)"],
       "definition-english": "A boundary or condition; environment; situation",
       "definition-chinese": "环境；境地；边境",
       "sentence": "干净的环境让人心情愉快。(A clean environment makes people feel happy.)"
@@ -2523,7 +2523,7 @@
       "english": "dirty",
       "pinyin": "zāng",
       "same-sounding-character": ["赃 (stolen goods)", "臧 (surname)", "葬 (bury)"],
-      "words": ["脏乱 (zāng luàn, dirty and messy)", "弄脏 (nòng zāng, make dirty)", "肮脏 (āng zāng, filthy)"],
+      "words": ["脏乱 (zāng luàn, dirty and messy)", "弄脏 (nòng zāng, make dirty)", "肮脏 (āng zāng, filthy)", "又脏又臭 (yòu zāng yòu chòu, dirty and smelly)"],
       "definition-english": "Dirty; unclean; not tidy",
       "definition-chinese": "不干净；肮脏",
       "sentence": "他把衣服弄脏了,需要重新洗一次。(He got his clothes dirty and needs to wash them again.)"
@@ -2563,7 +2563,7 @@
       "english": "decide, determine",
       "pinyin": "jué",
       "same-sounding-character": ["绝 (absolute)", "觉 (feel/sleep)", "掘 (dig)"],
-      "words": ["决定 (jué dìng, decide)", "解决 (jiě jué, resolve/solve)", "决心 (jué xīn, determination)"],
+      "words": ["决定 (jué dìng, decide)", "解决 (jiě jué, resolve/solve)", "决心 (jué xīn, determination)", "下定决心 (xià dìng jué xīn, make up one's mind)"],
       "definition-english": "To decide; to determine; to resolve",
       "definition-chinese": "决定；解决；决心",
       "sentence": "我们决定一起去清理公园里的垃圾。(We decided to go clean up the rubbish in the park together.)"
@@ -2573,7 +2573,7 @@
       "english": "startle, frighten, surprise",
       "pinyin": "jīng",
       "same-sounding-character": ["京 (capital)", "经 (pass through)", "精 (essence/spirit)"],
-      "words": ["惊讶 (jīng yà, surprised)", "吃惊 (chī jīng, shocked)", "惊叫 (jīng jiào, cry out in fright)"],
+      "words": ["惊讶 (jīng yà, surprised)", "吃惊 (chī jīng, shocked)", "惊叫 (jīng jiào, cry out in fright)", "大吃一惊 (dà chī yī jīng, greatly startled)"],
       "definition-english": "To startle; to frighten; to be surprised",
       "definition-chinese": "害怕；吃惊；惊讶",
       "sentence": "突然跳出来的青蛙让她大吃一惊。(The frog that suddenly jumped out gave her a big fright.)"
@@ -2593,7 +2593,7 @@
       "english": "throw, toss, discard",
       "pinyin": "rēng",
       "same-sounding-character": ["仍 (still/yet)", "认 (recognize)", "任 (task/duty)"],
-      "words": ["扔掉 (rēng diào, throw away)", "乱扔 (luàn rēng, litter carelessly)", "扔垃圾 (rēng lā jī, throw rubbish)"],
+      "words": ["扔掉 (rēng diào, throw away)", "乱扔 (luàn rēng, litter carelessly)", "扔垃圾 (rēng lā jī, throw rubbish)", "乱扔垃圾 (luàn rēng lā jī, litter rubbish carelessly)"],
       "definition-english": "To throw; to toss; to discard",
       "definition-chinese": "丢弃；抛出",
       "sentence": "请不要把垃圾乱扔在地上。(Please do not throw rubbish carelessly on the ground.)"
@@ -2603,7 +2603,7 @@
       "english": "protect, keep, guarantee",
       "pinyin": "bǎo",
       "same-sounding-character": ["宝 (treasure)", "饱 (full/satiated)", "抱 (hug)"],
-      "words": ["保护 (bǎo hù, protect)", "保持 (bǎo chí, maintain)", "环保 (huán bǎo, environmental protection)"],
+      "words": ["保护 (bǎo hù, protect)", "保持 (bǎo chí, maintain)", "环保 (huán bǎo, environmental protection)", "保持卫生 (bǎo chí wèi shēng, maintain hygiene)", "保护环境 (bǎo hù huán jìng, protect the environment)"],
       "definition-english": "To protect; to keep; to guarantee",
       "definition-chinese": "保护；保持；保证",
       "sentence": "大家应该一起保护环境。(Everyone should work together to protect the environment.)"
@@ -2613,7 +2613,7 @@
       "english": "hold, maintain, sustain",
       "pinyin": "chí",
       "same-sounding-character": ["迟 (late)", "池 (pond)", "驰 (gallop)"],
-      "words": ["保持 (bǎo chí, maintain)", "坚持 (jiān chí, persist)", "持续 (chí xù, continue)"],
+      "words": ["保持 (bǎo chí, maintain)", "坚持 (jiān chí, persist)", "持续 (chí xù, continue)", "保持卫生 (bǎo chí wèi shēng, maintain hygiene)"],
       "definition-english": "To hold; to maintain; to sustain",
       "definition-chinese": "保持；维持；坚持",
       "sentence": "我们要保持环境的整洁。(We must keep the environment clean and tidy.)"
@@ -2623,7 +2623,7 @@
       "english": "guard, protect",
       "pinyin": "wèi",
       "same-sounding-character": ["位 (position)", "味 (taste)", "未 (not yet)"],
-      "words": ["保卫 (bǎo wèi, defend)", "卫生 (wèi shēng, hygiene)", "卫生间 (wèi shēng jiān, toilet/restroom)"],
+      "words": ["保卫 (bǎo wèi, defend)", "卫生 (wèi shēng, hygiene)", "卫生间 (wèi shēng jiān, toilet/restroom)", "保持卫生 (bǎo chí wèi shēng, maintain hygiene)"],
       "definition-english": "To guard; to protect; hygiene, defense",
       "definition-chinese": "保护；防卫；卫生",
       "sentence": "保持个人卫生可以减少生病的机会。(Keeping personal hygiene can reduce the chance of falling sick.)"
@@ -2633,7 +2633,7 @@
       "english": "protect, guard, shield",
       "pinyin": "hù",
       "same-sounding-character": ["户 (household)", "互 (mutual)", "沪 (Shanghai)"],
-      "words": ["保护 (bǎo hù, protect)", "护士 (hù shi, nurse)", "爱护 (ài hù, cherish/take care of)"],
+      "words": ["保护 (bǎo hù, protect)", "护士 (hù shi, nurse)", "爱护 (ài hù, cherish/take care of)", "保护环境 (bǎo hù huán jìng, protect the environment)"],
       "definition-english": "To protect; to guard; to shield",
       "definition-chinese": "保护；爱护；守护",
       "sentence": "我们要爱护校园里的花草树木。(We should take care of the flowers, plants and trees in our school.)"
@@ -2643,7 +2643,7 @@
       "english": "week, all around, surrounding",
       "pinyin": "zhōu",
       "same-sounding-character": ["州 (state/prefecture)", "洲 (continent)", "粥 (porridge)"],
-      "words": ["周末 (zhōu mò, weekend)", "四周 (sì zhōu, surroundings)", "周围 (zhōu wéi, vicinity)"],
+      "words": ["周末 (zhōu mò, weekend)", "四周 (sì zhōu, surroundings)", "周围 (zhōu wéi, vicinity)", "周末的时候 (zhōu mò de shí hou, during the weekend)"],
       "definition-english": "A week; all around; surrounding",
       "definition-chinese": "星期；四周；周围",
       "sentence": "他环顾四周,发现地上有很多垃圾。(He looked around and found a lot of rubbish on the ground.)"
@@ -2653,7 +2653,7 @@
       "english": "end, tip, last",
       "pinyin": "mò",
       "same-sounding-character": ["莫 (do not)", "沫 (foam)", "陌 (unfamiliar)"],
-      "words": ["周末 (zhōu mò, weekend)", "末尾 (mò wěi, ending)", "期末 (qī mò, end of term)"],
+      "words": ["周末 (zhōu mò, weekend)", "末尾 (mò wěi, ending)", "期末 (qī mò, end of term)", "周末的时候 (zhōu mò de shí hou, during the weekend)"],
       "definition-english": "The end; the tip; the last part",
       "definition-chinese": "结尾；最后",
       "sentence": "周末我们一家人去公园野餐。(Over the weekend, our family went for a picnic in the park.)"
@@ -2663,7 +2663,7 @@
       "english": "ah, oh (exclamation particle)",
       "pinyin": "a",
       "same-sounding-character": ["呀 (ah/oh)", "阿 (prefix for names)", "吖 (exclamation)"],
-      "words": ["好啊 (hǎo a, okay!)", "是啊 (shì a, that's right!)", "快点啊 (kuài diǎn a, hurry up!)"],
+      "words": ["好啊 (hǎo a, okay!)", "是啊 (shì a, that's right!)", "快点啊 (kuài diǎn a, hurry up!)", "真漂亮啊 (zhēn piào liang a, how beautiful!)"],
       "definition-english": "A sentence-final particle used to express exclamation, surprise or emphasis",
       "definition-chinese": "语气词,表示惊讶或加强语气",
       "sentence": "地上怎么这么多垃圾啊。(Why is there so much rubbish on the ground!)"
@@ -2673,7 +2673,7 @@
       "english": "turn, rotate; spin",
       "pinyin": "zhuǎn / zhuàn",
       "same-sounding-character": ["专 (specialized)", "赚 (earn)", "传 (pass on)"],
-      "words": ["转身 (zhuǎn shēn, turn around)", "转动 (zhuàn dòng, rotate/spin)", "转变 (zhuǎn biàn, change/transform)"],
+      "words": ["转身 (zhuǎn shēn, turn around)", "转动 (zhuàn dòng, rotate/spin)", "转变 (zhuǎn biàn, change/transform)", "转身离开 (zhuǎn shēn lí kāi, turn around and leave)"],
       "definition-english": "To turn; to rotate; to change direction",
       "definition-chinese": "转身；转动；改变",
       "sentence": "他转身一看,发现乌鸦在垃圾桶旁边。(He turned around and saw a crow next to the rubbish bin.)"
@@ -2683,7 +2683,7 @@
       "english": "how, why",
       "pinyin": "zěn",
       "same-sounding-character": ["枕 (pillow)", "斟 (pour)", "疹 (rash)"],
-      "words": ["怎么 (zěn me, how/why)", "怎样 (zěn yàng, how)", "怎么办 (zěn me bàn, what to do)"],
+      "words": ["怎么 (zěn me, how/why)", "怎样 (zěn yàng, how)", "怎么办 (zěn me bàn, what to do)", "怎么回事 (zěn me huí shì, what's going on?)"],
       "definition-english": "How; why (used mainly in 怎么)",
       "definition-chinese": "怎么；如何",
       "sentence": "地上的垃圾到底是怎么来的?(Where on earth did the rubbish on the ground come from?)"
@@ -2693,7 +2693,7 @@
       "english": "chase, pursue",
       "pinyin": "zhuī",
       "same-sounding-character": ["锥 (cone/awl)", "缀 (adorn/link)", "坠 (fall/drop)"],
-      "words": ["追赶 (zhuī gǎn, chase after)", "追问 (zhuī wèn, question closely)", "追上 (zhuī shàng, catch up with)"],
+      "words": ["追赶 (zhuī gǎn, chase after)", "追问 (zhuī wèn, question closely)", "追上 (zhuī shàng, catch up with)", "能追得上 (néng zhuī de shàng, able to catch up with)"],
       "definition-english": "To chase; to pursue; to run after",
       "definition-chinese": "追赶；追逐",
       "sentence": "他大声追问是谁乱扔垃圾。(He loudly questioned who had littered carelessly.)"
