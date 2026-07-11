@@ -15,16 +15,16 @@ the char modal, tappable modal chips, and per-lesson mastery bars.
 
 ## New test modes (teacher)
 
-- [ ] **Sentence-level cloze**: every data entry has a full example `sentence`, but word-fill only
-  blanks a 2-character phrase. Add a mode (or extend 词语) that blanks the character inside the
-  full sentence — closer to P3 exam format.
-- [ ] **连词成句 (sentence reorder)**: scramble the words of `sentence`, student taps them into
-  order. P3 exam staple; data already sufficient.
-- [ ] **Homophone-in-context choice (选字填空, visual)**: show the sentence with a blank and offer
-  the correct character plus its `same-sounding-character` entries (在/再 style). The listening
-  mode covers the audio-driven variant; this is the reading-driven one.
-- [ ] **Tone-tap drill**: show the 汉字, student taps tone 1–4. Cheap: `TONE_NUMBER` already maps
-  tones, and wrong options are implicit.
+- [x] **Sentence-level cloze**: shipped as the 句子填空 mode (`sentence-fill`) — blanks every
+  occurrence of the character inside the full sentence, distractors excluded from characters
+  already visible in the sentence.
+- [x] **连词成句 (sentence reorder)**: shipped as the `reorder` mode — greedy longest-match
+  segmentation against the level's own vocabulary, tap-to-order chips, auto-check on last chip.
+- [x] **Homophone-in-context choice (选字填空, visual)**: shipped as the 选字 mode
+  (`choose-char`) — sentence blank with `same-sounding-character` distractors and a safe pinyin
+  hint (all options sound identical).
+- [x] **Tone-tap drill**: shipped as the 声调 mode (`tone-tap`) — four fixed options (the word's
+  syllable in tones 1–4); skips neutral-tone particles and p3 polyphones ("wèi / wéi").
 - [ ] **量词 (measure word) drills**: needs a small data addition (measure word per noun) —
   flag entries in chinese-p*.json first.
 - [ ] **Adaptive stroke scaffolding**: in 写词/找错字, pass `showOutline: true` to HanziWriter when
