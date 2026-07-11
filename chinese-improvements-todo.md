@@ -44,17 +44,19 @@ the char modal, tappable modal chips, and per-lesson mastery bars.
 
 ## SRS (deeper changes — need care with existing saved records)
 
-- [ ] **Per-skill scheduling split**: one record per (lesson, char) is still shared across modes;
-  the new `byMode` counters only *report* the split. Full fix = separate due date/interval per
-  skill group (recognition / writing / speaking) so recognition success stops postponing writing
-  practice. Requires a record migration in `loadProgress`.
-- [ ] **Deduplicate characters across lessons**: record key is `${lessonKey}-${character}`, so the
-  same character in two lessons carries two independent schedules. Consider keying by character
-  (keep lesson as metadata) — also a migration.
-- [ ] **Interval fuzz**: add ±5–10% jitter to `dueDate` so cards reviewed together don't pile up
-  on the same future day forever.
-- [ ] **Per-mode average time in Stats**: "Avg Time" still mixes 3s MCQ taps with 40s writing.
-  Either split by `byMode` (now recorded) or show avg only for recognition modes.
+- [x] **Per-skill scheduling split**: shipped — records carry `rec.skills` with a full
+  interval/ease/due/lastTested schedule per group (recognition / writing / speaking); queues,
+  mastery, and stats are group-aware, and `loadProgress` migrates legacy flat records on read
+  (idempotent). `mergeSrRecord` in sync-merge.js merges schedules per group.
+- [x] **Deduplicate characters across lessons**: shipped — records are keyed by character alone;
+  legacy `p*-N-char` keys fold on read via `mergeSrRecord`. Known trade-off: polyphones
+  (为 wèi/wéi) share one schedule.
+- [x] **Interval fuzz**: shipped — `fuzzedDueOffset` jitters `dueDate` by ±5% (intervals ≥ 5
+  days); the stored interval stays exact.
+- [x] **Per-mode average time in Stats**: shipped — `byMode` now records `timeMs`/`timed`; the
+  Avg Time column shows the recognition-only average with per-group averages in the tooltip.
+- [x] **(extra) Reset progress**: two-step-confirmed reset in the ⚙ Settings modal; writes a
+  `_resetAt` tombstone so Drive sync propagates the wipe instead of resurrecting old records.
 
 ## Engineering (minor)
 
