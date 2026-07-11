@@ -1523,11 +1523,6 @@
       </div>
     </div>
 
-    <!-- Avatar -->
-    <div class="avatar-chip" id="setup-avatar-chip" style="display:none">
-      <div id="setup-avatar-svg"></div>
-      <span class="avatar-chip-name" id="setup-avatar-name"></span>
-    </div>
     <div class="no-avatar-warn" id="setup-no-avatar" style="display:none">
       No avatar selected — <a href="avatar.html" style="color:var(--p-xl)">create one first</a>
     </div>
@@ -1545,6 +1540,7 @@
     <!-- Lessons -->
     <div class="section-label">Lessons</div>
     <div class="tab-row" id="setup-lesson-tabs"></div>
+    <div class="browse-word-grid" id="setup-lesson-words" style="flex:0 0 auto;max-height:280px"></div>
 
     <!-- Test mode -->
     <div class="section-label">Test Mode</div>
@@ -2461,20 +2457,15 @@
     // ═══════════════════════════════════════════════════════════════
     function initSetup() {
       const avatar = window.__avatarGetActive ? window.__avatarGetActive() : null;
-      const chip = document.getElementById('setup-avatar-chip');
       const warn = document.getElementById('setup-no-avatar');
       const startBtn = document.getElementById('setup-start');
 
       if (avatar) {
         S.avatarId = avatar.id;
         S.progress = loadProgress(avatar.id);
-        chip.style.display = 'flex';
         warn.style.display = 'none';
-        document.getElementById('setup-avatar-svg').innerHTML = window.__avatarRender ? window.__avatarRender(avatar, '40') : '👤';
-        document.getElementById('setup-avatar-name').textContent = avatar.nickname;
         startBtn.disabled = false;
       } else {
-        chip.style.display = 'none';
         warn.style.display = 'block';
         startBtn.disabled = true;
         S.avatarId = null;
@@ -2525,6 +2516,17 @@
         container.appendChild(btn);
       }
       
+      const allBtn = document.createElement('button');
+      const allSelected = count > 0 && !S.lessonTest && S.lessons.length === count;
+      allBtn.className = 'tab' + (allSelected ? ' active' : '');
+      allBtn.textContent = 'All Random';
+      allBtn.addEventListener('click', () => {
+        S.lessonTest = false;
+        S.lessons = Array.from({length: count}, (_, i) => i + 1);
+        renderSetupLessonTabs();
+      });
+      container.appendChild(allBtn);
+
       const testBtn = document.createElement('button');
       testBtn.className = 'tab' + (S.lessonTest ? ' active' : '');
       testBtn.textContent = 'Test';
@@ -2533,6 +2535,34 @@
         renderSetupLessonTabs();
       });
       container.appendChild(testBtn);
+
+      renderSetupLessonWords();
+    }
+
+    function renderSetupLessonWords() {
+      const container = document.getElementById('setup-lesson-words');
+      if (!container) return;
+      const data = DATA[S.level];
+      if (!data) { container.innerHTML = ''; return; }
+      const words = getWordPool(S.level, S.lessonTest ? 'all' : S.lessons);
+      if (words.length === 0) {
+        container.innerHTML = `<div class="browse-empty">No words for this selection</div>`;
+        return;
+      }
+      container.innerHTML = '';
+      words.forEach(w => {
+        const card = document.createElement('div');
+        card.className = 'browse-word-card';
+        card.innerHTML = `
+      <div class="browse-word-char">${w.character}</div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <div class="browse-word-pinyin">${w.pinyin}</div>
+      </div>
+      <div class="browse-word-eng">${esc(w.english)}</div>`;
+        card.querySelector('.browse-word-pinyin').after(makeSpeakBtn(w.character, w.pinyin));
+        card.addEventListener('click', () => showCharModal(w));
+        container.appendChild(card);
+      });
     }
     bindTabs('setup-mode-tabs', tab => {
       S.mode = tab.dataset.mode;
