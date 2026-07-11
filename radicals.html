@@ -406,7 +406,7 @@ function tagAsCombiningForm(card) {
   card.classList.add('is-variant');
   const tag = document.createElement('div');
   tag.className = 'variant-tag';
-  tag.textContent = '偏旁 combining form';
+  tag.textContent = '偏旁';
   card.insertBefore(tag, card.firstChild);
 }
 
@@ -517,9 +517,7 @@ RADICAL_GROUPS.forEach(({ strokes, items }) => {
       // inside other characters, shown as its own entry so it's easy to find.
       const variantCard = buildCard(item, {
         char: variant.variantChar,
-        note: variant.variantName
-          ? `${variant.variantName} (${variant.variantPinyin})`
-          : 'combining form',
+        note: variant.variantName || null,
         noteClass: 'rad-variant-name',
       });
       tagAsCombiningForm(variantCard);
@@ -532,7 +530,7 @@ RADICAL_GROUPS.forEach(({ strokes, items }) => {
       const named = extractNamedForm(item.note);
       const card = buildCard(item, {
         char: item.char,
-        note: named ? `${named.name} (${named.pinyin})` : item.note,
+        note: named ? named.name : item.note,
         noteClass: named ? 'rad-variant-name' : 'rad-note',
       });
       if (named) tagAsCombiningForm(card);
