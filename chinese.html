@@ -156,6 +156,7 @@
     }
 
     .tab {
+      position: relative;
       padding: 8px 18px;
       border-radius: 20px;
       border: 2px solid var(--brd);
@@ -167,6 +168,24 @@
       letter-spacing: 0.05em;
       transition: all 0.15s;
       touch-action: manipulation;
+    }
+
+    /* Subtle mastery fill under a lesson tab's label — % of lesson words
+       with a review interval of a week or more */
+    .tab-mastery {
+      position: absolute;
+      left: 16px;
+      bottom: 4px;
+      height: 3px;
+      max-width: calc(100% - 32px);
+      background: var(--ok);
+      border-radius: 2px;
+      pointer-events: none;
+      opacity: 0.75;
+    }
+
+    .tab.active .tab-mastery {
+      background: #a7f3d0;
     }
 
     .tab:hover {
@@ -410,6 +429,32 @@
       font-family: system-ui, -apple-system, sans-serif;
     }
 
+    .opt-btn.is-phrase-opt {
+      font-size: clamp(1.5rem, 7vw, 2.4rem);
+    }
+
+    /* ── Listening mode (听音) ── */
+    .listen-big-btn {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: var(--p);
+      border: none;
+      color: #fff;
+      font-size: 2.6rem;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .listen-big-btn:hover {
+      background: var(--p-lt);
+    }
+
+    .listen-big-btn:active {
+      transform: scale(0.94);
+    }
+
     .opt-btn:hover {
       border-color: var(--p-lt);
       background: #ede7fb;
@@ -442,6 +487,55 @@
 
     .opt-btn[disabled] {
       pointer-events: none;
+    }
+
+    /* ── Wrong-answer feedback strip ── */
+    .answer-feedback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 620px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      padding: 10px 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color 0.12s;
+    }
+
+    .answer-feedback:hover {
+      border-color: var(--p-lt);
+    }
+
+    .af-char {
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--p-text);
+    }
+
+    .af-pinyin {
+      color: var(--p-xl);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .af-eng {
+      color: var(--muted);
+      font-size: 0.85rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .af-more {
+      color: var(--muted);
+      font-size: 0.9rem;
+      flex-shrink: 0;
     }
 
     /* ── Find & Correct mode (找错字) ── */
@@ -1559,6 +1653,7 @@
       <button class="tab active" data-mode="pinyin-chinese">Pinyin → 汉字</button>
       <button class="tab" data-mode="chinese-pinyin">汉字 → Pinyin</button>
       <button class="tab" data-mode="english-chinese">English → 汉字</button>
+      <button class="tab" data-mode="listening">🔊 听音</button>
       <button class="tab" data-mode="word-fill">词语</button>
       <button class="tab" data-mode="word-write">写词</button>
       <button class="tab" data-mode="find-correct">找错字</button>
@@ -1670,10 +1765,6 @@
         <div class="hud-label">CORRECT</div>
         <div class="hud-val ok" id="hud-correct">0</div>
       </div>
-      <div class="hud-cell">
-        <div class="hud-label">WRONG</div>
-        <div class="hud-val" style="color:var(--err-lt)" id="hud-wrong">0</div>
-      </div>
       <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
     </div>
 
@@ -1723,6 +1814,8 @@
         <button class="btn btn-sm" id="pr-open-settings">⚙ Set up</button>
       </div>
     </div>
+
+    <div class="answer-feedback" id="answer-feedback" style="display:none"></div>
 
     <div class="btn-row" id="continue-row" style="display:none">
       <button class="btn" id="continue-btn">Continue →</button>
@@ -1866,6 +1959,11 @@
           <button class="speak-btn" id="cm-speak-btn" title="Listen">🔊</button>
         </div>
         <div class="char-modal-eng" id="cm-eng"></div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Strokes</div>
+        <button class="btn btn-outline btn-sm" id="cm-stroke-btn" style="align-self:flex-start">▶ Watch strokes</button>
+        <div id="cm-stroke-target" style="display:none;width:180px;height:180px;align-self:center;background:var(--bg);border:2px solid var(--brd);border-radius:12px"></div>
       </div>
       <div class="char-modal-section">
         <div class="char-modal-sec-label">Definition</div>
@@ -2191,18 +2289,54 @@
 
     function todayStr() { return new Date().toISOString().slice(0, 10); }
 
-    function updateRecord(rec, correct, timeMs) {
+    // Which memory each test mode exercises — tracked separately inside the
+    // record so recognition success doesn't hide production weakness.
+    const MODE_GROUP = {
+      'pinyin-chinese': 'recognition', 'chinese-pinyin': 'recognition',
+      'english-chinese': 'recognition', 'word-fill': 'recognition',
+      'listening': 'recognition',
+      'word-write': 'writing', 'find-correct': 'writing',
+      'pronunciation': 'speaking',
+    };
+
+    function daysBetween(fromStr, toStr) {
+      return Math.round((new Date(toStr) - new Date(fromStr)) / 86400000);
+    }
+
+    // Reviews done ahead of schedule (e.g. queue filler) prove less about memory
+    // than on-time ones, so their interval growth is scaled by how much of the
+    // scheduled gap actually elapsed (never below half).
+    function reviewEarlinessScale(rec) {
+      const today = todayStr();
+      if (!rec.lastTested || !rec.dueDate || rec.attempts === 0 || rec.dueDate <= today) return 1;
+      const elapsed = Math.max(0, daysBetween(rec.lastTested, today));
+      return Math.min(1, Math.max(0.5, elapsed / Math.max(1, rec.interval)));
+    }
+
+    // grade: 'easy' | 'good' | 'hard' — how comfortably the answer was produced.
+    // Callers derive it from a mode-appropriate signal (latency for MCQ, stroke
+    // mistakes for writing, score for speech) so writing/speaking cards aren't
+    // punished for inherently taking longer than a multiple-choice tap.
+    function updateRecord(rec, correct, timeMs, grade = 'good', modeGroup = null) {
       rec = { ...rec };
+      const earliness = reviewEarlinessScale(rec);
       rec.attempts++;
       rec.lastTested = todayStr();
       rec.totalTimeMs += timeMs;
+      if (modeGroup) {
+        rec.byMode = { ...(rec.byMode || {}) };
+        const m = rec.byMode[modeGroup] = { ...(rec.byMode[modeGroup] || { correct: 0, wrong: 0 }) };
+        correct ? m.correct++ : m.wrong++;
+      }
       if (correct) {
         rec.correct++;
-        const s = timeMs / 1000;
-        if (s < 5) { rec.interval = Math.round(rec.interval * rec.easeFactor); }
-        else if (s < 10) { rec.interval = Math.round(rec.interval * 2.0); rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.05); }
-        else { rec.interval = Math.round(rec.interval * 1.3); rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.10); }
-        rec.interval = Math.max(1, rec.interval);
+        let factor;
+        if (grade === 'easy') { factor = rec.easeFactor; rec.easeFactor = Math.min(2.8, rec.easeFactor + 0.05); }
+        else if (grade === 'hard') { factor = 1.3; rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.10); }
+        else { factor = 2.0; rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.05); }
+        const growth = Math.round((Math.round(rec.interval * factor) - rec.interval) * earliness);
+        // Always grow by at least one day so slow-but-correct cards can graduate
+        rec.interval = Math.min(365, rec.interval + Math.max(1, growth));
       } else {
         rec.wrong++;
         rec.easeFactor = Math.max(1.3, rec.easeFactor - 0.15);
@@ -2438,6 +2572,48 @@
       return { hanzi: word.character, pinyin: word.pinyin, english: word.english };
     }
 
+    // Listening (听音) — hear the word, pick the correctly written form.
+    // With homophone data the options are the example word with the tested
+    // character swapped for same-sounding characters (classic 选字 exam
+    // format); otherwise fall back to single characters that sound different.
+    function makeListening(word, pool) {
+      const ref = parseExampleWord(word);
+      const sameSound = [...new Set(
+        (word['same-sounding-character'] || [])
+          .map(s => (s.match(/^([^\s(]+)/) || [])[1])
+          .filter(c => c && c !== word.character)
+      )];
+
+      if (ref.hanzi.length > 1 && ref.hanzi.includes(word.character) && sameSound.length) {
+        const variants = shuffle(sameSound).slice(0, 3)
+          .map(c => ref.hanzi.replace(word.character, c));
+        if (variants.length < 3) {
+          for (const c of pickChars(pool, [word.character, ...sameSound], 3 - variants.length)) {
+            variants.push(ref.hanzi.replace(word.character, c));
+          }
+        }
+        return {
+          type: 'listening', prompt: '', answer: ref.hanzi,
+          options: shuffle([ref.hanzi, ...variants.slice(0, 3)]),
+          word, refHanzi: ref.hanzi, refPinyin: ref.pinyin,
+        };
+      }
+
+      // Single-character fallback — distractors must sound different, or the
+      // audio alone couldn't distinguish the right answer.
+      const targetBase = stripTones(word.pinyin);
+      const filtered = pool.filter(w => stripTones(w.pinyin) !== targetBase && w.character !== word.character);
+      const distractors = pickChars(filtered, [word.character], 3);
+      if (distractors.length < 3) {
+        distractors.push(...pickChars(pool, [word.character, ...distractors], 3 - distractors.length));
+      }
+      return {
+        type: 'listening', prompt: '', answer: word.character,
+        options: shuffle([word.character, ...distractors.slice(0, 3)]),
+        word, refHanzi: word.character, refPinyin: word.pinyin,
+      };
+    }
+
     function makePronunciation(word) {
       const ref = parseExampleWord(word);
       return {
@@ -2452,12 +2628,20 @@
 
     function makeCard(word, pool, mode) {
       if (mode === 'mix') {
-        const mixModes = ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'word-fill', 'word-write', 'find-correct'];
+        const mixModes = ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'listening', 'word-fill', 'word-write', 'find-correct'];
         if (isAzureConfigured()) mixModes.push('pronunciation');
-        mode = mixModes[Math.floor(Math.random() * mixModes.length)];
+        // Try modes in random order until one supports this word — some modes
+        // return null for words lacking phrase/homophone data, and dropping the
+        // card would silently shrink the session below its target size.
+        for (const m of shuffle(mixModes)) {
+          const card = makeCard(word, pool, m);
+          if (card) return card;
+        }
+        return makeEnglishChinese(word, pool);
       }
       if (mode === 'pinyin-chinese') return makePinyinChinese(word, pool);
       if (mode === 'chinese-pinyin') return makeChinesePinyin(word, pool);
+      if (mode === 'listening') return makeListening(word, pool);
       if (mode === 'word-fill') return makeWordFill(word, pool);
       if (mode === 'word-write') return makeWordWrite(word, pool);
       if (mode === 'find-correct') return makeFindCorrect(word, pool);
@@ -2527,6 +2711,7 @@
         startBtn.disabled = true;
         S.avatarId = null;
       }
+      renderSetupLessonTabs(); // refresh mastery bars with the latest progress
       showScreen('screen-setup');
     }
 
@@ -2549,6 +2734,19 @@
       renderSetupLessonTabs();
     });
 
+    // Fraction of a lesson's words the active avatar has "mastered"
+    // (reviewed at least once and scheduled a week or more out).
+    function lessonMastery(level, lessonNum) {
+      if (!S.avatarId) return 0;
+      const words = getWordPool(level, [lessonNum]);
+      if (!words.length) return 0;
+      const mastered = words.filter(w => {
+        const r = S.progress[w.key];
+        return r && r.attempts > 0 && r.interval >= 7;
+      }).length;
+      return mastered / words.length;
+    }
+
     function renderSetupLessonTabs() {
       const container = document.getElementById('setup-lesson-tabs');
       if (!container) return;
@@ -2559,6 +2757,13 @@
         const btn = document.createElement('button');
         btn.className = 'tab' + (S.lessons.includes(i) && !S.lessonTest ? ' active' : '');
         btn.textContent = 'L' + i;
+        const mastery = lessonMastery(S.level, i);
+        if (mastery > 0) {
+          const bar = document.createElement('span');
+          bar.className = 'tab-mastery';
+          bar.style.width = Math.round(mastery * 100) + '%';
+          btn.appendChild(bar);
+        }
         btn.addEventListener('click', () => {
           S.lessonTest = false;
           if (S.lessons.includes(i)) {
@@ -2610,7 +2815,7 @@
       words.forEach(w => {
         const card = document.createElement('div');
         card.className = 'browse-word-card compact';
-        card.innerHTML = `<div class="browse-word-char">${w.character}</div>`;
+        card.innerHTML = `<div class="browse-word-char">${esc(w.character)}</div>`;
         card.addEventListener('click', () => showCharModal(w));
         container.appendChild(card);
       });
@@ -2714,7 +2919,6 @@
       document.getElementById('hud-card').textContent = `${S.cardIndex + 1}/${total}`;
       document.getElementById('progress-fill').style.width = `${(S.cardIndex / total) * 100}%`;
       document.getElementById('hud-correct').textContent = S.results.filter(r => r.correct).length;
-      document.getElementById('hud-wrong').textContent = S.results.filter(r => !r.correct).length;
 
       const typeLabel = document.getElementById('question-type-label');
       const qText = document.getElementById('question-text');
@@ -2728,7 +2932,7 @@
       // Add source key in bottom right
       const keyEl = document.createElement('div');
       keyEl.className = 'source-key';
-      keyEl.textContent = sourceKey;
+      keyEl.textContent = (card.isRetry ? 'retry · ' : '') + sourceKey;
       qWrap.appendChild(keyEl);
 
       qText.onclick = null;
@@ -2740,6 +2944,7 @@
       document.getElementById('fc-feedback').style.display = 'none';
       document.getElementById('fc-write-panel').classList.remove('open');
       document.getElementById('pr-panel').style.display = 'none';
+      document.getElementById('answer-feedback').style.display = 'none';
       FC = null;
       PR = null;
 
@@ -2766,7 +2971,7 @@
       } else if (card.type === 'word-write') {
         typeLabel.textContent = '';
         const pinyinHint = card.phrasePinyin ? `<div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.phrasePinyin)}</div>` : '';
-        qText.innerHTML = `<div>${card.prompt}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.english)}</div>`;
+        qText.innerHTML = `<div>${esc(card.prompt)}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.english)}</div>`;
         qText.className = 'question-text';
         document.getElementById('options-grid').innerHTML = '';
         document.getElementById('options-grid').style.display = 'none';
@@ -2774,6 +2979,12 @@
         renderWordWrite(card);
         S.cardStart = Date.now();
         return;
+      } else if (card.type === 'listening') {
+        typeLabel.textContent = 'Listen — pick what you heard';
+        qText.innerHTML = `<button class="listen-big-btn" id="listen-replay" title="Play again">🔊</button>`;
+        qText.className = 'question-text';
+        document.getElementById('listen-replay').addEventListener('click', () => azureSpeak(card.refHanzi, card.refPinyin));
+        setTimeout(() => azureSpeak(card.refHanzi, card.refPinyin), 250);
       } else if (card.type === 'pinyin-chinese') {
         typeLabel.textContent = 'Which character matches this sound?';
         qText.textContent = card.prompt;
@@ -2782,15 +2993,11 @@
         typeLabel.textContent = 'Which pinyin is correct?';
         qText.textContent = card.prompt;
         qText.className = 'question-text';
-        qText.style.cursor = 'pointer';
-        qText.onclick = () => showCharModal(card.word);
       } else if (card.type === 'word-fill') {
         typeLabel.textContent = '';
         const pinyinHint = card.phrasePinyin ? `<div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.phrasePinyin)}</div>` : '';
-        qText.innerHTML = `<div>${card.prompt}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.english)}</div>`;
+        qText.innerHTML = `<div>${esc(card.prompt)}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.english)}</div>`;
         qText.className = 'question-text';
-        qText.style.cursor = 'pointer';
-        qText.onclick = () => showCharModal(card.word);
       } else {
         typeLabel.textContent = 'Which character means this?';
         qText.textContent = card.prompt;
@@ -2803,7 +3010,7 @@
 
       card.options.forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = 'opt-btn' + (isPinyinOpt ? ' is-pinyin-opt' : '');
+        btn.className = 'opt-btn' + (isPinyinOpt ? ' is-pinyin-opt' : '') + (opt.length > 1 && !isPinyinOpt ? ' is-phrase-opt' : '');
         btn.textContent = opt;
         btn.addEventListener('click', () => handleAnswer(opt, card));
         grid.appendChild(btn);
@@ -2816,6 +3023,22 @@
     // ═══════════════════════════════════════════════════════════════
     // HANDLE ANSWER
     // ═══════════════════════════════════════════════════════════════
+    // Records one card outcome. In-session retries are practice only — they
+    // never touch the SRS record or the results list. A failed first attempt
+    // re-queues the word once at the end of the session.
+    function registerResult(card, correct, timeMs, grade, extra) {
+      if (card.isRetry) return;
+      let rec = S.progress[card.word.key] || freshRecord();
+      rec = updateRecord(rec, correct, timeMs, grade, MODE_GROUP[card.type] || null);
+      S.progress[card.word.key] = rec;
+      saveProgress(S.avatarId, S.progress);
+      S.results.push({ word: card.word, correct, timeMs, type: card.type, ...(extra || {}) });
+      if (!correct) {
+        const retry = makeCard(card.word, S.wordPool, S.mode);
+        if (retry) { retry.isRetry = true; S.cards.push(retry); }
+      }
+    }
+
     function handleAnswer(chosen, card) {
       const timeMs = Date.now() - S.cardStart;
       const correct = chosen === card.answer;
@@ -2827,13 +3050,8 @@
         btn.disabled = true;
       });
 
-      // Update SR record
-      let rec = S.progress[card.word.key] || freshRecord();
-      rec = updateRecord(rec, correct, timeMs);
-      S.progress[card.word.key] = rec;
-      saveProgress(S.avatarId, S.progress);
-
-      S.results.push({ word: card.word, correct, timeMs, type: card.type });
+      const grade = timeMs < 5000 ? 'easy' : timeMs < 10000 ? 'good' : 'hard';
+      registerResult(card, correct, timeMs, grade);
 
       if (correct) {
         setTimeout(() => {
@@ -2843,8 +3061,20 @@
           else renderCard();
         }, 1500);
       } else {
+        showAnswerFeedback(card.word);
         document.getElementById('continue-row').style.display = 'flex';
       }
+    }
+
+    // Turn a wrong answer into a learning moment during the Continue pause:
+    // show the tested word with pinyin and meaning, play its audio, and open
+    // the full character card on tap.
+    function showAnswerFeedback(word) {
+      const el = document.getElementById('answer-feedback');
+      el.innerHTML = `<span class="af-char">${esc(word.character)}</span><span class="af-pinyin">${esc(word.pinyin)}</span><span class="af-eng">${esc(word.english)}</span><span class="af-more">ⓘ</span>`;
+      el.onclick = () => showCharModal(word);
+      el.style.display = 'flex';
+      azureSpeak(word.character, word.pinyin);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -2978,6 +3208,7 @@
 
     // Fallback when a character has no self-hosted stroke data (or the fetch fails)
     function fcMissingData(card) {
+      if (FC) FC.selfCheck = true;
       document.getElementById('fc-feedback').textContent = 'No stroke data for this character — write it on paper, then check yourself';
       const target = document.getElementById('fc-writer-target');
       target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:0.9rem;text-align:center;padding:8px">✍️ Write the character</div>`;
@@ -3008,12 +3239,14 @@
       document.getElementById('fc-reveal-row').style.display = 'none';
       document.getElementById('fc-feedback').textContent = correct ? '✓ Correct!' : `✗ The answer was ${card.correctChar}`;
 
-      let rec = S.progress[card.word.key] || freshRecord();
-      rec = updateRecord(rec, correct, timeMs);
-      S.progress[card.word.key] = rec;
-      saveProgress(S.avatarId, S.progress);
-
-      S.results.push({ word: card.word, correct, timeMs, type: card.type });
+      // Grade writing by stroke mistakes, not elapsed time — writing always
+      // takes >10s, so a latency-based grade would permanently mark it "hard".
+      let grade;
+      if (FC && FC.selfCheck) grade = 'good'; // paper self-check: no stroke count to verify against
+      else if (FC && FC.mistakes === 0) grade = 'easy';
+      else if (FC && FC.mistakes <= 2) grade = 'good';
+      else grade = 'hard';
+      registerResult(card, correct, timeMs, grade);
       FC = null;
 
       setTimeout(() => {
@@ -3208,13 +3441,7 @@
       // later retries just let the student practice, they don't change what's registered.
       const score = PR.firstScore === null ? 0 : PR.firstScore;
       const correct = score >= getAzureConfig().threshold;
-
-      let rec = S.progress[card.word.key] || freshRecord();
-      rec = updateRecord(rec, correct, timeMs);
-      S.progress[card.word.key] = rec;
-      saveProgress(S.avatarId, S.progress);
-
-      S.results.push({ word: card.word, correct, timeMs, type: 'pronunciation', score: Math.round(score) });
+      registerResult(card, correct, timeMs, score >= 85 ? 'easy' : 'good', { score: Math.round(score) });
       prAdvance();
     }
 
@@ -3224,13 +3451,7 @@
       const card = PR.card;
       const timeMs = Date.now() - S.cardStart;
       revealPronunciationAnswer(PR.card);
-
-      let rec = S.progress[card.word.key] || freshRecord();
-      rec = updateRecord(rec, false, timeMs);
-      S.progress[card.word.key] = rec;
-      saveProgress(S.avatarId, S.progress);
-
-      S.results.push({ word: card.word, correct: false, timeMs, type: 'pronunciation', score: 0 });
+      registerResult(card, false, timeMs, 'hard', { score: 0 });
       prAdvance();
     }
 
@@ -3415,7 +3636,7 @@
         item.appendChild(charEl);
         item.insertAdjacentHTML('beforeend', `
       <div class="result-info">
-        <div class="result-pinyin" style="display:flex;align-items:center;gap:4px"><span>${r.word.pinyin}</span></div>
+        <div class="result-pinyin" style="display:flex;align-items:center;gap:4px"><span>${esc(r.word.pinyin)}</span></div>
         <div class="result-english">${esc(r.word.english)}</div>
       </div>
       <div class="result-time">${r.type === 'pronunciation' ? `${r.score} pts ` : `${(r.timeMs / 1000).toFixed(1)}s `}${r.correct ? '✓' : '✗'}</div>`);
@@ -3442,6 +3663,9 @@
     function openStats() {
       S.statsAvatarId = S.avatarId;
       S.statsLevel = S.level;
+      document.querySelectorAll('#stats-level-tabs .tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.level === S.statsLevel);
+      });
       renderAvatarChips();
       renderStatsTable();
       showScreen('screen-stats');
@@ -3495,13 +3719,16 @@
         const wrongCls = r.wrong > 0 ? 'err' : 'ok';
         const correctCls = r.correct > 0 ? 'ok' : '';
         const dueCls = r.dueDate && r.dueDate <= today ? 'warn' : '';
-        return `<tr data-word-key="${w.key}">
-      <td class="td-char">${w.character}</td>
-      <td class="td-pinyin"><span style="display:inline-flex;align-items:center;gap:4px">${w.pinyin}<button class="speak-btn" data-char="${w.character}" data-pinyin="${w.pinyin}" title="Listen">🔊</button></span></td>
+        const byMode = r.byMode
+          ? esc(Object.entries(r.byMode).map(([g, m]) => `${g} ${m.correct}✓ ${m.wrong}✗`).join(' · '))
+          : '';
+        return `<tr data-word-key="${esc(w.key)}">
+      <td class="td-char">${esc(w.character)}</td>
+      <td class="td-pinyin"><span style="display:inline-flex;align-items:center;gap:4px">${esc(w.pinyin)}<button class="speak-btn" data-char="${esc(w.character)}" data-pinyin="${esc(w.pinyin)}" title="Listen">🔊</button></span></td>
       <td>${esc(w.english)}</td>
       <td class="td-lesson">L${w.lessonNum}</td>
-      <td class="${correctCls}">${r.correct}</td>
-      <td class="${wrongCls}">${r.wrong}</td>
+      <td class="${correctCls}" title="${byMode}">${r.correct}</td>
+      <td class="${wrongCls}" title="${byMode}">${r.wrong}</td>
       <td>${avg}</td>
       <td class="${dueCls}">${r.dueDate || '—'}</td>
     </tr>`;
@@ -3523,6 +3750,23 @@
     // ═══════════════════════════════════════════════════════════════
     // CHARACTER CARD MODAL
     // ═══════════════════════════════════════════════════════════════
+    // Find a character's full entry anywhere in the loaded data — used to make
+    // the "Same Sound" chips navigate to that character's own card.
+    function findWordByChar(char) {
+      for (const level of ['p1', 'p2', 'p3']) {
+        const data = DATA[level];
+        if (!data) continue;
+        for (const lk of Object.keys(data)) {
+          const entry = (data[lk] || []).find(e => e.character === char);
+          if (entry) {
+            const lessonNum = Number((lk.match(/-(\d+)$/) || [])[1] || 0);
+            return { ...entry, lessonKey: lk, lessonNum, level, key: `${lk}-${entry.character}` };
+          }
+        }
+      }
+      return null;
+    }
+
     function showCharModal(word) {
       document.getElementById('cm-char').textContent = word.character;
       document.getElementById('cm-pinyin').textContent = word.pinyin;
@@ -3532,12 +3776,23 @@
       document.getElementById('cm-def-en').textContent = word['definition-english'] || '';
       document.getElementById('cm-def-zh').textContent = word['definition-chinese'] || '';
 
+      // Reset the stroke area for the new character
+      document.getElementById('cm-stroke-btn').style.display = '';
+      const strokeTarget = document.getElementById('cm-stroke-target');
+      strokeTarget.style.display = 'none';
+      if (cmWriter) { try { cmWriter.pauseAnimation(); } catch { } }
+      else strokeTarget.innerHTML = '';
+
       const wordsEl = document.getElementById('cm-words');
       wordsEl.innerHTML = '';
       (word.words || []).forEach(w => {
         const chip = document.createElement('span');
         chip.className = 'char-modal-chip zh';
         chip.textContent = w;
+        const m = w.match(/^([^\s(]+)\s*\(([^,)]+)/);
+        chip.style.cursor = 'pointer';
+        chip.title = 'Listen';
+        chip.addEventListener('click', () => azureSpeak(m ? m[1] : w, m ? m[2].trim() : ''));
         wordsEl.appendChild(chip);
       });
 
@@ -3547,11 +3802,47 @@
         const chip = document.createElement('span');
         chip.className = 'char-modal-chip zh';
         chip.textContent = s;
+        const ch = (s.match(/^([^\s(]+)/) || [])[1];
+        chip.style.cursor = 'pointer';
+        chip.title = 'Open this character';
+        chip.addEventListener('click', () => {
+          const found = ch ? findWordByChar(ch) : null;
+          if (found) showCharModal(found);
+          else if (ch) speakChinese(ch);
+        });
         sameEl.appendChild(chip);
       });
 
       document.getElementById('char-modal').classList.add('open');
     }
+
+    // Stroke-order animation in the modal — same singleton pattern as fcWriter
+    // (HanziWriter binds to the target div once; setCharacter() reuses it).
+    let cmWriter = null;
+    document.getElementById('cm-stroke-btn').addEventListener('click', () => {
+      const char = document.getElementById('cm-char').textContent;
+      const target = document.getElementById('cm-stroke-target');
+      document.getElementById('cm-stroke-btn').style.display = 'none';
+      target.style.display = '';
+
+      fcCharDataLoader(char, () => {
+        if (!cmWriter) {
+          cmWriter = HanziWriter.create(target, char, {
+            width: 176, height: 176, padding: 10,
+            strokeAnimationSpeed: 1,
+            delayBetweenStrokes: 250,
+            delayBetweenLoops: 1500,
+            charDataLoader: fcCharDataLoader,
+          });
+        } else {
+          cmWriter.setCharacter(char);
+        }
+        cmWriter.loopCharacterAnimation();
+      }, () => {
+        target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:0.8rem;text-align:center;padding:8px">No stroke data for this character</div>`;
+        cmWriter = null; // its SVG was just replaced — recreate next time
+      });
+    });
 
     document.getElementById('char-modal').addEventListener('click', e => {
       if (e.target.id === 'char-modal') document.getElementById('char-modal').classList.remove('open');
@@ -3853,9 +4144,9 @@
         card.className = 'browse-word-card';
         const wordObj = { ...w, lessonKey, lessonNum: B.lesson, level: B.level, key: `${lessonKey}-${w.character}` };
         card.innerHTML = `
-      <div class="browse-word-char">${w.character}</div>
+      <div class="browse-word-char">${esc(w.character)}</div>
       <div style="display:flex;align-items:center;gap:4px">
-        <div class="browse-word-pinyin">${w.pinyin}</div>
+        <div class="browse-word-pinyin">${esc(w.pinyin)}</div>
       </div>
       <div class="browse-word-eng">${esc(w.english)}</div>`;
         card.querySelector('.browse-word-pinyin').after(makeSpeakBtn(w.character, w.pinyin));
@@ -4051,22 +4342,30 @@
         audioRow.appendChild(hint);
         card.appendChild(audioRow);
 
-        if (q.chinese) {
+        // Only show the sentence when the tested word actually appears in it —
+        // otherwise the un-blanked sentence could display the answer characters.
+        if (q.chinese && q.chinese.includes(q.word)) {
           const sentDiv = document.createElement('div');
           sentDiv.className = 'sp-q-sentence';
           const blankHtml = `<span class="sp-blank">___</span><span class="sp-blank" style="font-size:0.85rem"> (${esc(q.pinyin)})</span>`;
-          sentDiv.innerHTML = esc(q.chinese).replace(q.word, blankHtml);
+          sentDiv.innerHTML = esc(q.chinese).split(q.word).join(blankHtml);
           card.appendChild(sentDiv);
         }
         speakChinese(q.pinyin || q.word);
 
       } else {
-        if (q.chinese) {
+        if (q.chinese && q.chinese.includes(q.word)) {
           const sentDiv = document.createElement('div');
           sentDiv.className = 'sp-q-sentence';
           const underlineHtml = `<span class="sp-underline">${esc(q.word)}</span><span class="sp-bracket"> [ ]</span>`;
-          sentDiv.innerHTML = esc(q.chinese).replace(q.word, underlineHtml);
+          sentDiv.innerHTML = esc(q.chinese).split(q.word).join(underlineHtml);
           card.appendChild(sentDiv);
+        } else {
+          // No usable sentence — show the word itself so the question still has content
+          const wordDiv = document.createElement('div');
+          wordDiv.className = 'sp-q-sentence';
+          wordDiv.innerHTML = `<span class="sp-underline">${esc(q.word)}</span><span class="sp-bracket"> [ ]</span>`;
+          card.appendChild(wordDiv);
         }
         const hint = document.createElement('div');
         hint.className = 'sp-q-hint';
@@ -4230,18 +4529,18 @@
         const chip = document.createElement('div');
         chip.className = 'puz-chip';
         chip.dataset.word = w.chars;
-        chip.innerHTML = `<span class="puz-chip-chars">${w.pinyin}</span><span class="puz-chip-hint">${w.english}</span>`;
+        chip.innerHTML = `<span class="puz-chip-chars">${esc(w.pinyin)}</span><span class="puz-chip-hint">${esc(w.english)}</span>`;
         listEl.appendChild(chip);
       }
 
       document.getElementById('puz-complete').style.display = 'none';
       showScreen('screen-puzzle');
-      bindPuzInteraction(gridEl);
     }
 
-    function bindPuzInteraction(gridEl) {
-      const clone = gridEl.cloneNode(true);
-      gridEl.parentNode.replaceChild(clone, gridEl);
+    // Puzzle interaction — bound ONCE on the persistent #puz-grid element and
+    // window (startPuzzle only replaces the grid's innerHTML, never the element,
+    // so per-start binding would stack duplicate listeners).
+    {
       const el = document.getElementById('puz-grid');
       let audioInitialized = false;
 
