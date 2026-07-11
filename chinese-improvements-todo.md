@@ -67,6 +67,7 @@ the char modal, tappable modal chips, and per-lesson mastery bars.
 
 ## Explore / motivation (designer, lower priority)
 
-- [ ] **Richer mastery view for the student**: the lesson-tab bars are minimal by design; a
-  child-friendly per-lesson detail (e.g. tap-and-hold a lesson tab → grid of its words colored by
-  mastery) would guide self-directed exploration without touching the test screen.
+- [x] **Richer mastery view for the student**: shipped — tap-and-hold a setup lesson tab opens a
+  per-lesson modal grid of its words colored by mastery tier (not tried / learning <7d /
+  known 7–20d / mastered ≥21d, with legend; tier ≥ known matches the tab-bar rule); tapping a
+  word opens the character card on top. The setup word grid uses the same tier colors.
