@@ -2506,6 +2506,10 @@
         rec.byMode = { ...(rec.byMode || {}) };
         const m = rec.byMode[modeGroup] = { ...(rec.byMode[modeGroup] || { correct: 0, wrong: 0 }) };
         correct ? m.correct++ : m.wrong++;
+        // `timed` counts only attempts that contributed time — legacy byMode
+        // counts predate timeMs, so correct+wrong would understate averages.
+        m.timeMs = (m.timeMs || 0) + timeMs;
+        m.timed = (m.timed || 0) + 1;
       }
       if (correct) {
         rec.correct++;
@@ -4209,7 +4213,7 @@
 
       const sort = document.getElementById('stats-sort').value;
       if (sort === 'wrong') rows.sort((a, b) => (b.rec.wrong || 0) - (a.rec.wrong || 0));
-      else if (sort === 'time') rows.sort((a, b) => avgTime(b.rec) - avgTime(a.rec));
+      else if (sort === 'time') rows.sort((a, b) => avgTimeMs(b.rec) - avgTimeMs(a.rec));
       else if (sort === 'due') rows.sort((a, b) => (a.rec.dueDate || '') < (b.rec.dueDate || '') ? -1 : 1);
       else if (sort === 'lesson') rows.sort((a, b) => a.lessonNum - b.lessonNum);
 
@@ -4226,7 +4230,8 @@
       const today = todayStr();
       tbody.innerHTML = rows.map(w => {
         const r = w.rec;
-        const avg = r.attempts ? (r.totalTimeMs / r.attempts / 1000).toFixed(1) + 's' : '—';
+        const avgMs = avgTimeMs(r);
+        const avg = avgMs ? (avgMs / 1000).toFixed(1) + 's' : '—';
         const wrongCls = r.wrong > 0 ? 'err' : 'ok';
         const correctCls = r.correct > 0 ? 'ok' : '';
         const dueCls = r.dueDate && r.dueDate <= today ? 'warn' : '';
@@ -4240,13 +4245,27 @@
       <td class="td-lesson">L${w.lessonNum}</td>
       <td class="${correctCls}" title="${byMode}">${r.correct}</td>
       <td class="${wrongCls}" title="${byMode}">${r.wrong}</td>
-      <td>${avg}</td>
+      <td title="${esc(avgTimeTooltip(r))}">${avg}</td>
       <td class="${dueCls}">${r.dueDate || '—'}</td>
     </tr>`;
       }).join('');
     }
 
-    function avgTime(rec) { return rec.attempts ? rec.totalTimeMs / rec.attempts : 0; }
+    // Recognition-only average when per-mode time exists — the overall average
+    // mixes 3s MCQ taps with 40s writing sessions and means little.
+    function avgTimeMs(rec) {
+      const m = rec.byMode && rec.byMode.recognition;
+      if (m && m.timed) return m.timeMs / m.timed;
+      return rec.attempts ? rec.totalTimeMs / rec.attempts : 0;
+    }
+
+    function avgTimeTooltip(rec) {
+      if (!rec.byMode) return '';
+      return Object.entries(rec.byMode)
+        .filter(([, m]) => m.timed)
+        .map(([g, m]) => `${g} ${(m.timeMs / m.timed / 1000).toFixed(1)}s`)
+        .join(' · ');
+    }
 
     // Stats level tabs
     bindTabs('stats-level-tabs', tab => { S.statsLevel = tab.dataset.level; renderStatsTable(); });
