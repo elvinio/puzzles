@@ -199,7 +199,7 @@ const RADICAL_GROUPS = [
     { char: '弋', pinyin: 'yì', meaning: 'dart; shoot', word: '式', wordPinyin: 'shì', wordMeaning: 'style; pattern' },
     { char: '弓', pinyin: 'gōng', meaning: 'bow', word: '张', wordPinyin: 'zhāng', wordMeaning: 'stretch; measure word' },
     { char: '彡', pinyin: 'shān', meaning: 'hair; bristle', word: '影', wordPinyin: 'yǐng', wordMeaning: 'shadow' },
-    { char: '彳', pinyin: 'chì', meaning: 'step', word: '很', wordPinyin: 'hěn', wordMeaning: 'very' },
+    { char: '彳', pinyin: 'chì', meaning: 'step', note: 'called 双人旁 (shuāng rén páng) "double person side"', word: '很', wordPinyin: 'hěn', wordMeaning: 'very' },
   ]},
   { strokes: 4, items: [
     { char: '心 (忄)', pinyin: 'xīn', meaning: 'heart', note: '忄 is called 竖心旁 (shù xīn páng) "upright heart side"', word: '想', wordPinyin: 'xiǎng', wordMeaning: 'think' },
@@ -383,16 +383,31 @@ const COMBINING_FORM_CHARS = new Set([
   '邑 (阝右)', '金 (钅)', '阜 (阝左)', '食 (饣)',
 ]);
 
+// Pulls a "名称 (pīnyīn)" pedagogical name out of a note, e.g. from
+// 'called 双人旁 (shuāng rén páng) "double person side"' -> 双人旁 / shuāng rén páng.
+function extractNamedForm(note) {
+  const m = note && note.match(/([一-鿿]{2,5})\s*\(([^)]+)\)/);
+  return m ? { name: m[1], pinyin: m[2] } : null;
+}
+
 function parseVariant(item) {
   if (!COMBINING_FORM_CHARS.has(item.char)) return null;
   const m = item.char.match(/^(.+?)\s*\((.+?)\)$/);
-  const nameMatch = item.note && item.note.match(/([一-鿿]{2,5})\s*\(([^)]+)\)/);
+  const named = extractNamedForm(item.note);
   return {
     primary: m[1].trim(),
     variantChar: m[2].trim(),
-    variantName: nameMatch ? nameMatch[1] : null,
-    variantPinyin: nameMatch ? nameMatch[2] : null,
+    variantName: named ? named.name : null,
+    variantPinyin: named ? named.pinyin : null,
   };
+}
+
+function tagAsCombiningForm(card) {
+  card.classList.add('is-variant');
+  const tag = document.createElement('div');
+  tag.className = 'variant-tag';
+  tag.textContent = '偏旁 combining form';
+  card.insertBefore(tag, card.firstChild);
 }
 
 function buildCard(item, { char, note, noteClass = 'rad-note' } = {}) {
@@ -507,14 +522,21 @@ RADICAL_GROUPS.forEach(({ strokes, items }) => {
           : 'combining form',
         noteClass: 'rad-variant-name',
       });
-      variantCard.classList.add('is-variant');
-      const tag = document.createElement('div');
-      tag.className = 'variant-tag';
-      tag.textContent = '偏旁 combining form';
-      variantCard.insertBefore(tag, variantCard.firstChild);
+      tagAsCombiningForm(variantCard);
       grid.appendChild(variantCard);
     } else {
-      grid.appendChild(buildCard(item, { char: item.char, note: item.note }));
+      // Some radicals (e.g. 彳 "双人旁", 疒 "病字旁") only ever exist as a bound
+      // form — there's no separate standalone character to pair them with —
+      // but they're still named 偏旁, so tag them too instead of only tagging
+      // the split primary/combining-form pairs above.
+      const named = extractNamedForm(item.note);
+      const card = buildCard(item, {
+        char: item.char,
+        note: named ? `${named.name} (${named.pinyin})` : item.note,
+        noteClass: named ? 'rad-variant-name' : 'rad-note',
+      });
+      if (named) tagAsCombiningForm(card);
+      grid.appendChild(card);
     }
   });
 
