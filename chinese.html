@@ -2457,6 +2457,15 @@
 
     function todayStr() { return new Date().toISOString().slice(0, 10); }
 
+    // Cards graded together would otherwise stay due on the same future day
+    // forever; ±5% jitter on the calendar offset spreads them out. The stored
+    // interval stays exact so growth math and mastery thresholds are unaffected.
+    function fuzzedDueOffset(interval) {
+      if (interval < 5) return interval;
+      const jitter = Math.round(interval * (Math.random() * 0.10 - 0.05));
+      return Math.max(1, interval + jitter);
+    }
+
     // Which memory each test mode exercises — tracked separately inside the
     // record so recognition success doesn't hide production weakness.
     const MODE_GROUP = {
@@ -2513,7 +2522,7 @@
         rec.interval = 1;
       }
       const due = new Date();
-      due.setDate(due.getDate() + rec.interval);
+      due.setDate(due.getDate() + fuzzedDueOffset(rec.interval));
       rec.dueDate = due.toISOString().slice(0, 10);
       return rec;
     }
