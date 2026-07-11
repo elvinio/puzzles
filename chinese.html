@@ -168,6 +168,7 @@
       letter-spacing: 0.05em;
       transition: all 0.15s;
       touch-action: manipulation;
+      -webkit-touch-callout: none;
     }
 
     /* Subtle mastery fill under a lesson tab's label — % of lesson words
@@ -1410,6 +1411,64 @@
       font-size: 1.4rem;
     }
 
+    /* Mastery tiers: word cards tinted by the weakest exercised skill's
+       review interval (see masteryTier). Tier 0 (not tried) keeps the
+       default card look. */
+    .browse-word-card.lm-tier-1 {
+      background: #fef3c7;
+      border-color: #f59e0b;
+    }
+
+    .browse-word-card.lm-tier-2 {
+      background: #d1fae5;
+      border-color: #6ee7b7;
+    }
+
+    .browse-word-card.lm-tier-3 {
+      background: #bbf7d0;
+      border-color: var(--ok);
+    }
+
+    .lm-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--p-text);
+      text-align: center;
+    }
+
+    .lm-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .lm-legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 14px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .lm-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .lm-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 4px;
+      border: 2px solid var(--brd);
+      background: var(--surface);
+    }
+
+    .lm-dot.lm-tier-1 { background: #fef3c7; border-color: #f59e0b; }
+    .lm-dot.lm-tier-2 { background: #d1fae5; border-color: #6ee7b7; }
+    .lm-dot.lm-tier-3 { background: #bbf7d0; border-color: var(--ok); }
+
     .browse-empty {
       color: var(--muted);
       font-size: 0.9rem;
@@ -2127,6 +2186,23 @@
         <button class="btn" id="puz-again-btn" style="width:200px">Play Again</button>
         <button class="btn btn-outline" id="puz-exit-btn" style="width:200px">Back to Setup</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Lesson Mastery Modal (long-press a lesson tab; sits under #char-modal:
+       same z-index, earlier sibling, so a tapped word's card opens on top) -->
+  <div id="lesson-modal" class="char-modal-overlay">
+    <div class="char-modal" style="max-width:640px">
+      <button class="char-modal-close" id="lm-close">✕</button>
+      <div class="lm-title" id="lm-title"></div>
+      <div class="lm-sub" id="lm-sub"></div>
+      <div class="lm-legend">
+        <span><span class="lm-dot"></span>Not tried</span>
+        <span><span class="lm-dot lm-tier-1"></span>Learning</span>
+        <span><span class="lm-dot lm-tier-2"></span>Known</span>
+        <span><span class="lm-dot lm-tier-3"></span>Mastered</span>
+      </div>
+      <div class="browse-word-grid" id="lm-grid" style="grid-template-columns:repeat(auto-fill, minmax(56px, 1fr))"></div>
     </div>
   </div>
 
@@ -3250,6 +3326,68 @@
       return mastered / words.length;
     }
 
+    // Child-facing mastery tiers for the word grids. Tier >= 2 matches the
+    // lessonMastery "mastered" rule so the tab bar and grids always agree.
+    function masteryTier(rec) {
+      if (!rec || !(rec.attempts > 0)) return 0;
+      const iv = masteryInterval(rec);
+      if (iv >= 21) return 3;
+      if (iv >= 7) return 2;
+      return 1;
+    }
+
+    // Long-press without pointer capture: native scroll must still fire
+    // pointercancel to abort the hold. Must be attached BEFORE the element's
+    // click handler so a fired hold can swallow the synthetic click.
+    function attachLongPress(el, onHold) {
+      let timer = null, held = false, x0 = 0, y0 = 0;
+      const cancel = () => { clearTimeout(timer); timer = null; };
+      el.addEventListener('pointerdown', e => {
+        held = false; x0 = e.clientX; y0 = e.clientY;
+        cancel();
+        timer = setTimeout(() => { held = true; onHold(); }, 500);
+      });
+      el.addEventListener('pointermove', e => {
+        if (timer && Math.hypot(e.clientX - x0, e.clientY - y0) > 8) cancel();
+      });
+      el.addEventListener('pointerup', cancel);
+      el.addEventListener('pointercancel', cancel);
+      el.addEventListener('contextmenu', e => e.preventDefault());
+      el.addEventListener('click', e => {
+        if (!held) return;
+        held = false;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      });
+    }
+
+    function showLessonMastery(level, lessonNum) {
+      const words = getWordPool(level, [lessonNum]);
+      if (!words.length) return;
+      const levelName = { p1: 'Primary 1', p2: 'Primary 2', p3: 'Primary 3' }[level] || level;
+      document.getElementById('lm-title').textContent = `${levelName} · 第${lessonNum}课`;
+      const known = words.filter(w => masteryTier(S.progress[w.key]) >= 2).length;
+      document.getElementById('lm-sub').textContent = `${known} of ${words.length} words known`;
+      const grid = document.getElementById('lm-grid');
+      grid.innerHTML = '';
+      words.forEach(w => {
+        const tier = masteryTier(S.progress[w.key]);
+        const card = document.createElement('div');
+        card.className = 'browse-word-card compact' + (tier ? ` lm-tier-${tier}` : '');
+        card.innerHTML = `<div class="browse-word-char">${esc(w.character)}</div>`;
+        card.addEventListener('click', () => showCharModal(w));
+        grid.appendChild(card);
+      });
+      document.getElementById('lesson-modal').classList.add('open');
+    }
+
+    document.getElementById('lesson-modal').addEventListener('click', e => {
+      if (e.target.id === 'lesson-modal') document.getElementById('lesson-modal').classList.remove('open');
+    });
+    document.getElementById('lm-close').addEventListener('click', () => {
+      document.getElementById('lesson-modal').classList.remove('open');
+    });
+
     function renderSetupLessonTabs() {
       const container = document.getElementById('setup-lesson-tabs');
       if (!container) return;
@@ -3267,6 +3405,7 @@
           bar.style.width = Math.round(mastery * 100) + '%';
           btn.appendChild(bar);
         }
+        attachLongPress(btn, () => showLessonMastery(S.level, i));
         btn.addEventListener('click', () => {
           S.lessonTest = false;
           if (S.lessons.includes(i)) {
@@ -3316,8 +3455,9 @@
       }
       container.innerHTML = '';
       words.forEach(w => {
+        const tier = masteryTier(S.progress[w.key]);
         const card = document.createElement('div');
-        card.className = 'browse-word-card compact';
+        card.className = 'browse-word-card compact' + (tier ? ` lm-tier-${tier}` : '');
         card.innerHTML = `<div class="browse-word-char">${esc(w.character)}</div>`;
         card.addEventListener('click', () => showCharModal(w));
         container.appendChild(card);
