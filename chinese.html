@@ -2409,7 +2409,10 @@
       for (const i of lessonArray) {
         const lessonKey = `${level}-${i}`;
         (data[lessonKey] || []).forEach(entry => {
-          const key = `${lessonKey}-${entry.character}`;
+          // Progress records are keyed by character alone — the same character
+          // in several lessons shares one schedule (first lesson's entry wins
+          // as the displayed metadata).
+          const key = entry.character;
           if (!seen.has(key)) {
             seen.add(key);
             words.push({ key, lessonKey, lessonNum: i, level, ...entry });
@@ -2431,6 +2434,11 @@
       return migrateProgress(avatarId, map);
     }
 
+    // Records used to be keyed `${level}-${lesson}-${character}`, giving the
+    // same character an independent schedule per lesson. They are now keyed by
+    // character alone (lesson/level live on the pool words as metadata).
+    const LEGACY_KEY_RE = /^p\d+-\d+-(.+)$/;
+
     // Upgrades stored records to the current shape. Runs on every read because
     // the sync layer (applySnapshot) writes merged blobs straight to
     // localStorage — a stale device can re-introduce legacy shapes at any time
@@ -2444,7 +2452,12 @@
         if (!rec || typeof rec !== 'object') { changed = true; continue; }
         let r = rec;
         if (!r.skills) { r = { ...r, skills: seedSkills(r) }; changed = true; }
-        out[key] = r;
+        const legacy = key.match(LEGACY_KEY_RE);
+        const newKey = legacy ? legacy[1] : key;
+        if (newKey !== key) changed = true;
+        // Same character from two lessons (or re-synced legacy keys): fold with
+        // the sync merge semantics — monotone, so re-folding never inflates.
+        out[newKey] = out[newKey] ? window.PZSyncMerge.mergeSrRecord(out[newKey], r) : r;
       }
       if (changed) saveProgress(avatarId, out);
       return out;
@@ -4415,7 +4428,7 @@
           const entry = (data[lk] || []).find(e => e.character === char);
           if (entry) {
             const lessonNum = Number((lk.match(/-(\d+)$/) || [])[1] || 0);
-            return { ...entry, lessonKey: lk, lessonNum, level, key: `${lk}-${entry.character}` };
+            return { ...entry, lessonKey: lk, lessonNum, level, key: entry.character };
           }
         }
       }
@@ -4798,7 +4811,7 @@
       words.forEach(w => {
         const card = document.createElement('div');
         card.className = 'browse-word-card';
-        const wordObj = { ...w, lessonKey, lessonNum: B.lesson, level: B.level, key: `${lessonKey}-${w.character}` };
+        const wordObj = { ...w, lessonKey, lessonNum: B.lesson, level: B.level, key: w.character };
         card.innerHTML = `
       <div class="browse-word-char">${esc(w.character)}</div>
       <div style="display:flex;align-items:center;gap:4px">
