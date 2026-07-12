@@ -12,7 +12,11 @@
     hairStyle: 'short',
     hairColor: '#2c1810',
     dimpleStyle: 'none',
-    dimpleColor: '#ffb3c6'
+    dimpleColor: '#ffb3c6',
+    browStyle: 'none',
+    glassesStyle: 'none',
+    hatStyle: 'none',
+    hatColor: '#ef4444'
   };
 
   // ── Storage helpers ───────────────────────────────────────────────────────
@@ -85,7 +89,7 @@
   // ── SVG render ────────────────────────────────────────────────────────────
   // viewBox="0 0 100 100"
   // Face centre: (50, 55). Hair dome sides land at y≈52, inner fill y≈39.
-  // Layer order: bg → hairBack → face → hairFront → eyes → nose → mouth → dimples
+  // Layer order: bg → hairBack → face → hairFront → brows → eyes → nose → mouth → dimples → glasses → hat
 
   function renderAvatarSVG(state, size) {
     var s = Object.assign({}, DEFAULTS, state);
@@ -148,6 +152,32 @@
           hairBack = '<path d="M50,2 C27,2 5,22 5,57 C5,80 24,99 50,99 C76,99 95,80 95,57 C95,22 73,2 50,2 Z" fill="' + hc + '"/>';
           break;
 
+        case 'afro':
+          // Big round cloud surrounding the top half of the face
+          hairBack = '<circle cx="50" cy="32" r="34" fill="' + hc + '"/>' +
+                     '<circle cx="24" cy="42" r="14" fill="' + hc + '"/>' +
+                     '<circle cx="76" cy="42" r="14" fill="' + hc + '"/>';
+          break;
+
+        case 'pigtails':
+          // Short dome + two side bunches hanging below ear level
+          hairBack = '<path d="M18,52 Q18,12 50,10 Q82,12 82,52 Q66,40 50,39 Q34,40 18,52 Z" fill="' + hc + '"/>' +
+                     '<circle cx="13" cy="56" r="10" fill="' + hc + '"/>' +
+                     '<circle cx="87" cy="56" r="10" fill="' + hc + '"/>' +
+                     '<circle cx="12" cy="70" r="8" fill="' + hc + '"/>' +
+                     '<circle cx="88" cy="70" r="8" fill="' + hc + '"/>';
+          break;
+
+        case 'mohawk':
+          // Narrow centre strip of spikes, bare sides
+          hairBack = '<path d="M40,32 L42,14 L46,26 L50,6 L54,26 L58,14 L60,32 Q55,28 50,28 Q45,28 40,32 Z" fill="' + hc + '"/>';
+          break;
+
+        case 'sidepart':
+          // Asymmetric sweep: dome parted high on the left, longer over the right side
+          hairBack = '<path d="M18,52 Q18,12 50,10 Q82,12 82,52 Q80,34 70,30 Q74,46 62,38 Q48,30 34,36 Q24,41 18,52 Z" fill="' + hc + '"/>';
+          break;
+
         default:
           hairBack = '<path d="M18,52 Q18,12 50,10 Q82,12 82,52 Q66,40 50,39 Q34,40 18,52 Z" fill="' + hc + '"/>';
       }
@@ -191,6 +221,12 @@
       case 'starry':
         eyes = '<text x="37" y="52" text-anchor="middle" font-size="10" fill="#f0c040">★</text>' +
                '<text x="63" y="52" text-anchor="middle" font-size="10" fill="#f0c040">★</text>'; break;
+      case 'happy':
+        eyes = '<path d="M31,50 Q37,43 43,50" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
+               '<path d="M57,50 Q63,43 69,50" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>'; break;
+      case 'wink':
+        eyes = '<circle cx="37" cy="48" r="4.5" fill="#1a1a2e"/><circle cx="39" cy="46.5" r="1.5" fill="white"/>' +
+               '<line x1="57" y1="48" x2="69" y2="48" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="round"/>'; break;
       default: // round
         eyes = '<circle cx="37" cy="48" r="4.5" fill="#1a1a2e"/><circle cx="39" cy="46.5" r="1.5" fill="white"/>' +
                '<circle cx="63" cy="48" r="4.5" fill="#1a1a2e"/><circle cx="65" cy="46.5" r="1.5" fill="white"/>'; break;
@@ -224,6 +260,11 @@
         mouth = '<path d="M43,67 Q51,73 61,65" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>'; break;
       case 'open':
         mouth = '<ellipse cx="50" cy="68" rx="8" ry="5" fill="#1a1a2e"/><ellipse cx="50" cy="69" rx="5" ry="3" fill="#c084fc"/>'; break;
+      case 'tongue':
+        mouth = '<path d="M40,65 Q50,74 60,65" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
+                '<path d="M46,68 Q46,76 51,75 Q56,74 55,67 Q50,71 46,68 Z" fill="#ff8fab"/>'; break;
+      case 'cat':
+        mouth = '<path d="M40,65 Q45,71 50,66 Q55,71 60,65" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>'; break;
       default: // smile
         mouth = '<path d="M40,66 Q50,74 60,66" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>'; break;
     }
@@ -240,11 +281,105 @@
         // Oval dimples with long side horizontal
         dimples = '<ellipse cx="33" cy="66" rx="7" ry="5" fill="' + dc + '" opacity="0.72"/>' +
                   '<ellipse cx="67" cy="66" rx="7" ry="5" fill="' + dc + '" opacity="0.72"/>';
+      } else if (s.dimpleStyle === 'freckles') {
+        // A few small dots scattered across each cheek
+        dimples = '<circle cx="30" cy="63" r="1.6" fill="' + dc + '" opacity="0.85"/>' +
+                  '<circle cx="35" cy="66" r="1.6" fill="' + dc + '" opacity="0.85"/>' +
+                  '<circle cx="30" cy="69" r="1.6" fill="' + dc + '" opacity="0.85"/>' +
+                  '<circle cx="70" cy="63" r="1.6" fill="' + dc + '" opacity="0.85"/>' +
+                  '<circle cx="65" cy="66" r="1.6" fill="' + dc + '" opacity="0.85"/>' +
+                  '<circle cx="70" cy="69" r="1.6" fill="' + dc + '" opacity="0.85"/>';
+      }
+    }
+
+    // ── Eyebrows ──────────────────────────────────────────────────────────
+    // Drawn in hair color, sitting just above the eyes (eyes at y≈48).
+    var brows = '';
+    if (s.browStyle && s.browStyle !== 'none') {
+      var bc = s.hairColor;
+      switch (s.browStyle) {
+        case 'straight':
+          brows = '<line x1="31" y1="40" x2="43" y2="40" stroke="' + bc + '" stroke-width="2.5" stroke-linecap="round"/>' +
+                  '<line x1="57" y1="40" x2="69" y2="40" stroke="' + bc + '" stroke-width="2.5" stroke-linecap="round"/>'; break;
+        case 'curved':
+          brows = '<path d="M31,41 Q37,37 43,41" stroke="' + bc + '" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
+                  '<path d="M57,41 Q63,37 69,41" stroke="' + bc + '" stroke-width="2.5" fill="none" stroke-linecap="round"/>'; break;
+        case 'angry':
+          brows = '<line x1="31" y1="38" x2="43" y2="42" stroke="' + bc + '" stroke-width="2.5" stroke-linecap="round"/>' +
+                  '<line x1="57" y1="42" x2="69" y2="38" stroke="' + bc + '" stroke-width="2.5" stroke-linecap="round"/>'; break;
+        case 'worried':
+          brows = '<line x1="31" y1="42" x2="43" y2="38" stroke="' + bc + '" stroke-width="2.5" stroke-linecap="round"/>' +
+                  '<line x1="57" y1="38" x2="69" y2="42" stroke="' + bc + '" stroke-width="2.5" stroke-linecap="round"/>'; break;
+        case 'thick':
+          brows = '<rect x="30" y="38" width="14" height="4.5" rx="2.2" fill="' + bc + '"/>' +
+                  '<rect x="56" y="38" width="14" height="4.5" rx="2.2" fill="' + bc + '"/>'; break;
+      }
+    }
+
+    // ── Glasses ───────────────────────────────────────────────────────────
+    // Fixed dark frame, centred on the eyes (y≈48).
+    var glasses = '';
+    if (s.glassesStyle && s.glassesStyle !== 'none') {
+      var gc = '#1a1a2e';
+      switch (s.glassesStyle) {
+        case 'round':
+          glasses = '<circle cx="37" cy="48" r="9" fill="none" stroke="' + gc + '" stroke-width="2.5"/>' +
+                    '<circle cx="63" cy="48" r="9" fill="none" stroke="' + gc + '" stroke-width="2.5"/>' +
+                    '<line x1="46" y1="48" x2="54" y2="48" stroke="' + gc + '" stroke-width="2.5"/>' +
+                    '<line x1="28" y1="46" x2="22" y2="44" stroke="' + gc + '" stroke-width="2.5" stroke-linecap="round"/>' +
+                    '<line x1="72" y1="46" x2="78" y2="44" stroke="' + gc + '" stroke-width="2.5" stroke-linecap="round"/>'; break;
+        case 'square':
+          glasses = '<rect x="28" y="40" width="18" height="15" rx="3" fill="none" stroke="' + gc + '" stroke-width="2.5"/>' +
+                    '<rect x="54" y="40" width="18" height="15" rx="3" fill="none" stroke="' + gc + '" stroke-width="2.5"/>' +
+                    '<line x1="46" y1="46" x2="54" y2="46" stroke="' + gc + '" stroke-width="2.5"/>' +
+                    '<line x1="28" y1="45" x2="22" y2="43" stroke="' + gc + '" stroke-width="2.5" stroke-linecap="round"/>' +
+                    '<line x1="72" y1="45" x2="78" y2="43" stroke="' + gc + '" stroke-width="2.5" stroke-linecap="round"/>'; break;
+        case 'sunglasses':
+          glasses = '<rect x="27" y="41" width="19" height="14" rx="5" fill="' + gc + '"/>' +
+                    '<rect x="54" y="41" width="19" height="14" rx="5" fill="' + gc + '"/>' +
+                    '<line x1="46" y1="45" x2="54" y2="45" stroke="' + gc + '" stroke-width="2.5"/>' +
+                    '<line x1="27" y1="45" x2="21" y2="43" stroke="' + gc + '" stroke-width="2.5" stroke-linecap="round"/>' +
+                    '<line x1="73" y1="45" x2="79" y2="43" stroke="' + gc + '" stroke-width="2.5" stroke-linecap="round"/>' +
+                    '<line x1="31" y1="45" x2="36" y2="50" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>' +
+                    '<line x1="58" y1="45" x2="63" y2="50" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>'; break;
+        case 'star':
+          glasses = '<text x="37" y="55" text-anchor="middle" font-size="22" fill="#f0c040" stroke="' + gc + '" stroke-width="0.8">★</text>' +
+                    '<text x="63" y="55" text-anchor="middle" font-size="22" fill="#f0c040" stroke="' + gc + '" stroke-width="0.8">★</text>' +
+                    '<line x1="46" y1="47" x2="54" y2="47" stroke="' + gc + '" stroke-width="2.5"/>'; break;
+      }
+    }
+
+    // ── Headwear ──────────────────────────────────────────────────────────
+    // Topmost layer, sits over the hair dome (dome top y≈10).
+    var hat = '';
+    if (s.hatStyle && s.hatStyle !== 'none') {
+      var tc = s.hatColor || '#ef4444';
+      switch (s.hatStyle) {
+        case 'cap':
+          hat = '<path d="M22,26 Q22,4 50,4 Q78,4 78,26 Q64,20 50,20 Q36,20 22,26 Z" fill="' + tc + '"/>' +
+                '<path d="M50,20 Q78,20 84,28 Q66,26 50,26 Z" fill="' + tc + '" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>' +
+                '<circle cx="50" cy="6" r="2.5" fill="rgba(0,0,0,0.2)"/>'; break;
+        case 'beanie':
+          hat = '<path d="M22,28 Q22,4 50,4 Q78,4 78,28 L78,30 Q64,24 50,24 Q36,24 22,30 Z" fill="' + tc + '"/>' +
+                '<path d="M20,30 Q50,20 80,30 L80,24 Q50,14 20,24 Z" fill="' + tc + '" opacity="0.75"/>' +
+                '<circle cx="50" cy="4" r="4" fill="' + tc + '" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>'; break;
+        case 'party':
+          hat = '<path d="M50,0 L64,28 Q50,22 36,28 Z" fill="' + tc + '"/>' +
+                '<line x1="43" y1="15" x2="55" y2="11" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>' +
+                '<line x1="40" y1="23" x2="58" y2="17" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>' +
+                '<circle cx="50" cy="2" r="3.5" fill="#f0c040"/>'; break;
+        case 'crown':
+          hat = '<path d="M28,26 L26,8 L36,17 L50,3 L64,17 L74,8 L72,26 Q50,18 28,26 Z" fill="' + tc + '"/>' +
+                '<circle cx="26" cy="7" r="2.5" fill="#f0c040"/><circle cx="50" cy="3" r="2.5" fill="#f0c040"/><circle cx="74" cy="7" r="2.5" fill="#f0c040"/>'; break;
+        case 'bow':
+          hat = '<path d="M50,12 L36,4 Q32,12 36,20 Z" fill="' + tc + '"/>' +
+                '<path d="M50,12 L64,4 Q68,12 64,20 Z" fill="' + tc + '"/>' +
+                '<circle cx="50" cy="12" r="4" fill="' + tc + '" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>'; break;
       }
     }
 
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="' + sz + '" height="' + sz + '">' +
-      bg + hairBack + face + hairFront + eyes + nose + mouth + dimples + '</svg>';
+      bg + hairBack + face + hairFront + brows + eyes + nose + mouth + dimples + glasses + hat + '</svg>';
   }
 
   window.__avatarRender = renderAvatarSVG;
