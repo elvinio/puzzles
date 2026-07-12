@@ -120,6 +120,20 @@
       catch { }
     }
 
+    // Remembers each avatar's last-selected level so re-opening (or switching
+    // avatars) restores where that student left off instead of always p1.
+    function lastLevelKey(avatarId) { return `chinese-last-level-${avatarId}`; }
+
+    function loadLastLevel(avatarId) {
+      try { return localStorage.getItem(lastLevelKey(avatarId)) || 'p1'; }
+      catch { return 'p1'; }
+    }
+
+    function saveLastLevel(avatarId, level) {
+      try { localStorage.setItem(lastLevelKey(avatarId), level); }
+      catch { }
+    }
+
     const AZURE_CONFIG_KEY = 'chinese-azure-speech';
 
     function getAzureConfig() {
@@ -797,10 +811,18 @@
       const startBtn = document.getElementById('setup-start');
 
       if (avatar) {
+        const levelChanged = S.avatarId !== avatar.id;
         S.avatarId = avatar.id;
         S.progress = loadProgress(avatar.id);
         warn.style.display = 'none';
         startBtn.disabled = false;
+        if (levelChanged) {
+          S.level = loadLastLevel(avatar.id);
+          S.lessons = [1];
+          S.lessonTest = false;
+          const levelTabs = document.getElementById('setup-level-tabs');
+          levelTabs.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.level === S.level));
+        }
       } else {
         warn.style.display = 'block';
         startBtn.disabled = true;
@@ -822,10 +844,11 @@
       });
     }
 
-    bindTabs('setup-level-tabs', tab => { 
-      S.level = tab.dataset.level; 
+    bindTabs('setup-level-tabs', tab => {
+      S.level = tab.dataset.level;
       S.lessons = [1];
       S.lessonTest = false;
+      if (S.avatarId) saveLastLevel(S.avatarId, S.level);
       renderSetupLessonTabs();
     });
 
