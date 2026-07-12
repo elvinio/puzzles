@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#f5f2fb">
+  <link rel="icon" href="../icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="stylesheet" href="../styles.css">
+<title>Chinese Oral Practice 口试</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="oral.css">
+</head>
+<body>
+
+<header>
+  <h1>口试 Oral Practice</h1>
+  <nav class="top-nav">
+    <a class="btn btn-outline btn-sm" href="chinese.html">← Chinese</a>
+    <button class="btn btn-outline btn-sm" id="settings-btn" title="Settings">⚙</button>
+  </nav>
+</header>
+
+<!-- ═══ SETUP SCREEN ═══ -->
+<main id="screen-setup" class="screen active">
+  <p class="intro">Pick a picture, choose a level, and 陈老师 will practise
+    看图说话 with you — describing the picture out loud in Chinese, one question at a time.</p>
+
+  <label class="pic-drop" id="pic-drop">
+    <input type="file" id="pic-input" accept="image/*" hidden>
+    <img id="pic-preview" alt="" hidden>
+    <div class="pic-drop-hint" id="pic-drop-hint">
+      <div class="pic-drop-icon">🖼️</div>
+      <div>Tap to choose a picture<br><span class="pic-drop-sub">or drag &amp; drop one here</span></div>
+    </div>
+  </label>
+
+  <div class="level-row" id="level-row">
+    <span class="level-label">Level</span>
+    <button class="level-chip" data-level="1">P1</button>
+    <button class="level-chip" data-level="2">P2</button>
+    <button class="level-chip" data-level="3">P3</button>
+    <button class="level-chip" data-level="4">P4</button>
+    <button class="level-chip" data-level="5">P5</button>
+    <button class="level-chip" data-level="6">P6</button>
+  </div>
+
+  <button class="btn btn-lg" id="start-btn" disabled>开始 Start</button>
+  <div class="setup-status" id="setup-status"></div>
+</main>
+
+<!-- ═══ CONVERSATION SCREEN ═══ -->
+<main id="screen-chat" class="screen">
+  <div class="chat-pic-wrap"><img id="chat-pic" alt="Practice picture"></div>
+  <div class="chat-log" id="chat-log"></div>
+  <div class="chat-status" id="chat-status"></div>
+  <div class="chat-controls">
+    <button class="btn btn-outline btn-sm" id="finish-btn">结束 Finish</button>
+    <button class="mic-btn" id="mic-btn" title="Hold to talk">🎤</button>
+    <button class="btn btn-outline btn-sm" id="kbd-toggle-btn" title="Type instead">⌨</button>
+  </div>
+  <div class="typed-row" id="typed-row" hidden>
+    <input type="text" id="typed-input" placeholder="用中文输入…" autocomplete="off">
+    <button class="btn btn-sm" id="typed-send-btn">Send</button>
+  </div>
+</main>
+
+<!-- ═══ FEEDBACK SCREEN ═══ -->
+<main id="screen-feedback" class="screen">
+  <section class="fb-card">
+    <h2>给学生 <button class="speak-btn" id="fb-student-speak" title="Listen">🔊</button></h2>
+    <div class="fb-student" id="fb-student"></div>
+  </section>
+  <section class="fb-card">
+    <h2>Parent Report</h2>
+    <div class="fb-parent" id="fb-parent"></div>
+  </section>
+  <div class="btn-row">
+    <button class="btn" id="again-btn">再来一次 Same picture</button>
+    <button class="btn btn-outline" id="new-btn">New picture</button>
+  </div>
+</main>
+
+<!-- ═══ SETTINGS MODAL ═══ -->
+<div id="oral-settings-modal" class="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" id="os-close">✕</button>
+    <div class="modal-section" style="gap:4px">
+      <div style="font-size:1.1rem;font-weight:800;color:var(--p-text)">⚙ Oral Practice Settings</div>
+      <div style="font-size:0.8rem;color:var(--muted)">The tutor's brain is Claude (Anthropic).
+        Speech uses the same Azure proxy as the practice hub's 🎤 Speak mode — the proxy URL and key
+        below are shared with the hub's settings.</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-sec-label">Anthropic API Key</div>
+      <input type="password" id="os-anthropic-key" class="ss-input" placeholder="sk-ant-…" autocomplete="off">
+      <div style="font-size:0.75rem;color:var(--muted)">Stored only in this browser (localStorage).
+        Use a key you're comfortable keeping on this device.</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-sec-label">Model</div>
+      <input type="text" id="os-model" class="ss-input" placeholder="claude-opus-4-8" autocomplete="off">
+    </div>
+    <div class="modal-section">
+      <div class="modal-sec-label">Speech Proxy URL (Azure)</div>
+      <input type="text" id="os-proxy-url" class="ss-input" placeholder="https://your-app--azure-speech-proxy-fastapi-app.modal.run" autocomplete="off">
+    </div>
+    <div class="modal-section">
+      <div class="modal-sec-label">Speech Proxy Key</div>
+      <input type="password" id="os-proxy-key" class="ss-input" placeholder="Proxy API key" autocomplete="off">
+    </div>
+    <div class="btn-row" style="justify-content:flex-start">
+      <button class="btn btn-sm" id="os-save">Save</button>
+      <button class="btn btn-outline btn-sm" id="os-test">Test connections</button>
+    </div>
+    <div id="os-test-status" style="font-size:0.85rem;font-weight:700;min-height:1.2em;white-space:pre-line"></div>
+  </div>
+</div>
+
+  <script src="common.js"></script>
+  <script src="oral.js"></script>
+<script src="../sync-registry.js"></script>
+<script src="../sync-merge.js"></script>
+<script src="../sync-drive.js"></script>
+<script src="../sync-ui.js"></script>
+<script src="../avatar.js"></script>
+<script src="../app.js"></script>
+</body>
+</html>

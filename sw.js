@@ -8,7 +8,7 @@
 
    Bump VERSION on deploy to hard-reset caches.
    ========================================================================== */
-const VERSION = 'pz-v4';
+const VERSION = 'pz-v5';
 const SHELL   = 'shell-' + VERSION;
 const RUNTIME = 'runtime-' + VERSION;
 const AUDIO   = 'audio-' + VERSION;
@@ -28,10 +28,12 @@ const PRECACHE = [
   'sync-registry.js', 'sync-merge.js', 'sync-drive.js', 'sync-ui.js',
   // Chinese app (chinese/ subdir: pages + extracted css/js + data + hanzi lib)
   'chinese/chinese.html', 'chinese/radicals.html', 'chinese/pinyin_tones.html',
+  'chinese/oral.html',
   'chinese/common.css', 'chinese/common.js',
   'chinese/chinese.css', 'chinese/chinese.js',
   'chinese/radicals.css', 'chinese/radicals.js',
   'chinese/pinyin_tones.css', 'chinese/pinyin_tones.js',
+  'chinese/oral.css', 'chinese/oral.js',
   'chinese/hanzi-data/hanzi-writer.min.js',
   'chinese/data/chinese-p1.json', 'chinese/data/chinese-p2.json', 'chinese/data/chinese-p3.json',
   'chinese/data/chinese-idioms-p1.json', 'chinese/data/chinese-idioms-p3.json',

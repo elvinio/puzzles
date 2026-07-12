@@ -16,6 +16,7 @@ the hub.
 | `chinese.html` | Practice hub: SRS flashcards + ~14 quiz modes across 3 levels, 默写 spelling tests, dictionary browse (with stroke-order + TTS per word), stats, speech (STT/TTS) | `data/chinese-p{1,2,3}.json`, `hanzi-data/`, `pinyin_audio/` |
 | `radicals.html` | Kangxi radical reference, searchable | inline (data hard-coded in `radicals.js`) |
 | `pinyin_tones.html` | Pinyin tone drills (play the 4 tones of a syllable) | `pinyin_audio/` |
+| `oral.html` | AI oral tutor (看图说话): upload a picture, Claude holds a spoken conversation about it in Chinese (Azure STT/TTS via the speech proxy), ends with feedback for student + parent | user-supplied picture + Anthropic API + speech proxy |
 
 ## File layout
 
@@ -31,6 +32,7 @@ chinese/
   chinese.html / .css / .js
   radicals.html / .css / .js
   pinyin_tones.html / .css / .js
+  oral.html / .css / .js
   data/                  chinese-p{1,2,3}.json, chinese-idioms-p{1,3}.json
   fonts/                 KaiTiRegular.ttf  (the Chinese display font)
   pinyin_audio/          <syllable><tone>.mp3  (e.g. hao3.mp3) — 1500+ clips
@@ -57,10 +59,27 @@ chinese/
     contained and reusable — the natural place to build new pinyin-aware modes.
   - **`esc(s)`** — HTML-escape for safe `innerHTML` interpolation.
 
-  Currently loaded by `chinese.html`. `radicals.html` and `pinyin_tones.html`
-  don't use these helpers, so they don't load `common.js` — add the
-  `<script src="common.js">` tag before their `<name>.js` if a future change
-  needs the toolkit.
+  Currently loaded by `chinese.html` and `oral.html` (which uses `esc()`).
+  `radicals.html` and `pinyin_tones.html` don't use these helpers, so they
+  don't load `common.js` — add the `<script src="common.js">` tag before
+  their `<name>.js` if a future change needs the toolkit.
+
+### Oral tutor (`oral.html`) config & keys
+
+`oral.js` talks to two services, both configured in its ⚙ settings modal:
+
+- **Anthropic (Claude)** — called directly from the browser
+  (`anthropic-dangerous-direct-browser-access`); the API key + model live in
+  localStorage under `chinese-oral-config` (`{anthropicKey, model, level}`).
+  The key is stored client-side, so only use it on trusted family devices.
+- **Azure speech proxy (STT + TTS)** — **shares** the hub's
+  `chinese-azure-speech` localStorage key (`{proxyUrl, apiKey, threshold}`),
+  so a proxy configured in `chinese.html` works here with zero setup and vice
+  versa. The small proxy/WAV helpers are intentionally duplicated from
+  `chinese.js` (they live inside its closure and can't be imported).
+
+Without the speech proxy the page degrades gracefully: the child types
+answers and TTS falls back to the browser's `speechSynthesis`.
 
 ## Shared root dependencies
 
