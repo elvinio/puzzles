@@ -28,6 +28,7 @@
         <a class="btn btn-outline btn-sm" href="radicals.html">Radicals</a>
         <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
         <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
+        <button class="btn btn-outline btn-sm" id="setup-bugs-btn">🐛 Bugs</button>
         <button class="btn btn-outline btn-sm" id="setup-spelling-btn">默写</button>
         <button class="btn btn-outline btn-sm" id="setup-speech-settings-btn" title="Settings">⚙</button>
       </div>
@@ -174,7 +175,10 @@
         <div class="hud-label">CORRECT</div>
         <div class="hud-val ok" id="hud-correct">0</div>
       </div>
-      <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-outline btn-sm" id="bug-report-btn" title="Report a problem with this question">🐛</button>
+        <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
+      </div>
     </div>
 
     <div class="progress-bar-wrap">
@@ -346,6 +350,18 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════
+     SCREEN: BUG REPORTS
+════════════════════════════════════════════════ -->
+  <div id="screen-bugs" class="screen">
+    <div class="topbar">
+      <button class="back-link" id="bugs-back-btn">← Back</button>
+      <h1>🐛 Bug Reports</h1>
+      <div style="width:60px"></div>
+    </div>
+    <div class="bug-list" id="bug-list"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
      SCREEN: WORD PUZZLE
 ════════════════════════════════════════════════ -->
   <div id="screen-puzzle" class="screen">
@@ -469,6 +485,34 @@
             <button class="btn btn-outline btn-sm" id="reset-cancel2-btn">Cancel</button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bug Report Modal -->
+  <div id="bug-report-modal" class="char-modal-overlay">
+    <div class="char-modal">
+      <button class="char-modal-close" id="br-close">✕</button>
+      <div class="char-modal-section" style="gap:4px">
+        <div style="font-size:1.1rem;font-weight:800;color:var(--p-text)">🐛 Report a Problem</div>
+        <div class="char-modal-sec-label" id="br-context"></div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">What's wrong?</div>
+        <div class="tab-row" id="br-issue-tabs">
+          <button class="tab" data-issue="audio" type="button">Audio is wrong</button>
+          <button class="tab" data-issue="word" type="button">Word is wrong</button>
+          <button class="tab" data-issue="punctuation" type="button">Punctuation is wrong</button>
+          <button class="tab" data-issue="other" type="button">Others</button>
+        </div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Details (optional)</div>
+        <textarea id="br-note" class="ss-input" rows="3" placeholder="Describe the problem…" style="resize:vertical;font-family:inherit"></textarea>
+      </div>
+      <div class="btn-row" style="justify-content:flex-start">
+        <button class="btn btn-sm" id="br-submit">Submit Report</button>
+        <button class="btn btn-outline btn-sm" id="br-cancel">Cancel</button>
       </div>
     </div>
   </div>
