@@ -260,25 +260,103 @@
   }
 
   // ═══ Image prep — downscale to ≤1568px long edge, JPEG base64 ═══
+  // White-fill before drawing: JPEG has no alpha, and the topic SVGs may rely on it.
+  function imgToJpeg(img) {
+    const MAX = 1568;
+    const w0 = img.naturalWidth || 1200;
+    const h0 = img.naturalHeight || 800;
+    const scale = Math.min(1, MAX / Math.max(w0, h0));
+    const w = Math.round(w0 * scale);
+    const h = Math.round(h0 * scale);
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(img, 0, 0, w, h);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    return { data: dataUrl.split(',')[1], mediaType: 'image/jpeg', url: dataUrl };
+  }
+
   function fileToJpeg(file) {
     return new Promise((resolve, reject) => {
       const img = new Image();
       const objUrl = URL.createObjectURL(file);
       img.onload = () => {
-        const MAX = 1568;
-        const scale = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
-        const w = Math.round(img.naturalWidth * scale);
-        const h = Math.round(img.naturalHeight * scale);
-        const canvas = document.createElement('canvas');
-        canvas.width = w;
-        canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        const out = imgToJpeg(img);
         URL.revokeObjectURL(objUrl);
-        resolve({ data: dataUrl.split(',')[1], mediaType: 'image/jpeg', url: dataUrl });
+        resolve(out);
       };
       img.onerror = () => { URL.revokeObjectURL(objUrl); reject(new Error('bad image')); };
       img.src = objUrl;
+    });
+  }
+
+  // Rasterizes a same-origin image URL (the bundled topic SVGs) to JPEG base64.
+  function urlToJpeg(url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        try { resolve(imgToJpeg(img)); } catch (e) { reject(e); }
+      };
+      img.onerror = () => reject(new Error('bad image'));
+      img.src = url;
+    });
+  }
+
+  // ═══ Built-in topics (看图说话 scenes bundled with the app) ═══
+  const TOPICS = [
+    { file: 'park.svg', zh: '在公园', en: 'At the park' },
+    { file: 'classroom.svg', zh: '在教室', en: 'In class' },
+    { file: 'library.svg', zh: '在图书馆', en: 'At the library' },
+    { file: 'hawker.svg', zh: '在小贩中心', en: 'Hawker centre' },
+    { file: 'bus.svg', zh: '在巴士上', en: 'On the bus' },
+    { file: 'road.svg', zh: '过马路', en: 'Crossing the road' },
+    { file: 'chores.svg', zh: '做家务', en: 'Helping at home' },
+    { file: 'birthday.svg', zh: '生日会', en: 'Birthday party' },
+  ];
+
+  function clearTopicSelection() {
+    document.querySelectorAll('.topic-item.selected').forEach(b => b.classList.remove('selected'));
+  }
+
+  async function selectTopic(topic, btn) {
+    try {
+      S.image = await urlToJpeg(`oral-topics/${topic.file}`);
+    } catch {
+      $('setup-status').textContent = "Couldn't load that picture — try another one";
+      return;
+    }
+    if (!$('setup-status').textContent.startsWith('Add your')) $('setup-status').textContent = '';
+    clearTopicSelection();
+    btn.classList.add('selected');
+    $('pic-input').value = '';
+    $('pic-preview').src = S.image.url;
+    $('pic-preview').hidden = false;
+    $('pic-drop-hint').hidden = true;
+    updateStartState();
+  }
+
+  function buildTopicGrid() {
+    const grid = $('topic-grid');
+    TOPICS.forEach(topic => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'topic-item';
+      const img = document.createElement('img');
+      img.src = `oral-topics/${topic.file}`;
+      img.alt = `${topic.zh} ${topic.en}`;
+      img.loading = 'lazy';
+      const zh = document.createElement('span');
+      zh.className = 'topic-name';
+      zh.textContent = topic.zh;
+      const en = document.createElement('span');
+      en.className = 'topic-name-en';
+      en.textContent = topic.en;
+      btn.append(img, zh, en);
+      btn.addEventListener('click', () => selectTopic(topic, btn));
+      grid.appendChild(btn);
     });
   }
 
@@ -587,6 +665,7 @@
       $('setup-status').textContent = "Couldn't read that image — try another one";
       return;
     }
+    clearTopicSelection();
     $('pic-preview').src = S.image.url;
     $('pic-preview').hidden = false;
     $('pic-drop-hint').hidden = true;
@@ -594,6 +673,9 @@
   }
 
   function init() {
+    // Built-in topic gallery
+    buildTopicGrid();
+
     // Picture picker
     $('pic-input').addEventListener('change', e => handlePicked(e.target.files[0]));
     const drop = $('pic-drop');
@@ -653,6 +735,7 @@
     $('again-btn').addEventListener('click', () => { startSession(); });
     $('new-btn').addEventListener('click', () => {
       S.image = null;
+      clearTopicSelection();
       $('pic-preview').hidden = true;
       $('pic-drop-hint').hidden = false;
       $('pic-input').value = '';

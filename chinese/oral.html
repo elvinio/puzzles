@@ -24,8 +24,15 @@
 
 <!-- ═══ SETUP SCREEN ═══ -->
 <main id="screen-setup" class="screen active">
-  <p class="intro">Pick a picture, choose a level, and 陈老师 will practise
+  <p class="intro">Pick a topic (or use your own picture), choose a level, and 陈老师 will practise
     看图说话 with you — describing the picture out loud in Chinese, one question at a time.</p>
+
+  <div class="topic-wrap">
+    <div class="topic-label">选一个题目 Pick a topic</div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div class="or-divider">or use your own picture</div>
 
   <label class="pic-drop" id="pic-drop">
     <input type="file" id="pic-input" accept="image/*" hidden>
