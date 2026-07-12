@@ -22,7 +22,8 @@ import urllib.request
 from io import BytesIO
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT_DIR = os.path.join(REPO_ROOT, "hanzi-data")
+CHINESE_DIR = os.path.join(REPO_ROOT, "chinese")
+OUT_DIR = os.path.join(CHINESE_DIR, "hanzi-data")
 CHARS_DIR = os.path.join(OUT_DIR, "chars")
 
 HANZI_WRITER_VERSION = "3.7.3"
@@ -34,7 +35,7 @@ VOCAB_FILES = ["chinese-p1.json", "chinese-p2.json", "chinese-p3.json"]
 def needed_characters():
     chars = set()
     for fname in VOCAB_FILES:
-        path = os.path.join(REPO_ROOT, fname)
+        path = os.path.join(CHINESE_DIR, "data", fname)
         with open(path, encoding="utf-8") as f:
             data = json.load(f)
         for lesson in data.values():
