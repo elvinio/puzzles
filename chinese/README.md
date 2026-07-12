@@ -113,7 +113,25 @@ list and bump `VERSION` in `../sw.js`.**
 consumed by any page** (precached for a planned idioms feature).
 
 Per-character stroke data is lazy-loaded from `hanzi-data/chars/<char>.json` by
-the hanzi-writer library when a stroke animation is requested.
+the hanzi-writer library when a stroke animation is requested. If a character
+has no stroke data, the card modal falls back to showing the plain glyph
+instead of an animation.
+
+### Regenerating stroke data
+
+Whenever `data/chinese-p{1,2,3}.json` gains new `character` values, run from
+the repo root:
+
+```
+python3 tools/gen-hanzi-data.py
+```
+
+It scans those three files for every character in use, then re-vendors
+`hanzi-data/hanzi-writer.min.js` and `hanzi-data/chars/<char>.json` for each
+one from the `hanzi-writer`/`hanzi-writer-data` npm packages (fetched
+directly from `registry.npmjs.org`, no `npm install` needed). It's idempotent
+— safe to rerun any time — and prints a warning listing any characters the
+source package doesn't cover (rare; these keep the plain-glyph fallback).
 
 ## Extending the hub
 
