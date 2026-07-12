@@ -184,6 +184,17 @@
       'pronunciation': 'speaking',
     };
 
+    // Human-readable label per test mode / card type, reused by the setup
+    // mode tabs' wording and by bug reports (so a report always names the
+    // mode the way the student saw it, even under Mix All).
+    const MODE_LABELS = {
+      'pinyin-chinese': 'Pinyin → 汉字', 'chinese-pinyin': '汉字 → Pinyin',
+      'english-chinese': 'English → 汉字', 'listening': '🔊 听音',
+      'word-fill': '词语', 'word-write': '写词', 'find-correct': '找错字',
+      'sentence-fill': '句子填空', 'choose-char': '选字', 'tone-tap': '声调',
+      'reorder': '连词成句', 'mix': 'Mix All', 'pronunciation': '🎤 Speak',
+    };
+
     function daysBetween(fromStr, toStr) {
       return Math.round((new Date(toStr) - new Date(fromStr)) / 86400000);
     }
@@ -2330,6 +2341,115 @@
         status.style.color = 'var(--err)';
       }
     });
+
+    // ═══════════════════════════════════════════════════════════════
+    // BUG REPORTS — a test-mode 🐛 button lets a student flag a broken
+    // question (wrong audio/word/punctuation/other); reports are stored
+    // locally and reviewed/cleared from the setup screen's Bugs list.
+    // ═══════════════════════════════════════════════════════════════
+    const ISSUE_LABELS = {
+      audio: 'Audio is wrong', word: 'Word is wrong',
+      punctuation: 'Punctuation is wrong', other: 'Others',
+    };
+    const BUG_REPORTS_KEY = 'chinese-bug-reports';
+    const BR = { word: null, cardType: null, issue: null };
+
+    function loadBugReports() {
+      try { return JSON.parse(localStorage.getItem(BUG_REPORTS_KEY) || '[]'); } catch { return []; }
+    }
+    function saveBugReports(arr) { localStorage.setItem(BUG_REPORTS_KEY, JSON.stringify(arr)); }
+
+    function openBugReportModal() {
+      const card = S.cards[S.cardIndex];
+      if (!card || !card.word) { showToast('No question to report'); return; }
+      BR.word = card.word;
+      BR.cardType = card.type;
+      BR.issue = null;
+      document.querySelectorAll('#br-issue-tabs .tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('br-note').value = '';
+      const modeLabel = MODE_LABELS[card.type] || card.type;
+      document.getElementById('br-context').textContent =
+        `${card.word.lessonKey} · ${card.word.character} · ${modeLabel}`;
+      document.getElementById('bug-report-modal').classList.add('open');
+    }
+
+    function closeBugReportModal() {
+      document.getElementById('bug-report-modal').classList.remove('open');
+    }
+
+    document.getElementById('bug-report-btn').addEventListener('click', openBugReportModal);
+    document.getElementById('bug-report-modal').addEventListener('click', e => {
+      if (e.target.id === 'bug-report-modal') closeBugReportModal();
+    });
+    document.getElementById('br-close').addEventListener('click', closeBugReportModal);
+    document.getElementById('br-cancel').addEventListener('click', closeBugReportModal);
+
+    document.querySelectorAll('#br-issue-tabs .tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('#br-issue-tabs .tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        BR.issue = tab.dataset.issue;
+      });
+    });
+
+    document.getElementById('br-submit').addEventListener('click', () => {
+      if (!BR.word) { closeBugReportModal(); return; }
+      if (!BR.issue) { showToast("Pick what's wrong first"); return; }
+      const word = BR.word;
+      const bugs = loadBugReports();
+      bugs.unshift({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        ts: new Date().toISOString(),
+        level: word.level,
+        lessonKey: word.lessonKey,
+        character: word.character,
+        pinyin: word.pinyin,
+        english: word.english,
+        mode: BR.cardType,
+        modeLabel: MODE_LABELS[BR.cardType] || BR.cardType,
+        issue: BR.issue,
+        issueLabel: ISSUE_LABELS[BR.issue] || BR.issue,
+        note: document.getElementById('br-note').value.trim(),
+      });
+      saveBugReports(bugs);
+      closeBugReportModal();
+      showToast('Bug reported — thanks!');
+    });
+
+    function renderBugList() {
+      const bugs = loadBugReports();
+      const container = document.getElementById('bug-list');
+      if (!bugs.length) {
+        container.innerHTML = '<div class="bug-empty">No bugs reported yet.</div>';
+        return;
+      }
+      container.innerHTML = '';
+      bugs.forEach(b => {
+        const card = document.createElement('div');
+        card.className = 'bug-card';
+        const date = new Date(b.ts).toLocaleDateString();
+        card.innerHTML = `
+      <div class="bug-card-info">
+        <div class="bug-card-title">${esc(b.character || '?')} <span class="bug-issue-tag">${esc(b.issueLabel || '')}</span></div>
+        <div class="bug-card-meta">${esc(b.lessonKey || '')} · ${esc(b.modeLabel || b.mode || '')} · ${esc(date)}</div>
+        ${b.note ? `<div class="bug-card-note">${esc(b.note)}</div>` : ''}
+      </div>
+      <button class="btn btn-danger btn-sm" data-del="${esc(b.id)}" style="flex-shrink:0">✕</button>`;
+        card.querySelector('[data-del]').addEventListener('click', () => deleteBugReport(b.id));
+        container.appendChild(card);
+      });
+    }
+
+    function deleteBugReport(id) {
+      saveBugReports(loadBugReports().filter(b => b.id !== id));
+      renderBugList();
+    }
+
+    document.getElementById('setup-bugs-btn').addEventListener('click', () => {
+      renderBugList();
+      showScreen('screen-bugs');
+    });
+    document.getElementById('bugs-back-btn').addEventListener('click', () => showScreen('screen-setup'));
 
     // Stats table: speak button and click td-char to open character modal
     document.getElementById('stats-tbody').addEventListener('click', e => {

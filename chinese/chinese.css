@@ -1561,6 +1561,74 @@
       max-width: 620px;
     }
 
+    /* ── Bug reports ── */
+    .bug-list {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .bug-card {
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .bug-card-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .bug-card-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--p-text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bug-issue-tag {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--p-xl);
+      background: rgba(124, 58, 237, 0.15);
+      border-radius: 8px;
+      padding: 3px 8px;
+    }
+
+    .bug-card-meta {
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .bug-card-note {
+      font-size: 0.85rem;
+      color: var(--p-text);
+      margin-top: 8px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .bug-empty {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 40px;
+      width: 100%;
+      max-width: 620px;
+    }
+
     .sp-form {
       width: 100%;
       max-width: 620px;
