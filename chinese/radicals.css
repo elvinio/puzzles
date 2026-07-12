@@ -1,0 +1,107 @@
+/* radicals.css — page-specific styles for radicals.html.
+   Shared @font-face + reset live in common.css, loaded first. */
+  :root {
+    --bg: #f5f2fb; --surface: #ffffff; --border: #d7c9f2;
+    --text: #241b35; --muted: #756a91;
+    --p-xl: #5b21b6; --p-lt: #ede8fb;
+  }
+  body { background: var(--bg); color: var(--text); font-family: system-ui,-apple-system,sans-serif; min-height: 100vh; }
+
+  header { padding: 20px 24px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  header h1 { font-size: 1.2rem; font-weight: 700; color: var(--p-xl); }
+  .back-link {
+    color: var(--muted); text-decoration: none; font-size: 0.85rem;
+  }
+  .back-link:hover { color: var(--p-xl); }
+  .count-note { font-size: 0.78rem; color: var(--muted); }
+
+  .search-row {
+    margin-left: auto; display: flex; align-items: center; gap: 8px;
+  }
+  .search-input {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    padding: 6px 14px; font-size: 0.85rem; color: var(--text); font-family: inherit;
+    min-width: 160px;
+  }
+  .search-input:focus { outline: none; border-color: var(--p-xl); }
+  .variant-filter {
+    display: flex; align-items: center; gap: 6px; font-size: 0.78rem;
+    color: var(--muted); white-space: nowrap; cursor: pointer; user-select: none;
+  }
+  .variant-filter input { accent-color: var(--p-xl); cursor: pointer; }
+
+  .stroke-nav {
+    position: sticky; top: 0; z-index: 11;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 8px 24px; display: flex; gap: 4px; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .stroke-nav::-webkit-scrollbar { display: none; }
+  .stroke-nav a {
+    flex-shrink: 0; padding: 4px 9px; border-radius: 6px;
+    font-size: 0.78rem; font-weight: 700; color: var(--muted);
+    text-decoration: none; transition: background 0.12s, color 0.12s;
+  }
+  .stroke-nav a:hover { background: var(--p-lt); color: var(--p-xl); }
+  .stroke-nav a.current { background: var(--p-lt); color: var(--p-xl); }
+
+  main { padding: 20px 24px 60px; }
+
+  .group { margin-bottom: 26px; }
+  .group-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 10px; padding-left: 2px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 10px;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;
+    transition: border-color 0.12s;
+  }
+  .card:hover { border-color: var(--p-xl); }
+  .card.hidden { display: none; }
+  .card.is-variant { border-style: dashed; }
+
+  .variant-tag {
+    align-self: flex-start; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--p-xl); background: var(--p-lt);
+    padding: 2px 8px; border-radius: 8px;
+  }
+
+  .card-top { display: flex; align-items: center; gap: 10px; }
+  .rad-char {
+    font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+    font-size: 2.3rem; font-weight: 900; color: var(--text); line-height: 1;
+    flex-shrink: 0; cursor: pointer;
+  }
+  .rad-info { flex: 1; min-width: 0; }
+  .rad-pinyin { font-size: 0.9rem; font-weight: 700; color: var(--p-xl); }
+  .rad-meaning { font-size: 0.78rem; color: var(--muted); }
+  .rad-note { font-size: 0.7rem; color: var(--muted); font-style: italic; margin-top: 1px; }
+  .rad-variant-name { font-size: 0.82rem; font-weight: 700; color: var(--p-xl); }
+
+  .speak-btn {
+    background: none; border: none; cursor: pointer; font-size: 0.95rem;
+    opacity: 0.5; padding: 2px 5px; border-radius: 6px; flex-shrink: 0;
+    transition: opacity 0.15s, background 0.15s;
+  }
+  .speak-btn:hover { opacity: 1; background: var(--p-lt); }
+
+  .divider { height: 1px; background: var(--border); opacity: 0.6; }
+
+  .word-row { display: flex; align-items: baseline; gap: 8px; }
+  .word-char {
+    font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+    font-size: 1.3rem; font-weight: 900; color: var(--text); cursor: pointer;
+  }
+  .word-pinyin { font-size: 0.82rem; color: var(--p-xl); font-weight: 600; }
+  .word-meaning { font-size: 0.75rem; color: var(--muted); }
+
+  .empty-msg {
+    text-align: center; color: var(--muted); font-size: 0.9rem; padding: 40px;
+  }

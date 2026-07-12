@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#f5f2fb">
+  <link rel="icon" href="../icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="stylesheet" href="../styles.css">
+<title>Pinyin Tones</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="pinyin_tones.css">
+</head>
+<body>
+
+<header>
+  <h1>Pinyin Tone Explorer</h1>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tone1)"></div>Tone 1 (flat)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tone2)"></div>Tone 2 (rising)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tone3)"></div>Tone 3 (dip)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tone4)"></div>Tone 4 (falling)</div>
+  </div>
+</header>
+
+<nav class="initial-nav" id="initial-nav"></nav>
+
+<div class="tone-bar">
+  <span>Playing:</span>
+  <div class="tone-indicator">
+    <div class="tone-pip t1" id="pip1" onclick="playSingleTone(1)">1</div>
+    <div class="tone-pip t2" id="pip2" onclick="playSingleTone(2)">2</div>
+    <div class="tone-pip t3" id="pip3" onclick="playSingleTone(3)">3</div>
+    <div class="tone-pip t4" id="pip4" onclick="playSingleTone(4)">4</div>
+  </div>
+  <div class="current-label" id="current-label">—</div>
+  <div class="mode-toggle">
+    <button id="btn-mp3" class="active" onclick="setMode('mp3')">MP3</button>
+    <button id="btn-tts" onclick="setMode('tts')">TTS</button>
+  </div>
+</div>
+
+<main id="main"></main>
+
+  <script src="pinyin_tones.js"></script>
+<script src="../sync-registry.js"></script>
+<script src="../sync-merge.js"></script>
+<script src="../sync-drive.js"></script>
+<script src="../sync-ui.js"></script>
+<script src="../avatar.js"></script>
+<script src="../app.js"></script>
+</body>
+</html>

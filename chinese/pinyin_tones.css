@@ -1,0 +1,93 @@
+/* pinyin_tones.css — page-specific styles for pinyin_tones.html.
+   Shared @font-face + reset live in common.css, loaded first. */
+  :root {
+    --bg: #f5f2fb; --surface: #ffffff; --border: #d7c9f2;
+    --text: #241b35; --muted: #756a91;
+    --p-xl: #5b21b6; --p-lt: #ede8fb;
+    --tone1: #2563eb; --tone2: #059669; --tone3: #b45309; --tone4: #dc2626;
+    --active: #ede8fb;
+  }
+  body { background: var(--bg); color: var(--text); font-family: system-ui,-apple-system,sans-serif; min-height: 100vh; }
+
+  header { padding: 20px 24px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 1.2rem; font-weight: 700; color: var(--p-xl); }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .mode-toggle {
+    margin-left: auto; display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px; flex-shrink: 0;
+  }
+  .mode-toggle button {
+    padding: 4px 12px; border-radius: 16px; border: none; cursor: pointer;
+    font-size: 0.75rem; font-weight: 600; transition: background 0.15s, color 0.15s;
+    background: transparent; color: var(--muted);
+  }
+  .mode-toggle button.active { background: var(--p-xl); color: #fff; }
+
+  .initial-nav {
+    position: sticky; top: 0; z-index: 11;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 8px 24px; display: flex; gap: 4px; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .initial-nav::-webkit-scrollbar { display: none; }
+  .initial-nav a {
+    flex-shrink: 0; padding: 4px 9px; border-radius: 6px;
+    font-size: 0.78rem; font-weight: 700; color: var(--muted);
+    text-decoration: none; transition: background 0.12s, color 0.12s;
+  }
+  .initial-nav a:hover { background: var(--p-lt); color: var(--p-xl); }
+  .initial-nav a.current { background: var(--p-lt); color: var(--p-xl); }
+
+  .tone-bar {
+    position: sticky; top: 37px; z-index: 10;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 10px 24px; display: flex; align-items: center; gap: 10px;
+  }
+  .tone-bar span { font-size: 0.8rem; color: var(--muted); }
+  .tone-indicator {
+    display: flex; gap: 6px;
+  }
+  .tone-pip {
+    width: 28px; height: 28px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; opacity: 0.35;
+    transition: opacity 0.1s, transform 0.1s;
+    color: #fff;
+  }
+  .tone-pip.t1 { background: var(--tone1); }
+  .tone-pip.t2 { background: var(--tone2); }
+  .tone-pip.t3 { background: var(--tone3); }
+  .tone-pip.t4 { background: var(--tone4); }
+  .tone-pip.active { opacity: 1; transform: scale(1.15); }
+  .tone-pip.clickable { cursor: pointer; }
+  .tone-pip.clickable:hover { opacity: 0.8; transform: scale(1.08); }
+
+  .current-label {
+    margin-left: 12px; font-size: 0.9rem; color: var(--text); font-weight: 600; min-width: 80px;
+  }
+
+  main { padding: 20px 24px; }
+
+  .group { margin-bottom: 24px; }
+  .group-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 8px; padding-left: 2px;
+  }
+  .grid {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .syllable-btn {
+    padding: 7px 12px; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); font-size: 0.88rem; cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, transform 0.1s;
+    user-select: none;
+  }
+  .syllable-btn:hover { background: var(--p-lt); border-color: var(--p-xl); }
+  .syllable-btn.playing { background: var(--active); border-color: var(--p-xl); transform: scale(1.05); }
+  .syllable-btn.done { border-color: var(--p-xl); }
