@@ -1332,8 +1332,13 @@
     // ═══════════════════════════════════════════════════════════════
     // FIND & CORRECT MODE (找错字) — tap-then-write interaction
     // ═══════════════════════════════════════════════════════════════
-    let FC = null; // { card, step: 'tap'|'write', mistakes }
+    let FC = null; // { card, step: 'tap'|'write', mistakes, hintShown }
     let fcWriter = null; // single reused HanziWriter instance (see fcStartWriting)
+
+    // Once HanziWriter reveals a stroke's outline as a hint, the student is
+    // tracing rather than recalling it — that stroke no longer demonstrates
+    // they know the character, so the card is graded wrong.
+    const FC_HINT_AFTER_MISSES = 3;
 
     function fcCharDataLoader(char, onComplete, onError) {
       fetch(`hanzi-data/chars/${encodeURIComponent(char)}.json`)
@@ -1343,7 +1348,7 @@
     }
 
     function renderFindCorrect(card) {
-      FC = { card, step: 'tap', mistakes: 0 };
+      FC = { card, step: 'tap', mistakes: 0, hintShown: false };
 
       const sentWrap = document.getElementById('fc-sentence-wrap');
       const feedback = document.getElementById('fc-feedback');
@@ -1375,7 +1380,7 @@
     // the same fc- writer panel/state as 找错字)
     // ═══════════════════════════════════════════════════════════════
     function renderWordWrite(card) {
-      FC = { card, step: 'write', mistakes: 0 };
+      FC = { card, step: 'write', mistakes: 0, hintShown: false };
       document.getElementById('fc-sentence-wrap').style.display = 'none';
       document.getElementById('fc-feedback').style.display = 'block';
       document.getElementById('fc-feedback').textContent = 'Write the missing character';
@@ -1440,20 +1445,21 @@
             padding: 12,
             showOutline: false,
             showCharacter: false,
-            showHintAfterMisses: 3,
-            markStrokeCorrectAfterMisses: 3,
+            showHintAfterMisses: FC_HINT_AFTER_MISSES,
+            markStrokeCorrectAfterMisses: FC_HINT_AFTER_MISSES,
             charDataLoader: fcCharDataLoader
           });
         } else {
           fcWriter.setCharacter(card.correctChar);
         }
         fcWriter.quiz({
-          onMistake: () => {
+          onMistake: (strokeData) => {
             if (!FC) return;
             FC.mistakes++;
+            if (strokeData && strokeData.mistakesOnStroke >= FC_HINT_AFTER_MISSES) FC.hintShown = true;
             if (FC.mistakes >= 8) document.getElementById('fc-reveal-row').style.display = 'flex';
           },
-          onComplete: () => fcFinish(true, card)
+          onComplete: () => fcFinish(!FC || !FC.hintShown, card)
         });
       }, () => fcMissingData(card));
     }
