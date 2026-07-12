@@ -2263,7 +2263,7 @@
           cmWriter.setCharacter(char);
         }
       }, () => {
-        target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:0.8rem;text-align:center;padding:8px">No stroke data for this character</div>`;
+        target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:'Kaiti SC','KaiTiRegular','STKaiti',serif;font-size:5rem;color:var(--p-text)">${esc(char)}</div>`;
         cmWriter = null; // its SVG was just replaced — recreate next time
         document.getElementById('cm-play-btn').style.display = 'none';
       });
