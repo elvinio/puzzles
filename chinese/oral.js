@@ -9,7 +9,7 @@
   // ═══ Config ═══
   const AZURE_CONFIG_KEY = 'chinese-azure-speech'; // shared with chinese.js
   const ORAL_CONFIG_KEY = 'chinese-oral-config';
-  const DEFAULT_MODEL = 'claude-opus-4-8';
+  const DEFAULT_MODEL = 'claude-haiku-4-5';
   const MAX_CHILD_TURNS = 8; // system prompt tells the tutor to wrap up around here
 
   function getAzureConfig() {
@@ -86,13 +86,32 @@
   }
 
   // ═══ Anthropic call ═══
+  // Adds a cache_control breakpoint on the last block of the last message so the
+  // growing conversation history is cached incrementally turn over turn, on top
+  // of the fixed system-prompt and opening-image breakpoints set below.
+  function withCacheBreakpoint(messages) {
+    if (!messages.length) return messages;
+    const out = messages.slice(0, -1);
+    const last = messages[messages.length - 1];
+    let content = last.content;
+    if (typeof content === 'string') {
+      content = [{ type: 'text', text: content, cache_control: { type: 'ephemeral' } }];
+    } else {
+      content = content.map((block, i) =>
+        i === content.length - 1 ? { ...block, cache_control: { type: 'ephemeral' } } : block
+      );
+    }
+    out.push({ ...last, content });
+    return out;
+  }
+
   async function callClaude(maxTokens) {
     const cfg = getOralConfig();
     const body = {
       model: cfg.model || DEFAULT_MODEL,
       max_tokens: maxTokens || 400,
       system: [{ type: 'text', text: buildSystemPrompt(S.level), cache_control: { type: 'ephemeral' } }],
-      messages: S.messages,
+      messages: withCacheBreakpoint(S.messages),
     };
     let res;
     try {
