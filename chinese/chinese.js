@@ -120,6 +120,20 @@
       catch { }
     }
 
+    // Remembers each avatar's last-selected level so re-opening (or switching
+    // avatars) restores where that student left off instead of always p1.
+    function lastLevelKey(avatarId) { return `chinese-last-level-${avatarId}`; }
+
+    function loadLastLevel(avatarId) {
+      try { return localStorage.getItem(lastLevelKey(avatarId)) || 'p1'; }
+      catch { return 'p1'; }
+    }
+
+    function saveLastLevel(avatarId, level) {
+      try { localStorage.setItem(lastLevelKey(avatarId), level); }
+      catch { }
+    }
+
     const AZURE_CONFIG_KEY = 'chinese-azure-speech';
 
     function getAzureConfig() {
@@ -797,10 +811,18 @@
       const startBtn = document.getElementById('setup-start');
 
       if (avatar) {
+        const levelChanged = S.avatarId !== avatar.id;
         S.avatarId = avatar.id;
         S.progress = loadProgress(avatar.id);
         warn.style.display = 'none';
         startBtn.disabled = false;
+        if (levelChanged) {
+          S.level = loadLastLevel(avatar.id);
+          S.lessons = [1];
+          S.lessonTest = false;
+          const levelTabs = document.getElementById('setup-level-tabs');
+          levelTabs.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.level === S.level));
+        }
       } else {
         warn.style.display = 'block';
         startBtn.disabled = true;
@@ -822,10 +844,11 @@
       });
     }
 
-    bindTabs('setup-level-tabs', tab => { 
-      S.level = tab.dataset.level; 
+    bindTabs('setup-level-tabs', tab => {
+      S.level = tab.dataset.level;
       S.lessons = [1];
       S.lessonTest = false;
+      if (S.avatarId) saveLastLevel(S.avatarId, S.level);
       renderSetupLessonTabs();
     });
 
@@ -1309,8 +1332,13 @@
     // ═══════════════════════════════════════════════════════════════
     // FIND & CORRECT MODE (找错字) — tap-then-write interaction
     // ═══════════════════════════════════════════════════════════════
-    let FC = null; // { card, step: 'tap'|'write', mistakes }
+    let FC = null; // { card, step: 'tap'|'write', mistakes, hintShown }
     let fcWriter = null; // single reused HanziWriter instance (see fcStartWriting)
+
+    // Once HanziWriter reveals a stroke's outline as a hint, the student is
+    // tracing rather than recalling it — that stroke no longer demonstrates
+    // they know the character, so the card is graded wrong.
+    const FC_HINT_AFTER_MISSES = 3;
 
     function fcCharDataLoader(char, onComplete, onError) {
       fetch(`hanzi-data/chars/${encodeURIComponent(char)}.json`)
@@ -1320,7 +1348,7 @@
     }
 
     function renderFindCorrect(card) {
-      FC = { card, step: 'tap', mistakes: 0 };
+      FC = { card, step: 'tap', mistakes: 0, hintShown: false };
 
       const sentWrap = document.getElementById('fc-sentence-wrap');
       const feedback = document.getElementById('fc-feedback');
@@ -1352,7 +1380,7 @@
     // the same fc- writer panel/state as 找错字)
     // ═══════════════════════════════════════════════════════════════
     function renderWordWrite(card) {
-      FC = { card, step: 'write', mistakes: 0 };
+      FC = { card, step: 'write', mistakes: 0, hintShown: false };
       document.getElementById('fc-sentence-wrap').style.display = 'none';
       document.getElementById('fc-feedback').style.display = 'block';
       document.getElementById('fc-feedback').textContent = 'Write the missing character';
@@ -1417,20 +1445,21 @@
             padding: 12,
             showOutline: false,
             showCharacter: false,
-            showHintAfterMisses: 3,
-            markStrokeCorrectAfterMisses: 3,
+            showHintAfterMisses: FC_HINT_AFTER_MISSES,
+            markStrokeCorrectAfterMisses: FC_HINT_AFTER_MISSES,
             charDataLoader: fcCharDataLoader
           });
         } else {
           fcWriter.setCharacter(card.correctChar);
         }
         fcWriter.quiz({
-          onMistake: () => {
+          onMistake: (strokeData) => {
             if (!FC) return;
             FC.mistakes++;
+            if (strokeData && strokeData.mistakesOnStroke >= FC_HINT_AFTER_MISSES) FC.hintShown = true;
             if (FC.mistakes >= 8) document.getElementById('fc-reveal-row').style.display = 'flex';
           },
-          onComplete: () => fcFinish(true, card)
+          onComplete: () => fcFinish(!FC || !FC.hintShown, card)
         });
       }, () => fcMissingData(card));
     }
@@ -2240,7 +2269,7 @@
           cmWriter.setCharacter(char);
         }
       }, () => {
-        target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:0.8rem;text-align:center;padding:8px">No stroke data for this character</div>`;
+        target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:'Kaiti SC','KaiTiRegular','STKaiti',serif;font-size:5rem;color:var(--p-text)">${esc(char)}</div>`;
         cmWriter = null; // its SVG was just replaced — recreate next time
         document.getElementById('cm-play-btn').style.display = 'none';
       });
