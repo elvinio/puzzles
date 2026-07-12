@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#f5f2fb">
+  <link rel="icon" href="../icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="stylesheet" href="../styles.css">
+  <title>Chinese Practice</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="chinese.css">
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: SETUP
+════════════════════════════════════════════════ -->
+  <div id="screen-setup" class="screen active">
+    <div class="topbar">
+      <a class="back-link" href="../index.html">← Games</a>
+      <div class="topbar-right" style="display:flex;gap:6px">
+        <a class="btn btn-outline btn-sm" href="chinese-cards.html">Cards</a>
+        <a class="btn btn-outline btn-sm" href="pinyin_tones.html">Pinyin</a>
+        <a class="btn btn-outline btn-sm" href="radicals.html">Radicals</a>
+        <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
+        <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
+        <button class="btn btn-outline btn-sm" id="setup-spelling-btn">默写</button>
+        <button class="btn btn-outline btn-sm" id="setup-speech-settings-btn" title="Settings">⚙</button>
+      </div>
+    </div>
+
+    <div class="no-avatar-warn" id="setup-no-avatar" style="display:none">
+      No avatar selected — <a href="../avatar.html" style="color:var(--p-xl)">create one first</a>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Level -->
+    <div class="section-label">Level</div>
+    <div class="tab-row" id="setup-level-tabs">
+      <button class="tab active" data-level="p1">Primary 1</button>
+      <button class="tab" data-level="p2">Primary 2</button>
+      <button class="tab" data-level="p3">Primary 3</button>
+    </div>
+
+    <!-- Lessons -->
+    <div class="section-label">Lessons</div>
+    <div class="tab-row" id="setup-lesson-tabs"></div>
+    <div class="browse-word-grid" id="setup-lesson-words" style="flex:0 0 auto;max-height:280px;grid-template-columns:repeat(auto-fill, minmax(64px, 1fr))"></div>
+
+    <!-- Test mode -->
+    <div class="section-label">Test Mode</div>
+    <div class="tab-row" id="setup-mode-tabs">
+      <button class="tab active" data-mode="pinyin-chinese">Pinyin → 汉字</button>
+      <button class="tab" data-mode="chinese-pinyin">汉字 → Pinyin</button>
+      <button class="tab" data-mode="english-chinese">English → 汉字</button>
+      <button class="tab" data-mode="listening">🔊 听音</button>
+      <button class="tab" data-mode="word-fill">词语</button>
+      <button class="tab" data-mode="word-write">写词</button>
+      <button class="tab" data-mode="find-correct">找错字</button>
+      <button class="tab" data-mode="sentence-fill">句子填空</button>
+      <button class="tab" data-mode="choose-char">选字</button>
+      <button class="tab" data-mode="tone-tap">声调</button>
+      <button class="tab" data-mode="reorder">连词成句</button>
+      <button class="tab" data-mode="mix">Mix All</button>
+      <button class="tab" data-mode="pronunciation">🎤 Speak</button>
+      <button class="tab" data-mode="puzzle">🔍 Puzzle</button>
+    </div>
+
+    <div class="divider"></div>
+    <button class="btn" id="setup-start" style="width:100%;max-width:620px">▶ Start Practice</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: SPELLING
+════════════════════════════════════════════════ -->
+  <div id="screen-spelling" class="screen">
+
+    <!-- Sub-view: list -->
+    <div id="sp-list-view" class="sp-subview sp-active">
+      <div class="topbar">
+        <button class="back-link" id="sp-back-to-setup">← Back</button>
+        <h1>默写 Spelling</h1>
+        <div class="topbar-right">
+          <button class="btn btn-sm" id="sp-new-btn">＋ New</button>
+        </div>
+      </div>
+      <div id="sp-test-list" class="sp-test-list"></div>
+    </div>
+
+    <!-- Sub-view: create form -->
+    <div id="sp-create-view" class="sp-subview">
+      <div class="topbar">
+        <button class="back-link" id="sp-form-back">← Back</button>
+        <h1>New Test</h1>
+        <div class="topbar-right"></div>
+      </div>
+      <div class="sp-form">
+        <div class="sp-field">
+          <div class="sp-label">Level</div>
+          <div class="tab-row" id="sp-level-tabs">
+            <button class="tab active" data-level="p1">Primary 1</button>
+            <button class="tab" data-level="p2">Primary 2</button>
+            <button class="tab" data-level="p3">Primary 3</button>
+          </div>
+        </div>
+        <div class="sp-field">
+          <label class="sp-label" for="sp-name-input">Test Name</label>
+          <input class="sp-input" id="sp-name-input" type="text" placeholder="e.g. Week 3 Spelling">
+        </div>
+        <div class="sp-field">
+          <label class="sp-label" for="sp-writing-input">Writing Test Words</label>
+          <div style="font-size:0.72rem;color:var(--muted)">Comma-separated — audio plays, user writes the characters
+          </div>
+          <input class="sp-input" id="sp-writing-input" type="text" placeholder="e.g. 天气,月亮,衣服">
+        </div>
+        <div class="sp-field">
+          <label class="sp-label" for="sp-pinyin-input">Pinyin Test Words</label>
+          <div style="font-size:0.72rem;color:var(--muted)">Comma-separated — sentence shown, user writes the pinyin
+          </div>
+          <input class="sp-input" id="sp-pinyin-input" type="text" placeholder="e.g. 衣,鱼,雨">
+        </div>
+        <button class="btn" id="sp-save-btn" style="width:100%">Save Test</button>
+      </div>
+    </div>
+
+    <!-- Sub-view: active test -->
+    <div id="sp-test-view" class="sp-subview">
+      <div class="topbar">
+        <button class="back-link" id="sp-test-end-btn">✕ End</button>
+        <h1 id="sp-test-title">Spelling</h1>
+        <div class="topbar-right"></div>
+      </div>
+      <div class="sp-q-num" id="sp-progress-label"></div>
+      <div class="sp-question-card" id="sp-question-card"></div>
+      <div class="btn-row" style="width:100%;max-width:620px">
+        <button class="btn" id="sp-next-btn" style="width:100%">Next →</button>
+      </div>
+    </div>
+
+    <!-- Sub-view: results -->
+    <div id="sp-results-view" class="sp-subview">
+      <div class="topbar">
+        <div style="width:60px"></div>
+        <h1>Answers</h1>
+        <div style="width:60px"></div>
+      </div>
+      <div id="sp-results-content" style="width:100%;max-width:620px;display:flex;flex-direction:column;gap:16px"></div>
+      <div class="btn-row" style="width:100%;max-width:620px;margin-top:8px">
+        <button class="btn btn-outline" id="sp-results-back-btn" style="width:100%">← Back to Tests</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: GAME
+════════════════════════════════════════════════ -->
+  <div id="screen-game" class="screen">
+    <div class="hud" style="justify-content:space-between">
+      <div class="hud-cell">
+        <div class="hud-label">REMAINING</div>
+        <div class="hud-val" id="hud-timer">—</div>
+      </div>
+      <div class="hud-cell">
+        <div class="hud-label">CARD</div>
+        <div class="hud-val" id="hud-card">—</div>
+      </div>
+      <div class="hud-cell">
+        <div class="hud-label">CORRECT</div>
+        <div class="hud-val ok" id="hud-correct">0</div>
+      </div>
+      <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+
+    <div class="question-wrap" id="question-wrap">
+      <div class="question-type-label" id="question-type-label"></div>
+      <div class="question-text" id="question-text"></div>
+    </div>
+
+    <div class="options-grid" id="options-grid"></div>
+
+    <div class="fc-sentence-wrap" id="fc-sentence-wrap" style="display:none"></div>
+    <div class="fc-feedback" id="fc-feedback" style="display:none"></div>
+    <div class="fc-write-panel" id="fc-write-panel">
+      <div class="fc-hint" id="fc-hint">💡 Tap for hint</div>
+      <div class="fc-writer-target" id="fc-writer-target"></div>
+      <div class="btn-row" id="fc-reveal-row" style="display:none">
+        <button class="btn btn-outline btn-sm" id="fc-reveal-btn">Show Answer</button>
+      </div>
+      <div class="btn-row" id="fc-self-check-row" style="display:none">
+        <button class="btn btn-sm" id="fc-self-correct">✓ Got it right</button>
+        <button class="btn btn-outline btn-sm" id="fc-self-wrong">✗ Got it wrong</button>
+      </div>
+    </div>
+
+    <div class="ro-panel" id="ro-panel" style="display:none">
+      <div class="ro-row ro-answer" id="ro-answer"></div>
+      <div class="ro-row" id="ro-bank"></div>
+      <div class="fc-feedback" id="ro-feedback"></div>
+      <div class="btn-row" id="ro-clear-row">
+        <button class="btn btn-outline btn-sm" id="ro-clear-btn">↺ Clear</button>
+      </div>
+    </div>
+
+    <div class="pr-panel" id="pr-panel" style="display:none">
+      <div class="pr-score-wrap" id="pr-score-wrap" style="display:none">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <div class="pr-score-num" id="pr-score-num"></div>
+          <div class="pr-score-stars" id="pr-score-stars"></div>
+        </div>
+        <div class="pr-score-best" id="pr-score-best"></div>
+      </div>
+      <div class="pr-syllables" id="pr-syllables"></div>
+      <div class="pr-status" id="pr-status"></div>
+      <button class="pr-mic-btn" id="pr-mic-btn">🎤</button>
+      <div class="btn-row" id="pr-action-row">
+        <button class="btn" id="pr-next-btn" style="display:none">Next →</button>
+        <button class="btn btn-outline btn-sm" id="pr-skip-btn">Skip</button>
+      </div>
+      <div class="pr-unconfigured" id="pr-unconfigured" style="display:none">
+        <div style="font-size:2rem">🔑</div>
+        <div>Speaking practice needs a one-time setup.<br>Ask a parent to add the speech proxy details.</div>
+        <button class="btn btn-sm" id="pr-open-settings">⚙ Set up</button>
+      </div>
+    </div>
+
+    <div class="answer-feedback" id="answer-feedback" style="display:none"></div>
+
+    <div class="btn-row" id="continue-row" style="display:none">
+      <button class="btn" id="continue-btn">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: SUMMARY
+════════════════════════════════════════════════ -->
+  <div id="screen-summary" class="screen">
+    <div class="topbar">
+      <div style="width:60px"></div>
+      <h1>Session Complete</h1>
+      <div style="width:60px"></div>
+    </div>
+
+    <div class="summary-stats">
+      <div class="summary-stat">
+        <div class="summary-val ok" id="summary-correct">0</div>
+        <div class="summary-lbl">Correct</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-val err" id="summary-wrong">0</div>
+        <div class="summary-lbl">Wrong</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-val" id="summary-time">0:00</div>
+        <div class="summary-lbl">Time</div>
+      </div>
+    </div>
+
+    <div class="result-list" id="summary-result-list"></div>
+
+    <div class="btn-row">
+      <button class="btn" id="summary-again-btn">Play Again</button>
+      <button class="btn btn-outline" id="summary-setup-btn">Change Settings</button>
+      <button class="btn btn-outline" id="summary-stats-btn">View Stats</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: STATS
+════════════════════════════════════════════════ -->
+  <div id="screen-stats" class="screen">
+    <div class="topbar">
+      <button class="back-link" id="stats-back-btn">← Back</button>
+      <h1>Stats</h1>
+      <div style="width:60px"></div>
+    </div>
+
+    <div class="section-label">Player</div>
+    <div class="av-chips" id="stats-av-chips"></div>
+
+    <div class="stats-controls">
+      <div class="tab-row" id="stats-level-tabs" style="flex:1">
+        <button class="tab active" data-level="p1">Primary 1</button>
+        <button class="tab" data-level="p2">Primary 2</button>
+        <button class="tab" data-level="p3">Primary 3</button>
+      </div>
+      <select class="sort-select" id="stats-sort">
+        <option value="wrong">Most Wrong</option>
+        <option value="time">Slowest</option>
+        <option value="due">Next Due</option>
+        <option value="lesson">By Lesson</option>
+      </select>
+    </div>
+
+    <div class="stats-count" id="stats-count"></div>
+
+    <div class="stats-table-wrap">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Char</th>
+            <th>Pinyin</th>
+            <th>English</th>
+            <th>Lesson</th>
+            <th>✓</th>
+            <th>✗</th>
+            <th>Avg Time</th>
+            <th>Next Review</th>
+          </tr>
+        </thead>
+        <tbody id="stats-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: BROWSE BY LESSON
+════════════════════════════════════════════════ -->
+  <div id="screen-browse" class="screen">
+    <div class="topbar">
+      <button class="back-link" id="browse-back-btn">← Back</button>
+      <h1>Browse Words</h1>
+      <div style="width:60px"></div>
+    </div>
+
+    <div class="section-label">Level</div>
+    <div class="tab-row" id="browse-level-tabs">
+      <button class="tab active" data-level="p1">Primary 1</button>
+      <button class="tab" data-level="p2">Primary 2</button>
+      <button class="tab" data-level="p3">Primary 3</button>
+    </div>
+
+    <div class="section-label">Lesson</div>
+    <div class="browse-lesson-tabs" id="browse-lesson-tabs"></div>
+
+    <div class="browse-word-grid" id="browse-word-grid"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: WORD PUZZLE
+════════════════════════════════════════════════ -->
+  <div id="screen-puzzle" class="screen">
+    <div class="topbar">
+      <button class="back-link" id="puz-back">← Back</button>
+      <h1>Word Puzzle</h1>
+      <div class="topbar-right"></div>
+    </div>
+    <div id="puz-grid" class="puz-grid"></div>
+    <div id="puz-wordlist" class="puz-wordlist"></div>
+    <div id="puz-complete" class="puz-complete" style="display:none">
+      <div class="puz-complete-box">
+        <div style="font-size:2.5rem">🎉</div>
+        <div>All words found!</div>
+        <button class="btn" id="puz-again-btn" style="width:200px">Play Again</button>
+        <button class="btn btn-outline" id="puz-exit-btn" style="width:200px">Back to Setup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lesson Mastery Modal (long-press a lesson tab; sits under #char-modal:
+       same z-index, earlier sibling, so a tapped word's card opens on top) -->
+  <div id="lesson-modal" class="char-modal-overlay">
+    <div class="char-modal" style="max-width:640px">
+      <button class="char-modal-close" id="lm-close">✕</button>
+      <div class="lm-title" id="lm-title"></div>
+      <div class="lm-sub" id="lm-sub"></div>
+      <div class="lm-legend">
+        <span><span class="lm-dot"></span>Not tried</span>
+        <span><span class="lm-dot lm-tier-1"></span>Learning</span>
+        <span><span class="lm-dot lm-tier-2"></span>Known</span>
+        <span><span class="lm-dot lm-tier-3"></span>Mastered</span>
+      </div>
+      <div class="browse-word-grid" id="lm-grid" style="grid-template-columns:repeat(auto-fill, minmax(56px, 1fr))"></div>
+    </div>
+  </div>
+
+  <!-- Character Card Modal -->
+  <div id="char-modal" class="char-modal-overlay">
+    <div class="char-modal">
+      <button class="char-modal-close" id="cm-close">✕</button>
+      <div class="char-modal-header">
+        <div class="char-modal-lesson" id="cm-lesson"></div>
+        <div class="char-modal-writer-wrap">
+          <div id="cm-stroke-target" class="char-modal-writer"></div>
+          <button class="char-modal-play-btn" id="cm-play-btn" title="Play stroke order">▶</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="char-modal-pinyin-lg" id="cm-pinyin"></div>
+          <button class="speak-btn" id="cm-speak-btn" title="Listen">🔊</button>
+        </div>
+        <div class="char-modal-eng" id="cm-eng"></div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Definition</div>
+        <div class="char-modal-text" id="cm-def-en"></div>
+        <div class="char-modal-text zh" id="cm-def-zh"></div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Words</div>
+        <div class="char-modal-chips" id="cm-words"></div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Same Sound</div>
+        <div class="char-modal-chips" id="cm-same"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal (speech + danger zone) -->
+  <div id="speech-settings-modal" class="char-modal-overlay">
+    <div class="char-modal">
+      <button class="char-modal-close" id="ss-close">✕</button>
+      <div class="char-modal-section" style="gap:4px">
+        <div style="font-size:1.1rem;font-weight:800;color:var(--p-text)">⚙ Settings</div>
+        <div style="font-size:0.8rem;color:var(--muted)">Speech settings power the 🎤 Speak mode using Microsoft Azure pronunciation scoring, via a Modal proxy that keeps the Azure key off this device.</div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Modal Proxy URL</div>
+        <input type="text" id="ss-proxy-url" class="ss-input" placeholder="https://your-app--azure-speech-proxy-fastapi-app.modal.run" autocomplete="off">
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">API Key</div>
+        <input type="password" id="ss-api-key" class="ss-input" placeholder="Proxy API key" autocomplete="off">
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Pass Score (0–100)</div>
+        <input type="number" id="ss-threshold" class="ss-input" min="1" max="100" step="5" value="70">
+        <div style="font-size:0.75rem;color:var(--muted)">Below this score the word is marked wrong and comes back for review sooner.</div>
+      </div>
+      <div class="btn-row" style="justify-content:flex-start">
+        <button class="btn btn-sm" id="ss-save">Save</button>
+        <button class="btn btn-outline btn-sm" id="ss-test">Test connection</button>
+      </div>
+      <div id="ss-test-status" style="font-size:0.85rem;font-weight:700;min-height:1.2em"></div>
+      <details class="char-modal-section" style="font-size:0.8rem;color:var(--muted)">
+        <summary style="cursor:pointer;font-weight:700;color:var(--p-text)">Where do I get these?</summary>
+        <ol style="margin:8px 0 0 18px;display:flex;flex-direction:column;gap:6px;line-height:1.5">
+          <li>Deploy <code>modal/azure_speech_proxy.py</code> from the health repo to <a href="https://modal.com" target="_blank" rel="noopener" style="color:var(--p-xl)">Modal</a> (it auto-deploys on push, or run <code>modal deploy modal/azure_speech_proxy.py</code>)</li>
+          <li>Create the <code>azure-speech-proxy-secrets</code> Modal secret with an Azure Speech key, region, and a proxy token you choose (see the file's docstring)</li>
+          <li>Paste the URL Modal prints into the box above, and the proxy token into API Key</li>
+        </ol>
+        <div style="margin-top:8px">Only the proxy URL and proxy token are stored in this browser (localStorage) — the real Azure key stays server-side in the Modal secret.</div>
+      </details>
+      <div class="char-modal-section" style="border-top:2px solid var(--err);padding-top:10px">
+        <div class="char-modal-sec-label" style="color:var(--err)">Danger Zone</div>
+        <div id="reset-step0">
+          <button class="btn btn-outline btn-sm" id="reset-progress-btn">Reset progress…</button>
+        </div>
+        <div id="reset-step1" style="display:none;flex-direction:column;gap:8px">
+          <div style="font-size:0.85rem;color:var(--p-text)" id="reset-warn-text"></div>
+          <div class="btn-row" style="justify-content:flex-start">
+            <button class="btn btn-sm" id="reset-continue-btn">Continue</button>
+            <button class="btn btn-outline btn-sm" id="reset-cancel1-btn">Cancel</button>
+          </div>
+        </div>
+        <div id="reset-step2" style="display:none;flex-direction:column;gap:8px">
+          <div style="font-size:0.85rem;font-weight:700;color:var(--err)" id="reset-final-text"></div>
+          <div class="btn-row" style="justify-content:flex-start">
+            <button class="btn btn-sm" id="reset-confirm-btn" style="background:var(--err);border-color:var(--err)">Erase everything</button>
+            <button class="btn btn-outline btn-sm" id="reset-cancel2-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="../sync-registry.js"></script>
+<script src="../sync-merge.js"></script>
+<script src="../sync-drive.js"></script>
+<script src="../sync-ui.js"></script>
+<script src="../avatar.js"></script>
+<script src="../app.js"></script>
+<script src="hanzi-data/hanzi-writer.min.js"></script>
+  <script src="common.js"></script>
+  <script src="chinese.js"></script>
+</body>
+
+</html>

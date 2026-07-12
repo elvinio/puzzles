@@ -1,0 +1,16 @@
+/* common.css — shared base for all Chinese app pages (chinese/*.html).
+   Loaded BEFORE each page's own <page>.css. Holds only rules that are
+   identical across pages: the KaiTi web font and the box-model reset.
+   Per-page :root palettes stay in each <page>.css (they differ on purpose). */
+@font-face {
+  font-family: 'KaiTiRegular';
+  src: url('fonts/KaiTiRegular.ttf') format('truetype');
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}

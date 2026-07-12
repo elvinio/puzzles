@@ -8,11 +8,16 @@
 (function () {
   'use strict';
 
+  // Resolve shared assets against app.js's OWN url (captured synchronously),
+  // not the page url — so pages in subdirectories (e.g. chinese/) still reach
+  // the root-level manifest + service worker with correct root scope.
+  var APP_BASE = (document.currentScript && document.currentScript.src) || location.href;
+
   // ── Manifest / theme fallback ──────────────────────────────────────────────
   if (!document.querySelector('link[rel="manifest"]')) {
     var link = document.createElement('link');
     link.rel = 'manifest';
-    link.href = 'manifest.webmanifest';
+    link.href = new URL('manifest.webmanifest', APP_BASE).href;
     document.head.appendChild(link);
   }
   if (!document.querySelector('meta[name="theme-color"]')) {
@@ -24,8 +29,9 @@
 
   // ── Service worker ──────────────────────────────────────────────────────────
   if ('serviceWorker' in navigator) {
+    var swUrl = new URL('sw.js', APP_BASE).href;   // root sw.js, root scope
     window.addEventListener('load', function () {
-      navigator.serviceWorker.register('sw.js').catch(function () {});
+      navigator.serviceWorker.register(swUrl).catch(function () {});
     });
   }
 
