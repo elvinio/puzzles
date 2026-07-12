@@ -9,7 +9,7 @@
         TONED_TO_BASE, BASE_TO_TONES, TONE_NUMBER, INITIALS, SIMILAR_*,
         VALID_SYLLABLES).
      • esc(s) — HTML-escape a string for safe innerHTML interpolation.
-   Currently consumed by chinese.js and chinese-cards.js. */
+   Currently consumed by chinese.js. */
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════

@@ -6,15 +6,14 @@ root (see [Shared root dependencies](#shared-root-dependencies)).
 
 ## Pages
 
-`chinese.html` is the **hub** — the practice engine — and links to the three
+`chinese.html` is the **hub** — the practice engine — and links to the other
 sub-pages from its top nav. Only `chinese.html` and `pinyin_tones.html` are
 surfaced on the site's root `../index.html`; the others are reached from within
 the hub.
 
 | Page | What it is | Data source |
 |------|------------|-------------|
-| `chinese.html` | Practice hub: SRS flashcards + ~14 quiz modes across 3 levels, 默写 spelling tests, dictionary browse, stats, stroke-order animations, speech (STT/TTS) | `data/chinese-p{1,2,3}.json`, `hanzi-data/`, `pinyin_audio/` |
-| `chinese-cards.html` | Browsable flashcard grid + per-character detail modal | `data/chinese-p1.json`, `data/chinese-p2.json` |
+| `chinese.html` | Practice hub: SRS flashcards + ~14 quiz modes across 3 levels, 默写 spelling tests, dictionary browse (with stroke-order + TTS per word), stats, speech (STT/TTS) | `data/chinese-p{1,2,3}.json`, `hanzi-data/`, `pinyin_audio/` |
 | `radicals.html` | Kangxi radical reference, searchable | inline (data hard-coded in `radicals.js`) |
 | `pinyin_tones.html` | Pinyin tone drills (play the 4 tones of a syllable) | `pinyin_audio/` |
 
@@ -30,7 +29,6 @@ chinese/
   common.css             @font-face (KaiTi) + box-model reset  — loaded by every page first
   common.js              shared JS: pinyin toolkit + esc()      — loaded by pages that use it
   chinese.html / .css / .js
-  chinese-cards.html / .css / .js
   radicals.html / .css / .js
   pinyin_tones.html / .css / .js
   data/                  chinese-p{1,2,3}.json, chinese-idioms-p{1,3}.json
@@ -59,10 +57,10 @@ chinese/
     contained and reusable — the natural place to build new pinyin-aware modes.
   - **`esc(s)`** — HTML-escape for safe `innerHTML` interpolation.
 
-  Currently loaded by `chinese.html` and `chinese-cards.html`. `radicals.html`
-  and `pinyin_tones.html` don't use these helpers, so they don't load
-  `common.js` — add the `<script src="common.js">` tag before their `<name>.js`
-  if a future change needs the toolkit.
+  Currently loaded by `chinese.html`. `radicals.html` and `pinyin_tones.html`
+  don't use these helpers, so they don't load `common.js` — add the
+  `<script src="common.js">` tag before their `<name>.js` if a future change
+  needs the toolkit.
 
 ## Shared root dependencies
 
@@ -80,7 +78,7 @@ The pages reference site-wide infrastructure at the repo root via `../`:
 - `../manifest.webmanifest`, `../icons/…`, back-links to `../index.html` /
   `../avatar.html`.
 
-`../sw.js` precaches all four pages, their css/js, `data/*.json`, and the hanzi
+`../sw.js` precaches all three pages, their css/js, `data/*.json`, and the hanzi
 library; `pinyin_audio/*.mp3` and `hanzi-data/chars/*.json` are runtime
 cache-first. **When you add or rename a page/asset here, update the `PRECACHE`
 list and bump `VERSION` in `../sw.js`.**

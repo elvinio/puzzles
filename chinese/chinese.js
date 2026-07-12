@@ -2726,6 +2726,18 @@
       const container = document.getElementById('browse-lesson-tabs');
       container.innerHTML = '';
       const count = getLessonCount(B.level);
+
+      const allBtn = document.createElement('button');
+      allBtn.className = 'browse-lesson-tab' + (B.lesson === 'all' ? ' active' : '');
+      allBtn.textContent = 'All';
+      allBtn.addEventListener('click', () => {
+        B.lesson = 'all';
+        container.querySelectorAll('.browse-lesson-tab').forEach(b => b.classList.remove('active'));
+        allBtn.classList.add('active');
+        renderBrowseWords();
+      });
+      container.appendChild(allBtn);
+
       for (let i = 1; i <= count; i++) {
         const btn = document.createElement('button');
         btn.className = 'browse-lesson-tab' + (i === B.lesson ? ' active' : '');
@@ -2745,16 +2757,28 @@
       grid.innerHTML = '';
       const data = DATA[B.level];
       if (!data) { grid.innerHTML = `<div class="browse-empty">Loading…</div>`; return; }
-      const lessonKey = `${B.level}-${B.lesson}`;
-      const words = data[lessonKey] || [];
-      if (words.length === 0) {
-        grid.innerHTML = `<div class="browse-empty">No words for ${lessonKey}</div>`;
+
+      let entries;
+      if (B.lesson === 'all') {
+        entries = [];
+        const count = getLessonCount(B.level);
+        for (let i = 1; i <= count; i++) {
+          const lessonKey = `${B.level}-${i}`;
+          (data[lessonKey] || []).forEach(w => entries.push({ w, lessonKey, lessonNum: i }));
+        }
+      } else {
+        const lessonKey = `${B.level}-${B.lesson}`;
+        entries = (data[lessonKey] || []).map(w => ({ w, lessonKey, lessonNum: B.lesson }));
+      }
+
+      if (entries.length === 0) {
+        grid.innerHTML = `<div class="browse-empty">No words for ${B.level}-${B.lesson}</div>`;
         return;
       }
-      words.forEach(w => {
+      entries.forEach(({ w, lessonKey, lessonNum }) => {
         const card = document.createElement('div');
         card.className = 'browse-word-card';
-        const wordObj = { ...w, lessonKey, lessonNum: B.lesson, level: B.level, key: w.character };
+        const wordObj = { ...w, lessonKey, lessonNum, level: B.level, key: w.character };
         card.innerHTML = `
       <div class="browse-word-char">${esc(w.character)}</div>
       <div style="display:flex;align-items:center;gap:4px">
