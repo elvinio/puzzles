@@ -251,6 +251,9 @@
     #view-editor.active { display: flex; }
 
     .preview-card {
+      position: sticky;
+      top: 8px;
+      z-index: 5;
       background: var(--surface);
       border: 2px solid var(--brd);
       border-radius: 20px;
@@ -259,6 +262,7 @@
       flex-direction: column;
       align-items: center;
       gap: 10px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
     }
     #preview-svg svg {
       width: clamp(120px, 35vw, 160px);
