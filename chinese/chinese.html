@@ -21,14 +21,14 @@
 ════════════════════════════════════════════════ -->
   <div id="screen-setup" class="screen active">
     <div class="topbar">
-      <a class="back-link" href="../index.html">← Games</a>
-      <div class="topbar-right" style="display:flex;gap:6px">
+      <div class="topbar-right" style="display:flex;gap:6px;flex-wrap:wrap">
+        <a class="btn btn-outline btn-sm" href="../index.html">← Games</a>
         <a class="btn btn-outline btn-sm" href="chinese-cards.html">Cards</a>
         <a class="btn btn-outline btn-sm" href="pinyin_tones.html">Pinyin</a>
         <a class="btn btn-outline btn-sm" href="radicals.html">Radicals</a>
         <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
         <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
-        <button class="btn btn-outline btn-sm" id="setup-bugs-btn">🐛 Bugs</button>
+        <button class="btn btn-outline btn-sm" id="setup-bugs-btn">Bugs</button>
         <button class="btn btn-outline btn-sm" id="setup-spelling-btn">默写</button>
         <button class="btn btn-outline btn-sm" id="setup-speech-settings-btn" title="Settings">⚙</button>
       </div>
@@ -73,7 +73,7 @@
     </div>
 
     <div class="divider"></div>
-    <button class="btn" id="setup-start" style="width:100%;max-width:620px">▶ Start Practice</button>
+    <button class="btn" id="setup-start" style="width:100%;max-width:720px">▶ Start Practice</button>
   </div>
 
   <!-- ═══════════════════════════════════════════════
@@ -138,7 +138,7 @@
       </div>
       <div class="sp-q-num" id="sp-progress-label"></div>
       <div class="sp-question-card" id="sp-question-card"></div>
-      <div class="btn-row" style="width:100%;max-width:620px">
+      <div class="btn-row" style="width:100%;max-width:720px">
         <button class="btn" id="sp-next-btn" style="width:100%">Next →</button>
       </div>
     </div>
@@ -150,8 +150,8 @@
         <h1>Answers</h1>
         <div style="width:60px"></div>
       </div>
-      <div id="sp-results-content" style="width:100%;max-width:620px;display:flex;flex-direction:column;gap:16px"></div>
-      <div class="btn-row" style="width:100%;max-width:620px;margin-top:8px">
+      <div id="sp-results-content" style="width:100%;max-width:720px;display:flex;flex-direction:column;gap:16px"></div>
+      <div class="btn-row" style="width:100%;max-width:720px;margin-top:8px">
         <button class="btn btn-outline" id="sp-results-back-btn" style="width:100%">← Back to Tests</button>
       </div>
     </div>
@@ -176,7 +176,7 @@
         <div class="hud-val ok" id="hud-correct">0</div>
       </div>
       <div style="display:flex;gap:6px">
-        <button class="btn btn-outline btn-sm" id="bug-report-btn" title="Report a problem with this question">🐛</button>
+        <button class="btn btn-outline btn-sm" id="bug-report-btn" title="Report a problem with this question">Report</button>
         <button class="btn btn-outline btn-sm" id="game-end-btn">End</button>
       </div>
     </div>
@@ -355,7 +355,7 @@
   <div id="screen-bugs" class="screen">
     <div class="topbar">
       <button class="back-link" id="bugs-back-btn">← Back</button>
-      <h1>🐛 Bug Reports</h1>
+      <h1>Bug Reports</h1>
       <div style="width:60px"></div>
     </div>
     <div class="bug-list" id="bug-list"></div>
@@ -494,7 +494,7 @@
     <div class="char-modal">
       <button class="char-modal-close" id="br-close">✕</button>
       <div class="char-modal-section" style="gap:4px">
-        <div style="font-size:1.1rem;font-weight:800;color:var(--p-text)">🐛 Report a Problem</div>
+        <div style="font-size:1.1rem;font-weight:800;color:var(--p-text)">Report a Problem</div>
         <div class="char-modal-sec-label" id="br-context"></div>
       </div>
       <div class="char-modal-section">
