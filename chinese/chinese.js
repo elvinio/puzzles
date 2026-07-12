@@ -598,6 +598,18 @@
     // the characters themselves), falling back to single characters. The
     // lesson sentences are written from exactly this vocabulary, so it
     // chunks into natural words most of the time.
+    // SEG_EXTRA_WORDS plugs the gaps: common pronouns/family/time/connective
+    // words that show up constantly in sentences but rarely as a "words"
+    // example, so without them the segmenter shatters those spots into lone
+    // characters and the puzzle gets needlessly fiddly.
+    const SEG_EXTRA_WORDS = [
+      '我们', '你们', '他们', '她们', '它们', '大家', '自己',
+      '妈妈', '爸爸', '爷爷', '奶奶', '弟弟', '妹妹', '哥哥', '姐姐', '朋友', '老师', '同学', '家人',
+      '每天', '今天', '明天', '昨天', '早上', '中午', '晚上', '现在', '时候', '马上', '一起', '一直', '突然', '终于', '然后', '已经',
+      '一个', '一只', '一家', '一条', '一天', '一样', '这个', '那个', '这里', '那里', '这是', '那是', '什么', '怎么', '为什么', '哪里',
+      '可以', '应该', '觉得', '知道', '喜欢', '希望', '发现', '没有', '不是', '不要', '而且', '但是', '因为', '所以', '如果', '虽然', '可是',
+      '学校', '公园', '动物', '运动', '非常', '小心', '地上',
+    ];
     const _segLexicons = {};
     function getSegLexicon(level) {
       if (_segLexicons[level]) return _segLexicons[level];
@@ -615,7 +627,31 @@
           }
         }
       }
+      for (const w of SEG_EXTRA_WORDS) {
+        set.add(w);
+        maxLen = Math.max(maxLen, Math.min(w.length, 4));
+      }
       return (_segLexicons[level] = { set, maxLen });
+    }
+
+    // Any lexicon gaps still left after segmenting fall back to lone
+    // characters; pair up adjacent leftover singles so the puzzle isn't
+    // mostly one-character tiles.
+    function mergeStraySingles(chunks) {
+      const merged = [];
+      let i = 0;
+      while (i < chunks.length) {
+        const c = chunks[i];
+        const next = chunks[i + 1];
+        if (c.length === 1 && next && next.length === 1) {
+          merged.push(c + next);
+          i += 2;
+        } else {
+          merged.push(c);
+          i += 1;
+        }
+      }
+      return merged;
     }
 
     function segmentSentence(chinese, level) {
@@ -636,7 +672,7 @@
         chunks.push(chars.slice(i, i + len).join(''));
         i += len;
       }
-      return chunks;
+      return mergeStraySingles(chunks);
     }
 
     function makeReorder(word, pool) {
