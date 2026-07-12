@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <!-- 在巴士上 On the bus: a boy stands up to give his seat to an elderly lady with a
+       walking stick; other passengers sit and stand. -->
+  <rect width="1200" height="800" fill="#dff0fa"/>
+  <!-- bus interior shell -->
+  <rect x="40" y="60" width="1120" height="680" rx="30" fill="#f2f6f9" stroke="#8fa4b8" stroke-width="10"/>
+  <rect x="40" y="620" width="1120" height="120" fill="#c2d2df"/>
+  <path d="M40,620 L1160,620" stroke="#8fa4b8" stroke-width="6"/>
+  <!-- windows -->
+  <g fill="#bde3f8" stroke="#8fa4b8" stroke-width="6">
+    <rect x="90" y="110" width="230" height="160" rx="12"/>
+    <rect x="360" y="110" width="230" height="160" rx="12"/>
+    <rect x="630" y="110" width="230" height="160" rx="12"/>
+    <rect x="900" y="110" width="210" height="160" rx="12"/>
+  </g>
+  <!-- scenery in windows -->
+  <g>
+    <path d="M110,240 L160,180 L210,240 Z" fill="#96d06e"/>
+    <circle cx="270" cy="160" r="24" fill="#ffd35c"/>
+    <rect x="390" y="170" width="50" height="70" fill="#b7a6d9"/>
+    <rect x="460" y="150" width="46" height="90" fill="#9db8d6"/>
+    <ellipse cx="720" cy="150" rx="42" ry="16" fill="#ffffff"/>
+    <path d="M930,240 L980,190 L1030,240 Z" fill="#96d06e"/>
+  </g>
+  <!-- handrail + hanging handles -->
+  <path d="M80,330 L1120,330" stroke="#e2b13c" stroke-width="10" stroke-linecap="round"/>
+  <g stroke="#e2b13c" stroke-width="7" fill="none">
+    <path d="M250,330 L250,380"/><ellipse cx="250" cy="396" rx="18" ry="16"/>
+    <path d="M480,330 L480,380"/><ellipse cx="480" cy="396" rx="18" ry="16"/>
+    <path d="M710,330 L710,380"/><ellipse cx="710" cy="396" rx="18" ry="16"/>
+    <path d="M940,330 L940,380"/><ellipse cx="940" cy="396" rx="18" ry="16"/>
+  </g>
+
+  <!-- priority seat sign -->
+  <rect x="60" y="300" width="150" height="66" rx="10" fill="#ffffff" stroke="#4f77b0" stroke-width="4"/>
+  <text x="76" y="345" font-family="serif" font-size="34" fill="#31456b">博爱座</text>
+
+  <!-- seats -->
+  <g fill="#4f77b0">
+    <rect x="90" y="470" width="120" height="150" rx="14"/>
+    <rect x="90" y="440" width="26" height="120" rx="10"/>
+    <rect x="950" y="470" width="120" height="150" rx="14"/>
+    <rect x="1044" y="440" width="26" height="120" rx="10"/>
+    <rect x="770" y="470" width="120" height="150" rx="14"/>
+    <rect x="864" y="440" width="26" height="120" rx="10"/>
+  </g>
+
+  <!-- boy standing, gesturing to the empty seat he has given up -->
+  <g transform="translate(300,430)">
+    <path d="M-22,18 A22,22 0 0 1 22,18 Z" fill="#2c2c2c"/>
+    <circle cx="0" cy="18" r="22" fill="#f6c9a0"/>
+    <path d="M-22,12 A22,22 0 0 1 22,12 L22,6 A22,22 0 0 0 -22,6 Z" fill="#2c2c2c"/>
+    <circle cx="-8" cy="16" r="2.6" fill="#333"/>
+    <circle cx="8" cy="16" r="2.6" fill="#333"/>
+    <path d="M-7,27 Q0,33 7,27" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <rect x="-20" y="40" width="40" height="55" rx="12" fill="#5fae4a"/>
+    <!-- one arm inviting toward the seat, one holding schoolbag strap -->
+    <path d="M-18,50 L-54,58" stroke="#5fae4a" stroke-width="10" stroke-linecap="round"/>
+    <path d="M18,50 L26,80" stroke="#5fae4a" stroke-width="10" stroke-linecap="round"/>
+    <rect x="12" y="42" width="34" height="46" rx="10" fill="#e2574c"/>
+    <rect x="-16" y="93" width="13" height="42" rx="6" fill="#31456b"/>
+    <rect x="3" y="93" width="13" height="42" rx="6" fill="#31456b"/>
+    <ellipse cx="-10" cy="140" rx="12" ry="7" fill="#fff"/>
+    <ellipse cx="10" cy="140" rx="12" ry="7" fill="#fff"/>
+  </g>
+
+  <!-- elderly lady with walking stick moving toward the seat -->
+  <g transform="translate(470,440)">
+    <path d="M-22,18 A22,22 0 0 1 22,18 Z" fill="#e6e6e6"/>
+    <circle cx="0" cy="18" r="22" fill="#f2c396"/>
+    <path d="M-22,12 A22,22 0 0 1 22,12 L22,6 A22,22 0 0 0 -22,6 Z" fill="#dcdcdc"/>
+    <circle cx="0" cy="-6" r="10" fill="#dcdcdc"/>
+    <circle cx="-8" cy="16" r="2.6" fill="#333"/>
+    <circle cx="8" cy="16" r="2.6" fill="#333"/>
+    <path d="M-6,28 Q0,33 6,28" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M-24,40 L24,40 L30,110 L-30,110 Z" fill="#b7a6d9"/>
+    <!-- hand on walking stick -->
+    <path d="M-20,52 L-40,84" stroke="#b7a6d9" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-44,88 L-44,140" stroke="#8a5a33" stroke-width="7" stroke-linecap="round"/>
+    <path d="M20,52 L34,80" stroke="#b7a6d9" stroke-width="10" stroke-linecap="round"/>
+    <rect x="-14" y="110" width="12" height="26" rx="6" fill="#f2c396"/>
+    <rect x="4" y="110" width="12" height="26" rx="6" fill="#f2c396"/>
+    <ellipse cx="-8" cy="140" rx="11" ry="7" fill="#5c5c6e"/>
+    <ellipse cx="10" cy="140" rx="11" ry="7" fill="#5c5c6e"/>
+  </g>
+
+  <!-- seated passenger reading phone -->
+  <g transform="translate(1010,420)">
+    <path d="M-21,17 A21,21 0 0 1 21,17 Z" fill="#151515"/>
+    <circle cx="0" cy="17" r="21" fill="#c98d5f"/>
+    <path d="M-21,12 A21,21 0 0 1 21,12 L21,6 A21,21 0 0 0 -21,6 Z" fill="#151515"/>
+    <circle cx="-7" cy="16" r="2.5" fill="#333"/>
+    <circle cx="7" cy="16" r="2.5" fill="#333"/>
+    <path d="M-5,27 Q0,30 5,27" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <rect x="-21" y="38" width="42" height="52" rx="12" fill="#f4a83c"/>
+    <path d="M-19,48 L-8,84" stroke="#f4a83c" stroke-width="10" stroke-linecap="round"/>
+    <path d="M19,48 L8,84" stroke="#f4a83c" stroke-width="10" stroke-linecap="round"/>
+    <rect x="-14" y="76" width="26" height="18" rx="4" fill="#31456b"/>
+    <rect x="-19" y="90" width="14" height="38" rx="6" fill="#4a4a58"/>
+    <rect x="5" y="90" width="14" height="38" rx="6" fill="#4a4a58"/>
+  </g>
+
+  <!-- seated passenger with shopping bag -->
+  <g transform="translate(830,420)">
+    <path d="M-21,17 A21,21 0 0 1 21,17 Z" fill="#4a2f18"/>
+    <circle cx="0" cy="17" r="21" fill="#f6c9a0"/>
+    <path d="M-21,12 A21,21 0 0 1 21,12 L21,6 A21,21 0 0 0 -21,6 Z" fill="#4a2f18"/>
+    <path d="M-21,12 Q-28,38 -19,54 L-13,16 Z" fill="#4a2f18"/>
+    <circle cx="-7" cy="16" r="2.5" fill="#333"/>
+    <circle cx="7" cy="16" r="2.5" fill="#333"/>
+    <path d="M-6,27 Q0,32 6,27" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <rect x="-21" y="38" width="42" height="52" rx="12" fill="#e05780"/>
+    <path d="M-19,48 L-10,84" stroke="#e05780" stroke-width="10" stroke-linecap="round"/>
+    <path d="M19,48 L10,84" stroke="#e05780" stroke-width="10" stroke-linecap="round"/>
+    <rect x="-19" y="90" width="14" height="38" rx="6" fill="#5c5c6e"/>
+    <rect x="5" y="90" width="14" height="38" rx="6" fill="#5c5c6e"/>
+    <path d="M28,60 L52,60 L48,104 L32,104 Z" fill="#c8e6b8" stroke="#7aa863" stroke-width="3"/>
+    <path d="M33,60 q7,-14 14,0" stroke="#7aa863" stroke-width="3" fill="none"/>
+  </g>
+
+  <!-- standing passenger holding a handle -->
+  <g transform="translate(710,438)">
+    <path d="M-21,17 A21,21 0 0 1 21,17 Z" fill="#2c2c2c"/>
+    <circle cx="0" cy="17" r="21" fill="#e8b48a"/>
+    <path d="M-21,12 A21,21 0 0 1 21,12 L21,6 A21,21 0 0 0 -21,6 Z" fill="#2c2c2c"/>
+    <circle cx="-7" cy="16" r="2.5" fill="#333"/>
+    <circle cx="7" cy="16" r="2.5" fill="#333"/>
+    <path d="M-6,27 Q0,31 6,27" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <rect x="-20" y="38" width="40" height="54" rx="12" fill="#4fb0a5"/>
+    <!-- arm up to the hanging handle -->
+    <path d="M14,42 L4,-32" stroke="#4fb0a5" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-18,48 L-26,80" stroke="#4fb0a5" stroke-width="10" stroke-linecap="round"/>
+    <rect x="-16" y="90" width="13" height="40" rx="6" fill="#6b4f3a"/>
+    <rect x="3" y="90" width="13" height="40" rx="6" fill="#6b4f3a"/>
+    <ellipse cx="-10" cy="134" rx="12" ry="7" fill="#fff"/>
+    <ellipse cx="10" cy="134" rx="12" ry="7" fill="#fff"/>
+  </g>
+</svg>

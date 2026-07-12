@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <!-- 生日会 Birthday party: birthday girl in front of the cake, friends clapping and
+       singing, balloons, presents, and a 生日快乐 banner. -->
+  <rect width="1200" height="800" fill="#fdeef3"/>
+  <rect y="620" width="1200" height="180" fill="#e8c9d6"/>
+  <rect y="612" width="1200" height="10" fill="#d9b3c4"/>
+
+  <!-- banner -->
+  <path d="M120,80 Q600,170 1080,80" stroke="#c98da8" stroke-width="5" fill="none"/>
+  <g font-family="serif" font-size="46" fill="#ffffff" text-anchor="middle">
+    <g transform="translate(330,132) rotate(6)">
+      <path d="M-30,-38 L30,-38 L30,18 L0,34 L-30,18 Z" fill="#ef6461"/>
+      <text y="6">生</text>
+    </g>
+    <g transform="translate(510,152) rotate(2)">
+      <path d="M-30,-38 L30,-38 L30,18 L0,34 L-30,18 Z" fill="#f4a83c"/>
+      <text y="6">日</text>
+    </g>
+    <g transform="translate(690,152) rotate(-2)">
+      <path d="M-30,-38 L30,-38 L30,18 L0,34 L-30,18 Z" fill="#4fb0a5"/>
+      <text y="6">快</text>
+    </g>
+    <g transform="translate(870,132) rotate(-6)">
+      <path d="M-30,-38 L30,-38 L30,18 L0,34 L-30,18 Z" fill="#9b6dd6"/>
+      <text y="6">乐</text>
+    </g>
+  </g>
+
+  <!-- balloons -->
+  <g>
+    <ellipse cx="110" cy="270" rx="40" ry="50" fill="#ef6461"/>
+    <path d="M110,320 L106,332 L114,332 Z" fill="#ef6461"/>
+    <path d="M110,332 q-8,40 4,78" stroke="#999" stroke-width="2.5" fill="none"/>
+    <ellipse cx="190" cy="230" rx="36" ry="46" fill="#6fc3e8"/>
+    <path d="M190,276 L186,288 L194,288 Z" fill="#6fc3e8"/>
+    <path d="M190,288 q10,44 -2,86" stroke="#999" stroke-width="2.5" fill="none"/>
+    <ellipse cx="1080" cy="260" rx="40" ry="50" fill="#ffd35c"/>
+    <path d="M1080,310 L1076,322 L1084,322 Z" fill="#ffd35c"/>
+    <path d="M1080,322 q-10,44 2,84" stroke="#999" stroke-width="2.5" fill="none"/>
+    <ellipse cx="1000" cy="220" rx="34" ry="44" fill="#9b6dd6"/>
+    <path d="M1000,264 L996,276 L1004,276 Z" fill="#9b6dd6"/>
+    <path d="M1000,276 q10,44 -4,90" stroke="#999" stroke-width="2.5" fill="none"/>
+  </g>
+
+  <!-- birthday girl with party hat, standing behind the cake (drawn first so the
+       cake and table overlap her lower body) -->
+  <g transform="translate(600,300)">
+    <path d="M0,-66 L26,-16 L-26,-16 Z" fill="#f4a83c"/>
+    <circle cx="0" cy="-66" r="7" fill="#ef6461"/>
+    <path d="M-21,-4 A21,21 0 0 1 21,-4 Z" fill="#4a2f18"/>
+    <circle cx="0" cy="-4" r="21" fill="#f6c9a0"/>
+    <path d="M-21,-9 A21,21 0 0 1 21,-9 L21,-15 A21,21 0 0 0 -21,-15 Z" fill="#4a2f18"/>
+    <circle cx="-17" cy="-16" r="7" fill="#4a2f18"/>
+    <circle cx="17" cy="-16" r="7" fill="#4a2f18"/>
+    <circle cx="-7" cy="-5" r="2.5" fill="#333"/>
+    <circle cx="7" cy="-5" r="2.5" fill="#333"/>
+    <ellipse cx="0" cy="7" rx="5" ry="6" fill="#7a3b3b"/>
+    <path d="M-22,17 L22,17 L28,72 L-28,72 Z" fill="#e05780"/>
+    <!-- hands together, about to blow the candles -->
+    <path d="M-18,26 L-34,54" stroke="#e05780" stroke-width="10" stroke-linecap="round"/>
+    <path d="M18,26 L34,54" stroke="#e05780" stroke-width="10" stroke-linecap="round"/>
+  </g>
+
+  <!-- table with cake -->
+  <g>
+    <rect x="430" y="480" width="340" height="22" rx="8" fill="#a5713f"/>
+    <rect x="450" y="502" width="20" height="130" fill="#7d5330"/>
+    <rect x="730" y="502" width="20" height="130" fill="#7d5330"/>
+    <rect x="440" y="470" width="320" height="14" rx="6" fill="#ffffff"/>
+    <!-- cake -->
+    <rect x="530" y="400" width="140" height="70" rx="10" fill="#f7c8dc"/>
+    <rect x="555" y="352" width="90" height="52" rx="9" fill="#fde3ee"/>
+    <path d="M530,414 q11,14 23,0 q12,14 24,0 q12,14 24,0 q12,14 23,0 q12,14 23,0 q12,14 23,0" stroke="#ffffff" stroke-width="7" fill="none"/>
+    <!-- candles -->
+    <rect x="576" y="322" width="8" height="32" rx="3" fill="#6fc3e8"/>
+    <rect x="596" y="316" width="8" height="38" rx="3" fill="#ef6461"/>
+    <rect x="616" y="322" width="8" height="32" rx="3" fill="#5fae4a"/>
+    <ellipse cx="580" cy="314" rx="5" ry="8" fill="#ffb347"/>
+    <ellipse cx="600" cy="308" rx="5" ry="8" fill="#ffb347"/>
+    <ellipse cx="620" cy="314" rx="5" ry="8" fill="#ffb347"/>
+  </g>
+
+  <!-- presents -->
+  <g>
+    <rect x="270" y="540" width="110" height="90" rx="8" fill="#4fb0a5"/>
+    <rect x="316" y="540" width="18" height="90" fill="#ffd35c"/>
+    <rect x="270" y="576" width="110" height="16" fill="#ffd35c"/>
+    <path d="M325,540 q-20,-26 -34,-8 q14,12 34,8 q20,-26 34,-8 q-14,12 -34,8" fill="#e2b13c"/>
+    <rect x="820" y="556" width="90" height="74" rx="8" fill="#ef6461"/>
+    <rect x="856" y="556" width="16" height="74" fill="#ffffff"/>
+    <rect x="820" y="586" width="90" height="14" fill="#ffffff"/>
+  </g>
+
+  <!-- friend left, clapping -->
+  <g transform="translate(370,330)">
+    <path d="M-22,18 A22,22 0 0 1 22,18 Z" fill="#2c2c2c"/>
+    <circle cx="0" cy="18" r="22" fill="#c98d5f"/>
+    <path d="M-22,12 A22,22 0 0 1 22,12 L22,6 A22,22 0 0 0 -22,6 Z" fill="#2c2c2c"/>
+    <circle cx="-8" cy="16" r="2.6" fill="#333"/>
+    <circle cx="8" cy="16" r="2.6" fill="#333"/>
+    <ellipse cx="0" cy="29" rx="5" ry="6" fill="#7a3b3b"/>
+    <rect x="-20" y="40" width="40" height="54" rx="12" fill="#4f77b0"/>
+    <!-- clapping hands up -->
+    <path d="M-18,50 L-36,22" stroke="#4f77b0" stroke-width="10" stroke-linecap="round"/>
+    <path d="M18,50 L36,22" stroke="#4f77b0" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="-38" cy="16" r="8" fill="#c98d5f"/>
+    <circle cx="38" cy="16" r="8" fill="#c98d5f"/>
+    <path d="M-52,6 L-58,-2 M-46,0 L-49,-10 M52,6 L58,-2 M46,0 L49,-10" stroke="#f4a83c" stroke-width="4" stroke-linecap="round"/>
+    <rect x="-16" y="92" width="13" height="40" rx="6" fill="#4a4a58"/>
+    <rect x="3" y="92" width="13" height="40" rx="6" fill="#4a4a58"/>
+    <ellipse cx="-10" cy="136" rx="12" ry="7" fill="#fff"/>
+    <ellipse cx="10" cy="136" rx="12" ry="7" fill="#fff"/>
+  </g>
+
+  <!-- friend right, singing -->
+  <g transform="translate(840,330)">
+    <path d="M-22,18 A22,22 0 0 1 22,18 Z" fill="#151515"/>
+    <circle cx="0" cy="18" r="22" fill="#e8b48a"/>
+    <path d="M-22,12 A22,22 0 0 1 22,12 L22,6 A22,22 0 0 0 -22,6 Z" fill="#151515"/>
+    <circle cx="-17" cy="4" r="7" fill="#151515"/>
+    <circle cx="17" cy="4" r="7" fill="#151515"/>
+    <circle cx="-8" cy="16" r="2.6" fill="#333"/>
+    <circle cx="8" cy="16" r="2.6" fill="#333"/>
+    <ellipse cx="0" cy="29" rx="6" ry="7" fill="#7a3b3b"/>
+    <path d="M-22,40 L22,40 L28,94 L-28,94 Z" fill="#f4a83c"/>
+    <path d="M-18,50 L-36,74" stroke="#f4a83c" stroke-width="10" stroke-linecap="round"/>
+    <path d="M18,50 L36,74" stroke="#f4a83c" stroke-width="10" stroke-linecap="round"/>
+    <!-- music notes -->
+    <g fill="#9b6dd6">
+      <circle cx="52" cy="4" r="6"/>
+      <path d="M58,4 L58,-26 L70,-30 L70,-22 L58,-18" stroke="#9b6dd6" stroke-width="4" fill="none"/>
+      <circle cx="80" cy="26" r="5"/>
+      <path d="M85,26 L85,2" stroke="#9b6dd6" stroke-width="4"/>
+    </g>
+    <rect x="-14" y="94" width="12" height="34" rx="6" fill="#e8b48a"/>
+    <rect x="2" y="94" width="12" height="34" rx="6" fill="#e8b48a"/>
+    <ellipse cx="-8" cy="132" rx="11" ry="7" fill="#e05780"/>
+    <ellipse cx="8" cy="132" rx="11" ry="7" fill="#e05780"/>
+  </g>
+
+  <!-- confetti -->
+  <g>
+    <rect x="300" y="200" width="12" height="12" rx="3" fill="#4fb0a5" transform="rotate(20 306 206)"/>
+    <rect x="430" y="240" width="12" height="12" rx="3" fill="#ffd35c" transform="rotate(-15 436 246)"/>
+    <rect x="760" y="230" width="12" height="12" rx="3" fill="#ef6461" transform="rotate(30 766 236)"/>
+    <rect x="900" y="190" width="12" height="12" rx="3" fill="#6fc3e8" transform="rotate(-25 906 196)"/>
+    <circle cx="520" cy="210" r="6" fill="#9b6dd6"/>
+    <circle cx="680" cy="200" r="6" fill="#5fae4a"/>
+  </g>
+</svg>

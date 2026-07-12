@@ -67,8 +67,37 @@ header h1 { font-size: 1.15rem; font-weight: 800; color: var(--p-xl); }
 #screen-setup { gap: 20px; padding: 22px 18px 40px; overflow-y: auto; }
 .intro { max-width: 480px; text-align: center; color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
 
+/* ── Topic gallery ── */
+.topic-wrap { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 10px; }
+.topic-label { font-size: 0.85rem; font-weight: 700; color: var(--muted); text-align: center; }
+.topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)); gap: 10px; }
+.topic-item {
+  border: 3px solid var(--brd); border-radius: 14px;
+  background: var(--surface); padding: 0 0 7px;
+  cursor: pointer; overflow: hidden;
+  display: flex; flex-direction: column; gap: 3px;
+  font-family: inherit;
+  transition: border-color 0.12s, transform 0.1s, box-shadow 0.12s;
+}
+.topic-item:hover { border-color: var(--p-lt); }
+.topic-item:active { transform: scale(0.97); }
+.topic-item.selected { border-color: var(--p); box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.22); }
+.topic-item img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; background: #fff; }
+.topic-name { font-size: 0.82rem; font-weight: 800; color: var(--p-text); text-align: center; line-height: 1.25; }
+.topic-name-en { font-size: 0.66rem; font-weight: 600; color: var(--muted); text-align: center; line-height: 1.2; }
+
+.or-divider {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; max-width: 480px;
+  color: var(--muted); font-size: 0.8rem; font-weight: 700;
+}
+.or-divider::before, .or-divider::after {
+  content: ''; flex: 1; height: 2px;
+  background: var(--brd); border-radius: 2px;
+}
+
 .pic-drop {
-  width: 100%; max-width: 480px; min-height: 220px;
+  width: 100%; max-width: 480px; min-height: 160px;
   border: 3px dashed var(--brd); border-radius: 18px;
   background: var(--surface);
   display: flex; align-items: center; justify-content: center;
