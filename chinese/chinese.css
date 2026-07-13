@@ -1335,7 +1335,8 @@
       width: 100%;
       max-width: 720px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      grid-template-columns: repeat(5, 1fr);
+      align-content: start;
       gap: 8px;
       overflow-y: auto;
       flex: 1;
@@ -1369,14 +1370,6 @@
       font-size: 0.8rem;
       color: var(--p-xl);
       font-weight: 700;
-    }
-
-    .browse-word-eng {
-      font-size: 0.73rem;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .browse-word-card.compact {
