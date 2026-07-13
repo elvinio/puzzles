@@ -195,3 +195,11 @@
   padding: 0 2px;
 }
 .pz-close:hover { color: var(--p-text); }
+
+.pz-sync-version {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  opacity: .7;
+}

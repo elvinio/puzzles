@@ -69,6 +69,8 @@
         '</div>' +
 
         '<div class="pz-sync-section" id="pz-settings"></div>' +
+
+        '<div class="pz-sync-version">Version ' + esc(window.PZ_VERSION || '?') + '</div>' +
       '</div>';
 
     overlay.addEventListener('click', function (e) {

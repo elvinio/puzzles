@@ -6,9 +6,10 @@
      with an LRU cap on the audio cache so it can't evict the whole SW cache.
    • Cross-origin (Google/Drive/CDN) is network-only, never cached.
 
-   Bump VERSION on deploy to hard-reset caches.
+   Bump VERSION in version.js on deploy to hard-reset caches.
    ========================================================================== */
-const VERSION = 'pz-v7';
+importScripts('version.js');
+const VERSION = self.PZ_VERSION;
 const SHELL   = 'shell-' + VERSION;
 const RUNTIME = 'runtime-' + VERSION;
 const AUDIO   = 'audio-' + VERSION;
@@ -24,7 +25,7 @@ const PRECACHE = [
   'science.html', 'spaceinvaders.html', 'sudoku.html', 'tower.html', 'tower2.html',
   'typingtutor.html', 'whackamole.html', 'wordle.html',
   // shared js/css
-  'styles.css', 'app.js', 'avatar.js',
+  'styles.css', 'app.js', 'avatar.js', 'version.js',
   'sync-registry.js', 'sync-merge.js', 'sync-drive.js', 'sync-ui.js',
   // Chinese app (chinese/ subdir: pages + extracted css/js + data + hanzi lib)
   'chinese/chinese.html', 'chinese/radicals.html', 'chinese/pinyin_tones.html',
