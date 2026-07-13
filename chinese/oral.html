@@ -18,6 +18,7 @@
   <h1>口试 Oral Practice</h1>
   <nav class="top-nav">
     <a class="btn btn-outline btn-sm" href="chinese.html">← Chinese</a>
+    <button class="btn btn-outline btn-sm" id="history-btn" title="Past attempts">🗂</button>
     <button class="btn btn-outline btn-sm" id="settings-btn" title="Settings">⚙</button>
   </nav>
 </header>
@@ -89,6 +90,43 @@
   </div>
 </main>
 
+<!-- ═══ HISTORY LIST SCREEN ═══ -->
+<main id="screen-history" class="screen">
+  <div class="history-header">
+    <h2>Past Attempts</h2>
+    <button class="btn btn-outline btn-sm" id="history-clear-btn">Clear all</button>
+  </div>
+  <div class="history-list" id="history-list"></div>
+  <div class="history-empty" id="history-empty" hidden>No attempts yet — finish a practice session to see it here.</div>
+  <div class="btn-row">
+    <button class="btn btn-outline" id="history-back-btn">← Back</button>
+  </div>
+</main>
+
+<!-- ═══ HISTORY DETAIL SCREEN ═══ -->
+<main id="screen-history-detail" class="screen">
+  <div class="history-detail-head">
+    <img id="hd-thumb" alt="">
+    <div>
+      <div class="hd-title" id="hd-title"></div>
+      <div class="hd-meta" id="hd-meta"></div>
+    </div>
+  </div>
+  <div class="hd-transcript-log" id="hd-transcript"></div>
+  <section class="fb-card">
+    <h2>给学生</h2>
+    <div class="fb-student" id="hd-student"></div>
+  </section>
+  <section class="fb-card">
+    <h2>Parent Report</h2>
+    <div class="fb-parent" id="hd-parent"></div>
+  </section>
+  <div class="btn-row">
+    <button class="btn btn-outline" id="hd-delete-btn">Delete this attempt</button>
+    <button class="btn" id="hd-back-btn">← Back to history</button>
+  </div>
+</main>
+
 <!-- ═══ SETTINGS MODAL ═══ -->
 <div id="oral-settings-modal" class="modal-overlay">
   <div class="modal">
@@ -119,6 +157,17 @@
     <div class="modal-section">
       <div class="modal-sec-label">Speech Proxy Key</div>
       <input type="password" id="os-proxy-key" class="ss-input" placeholder="Proxy API key" autocomplete="off">
+    </div>
+    <div class="modal-section">
+      <div class="modal-sec-label">Tutor System Prompt</div>
+      <textarea id="os-prompt" class="ss-input ss-textarea" rows="10" spellcheck="false"></textarea>
+      <div style="font-size:0.75rem;color:var(--muted)">Use <code>{level}</code> and <code>{maxTurns}</code> as
+        placeholders — they're filled in automatically for the chosen level. Keep the
+        <code>【给学生】</code> / <code>【家长报告】</code> labels if you want the feedback screen to split
+        student vs. parent text correctly.</div>
+      <div class="btn-row" style="justify-content:flex-start">
+        <button type="button" class="btn btn-outline btn-sm" id="os-prompt-reset">Reset to default</button>
+      </div>
     </div>
     <div class="btn-row" style="justify-content:flex-start">
       <button class="btn btn-sm" id="os-save">Save</button>
