@@ -9,6 +9,8 @@
   // ═══ Config ═══
   const AZURE_CONFIG_KEY = 'chinese-azure-speech'; // shared with chinese.js
   const ORAL_CONFIG_KEY = 'chinese-oral-config';
+  const HISTORY_KEY = 'chinese-oral-history';
+  const MAX_HISTORY = 60; // oldest attempts are dropped past this cap
   const DEFAULT_MODEL = 'claude-haiku-4-5';
   const MAX_CHILD_TURNS = 8; // system prompt tells the tutor to wrap up around here
 
@@ -32,7 +34,12 @@
   function getOralConfig() {
     let cfg = {};
     try { cfg = JSON.parse(localStorage.getItem(ORAL_CONFIG_KEY) || '{}'); } catch { }
-    return { anthropicKey: cfg.anthropicKey || '', model: cfg.model || DEFAULT_MODEL, level: cfg.level || 2 };
+    return {
+      anthropicKey: cfg.anthropicKey || '',
+      model: cfg.model || DEFAULT_MODEL,
+      level: cfg.level || 2,
+      promptTemplate: cfg.promptTemplate || '', // '' means "use the built-in default"
+    };
   }
   function saveOralConfig(patch) {
     const cfg = getOralConfig();
@@ -40,11 +47,34 @@
     try { localStorage.setItem(ORAL_CONFIG_KEY, JSON.stringify(cfg)); } catch { }
   }
 
+  // ═══ History (persisted past attempts, for parent review) ═══
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
+  }
+  function saveHistory(list) {
+    // If storage is full, drop the oldest record(s) and retry rather than losing the new one.
+    while (list.length) {
+      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(list)); return; } catch { list.pop(); }
+    }
+    try { localStorage.removeItem(HISTORY_KEY); } catch { }
+  }
+  function addHistoryRecord(record) {
+    const list = loadHistory();
+    list.unshift(record);
+    if (list.length > MAX_HISTORY) list.length = MAX_HISTORY;
+    saveHistory(list);
+  }
+  function deleteHistoryRecord(id) {
+    saveHistory(loadHistory().filter(r => r.id !== id));
+  }
+
   // ═══ State ═══
   const S = {
     image: null,        // { data: base64 jpeg (no prefix), mediaType, url }
+    topicLabel: '',      // human-readable picture label, for history review
     level: getOralConfig().level,
     messages: [],       // Anthropic messages array (full history, resent each turn)
+    transcript: [],      // [{role:'child'|'tutor', text}] — lightweight log for history review
     childTurns: 0,
     busy: false,
     recording: false,
@@ -59,30 +89,35 @@
   }
 
   // ═══ System prompt ═══
+  // Stored/edited as a template with {level}/{maxTurns} placeholders (rather than a
+  // resolved string) so a parent's edits in Settings still track the level picker.
+  const DEFAULT_PROMPT_TEMPLATE = [
+    'You are 陈老师 (Teacher Chen), a warm and patient Chinese oral tutor for a Primary {level} student in Singapore. You are practising 看图说话 (picture description, like the school oral exam) with the student, based on the picture provided in the first message.',
+    '',
+    'Hard rules:',
+    '- Reply ONLY in Simplified Chinese. Never use English, pinyin, or translations in your replies to the student.',
+    '- Use vocabulary and sentence patterns a Primary {level} student following the Singapore MOE 华文 syllabus would know. Prefer simple, common words.',
+    '- Keep every reply to 1–2 short sentences, and ask exactly ONE question per turn.',
+    '- Be warm and encouraging: briefly praise something specific the student said before asking the next question.',
+    "- The student's replies are transcribed by speech recognition and may contain recognition errors. If a reply seems garbled or doesn't make sense, don't guess — gently ask the student to repeat, e.g. 老师没听清楚，你可以再说一次吗？",
+    '- If the student replies in English, respond warmly in Chinese and encourage them to try again in Chinese, e.g. 你可以试试用华语说吗？You may offer one simple Chinese word to help them.',
+    '- Guide the conversation like an oral exam: first who/what is in the picture, then what is happening, then feelings and thoughts, and finally a simple opinion or a connection to the student\'s own life.',
+    '- After about {maxTurns} student turns, wrap up warmly (e.g. 你今天说得真棒！我们下次再练习。) and stop asking questions.',
+    '',
+    'Example exchanges (style reference only):',
+    '学生: 图片里有一个小男孩。',
+    '老师: 对！你观察得很仔细。小男孩在做什么呢？',
+    '学生: 他在公园跑步。',
+    '老师: 说得好！他跑步的时候，心情怎么样？',
+    '',
+    'When you receive a message starting with [FEEDBACK REQUEST], the practice session is over. Stop the roleplay and reply with exactly these two labelled sections:',
+    '【给学生】 2–3 encouraging sentences in simple Chinese, mentioning one specific thing the student did well and one thing to practise.',
+    '【家长报告】 A short report in English for the parent: strengths, vocabulary and grammar points to practise, and 2–3 useful Chinese phrases to rehearse (with pinyin).',
+  ].join('\n');
+
   function buildSystemPrompt(level) {
-    return [
-      `You are 陈老师 (Teacher Chen), a warm and patient Chinese oral tutor for a Primary ${level} student in Singapore. You are practising 看图说话 (picture description, like the school oral exam) with the student, based on the picture provided in the first message.`,
-      '',
-      'Hard rules:',
-      '- Reply ONLY in Simplified Chinese. Never use English, pinyin, or translations in your replies to the student.',
-      `- Use vocabulary and sentence patterns a Primary ${level} student following the Singapore MOE 华文 syllabus would know. Prefer simple, common words.`,
-      '- Keep every reply to 1–2 short sentences, and ask exactly ONE question per turn.',
-      '- Be warm and encouraging: briefly praise something specific the student said before asking the next question.',
-      "- The student's replies are transcribed by speech recognition and may contain recognition errors. If a reply seems garbled or doesn't make sense, don't guess — gently ask the student to repeat, e.g. 老师没听清楚，你可以再说一次吗？",
-      '- If the student replies in English, respond warmly in Chinese and encourage them to try again in Chinese, e.g. 你可以试试用华语说吗？You may offer one simple Chinese word to help them.',
-      '- Guide the conversation like an oral exam: first who/what is in the picture, then what is happening, then feelings and thoughts, and finally a simple opinion or a connection to the student\'s own life.',
-      `- After about ${MAX_CHILD_TURNS} student turns, wrap up warmly (e.g. 你今天说得真棒！我们下次再练习。) and stop asking questions.`,
-      '',
-      'Example exchanges (style reference only):',
-      '学生: 图片里有一个小男孩。',
-      '老师: 对！你观察得很仔细。小男孩在做什么呢？',
-      '学生: 他在公园跑步。',
-      '老师: 说得好！他跑步的时候，心情怎么样？',
-      '',
-      'When you receive a message starting with [FEEDBACK REQUEST], the practice session is over. Stop the roleplay and reply with exactly these two labelled sections:',
-      '【给学生】 2–3 encouraging sentences in simple Chinese, mentioning one specific thing the student did well and one thing to practise.',
-      '【家长报告】 A short report in English for the parent: strengths, vocabulary and grammar points to practise, and 2–3 useful Chinese phrases to rehearse (with pinyin).',
-    ].join('\n');
+    const template = getOralConfig().promptTemplate || DEFAULT_PROMPT_TEMPLATE;
+    return template.replace(/\{level\}/g, level).replace(/\{maxTurns\}/g, MAX_CHILD_TURNS);
   }
 
   // ═══ Anthropic call ═══
@@ -330,6 +365,7 @@
       $('setup-status').textContent = "Couldn't load that picture — try another one";
       return;
     }
+    S.topicLabel = `${topic.zh} ${topic.en}`;
     if (!$('setup-status').textContent.startsWith('Add your')) $('setup-status').textContent = '';
     clearTopicSelection();
     btn.classList.add('selected');
@@ -426,6 +462,7 @@
       ],
     }];
     S.childTurns = 0;
+    S.transcript = [];
     S.ended = false;
     $('chat-log').innerHTML = '';
     $('chat-pic').src = S.image.url;
@@ -444,6 +481,7 @@
       const reply = await callClaude(400);
       thinking.remove();
       S.messages.push({ role: 'assistant', content: reply });
+      S.transcript.push({ role: 'tutor', text: reply });
       addBubble('tutor', reply);
       setStatus('');
       speak(reply);
@@ -462,6 +500,7 @@
     if (S.busy || S.ended || !text) return;
     addBubble('child', text);
     S.messages.push({ role: 'user', content: text });
+    S.transcript.push({ role: 'child', text });
     S.childTurns++;
     await tutorTurn();
   }
@@ -503,6 +542,49 @@
     $('fb-parent').textContent = parent || '—';
     showScreen('screen-feedback');
     speak(student);
+    saveAttemptToHistory(student, parent);
+  }
+
+  // Downscales a data URL to a small thumbnail for cheap history storage.
+  function makeThumb(dataUrl) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const MAX = 200;
+          const scale = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+          const w = Math.max(1, Math.round(img.naturalWidth * scale));
+          const h = Math.max(1, Math.round(img.naturalHeight * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.6));
+        } catch { resolve(''); }
+      };
+      img.onerror = () => resolve('');
+      img.src = dataUrl;
+    });
+  }
+
+  // Best-effort — persistence failures must never block showing feedback to the child.
+  async function saveAttemptToHistory(studentFb, parentReport) {
+    try {
+      const thumb = S.image ? await makeThumb(S.image.url) : '';
+      addHistoryRecord({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        ts: Date.now(),
+        level: S.level,
+        topicLabel: S.topicLabel || 'Picture',
+        thumb,
+        transcript: S.transcript.slice(),
+        studentFeedback: studentFb,
+        parentReport: parentReport || '',
+      });
+    } catch { }
   }
 
   // ═══ Recording (hold-to-talk) ═══
@@ -592,14 +674,18 @@
     $('os-model').value = oral.model;
     $('os-proxy-url').value = azure.proxyUrl;
     $('os-proxy-key').value = azure.apiKey;
+    $('os-prompt').value = oral.promptTemplate || DEFAULT_PROMPT_TEMPLATE;
     $('os-test-status').textContent = '';
     $('oral-settings-modal').classList.add('open');
   }
 
   function saveSettings() {
+    const promptVal = $('os-prompt').value.replace(/\r\n/g, '\n');
     saveOralConfig({
       anthropicKey: $('os-anthropic-key').value.trim(),
       model: $('os-model').value.trim() || DEFAULT_MODEL,
+      // Store '' (= use built-in default) when the text matches the default verbatim.
+      promptTemplate: promptVal.trim() === DEFAULT_PROMPT_TEMPLATE.trim() ? '' : promptVal,
     });
     saveAzureConfig({
       proxyUrl: $('os-proxy-url').value.trim().replace(/\/+$/, ''),
@@ -656,6 +742,77 @@
     status.style.color = lines.every(l => l.startsWith('✓') || l.startsWith('•')) ? 'var(--ok)' : 'var(--err)';
   }
 
+  // ═══ History review ═══
+  function formatDate(ts) {
+    const d = new Date(ts);
+    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) +
+      ' ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function renderHistoryList() {
+    const list = loadHistory();
+    const container = $('history-list');
+    container.innerHTML = '';
+    $('history-empty').hidden = list.length > 0;
+    list.forEach(rec => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'history-item';
+
+      const img = document.createElement('img');
+      img.src = rec.thumb || '';
+      img.alt = '';
+
+      const body = document.createElement('div');
+      body.className = 'history-item-body';
+      const title = document.createElement('div');
+      title.className = 'history-item-title';
+      title.textContent = `${rec.topicLabel || 'Picture'} · P${rec.level}`;
+      const meta = document.createElement('div');
+      meta.className = 'history-item-meta';
+      meta.textContent = formatDate(rec.ts);
+      body.append(title, meta);
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'history-item-del';
+      del.title = 'Delete';
+      del.textContent = '🗑';
+      del.addEventListener('click', e => {
+        e.stopPropagation();
+        if (confirm('Delete this attempt?')) {
+          deleteHistoryRecord(rec.id);
+          renderHistoryList();
+        }
+      });
+
+      btn.append(img, body, del);
+      btn.addEventListener('click', () => openHistoryDetail(rec));
+      container.appendChild(btn);
+    });
+  }
+
+  let currentHistoryId = null;
+  function openHistoryDetail(rec) {
+    currentHistoryId = rec.id;
+    $('hd-thumb').src = rec.thumb || '';
+    $('hd-title').textContent = `${rec.topicLabel || 'Picture'} · P${rec.level}`;
+    $('hd-meta').textContent = formatDate(rec.ts);
+    const log = $('hd-transcript');
+    log.innerHTML = '';
+    (rec.transcript || []).forEach(turn => {
+      const div = document.createElement('div');
+      div.className = `bubble ${turn.role === 'child' ? 'child' : 'tutor'}`;
+      const span = document.createElement('span');
+      span.textContent = turn.text;
+      div.appendChild(span);
+      log.appendChild(div);
+    });
+    $('hd-student').textContent = rec.studentFeedback || '—';
+    $('hd-parent').textContent = rec.parentReport || '—';
+    showScreen('screen-history-detail');
+  }
+
   // ═══ Setup screen wiring ═══
   function updateStartState() {
     $('start-btn').disabled = !S.image;
@@ -672,6 +829,7 @@
       $('setup-status').textContent = "Couldn't read that image — try another one";
       return;
     }
+    S.topicLabel = 'Own picture';
     clearTopicSelection();
     $('pic-preview').src = S.image.url;
     $('pic-preview').hidden = false;
@@ -758,6 +916,26 @@
     });
     $('os-save').addEventListener('click', saveSettings);
     $('os-test').addEventListener('click', testConnections);
+    $('os-prompt-reset').addEventListener('click', () => { $('os-prompt').value = DEFAULT_PROMPT_TEMPLATE; });
+
+    // History
+    $('history-btn').addEventListener('click', () => { renderHistoryList(); showScreen('screen-history'); });
+    $('history-back-btn').addEventListener('click', () => showScreen('screen-setup'));
+    $('history-clear-btn').addEventListener('click', () => {
+      if (loadHistory().length && confirm('Delete all saved attempts? This cannot be undone.')) {
+        saveHistory([]);
+        renderHistoryList();
+      }
+    });
+    $('hd-back-btn').addEventListener('click', () => { renderHistoryList(); showScreen('screen-history'); });
+    $('hd-delete-btn').addEventListener('click', () => {
+      if (currentHistoryId && confirm('Delete this attempt?')) {
+        deleteHistoryRecord(currentHistoryId);
+        currentHistoryId = null;
+        renderHistoryList();
+        showScreen('screen-history');
+      }
+    });
 
     updateStartState();
   }

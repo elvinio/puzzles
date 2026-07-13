@@ -70,8 +70,9 @@ chinese/
 
 - **Anthropic (Claude)** — called directly from the browser
   (`anthropic-dangerous-direct-browser-access`); the API key + model live in
-  localStorage under `chinese-oral-config` (`{anthropicKey, model, level}`).
-  The key is stored client-side, so only use it on trusted family devices.
+  localStorage under `chinese-oral-config`
+  (`{anthropicKey, model, level, promptTemplate}`). The key is stored
+  client-side, so only use it on trusted family devices.
 - **Azure speech proxy (STT + TTS)** — **shares** the hub's
   `chinese-azure-speech` localStorage key (`{proxyUrl, apiKey, threshold}`),
   so a proxy configured in `chinese.html` works here with zero setup and vice
@@ -80,6 +81,25 @@ chinese/
 
 Without the speech proxy the page degrades gracefully: the child types
 answers and TTS falls back to the browser's `speechSynthesis`.
+
+The tutor's system prompt (`DEFAULT_PROMPT_TEMPLATE` in `oral.js`) is
+editable from the ⚙ Settings modal — edits are stored as
+`promptTemplate` in `chinese-oral-config` (empty string means "use the
+built-in default"). The template uses `{level}`/`{maxTurns}` placeholders
+that get substituted at call time, so an edited prompt still tracks the
+level picker. Keep the `【给学生】`/`【家长报告】` markers if you want the
+feedback screen to keep splitting student vs. parent text correctly.
+
+### Oral attempt history
+
+Every finished attempt (transcript + the 【给学生】/【家长报告】 feedback) is
+saved to localStorage under `chinese-oral-history` (newest first, capped at
+60 records with oldest dropped first on quota errors). The 🗂 button in
+`oral.html`'s header opens a list of past attempts; tapping one shows the
+full transcript and parent report for review, with per-attempt and
+clear-all delete. Like the oral config keys, this isn't registered in
+`sync-registry.js`, so history stays local to the device it was recorded
+on.
 
 ## Shared root dependencies
 

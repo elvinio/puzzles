@@ -229,3 +229,44 @@ header h1 { font-size: 1.15rem; font-weight: 800; color: var(--p-xl); }
   background: var(--bg); color: var(--p-text);
   font-family: inherit; font-size: 0.95rem;
 }
+.ss-textarea {
+  resize: vertical; min-height: 160px;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.8rem; line-height: 1.55;
+}
+
+/* ── History ── */
+#screen-history, #screen-history-detail {
+  gap: 16px; padding: 22px 18px 40px; overflow-y: auto;
+  width: 100%; max-width: 640px; margin: 0 auto;
+}
+.history-header { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.history-header h2 { font-size: 1.05rem; font-weight: 800; color: var(--p-xl); }
+.history-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.history-empty { color: var(--muted); text-align: center; font-size: 0.9rem; padding: 20px 0; }
+.history-item {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  background: var(--surface); border: 2px solid var(--brd); border-radius: 14px;
+  padding: 10px 12px; cursor: pointer; text-align: left; font-family: inherit;
+  transition: border-color 0.12s;
+}
+.history-item:hover { border-color: var(--p-lt); }
+.history-item img { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #fff; }
+.history-item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.history-item-title { font-weight: 800; font-size: 0.92rem; color: var(--p-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-item-meta { font-size: 0.75rem; color: var(--muted); }
+.history-item-del {
+  background: none; border: none; color: var(--muted); font-size: 1rem;
+  cursor: pointer; padding: 6px; border-radius: 8px; flex-shrink: 0;
+}
+.history-item-del:hover { color: var(--err); background: rgba(220, 38, 38, 0.1); }
+
+.history-detail-head { display: flex; align-items: center; gap: 14px; width: 100%; }
+.history-detail-head img { width: 72px; height: 72px; border-radius: 12px; object-fit: cover; background: #fff; border: 2px solid var(--brd); }
+.hd-title { font-weight: 800; font-size: 1.05rem; color: var(--p-text); }
+.hd-meta { font-size: 0.8rem; color: var(--muted); }
+.hd-transcript-log {
+  width: 100%; max-height: 360px; overflow-y: auto;
+  border: 2px solid var(--brd); border-radius: 14px; padding: 12px;
+  background: var(--surface); display: flex; flex-direction: column; gap: 10px;
+}
