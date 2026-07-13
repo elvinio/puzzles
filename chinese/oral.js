@@ -308,15 +308,15 @@
   // ═══ Built-in topics (看图说话 scenes bundled with the app) ═══
   const TOPICS = [
     { file: 'park.svg', zh: '在公园', en: 'At the park' },
-    { file: 'classroom.png', zh: '在教室', en: 'In class' },
+    { file: 'classroom.jpg', zh: '在教室', en: 'In class' },
     { file: 'library.svg', zh: '在图书馆', en: 'At the library' },
-    { file: 'hawker.png', zh: '在小贩中心', en: 'Hawker centre' },
+    { file: 'hawker.jpg', zh: '在小贩中心', en: 'Hawker centre' },
     { file: 'bus.svg', zh: '在巴士上', en: 'On the bus' },
     { file: 'road.svg', zh: '过马路', en: 'Crossing the road' },
-    { file: 'chores.png', zh: '做家务', en: 'Helping at home' },
+    { file: 'chores.jpg', zh: '做家务', en: 'Helping at home' },
     { file: 'birthday.svg', zh: '生日会', en: 'Birthday party' },
-    { file: 'sports.png', zh: '运动会', en: 'School sports day' },
-    { file: 'community.png', zh: '在社区', en: 'In the community' },
+    { file: 'sports.jpg', zh: '运动会', en: 'School sports day' },
+    { file: 'community.jpg', zh: '在社区', en: 'In the community' },
   ];
 
   function clearTopicSelection() {
