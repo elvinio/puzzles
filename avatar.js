@@ -15,6 +15,7 @@
     dimpleColor: '#ffb3c6',
     browStyle: 'none',
     glassesStyle: 'none',
+    glassesColor: '#1a1a2e',
     hatStyle: 'none',
     hatColor: '#ef4444'
   };
@@ -321,7 +322,7 @@
     // Fixed dark frame, centred on the eyes (y≈48).
     var glasses = '';
     if (s.glassesStyle && s.glassesStyle !== 'none') {
-      var gc = '#1a1a2e';
+      var gc = s.glassesColor || '#1a1a2e';
       switch (s.glassesStyle) {
         case 'round':
           glasses = '<circle cx="37" cy="48" r="9" fill="none" stroke="' + gc + '" stroke-width="2.5"/>' +
@@ -347,6 +348,14 @@
           glasses = '<text x="37" y="55" text-anchor="middle" font-size="22" fill="#f0c040" stroke="' + gc + '" stroke-width="0.8">★</text>' +
                     '<text x="63" y="55" text-anchor="middle" font-size="22" fill="#f0c040" stroke="' + gc + '" stroke-width="0.8">★</text>' +
                     '<line x1="46" y1="47" x2="54" y2="47" stroke="' + gc + '" stroke-width="2.5"/>'; break;
+        case 'heart':
+          glasses = '<text x="37" y="56" text-anchor="middle" font-size="22" fill="' + gc + '">♥</text>' +
+                    '<text x="63" y="56" text-anchor="middle" font-size="22" fill="' + gc + '">♥</text>' +
+                    '<line x1="46" y1="47" x2="54" y2="47" stroke="' + gc + '" stroke-width="2.5"/>'; break;
+        case 'monocle':
+          glasses = '<circle cx="63" cy="48" r="9" fill="none" stroke="' + gc + '" stroke-width="2.5"/>' +
+                    '<line x1="63" y1="57" x2="70" y2="80" stroke="' + gc + '" stroke-width="1.5"/>' +
+                    '<circle cx="70" cy="82" r="2.2" fill="' + gc + '"/>'; break;
       }
     }
 
@@ -376,6 +385,20 @@
           hat = '<path d="M50,12 L36,4 Q32,12 36,20 Z" fill="' + tc + '"/>' +
                 '<path d="M50,12 L64,4 Q68,12 64,20 Z" fill="' + tc + '"/>' +
                 '<circle cx="50" cy="12" r="4" fill="' + tc + '" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>'; break;
+        case 'headphones':
+          hat = '<path d="M20,45 Q20,8 50,8 Q80,8 80,45" fill="none" stroke="' + tc + '" stroke-width="5" stroke-linecap="round"/>' +
+                '<rect x="12" y="42" width="10" height="16" rx="5" fill="' + tc + '"/>' +
+                '<rect x="78" y="42" width="10" height="16" rx="5" fill="' + tc + '"/>'; break;
+        case 'flower':
+          hat = '<circle cx="72" cy="14" r="7" fill="' + tc + '"/><circle cx="80" cy="19" r="7" fill="' + tc + '"/>' +
+                '<circle cx="77" cy="27" r="7" fill="' + tc + '"/><circle cx="67" cy="27" r="7" fill="' + tc + '"/>' +
+                '<circle cx="64" cy="19" r="7" fill="' + tc + '"/><circle cx="72" cy="20" r="5" fill="#f0c040"/>'; break;
+        case 'halo':
+          hat = '<ellipse cx="50" cy="2" rx="17" ry="4.5" fill="none" stroke="' + tc + '" stroke-width="3" opacity="0.85"/>'; break;
+        case 'bandana':
+          hat = '<path d="M18,32 Q18,6 50,6 Q82,6 82,32 Q66,18 50,18 Q34,18 18,32 Z" fill="' + tc + '"/>' +
+                '<path d="M50,18 L43,32 L57,32 Z" fill="' + tc + '" opacity="0.7"/>' +
+                '<path d="M78,26 L94,36 L89,20 Z" fill="' + tc + '"/>'; break;
       }
     }
 
