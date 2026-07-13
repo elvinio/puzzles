@@ -868,6 +868,13 @@
       showScreen('screen-setup');
     }
 
+    // Switching avatars via the badge menu doesn't navigate away from
+    // chinese.html, so re-run setup's avatar/progress load right away
+    // instead of waiting for the next back-to-setup navigation.
+    window.addEventListener('pz-avatar-change', () => {
+      if (document.getElementById('screen-setup').classList.contains('active')) initSetup();
+    });
+
     // Tab helpers
     function bindTabs(containerId, onSelect) {
       const container = document.getElementById(containerId);

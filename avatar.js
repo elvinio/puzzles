@@ -48,6 +48,7 @@
   window.__avatarSetActiveId = function (id) {
     try { localStorage.setItem('puzzles-avatar-active', id); } catch (e) {}
     updateBadge();
+    try { window.dispatchEvent(new CustomEvent('pz-avatar-change', { detail: { id: id } })); } catch (e) {}
   };
 
   // ── Migration from old single-avatar schema ───────────────────────────────
