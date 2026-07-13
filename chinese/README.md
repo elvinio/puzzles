@@ -17,6 +17,7 @@ the hub.
 | `radicals.html` | Kangxi radical reference, searchable | inline (data hard-coded in `radicals.js`) |
 | `pinyin_tones.html` | Pinyin tone drills (play the 4 tones of a syllable) | `pinyin_audio/` |
 | `oral.html` | AI oral tutor (看图说话): upload a picture, Claude holds a spoken conversation about it in Chinese (Azure STT/TTS via the speech proxy), ends with feedback for student + parent | user-supplied picture + Anthropic API + speech proxy |
+| `polyphonic.html` | 多音字 reference: searchable list of polyphonic characters, each reading with pinyin, meaning, and an example sentence (tap to hear via TTS) | `data/chinese-polyphonic.json` |
 
 ## File layout
 
@@ -33,7 +34,8 @@ chinese/
   radicals.html / .css / .js
   pinyin_tones.html / .css / .js
   oral.html / .css / .js
-  data/                  chinese-p{1,2,3}.json, chinese-idioms-p{1,3}.json
+  polyphonic.html / .css / .js
+  data/                  chinese-p{1,2,3}.json, chinese-idioms-p{1,3}.json, chinese-polyphonic.json
   fonts/                 KaiTiRegular.ttf  (the Chinese display font)
   pinyin_audio/          <syllable><tone>.mp3  (e.g. hao3.mp3) — 1500+ clips
   hanzi-data/
@@ -148,6 +150,20 @@ list and bump `VERSION` in `../sw.js`.**
 `data/chinese-idioms-p{1,3}.json` — a flat array of
 `{ character, idiom, pinyin, meaning-chinese, meaning-english }`. **Not yet
 consumed by any page** (precached for a planned idioms feature).
+
+`data/chinese-polyphonic.json` — consumed by `polyphonic.html`. A flat array of
+polyphonic characters (多音字, below Primary 6 level), each with all of its
+common readings:
+
+```jsonc
+{
+  "character": "长",
+  "readings": [
+    { "pinyin": "cháng", "meaning": "long (length)", "example": "这条路很长。" },
+    { "pinyin": "zhǎng", "meaning": "to grow; elder", "example": "妹妹长高了。" }
+  ]
+}
+```
 
 Per-character stroke data is lazy-loaded from `hanzi-data/chars/<char>.json` by
 the hanzi-writer library when a stroke animation is requested. If a character

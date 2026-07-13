@@ -29,12 +29,13 @@ const PRECACHE = [
   'sync-registry.js', 'sync-merge.js', 'sync-drive.js', 'sync-ui.js',
   // Chinese app (chinese/ subdir: pages + extracted css/js + data + hanzi lib)
   'chinese/chinese.html', 'chinese/radicals.html', 'chinese/pinyin_tones.html',
-  'chinese/oral.html',
+  'chinese/oral.html', 'chinese/polyphonic.html',
   'chinese/common.css', 'chinese/common.js',
   'chinese/chinese.css', 'chinese/chinese.js',
   'chinese/radicals.css', 'chinese/radicals.js',
   'chinese/pinyin_tones.css', 'chinese/pinyin_tones.js',
   'chinese/oral.css', 'chinese/oral.js',
+  'chinese/polyphonic.css', 'chinese/polyphonic.js',
   'chinese/oral-topics/park.svg', 'chinese/oral-topics/classroom.jpg',
   'chinese/oral-topics/library.svg', 'chinese/oral-topics/hawker.jpg',
   'chinese/oral-topics/bus.svg', 'chinese/oral-topics/road.svg',
@@ -43,6 +44,7 @@ const PRECACHE = [
   'chinese/hanzi-data/hanzi-writer.min.js',
   'chinese/data/chinese-p1.json', 'chinese/data/chinese-p2.json', 'chinese/data/chinese-p3.json',
   'chinese/data/chinese-idioms-p1.json', 'chinese/data/chinese-idioms-p3.json',
+  'chinese/data/chinese-polyphonic.json',
   // JSON data (small)
   'english-p1.json', 'english-p3.json', 'english-idioms.json', 'english-proverbs.json',
   // manifest + icons
