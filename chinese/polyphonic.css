@@ -1,0 +1,64 @@
+/* polyphonic.css — page-specific styles for polyphonic.html.
+   Shared @font-face + reset live in common.css, loaded first. */
+  :root {
+    --bg: #f5f2fb; --surface: #ffffff; --border: #d7c9f2;
+    --text: #241b35; --muted: #756a91;
+    --p-xl: #5b21b6; --p-lt: #ede8fb;
+  }
+  body { background: var(--bg); color: var(--text); font-family: system-ui,-apple-system,sans-serif; min-height: 100vh; }
+
+  header { padding: 20px 24px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  header h1 { font-size: 1.2rem; font-weight: 700; color: var(--p-xl); }
+  .back-link { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
+  .back-link:hover { color: var(--p-xl); }
+  .count-note { font-size: 0.78rem; color: var(--muted); }
+
+  .search-row { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .search-input {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    padding: 6px 14px; font-size: 0.85rem; color: var(--text); font-family: inherit;
+    min-width: 200px;
+  }
+  .search-input:focus { outline: none; border-color: var(--p-xl); }
+
+  main { padding: 20px 24px 60px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.12s;
+  }
+  .card:hover { border-color: var(--p-xl); }
+  .card.hidden { display: none; }
+
+  .card-top { display: flex; align-items: center; gap: 12px; }
+  .poly-char {
+    font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+    font-size: 2.6rem; font-weight: 900; color: var(--text); line-height: 1;
+  }
+  .poly-count { font-size: 0.72rem; color: var(--muted); }
+
+  .divider { height: 1px; background: var(--border); opacity: 0.6; }
+
+  .reading-list { display: flex; flex-direction: column; gap: 8px; }
+  .reading-row { display: flex; flex-direction: column; gap: 2px; }
+  .reading-head { display: flex; align-items: baseline; gap: 8px; }
+  .reading-pinyin { font-size: 1rem; font-weight: 700; color: var(--p-xl); }
+  .reading-meaning { font-size: 0.8rem; color: var(--muted); }
+  .reading-example { font-size: 0.85rem; color: var(--text); cursor: pointer; }
+  .reading-example:hover { color: var(--p-xl); }
+
+  .speak-btn {
+    background: none; border: none; cursor: pointer; font-size: 0.9rem;
+    opacity: 0.5; padding: 0 4px; border-radius: 6px; flex-shrink: 0;
+    transition: opacity 0.15s, background 0.15s;
+  }
+  .speak-btn:hover { opacity: 1; background: var(--p-lt); }
+
+  .empty-msg { text-align: center; color: var(--muted); font-size: 0.9rem; padding: 40px; }

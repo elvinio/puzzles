@@ -1,0 +1,284 @@
+[
+  {
+    "character": "长",
+    "readings": [
+      { "pinyin": "cháng", "meaning": "long (length)", "example": "这条路很长。" },
+      { "pinyin": "zhǎng", "meaning": "to grow; elder", "example": "妹妹长高了。" }
+    ]
+  },
+  {
+    "character": "重",
+    "readings": [
+      { "pinyin": "zhòng", "meaning": "heavy; important", "example": "这个箱子很重。" },
+      { "pinyin": "chóng", "meaning": "again; repeat", "example": "他重新做了一次。" }
+    ]
+  },
+  {
+    "character": "还",
+    "readings": [
+      { "pinyin": "hái", "meaning": "still; also", "example": "他还没吃饭。" },
+      { "pinyin": "huán", "meaning": "to return (something)", "example": "请把书还给我。" }
+    ]
+  },
+  {
+    "character": "假",
+    "readings": [
+      { "pinyin": "jiǎ", "meaning": "false; fake", "example": "这是假的花，不是真的。" },
+      { "pinyin": "jià", "meaning": "holiday; leave", "example": "我们明天放假。" }
+    ]
+  },
+  {
+    "character": "教",
+    "readings": [
+      { "pinyin": "jiāo", "meaning": "to teach", "example": "老师教我们写字。" },
+      { "pinyin": "jiào", "meaning": "education; religion", "example": "他在学校当教师。" }
+    ]
+  },
+  {
+    "character": "好",
+    "readings": [
+      { "pinyin": "hǎo", "meaning": "good; well", "example": "今天天气很好。" },
+      { "pinyin": "hào", "meaning": "to like; to be fond of", "example": "他很好学。" }
+    ]
+  },
+  {
+    "character": "觉",
+    "readings": [
+      { "pinyin": "jué", "meaning": "to feel; to sense", "example": "我觉得很累。" },
+      { "pinyin": "jiào", "meaning": "sleep", "example": "妹妹在睡觉。" }
+    ]
+  },
+  {
+    "character": "得",
+    "readings": [
+      { "pinyin": "dé", "meaning": "to get; to obtain", "example": "他得了第一名。" },
+      { "pinyin": "de", "meaning": "structural particle (before adjectives/adverbs)", "example": "他跑得很快。" },
+      { "pinyin": "děi", "meaning": "must; have to", "example": "我们得快点走了。" }
+    ]
+  },
+  {
+    "character": "都",
+    "readings": [
+      { "pinyin": "dōu", "meaning": "all; both", "example": "我们都喜欢唱歌。" },
+      { "pinyin": "dū", "meaning": "capital city", "example": "北京是中国的首都。" }
+    ]
+  },
+  {
+    "character": "少",
+    "readings": [
+      { "pinyin": "shǎo", "meaning": "few; little", "example": "今天来的人很少。" },
+      { "pinyin": "shào", "meaning": "young", "example": "他是一个少年。" }
+    ]
+  },
+  {
+    "character": "干",
+    "readings": [
+      { "pinyin": "gān", "meaning": "dry", "example": "衣服晒干了。" },
+      { "pinyin": "gàn", "meaning": "to do (work)", "example": "他每天认真干活。" }
+    ]
+  },
+  {
+    "character": "差",
+    "readings": [
+      { "pinyin": "chà", "meaning": "poor; lacking", "example": "他的成绩很差。" },
+      { "pinyin": "chā", "meaning": "difference", "example": "这两个数字差不多。" }
+    ]
+  },
+  {
+    "character": "空",
+    "readings": [
+      { "pinyin": "kōng", "meaning": "empty; sky", "example": "天空一片蓝色。" },
+      { "pinyin": "kòng", "meaning": "free time; blank space", "example": "你今天有空吗？" }
+    ]
+  },
+  {
+    "character": "数",
+    "readings": [
+      { "pinyin": "shù", "meaning": "number", "example": "他喜欢学数学。" },
+      { "pinyin": "shǔ", "meaning": "to count", "example": "我们一起数一数吧。" }
+    ]
+  },
+  {
+    "character": "乐",
+    "readings": [
+      { "pinyin": "lè", "meaning": "happy; joyful", "example": "祝你生日快乐。" },
+      { "pinyin": "yuè", "meaning": "music", "example": "她喜欢听音乐。" }
+    ]
+  },
+  {
+    "character": "曾",
+    "readings": [
+      { "pinyin": "céng", "meaning": "once; already", "example": "我曾经去过北京。" },
+      { "pinyin": "zēng", "meaning": "surname (also related to great-grandparents)", "example": "曾先生是我的老师。" }
+    ]
+  },
+  {
+    "character": "血",
+    "readings": [
+      { "pinyin": "xuè", "meaning": "blood (formal/written)", "example": "他不小心流血了。" },
+      { "pinyin": "xiě", "meaning": "blood (spoken)", "example": "手指流了一点血。" }
+    ]
+  },
+  {
+    "character": "场",
+    "readings": [
+      { "pinyin": "chǎng", "meaning": "field; site", "example": "我们在球场打球。" },
+      { "pinyin": "cháng", "meaning": "measure word for events", "example": "昨天下了一场大雨。" }
+    ]
+  },
+  {
+    "character": "只",
+    "readings": [
+      { "pinyin": "zhǐ", "meaning": "only", "example": "我只有一个苹果。" },
+      { "pinyin": "zhī", "meaning": "measure word for animals", "example": "河里有一只小鸭子。" }
+    ]
+  },
+  {
+    "character": "分",
+    "readings": [
+      { "pinyin": "fēn", "meaning": "to divide; minute", "example": "妈妈把蛋糕分成四份。" },
+      { "pinyin": "fèn", "meaning": "part; portion", "example": "这是我的一份礼物。" }
+    ]
+  },
+  {
+    "character": "兴",
+    "readings": [
+      { "pinyin": "xīng", "meaning": "to rise; to prosper", "example": "大家都很兴奋。" },
+      { "pinyin": "xìng", "meaning": "interest; mood", "example": "他对画画很有兴趣。" }
+    ]
+  },
+  {
+    "character": "行",
+    "readings": [
+      { "pinyin": "xíng", "meaning": "to walk; okay", "example": "我们一起去旅行。" },
+      { "pinyin": "háng", "meaning": "row; line; profession", "example": "银行就在前面。" }
+    ]
+  },
+  {
+    "character": "和",
+    "readings": [
+      { "pinyin": "hé", "meaning": "and; with", "example": "我和妹妹一起去公园。" },
+      { "pinyin": "huo", "meaning": "to mix (used in 暖和 warm, 和面 knead dough)", "example": "今天天气很暖和。" }
+    ]
+  },
+  {
+    "character": "相",
+    "readings": [
+      { "pinyin": "xiāng", "meaning": "each other; mutually", "example": "他们互相帮助。" },
+      { "pinyin": "xiàng", "meaning": "appearance; photo", "example": "我们去照相馆照相。" }
+    ]
+  },
+  {
+    "character": "折",
+    "readings": [
+      { "pinyin": "zhé", "meaning": "to fold; to break", "example": "他把纸折成了小船。" },
+      { "pinyin": "shé", "meaning": "to snap; to lose (money)", "example": "树枝被风吹折了。" }
+    ]
+  },
+  {
+    "character": "藏",
+    "readings": [
+      { "pinyin": "cáng", "meaning": "to hide; to store", "example": "小猫躲藏在桌子下面。" },
+      { "pinyin": "zàng", "meaning": "Tibet (place name)", "example": "西藏的风景很美。" }
+    ]
+  },
+  {
+    "character": "强",
+    "readings": [
+      { "pinyin": "qiáng", "meaning": "strong", "example": "他的身体很强壮。" },
+      { "pinyin": "qiǎng", "meaning": "to force", "example": "别勉强他做不喜欢的事。" }
+    ]
+  },
+  {
+    "character": "什",
+    "readings": [
+      { "pinyin": "shén", "meaning": "what (in 什么)", "example": "这是什么东西？" },
+      { "pinyin": "shí", "meaning": "assorted; ten (formal)", "example": "妈妈买了一些什锦水果。" }
+    ]
+  },
+  {
+    "character": "系",
+    "readings": [
+      { "pinyin": "xì", "meaning": "system; department", "example": "他是中文系的学生。" },
+      { "pinyin": "jì", "meaning": "to tie; to fasten", "example": "请把鞋带系好。" }
+    ]
+  },
+  {
+    "character": "朝",
+    "readings": [
+      { "pinyin": "zhāo", "meaning": "morning", "example": "他每天朝气蓬勃。" },
+      { "pinyin": "cháo", "meaning": "dynasty; facing towards", "example": "这间房子朝东。" }
+    ]
+  },
+  {
+    "character": "挑",
+    "readings": [
+      { "pinyin": "tiāo", "meaning": "to pick; to choose", "example": "妈妈在挑水果。" },
+      { "pinyin": "tiǎo", "meaning": "to provoke; to stir up", "example": "他喜欢挑战难题。" }
+    ]
+  },
+  {
+    "character": "转",
+    "readings": [
+      { "pinyin": "zhuǎn", "meaning": "to turn; to change direction", "example": "前面路口向左转。" },
+      { "pinyin": "zhuàn", "meaning": "to rotate; to spin", "example": "风车在转动。" }
+    ]
+  },
+  {
+    "character": "更",
+    "readings": [
+      { "pinyin": "gèng", "meaning": "even more", "example": "今天比昨天更冷。" },
+      { "pinyin": "gēng", "meaning": "to change; night watch", "example": "他半夜三更才回家。" }
+    ]
+  },
+  {
+    "character": "落",
+    "readings": [
+      { "pinyin": "luò", "meaning": "to fall", "example": "树叶从树上落下来。" },
+      { "pinyin": "là", "meaning": "to leave behind; to be left out", "example": "他把书包落在家里了。" }
+    ]
+  },
+  {
+    "character": "为",
+    "readings": [
+      { "pinyin": "wéi", "meaning": "to act as; to be", "example": "他成为一名医生。" },
+      { "pinyin": "wèi", "meaning": "for; because of", "example": "妈妈为我做了晚饭。" }
+    ]
+  },
+  {
+    "character": "着",
+    "readings": [
+      { "pinyin": "zhe", "meaning": "continuous aspect particle", "example": "他坐着看书。" },
+      { "pinyin": "zháo", "meaning": "to catch; to be affected by", "example": "妹妹昨晚睡着了。" },
+      { "pinyin": "zhuó", "meaning": "to wear; to touch", "example": "他穿着一件蓝色的衣服。" }
+    ]
+  },
+  {
+    "character": "地",
+    "readings": [
+      { "pinyin": "dì", "meaning": "land; ground", "example": "小鸟停在地上。" },
+      { "pinyin": "de", "meaning": "adverbial particle", "example": "他慢慢地走过来。" }
+    ]
+  },
+  {
+    "character": "供",
+    "readings": [
+      { "pinyin": "gōng", "meaning": "to supply; to provide", "example": "工厂供电很稳定。" },
+      { "pinyin": "gòng", "meaning": "to offer (to worship)", "example": "他们在庙里上供。" }
+    ]
+  },
+  {
+    "character": "尽",
+    "readings": [
+      { "pinyin": "jǐn", "meaning": "to the greatest extent", "example": "请尽量早点到。" },
+      { "pinyin": "jìn", "meaning": "to exhaust; to the end", "example": "他尽力完成了作业。" }
+    ]
+  },
+  {
+    "character": "参",
+    "readings": [
+      { "pinyin": "cān", "meaning": "to participate; to join", "example": "我参加了运动会。" },
+      { "pinyin": "shēn", "meaning": "ginseng", "example": "人参是一种药材。" }
+    ]
+  }
+]
