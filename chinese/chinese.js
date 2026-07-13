@@ -271,11 +271,12 @@
     }
 
     // Which skill schedules a session exercises: single-group modes look only
-    // at their own schedule; mix (and anything unmapped) counts a card as due
-    // when ANY group is due.
-    function groupsForMode(mode) {
-      if (mode === 'mix') return SKILL_GROUPS;
-      const g = MODE_GROUP[mode];
+    // at their own schedule; mix, a custom multi-mode selection (and anything
+    // unmapped) count a card as due when ANY group is due.
+    function groupsForMode(modes) {
+      const list = Array.isArray(modes) ? modes : [modes];
+      if (list.length > 1 || list.includes('mix')) return SKILL_GROUPS;
+      const g = MODE_GROUP[list[0]];
       return g ? [g] : SKILL_GROUPS;
     }
 
@@ -757,11 +758,15 @@
       };
     }
 
+    // `mode` is normally a single mode string, but the setup screen lets
+    // multiple Test Mode tabs be selected at once — in that case it's an
+    // array of the chosen modes and only those are mixed (rather than the
+    // full built-in set 'mix' pulls from).
     function makeCard(word, pool, mode, dueGroups) {
-      if (mode === 'mix') {
-        const mixModes = ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'listening', 'word-fill', 'word-write', 'find-correct',
+      if (mode === 'mix' || Array.isArray(mode)) {
+        const mixModes = Array.isArray(mode) ? mode.slice() : ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'listening', 'word-fill', 'word-write', 'find-correct',
           'sentence-fill', 'choose-char', 'tone-tap', 'reorder'];
-        if (isAzureConfigured()) mixModes.push('pronunciation');
+        if (!Array.isArray(mode) && isAzureConfigured()) mixModes.push('pronunciation');
         // Prefer submodes that exercise a skill this word is actually due in —
         // otherwise a word pulled into the mix because writing is due could be
         // dealt a recognition card and leave the writing schedule untouched.
@@ -800,7 +805,7 @@
       level: 'p1',
       lessons: [1],
       lessonTest: false,
-      mode: 'pinyin-chinese',
+      modes: ['pinyin-chinese'],
       cards: [],
       cardIndex: 0,
       results: [],
@@ -1057,17 +1062,48 @@
         container.appendChild(card);
       });
     }
-    bindTabs('setup-mode-tabs', tab => {
-      S.mode = tab.dataset.mode;
+    // Test Mode tabs are multi-select — tapping several combines them into a
+    // custom mix (see makeCard's Array.isArray(mode) branch), like ticking
+    // several checkboxes rather than picking one radio option. 'puzzle' and
+    // 'mix' (Mix All) are shortcuts that replace the whole selection instead,
+    // since puzzle is a different screen entirely and Mix All already means
+    // "every mode".
+    function renderSetupModeTabs() {
+      document.querySelectorAll('#setup-mode-tabs .tab').forEach(tab => {
+        tab.classList.toggle('active', S.modes.includes(tab.dataset.mode));
+      });
+    }
+
+    function onModeSelectionChange() {
       const startBtn = document.getElementById('setup-start');
-      if (S.mode === 'puzzle') {
+      if (S.modes.includes('puzzle')) {
         startBtn.disabled = false;
       } else if (!S.avatarId) {
         startBtn.disabled = true;
       }
-      if (S.mode === 'pronunciation' && !isAzureConfigured()) {
+      if (S.modes.includes('pronunciation') && !isAzureConfigured()) {
         showToast('Ask a parent to set up the speech key ⚙');
       }
+    }
+
+    document.querySelectorAll('#setup-mode-tabs .tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const mode = tab.dataset.mode;
+        if (mode === 'puzzle' || mode === 'mix') {
+          S.modes = [mode];
+        } else {
+          let modes = S.modes.filter(m => m !== 'puzzle' && m !== 'mix');
+          if (modes.includes(mode)) {
+            modes = modes.filter(m => m !== mode);
+            if (modes.length === 0) modes = [mode]; // keep at least one selected
+          } else {
+            modes.push(mode);
+          }
+          S.modes = modes;
+        }
+        renderSetupModeTabs();
+        onModeSelectionChange();
+      });
     });
 
     document.getElementById('setup-stats-btn').addEventListener('click', () => {
@@ -1080,6 +1116,13 @@
     // ═══════════════════════════════════════════════════════════════
     // START SESSION
     // ═══════════════════════════════════════════════════════════════
+    // The mode(s) selected on the setup screen, collapsed to what makeCard
+    // and groupsForMode expect: a single mode string, or (when several Test
+    // Mode tabs are ticked) the array of chosen modes for a custom mix.
+    function effectiveMode() {
+      return S.modes.length === 1 ? S.modes[0] : S.modes;
+    }
+
     async function startSession() {
       await dataPromise;
       if (!DATA[S.level]) { showToast('Failed to load word data'); return; }
@@ -1087,12 +1130,13 @@
       S.wordPool = getWordPool(S.level, S.lessonTest ? 'all' : S.lessons);
       if (S.wordPool.length === 0) { showToast('No words found'); return; }
 
-      if (S.mode === 'puzzle') { startPuzzle(); return; }
+      if (S.modes.includes('puzzle')) { startPuzzle(); return; }
 
       const cfg = SESSION_CONFIG[S.level];
       S.progress = loadProgress(S.avatarId);
 
-      const groups = groupsForMode(S.mode);
+      const mode = effectiveMode();
+      const groups = groupsForMode(mode);
       let queue;
       if (S.lessonTest) {
         S.timeLimitMs = Infinity;
@@ -1111,7 +1155,7 @@
       S.cards = queue.map(w => {
         const r = S.progress[w.key];
         const dueGroups = r ? groups.filter(g => { const s = getSkill(r, g); return !s.dueDate || s.dueDate <= today; }) : [];
-        return makeCard(w, S.wordPool, S.mode, dueGroups);
+        return makeCard(w, S.wordPool, mode, dueGroups);
       }).filter(c => c !== null);
       if (S.cards.length === 0) { showToast('No valid cards for this mode'); return; }
       S.cardIndex = 0;
@@ -1319,7 +1363,7 @@
       saveProgress(S.avatarId, S.progress);
       S.results.push({ word: card.word, correct, timeMs, type: card.type, ...(extra || {}) });
       if (!correct) {
-        const retry = makeCard(card.word, S.wordPool, S.mode);
+        const retry = makeCard(card.word, S.wordPool, effectiveMode());
         if (retry) { retry.isRetry = true; S.cards.push(retry); }
       }
     }
