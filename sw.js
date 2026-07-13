@@ -8,7 +8,7 @@
 
    Bump VERSION on deploy to hard-reset caches.
    ========================================================================== */
-const VERSION = 'pz-v6';
+const VERSION = 'pz-v7';
 const SHELL   = 'shell-' + VERSION;
 const RUNTIME = 'runtime-' + VERSION;
 const AUDIO   = 'audio-' + VERSION;
@@ -34,10 +34,11 @@ const PRECACHE = [
   'chinese/radicals.css', 'chinese/radicals.js',
   'chinese/pinyin_tones.css', 'chinese/pinyin_tones.js',
   'chinese/oral.css', 'chinese/oral.js',
-  'chinese/oral-topics/park.svg', 'chinese/oral-topics/classroom.svg',
-  'chinese/oral-topics/library.svg', 'chinese/oral-topics/hawker.svg',
+  'chinese/oral-topics/park.svg', 'chinese/oral-topics/classroom.png',
+  'chinese/oral-topics/library.svg', 'chinese/oral-topics/hawker.png',
   'chinese/oral-topics/bus.svg', 'chinese/oral-topics/road.svg',
-  'chinese/oral-topics/chores.svg', 'chinese/oral-topics/birthday.svg',
+  'chinese/oral-topics/chores.png', 'chinese/oral-topics/birthday.svg',
+  'chinese/oral-topics/sports.png', 'chinese/oral-topics/community.png',
   'chinese/hanzi-data/hanzi-writer.min.js',
   'chinese/data/chinese-p1.json', 'chinese/data/chinese-p2.json', 'chinese/data/chinese-p3.json',
   'chinese/data/chinese-idioms-p1.json', 'chinese/data/chinese-idioms-p3.json',
