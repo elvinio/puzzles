@@ -1426,6 +1426,10 @@
     // tracing rather than recalling it — that stroke no longer demonstrates
     // they know the character, so the card is graded wrong.
     const FC_HINT_AFTER_MISSES = 3;
+    // Total mistakes across the whole character (not just one stroke) at which
+    // we stop trusting a later correct completion — this many wrong attempts
+    // means the student doesn't know the character, hint or no hint.
+    const FC_REVEAL_AFTER_MISSES = 2;
 
     function fcCharDataLoader(char, onComplete, onError) {
       fetch(`hanzi-data/chars/${encodeURIComponent(char)}.json`)
@@ -1512,6 +1516,7 @@
       } else {
         hint.classList.add('revealed');
         hint.textContent = FC.card.correctChar;
+        FC.hintShown = true;
       }
     });
 
@@ -1544,7 +1549,10 @@
             if (!FC) return;
             FC.mistakes++;
             if (strokeData && strokeData.mistakesOnStroke >= FC_HINT_AFTER_MISSES) FC.hintShown = true;
-            if (FC.mistakes >= 8) document.getElementById('fc-reveal-row').style.display = 'flex';
+            if (FC.mistakes >= FC_REVEAL_AFTER_MISSES) {
+              FC.hintShown = true;
+              document.getElementById('fc-reveal-row').style.display = 'flex';
+            }
           },
           onComplete: () => fcFinish(!FC || !FC.hintShown, card)
         });
@@ -1569,12 +1577,13 @@
       const target = document.getElementById('fc-writer-target');
       target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:'Kaiti SC','KaiTiRegular','STKaiti',serif;font-size:5rem;color:var(--ok-lt)">${esc(card.correctChar)}</div>`;
       fcWriter = null; // SVG this instance owned was just replaced — force a fresh create() next time
+      FC.hintShown = true;
       document.getElementById('fc-reveal-row').style.display = 'none';
       document.getElementById('fc-feedback').textContent = 'Did you write it correctly?';
       document.getElementById('fc-self-check-row').style.display = 'flex';
     });
 
-    document.getElementById('fc-self-correct').addEventListener('click', () => { if (FC) fcFinish(true, FC.card); });
+    document.getElementById('fc-self-correct').addEventListener('click', () => { if (FC) fcFinish(!FC.hintShown, FC.card); });
     document.getElementById('fc-self-wrong').addEventListener('click', () => { if (FC) fcFinish(false, FC.card); });
 
     function fcFinish(correct, card) {
