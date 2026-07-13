@@ -517,13 +517,18 @@
     if (!sttAudioCtx) { try { sttAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch { } }
     if (sttAudioCtx && sttAudioCtx.state === 'suspended') sttAudioCtx.resume().catch(() => { });
 
-    if (!recStream) {
-      try {
-        recStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
-      } catch {
-        setStatus('Microphone blocked — allow it in browser settings');
-        return;
-      }
+    // Re-acquire a fresh mic stream on every hold rather than reusing one across turns —
+    // once the tutor's TTS reply plays through the audio element, mobile browsers (notably
+    // iOS Safari) commonly end or permanently mute the previously-granted mic track while
+    // switching the audio session back from playback to recording. Reusing that dead track
+    // silently records 0 bytes, which otherwise surfaces as a false "too short" error even
+    // though the child spoke for a normal duration.
+    if (recStream) { recStream.getTracks().forEach(t => t.stop()); recStream = null; }
+    try {
+      recStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+    } catch {
+      setStatus('Microphone blocked — allow it in browser settings');
+      return;
     }
     if (S.busy || S.recording) return; // state may have changed while awaiting
 
