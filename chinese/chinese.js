@@ -1429,7 +1429,7 @@
     // Total mistakes across the whole character (not just one stroke) at which
     // we stop trusting a later correct completion — this many wrong attempts
     // means the student doesn't know the character, hint or no hint.
-    const FC_REVEAL_AFTER_MISSES = 8;
+    const FC_REVEAL_AFTER_MISSES = 2;
 
     function fcCharDataLoader(char, onComplete, onError) {
       fetch(`hanzi-data/chars/${encodeURIComponent(char)}.json`)
