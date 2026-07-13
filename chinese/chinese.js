@@ -2834,8 +2834,7 @@
       <div class="browse-word-char">${esc(w.character)}</div>
       <div style="display:flex;align-items:center;gap:4px">
         <div class="browse-word-pinyin">${esc(w.pinyin)}</div>
-      </div>
-      <div class="browse-word-eng">${esc(w.english)}</div>`;
+      </div>`;
         card.querySelector('.browse-word-pinyin').after(makeSpeakBtn(w.character, w.pinyin));
         card.addEventListener('click', () => showCharModal(wordObj));
         grid.appendChild(card);
