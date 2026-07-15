@@ -298,11 +298,15 @@
       // Words still short of mastery go first even if an already-mastered word
       // came due earlier — a student should climb a weak word to mastery
       // before the queue spends turns refreshing something they already know.
-      // Test date only breaks ties within the same mastery tier.
-      const due = pool.filter(w => isDue(w.key)).sort((a, b) => {
+      // Test date only breaks ties within the same mastery tier. Pre-shuffling
+      // before this stable sort randomizes any remaining ties (same tier AND
+      // same due date), so the queue doesn't march through in pool order
+      // (e.g. all of lesson 1 before lesson 2).
+      const due = shuffle(pool.filter(w => isDue(w.key))).sort((a, b) => {
         const tierDiff = masteryTier(progress[a.key]) - masteryTier(progress[b.key]);
         if (tierDiff !== 0) return tierDiff;
-        return soonestDue(progress[a.key], groups) < soonestDue(progress[b.key], groups) ? -1 : 1;
+        const da = soonestDue(progress[a.key], groups), db = soonestDue(progress[b.key], groups);
+        return da < db ? -1 : da > db ? 1 : 0;
       });
       const nw = shuffle(pool.filter(w => isNew(w.key)));
       const weak = pool.filter(w => isWeak(w.key)).sort((a, b) => (progress[b.key]?.wrong || 0) - (progress[a.key]?.wrong || 0));
