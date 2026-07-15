@@ -2173,6 +2173,7 @@
       if (sort === 'wrong') rows.sort((a, b) => (b.rec.wrong || 0) - (a.rec.wrong || 0));
       else if (sort === 'time') rows.sort((a, b) => avgTimeMs(b.rec) - avgTimeMs(a.rec));
       else if (sort === 'due') rows.sort((a, b) => statsDueDate(a.rec) < statsDueDate(b.rec) ? -1 : 1);
+      else if (sort === 'tested') rows.sort((a, b) => (b.rec.lastTested || '') < (a.rec.lastTested || '') ? -1 : 1);
       else if (sort === 'lesson') rows.sort((a, b) => a.lessonNum - b.lessonNum);
 
       document.getElementById('stats-count').textContent = rows.length
@@ -2181,7 +2182,7 @@
 
       const tbody = document.getElementById('stats-tbody');
       if (rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="stats-empty">No practice data yet for this level.<br>Complete a session to see your progress here.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="stats-empty">No practice data yet for this level.<br>Complete a session to see your progress here.</td></tr>`;
         return;
       }
 
@@ -2205,9 +2206,21 @@
       <td class="${correctCls}" title="${byMode}">${r.correct}</td>
       <td class="${wrongCls}" title="${byMode}">${r.wrong}</td>
       <td title="${esc(avgTimeTooltip(r))}">${avg}</td>
+      <td title="${esc(r.lastTested || '')}">${esc(lastTestedLabel(r, today))}</td>
       <td class="${dueCls}" title="${esc(dueTooltip(r))}">${dueDate || '—'}</td>
     </tr>`;
       }).join('');
+    }
+
+    // Friendly relative label for the raw lastTested date — the due-date
+    // column already shows an absolute date, so this one reads better as
+    // "how long ago" at a glance; the exact date is still in the tooltip.
+    function lastTestedLabel(rec, today) {
+      if (!rec.lastTested) return '—';
+      const days = daysBetween(rec.lastTested, today);
+      if (days <= 0) return 'Today';
+      if (days === 1) return 'Yesterday';
+      return `${days}d ago`;
     }
 
     // Recognition-only average when per-mode time exists — the overall average
@@ -2297,12 +2310,49 @@
       return frag;
     }
 
-    function showCharModal(word) {
+    // Tier labels line up with masteryTier() (0 = never attempted, handled
+    // separately by the empty state) so the badge always matches the grids.
+    const MASTERY_TIER_LABELS = { 1: 'Learning', 2: 'Known', 3: 'Mastered' };
+
+    function renderCmStats(word, avatarId) {
+      const el = document.getElementById('cm-stats');
+      if (!avatarId) {
+        el.innerHTML = `<div class="cm-stats-empty">No avatar selected.</div>`;
+        return;
+      }
+      const progress = avatarId === S.avatarId ? S.progress : loadProgress(avatarId);
+      const rec = progress[word.key];
+      if (!rec || !(rec.attempts > 0)) {
+        el.innerHTML = `<div class="cm-stats-empty">Not practiced yet — play a session to start tracking this character.</div>`;
+        return;
+      }
+      const avgMs = avgTimeMs(rec);
+      const avg = avgMs ? (avgMs / 1000).toFixed(1) + 's' : '—';
+      const today = todayStr();
+      const dueDate = statsDueDate(rec);
+      const dueCls = dueDate && dueDate <= today ? 'warn' : '';
+      const tier = masteryTier(rec);
+      const skillsLine = attemptedGroups(rec)
+        .map(g => `${g}: due ${getSkill(rec, g).dueDate || '—'}`)
+        .join(' · ');
+      el.innerHTML = `
+        <div class="cm-stats-row">
+          <div class="cm-stat-tile"><div class="cm-stat-val ${rec.correct > 0 ? 'ok' : ''}">${rec.correct}</div><div class="cm-stat-lbl">Correct</div></div>
+          <div class="cm-stat-tile"><div class="cm-stat-val ${rec.wrong > 0 ? 'err' : ''}">${rec.wrong}</div><div class="cm-stat-lbl">Wrong</div></div>
+          <div class="cm-stat-tile"><div class="cm-stat-val">${esc(avg)}</div><div class="cm-stat-lbl">Avg Time</div></div>
+          <div class="cm-stat-tile"><div class="cm-stat-val ${dueCls}">${esc(dueDate || '—')}</div><div class="cm-stat-lbl">Next Due</div></div>
+        </div>
+        <div><span class="cm-mastery-badge">${esc(MASTERY_TIER_LABELS[tier] || 'Learning')}</span></div>
+        ${skillsLine ? `<div class="cm-stats-skills">${esc(skillsLine)}</div>` : ''}`;
+    }
+
+    function showCharModal(word, avatarId = S.avatarId) {
       document.getElementById('cm-lesson').textContent = word.lessonKey || (word.level ? `${word.level}-${word.lessonNum}` : '');
       document.getElementById('cm-pinyin').textContent = word.pinyin;
       const cmSpeak = document.getElementById('cm-speak-btn');
       cmSpeak.onclick = e => { e.stopPropagation(); speakChinese(word.pinyin || word.character); };
       document.getElementById('cm-eng').textContent = word.english;
+      renderCmStats(word, avatarId);
       document.getElementById('cm-def-en').textContent = word['definition-english'] || '';
       document.getElementById('cm-def-zh').textContent = word['definition-chinese'] || '';
 
@@ -2332,7 +2382,7 @@
         chip.title = 'Open this character';
         chip.addEventListener('click', () => {
           const found = ch ? findWordByChar(ch) : null;
-          if (found) showCharModal(found);
+          if (found) showCharModal(found, avatarId);
           else if (ch) speakChinese(ch);
         });
         sameEl.appendChild(chip);
@@ -2586,7 +2636,7 @@
       if (!key) return;
       const pool = getWordPool(S.statsLevel, 'all');
       const word = pool.find(w => w.key === key);
-      if (word) showCharModal(word);
+      if (word) showCharModal(word, S.statsAvatarId);
     });
 
     // ═══════════════════════════════════════════════════════════════
@@ -2980,16 +3030,33 @@
         const found = findSpellingEntry(test.level, word);
         if (!found) { skipped.push(word); continue; }
         const { chinese } = parseSentence(found.entry.sentence);
-        questions.push({ type: 'writing', word, pinyin: found.pinyin, chinese });
+        // progressKey ties this question back to the same per-character record
+        // the flashcard/browse screens use (getWordPool keys by entry.character),
+        // so self-grading a spelling test updates the same Stats page counters.
+        questions.push({ type: 'writing', word, pinyin: found.pinyin, chinese, progressKey: found.entry.character, level: test.level });
       }
       for (const word of (test.pinyinWords || [])) {
         const found = findSpellingEntry(test.level, word);
         if (!found) { skipped.push(word); continue; }
         const { chinese } = parseSentence(found.entry.sentence);
-        questions.push({ type: 'pinyin', word, pinyin: found.pinyin, chinese });
+        questions.push({ type: 'pinyin', word, pinyin: found.pinyin, chinese, progressKey: found.entry.character, level: test.level });
       }
       if (skipped.length) setTimeout(() => showToast('Not found, skipped: ' + skipped.join(', ')), 300);
       return questions;
+    }
+
+    // Spelling tests are done on paper (the student writes the character or
+    // pinyin by hand while the app only plays audio / shows the sentence), so
+    // there's no keystroke to grade automatically. Self-grading here is what
+    // feeds these words into the same SRS record the flashcard modes update —
+    // without it a spelling test would never move the Stats page counters.
+    function recordSpellingAnswer(q, correct) {
+      if (!S.avatarId || !q.progressKey) { showToast('Select an avatar first to save progress'); return false; }
+      let rec = S.progress[q.progressKey] || freshRecord();
+      rec = updateRecord(rec, correct, 0, 'good', q.type === 'writing' ? 'writing' : 'recognition');
+      S.progress[q.progressKey] = rec;
+      saveProgress(S.avatarId, S.progress);
+      return true;
     }
 
     function startSpellingTest(id) {
@@ -3109,6 +3176,31 @@
             sent.textContent = q.chinese;
             item.appendChild(sent);
           }
+
+          // Grading happens against the sentence/answer shown above, so this
+          // only checks how the student marked their own paper — it's the
+          // sole source of truth for whether this word counts as practiced.
+          const gradeRow = document.createElement('div');
+          gradeRow.className = 'sp-grade-row';
+          const rightBtn = document.createElement('button');
+          rightBtn.className = 'sp-grade-btn sp-grade-right';
+          rightBtn.textContent = '✓ Got it right';
+          const wrongBtn = document.createElement('button');
+          wrongBtn.className = 'sp-grade-btn sp-grade-wrong';
+          wrongBtn.textContent = '✗ Got it wrong';
+          const lockIn = correct => {
+            if (!recordSpellingAnswer(q, correct)) return;
+            rightBtn.disabled = true;
+            wrongBtn.disabled = true;
+            rightBtn.classList.toggle('sp-grade-chosen', correct);
+            wrongBtn.classList.toggle('sp-grade-chosen', !correct);
+          };
+          rightBtn.addEventListener('click', () => lockIn(true));
+          wrongBtn.addEventListener('click', () => lockIn(false));
+          gradeRow.appendChild(rightBtn);
+          gradeRow.appendChild(wrongBtn);
+          item.appendChild(gradeRow);
+
           sec.appendChild(item);
         });
         container.appendChild(sec);
