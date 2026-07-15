@@ -2173,6 +2173,7 @@
       if (sort === 'wrong') rows.sort((a, b) => (b.rec.wrong || 0) - (a.rec.wrong || 0));
       else if (sort === 'time') rows.sort((a, b) => avgTimeMs(b.rec) - avgTimeMs(a.rec));
       else if (sort === 'due') rows.sort((a, b) => statsDueDate(a.rec) < statsDueDate(b.rec) ? -1 : 1);
+      else if (sort === 'tested') rows.sort((a, b) => (b.rec.lastTested || '') < (a.rec.lastTested || '') ? -1 : 1);
       else if (sort === 'lesson') rows.sort((a, b) => a.lessonNum - b.lessonNum);
 
       document.getElementById('stats-count').textContent = rows.length
@@ -2181,7 +2182,7 @@
 
       const tbody = document.getElementById('stats-tbody');
       if (rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="stats-empty">No practice data yet for this level.<br>Complete a session to see your progress here.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="stats-empty">No practice data yet for this level.<br>Complete a session to see your progress here.</td></tr>`;
         return;
       }
 
@@ -2205,9 +2206,21 @@
       <td class="${correctCls}" title="${byMode}">${r.correct}</td>
       <td class="${wrongCls}" title="${byMode}">${r.wrong}</td>
       <td title="${esc(avgTimeTooltip(r))}">${avg}</td>
+      <td title="${esc(r.lastTested || '')}">${esc(lastTestedLabel(r, today))}</td>
       <td class="${dueCls}" title="${esc(dueTooltip(r))}">${dueDate || '—'}</td>
     </tr>`;
       }).join('');
+    }
+
+    // Friendly relative label for the raw lastTested date — the due-date
+    // column already shows an absolute date, so this one reads better as
+    // "how long ago" at a glance; the exact date is still in the tooltip.
+    function lastTestedLabel(rec, today) {
+      if (!rec.lastTested) return '—';
+      const days = daysBetween(rec.lastTested, today);
+      if (days <= 0) return 'Today';
+      if (days === 1) return 'Yesterday';
+      return `${days}d ago`;
     }
 
     // Recognition-only average when per-mode time exists — the overall average
