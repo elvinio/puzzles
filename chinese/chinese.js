@@ -151,6 +151,34 @@
       return !!(cfg.proxyUrl && cfg.apiKey);
     }
 
+    // Caps how many lessons deep Test / All Random reach into — lets a parent
+    // hold review to material already covered instead of the whole level.
+    const MAX_LESSON_KEY = 'chinese-max-lesson';
+
+    function getMaxLesson() {
+      const v = parseInt(localStorage.getItem(MAX_LESSON_KEY) || '', 10);
+      return Number.isFinite(v) && v > 0 ? v : 0; // 0 = no cap
+    }
+
+    function saveMaxLesson(v) {
+      try {
+        if (v > 0) localStorage.setItem(MAX_LESSON_KEY, String(v));
+        else localStorage.removeItem(MAX_LESSON_KEY);
+      } catch { }
+    }
+
+    // Lessons 1..N eligible for Test / All Random: the level's own lesson
+    // count, narrowed by the Max Lesson setting when one is configured.
+    function testRandomLessonCount(level) {
+      const count = getLessonCount(level);
+      const cap = getMaxLesson();
+      return cap > 0 ? Math.min(cap, count) : count;
+    }
+
+    function testRandomLessons(level) {
+      return Array.from({ length: testRandomLessonCount(level) }, (_, i) => i + 1);
+    }
+
     // Each record carries one schedule per skill group (rec.skills) so
     // recognition success can't postpone writing practice. The top-level
     // lastTested tracks the most recent practice in any group (used by the
@@ -296,24 +324,28 @@
       const isNew = k => !progress[k] || progress[k].attempts === 0;
       const isWeak = k => { const r = progress[k]; return r && r.attempts > 0 && !isDue(k); };
 
-      // Words still short of mastery go first even if an already-mastered word
-      // came due earlier — a student should climb a weak word to mastery
-      // before the queue spends turns refreshing something they already know.
-      // Test date only breaks ties within the same mastery tier. Pre-shuffling
-      // before this stable sort randomizes any remaining ties (same tier AND
-      // same due date), so the queue doesn't march through in pool order
-      // (e.g. all of lesson 1 before lesson 2).
+      // Never-attempted words go first — a student should meet every new
+      // character in the lesson before the queue spends turns on review.
+      const nw = shuffle(pool.filter(w => isNew(w.key)));
+
+      // Among already-attempted words, ones still short of mastery go first
+      // even if an already-mastered word came due earlier — a student should
+      // climb a weak word to mastery before the queue spends turns refreshing
+      // something they already know. Test date only breaks ties within the
+      // same mastery tier. Pre-shuffling before this stable sort randomizes
+      // any remaining ties (same tier AND same due date), so the queue
+      // doesn't march through in pool order (e.g. all of lesson 1 before
+      // lesson 2).
       const due = shuffle(pool.filter(w => isDue(w.key))).sort((a, b) => {
         const tierDiff = masteryTier(progress[a.key]) - masteryTier(progress[b.key]);
         if (tierDiff !== 0) return tierDiff;
         const da = soonestDue(progress[a.key], groups), db = soonestDue(progress[b.key], groups);
         return da < db ? -1 : da > db ? 1 : 0;
       });
-      const nw = shuffle(pool.filter(w => isNew(w.key)));
       const weak = pool.filter(w => isWeak(w.key)).sort((a, b) => (progress[b.key]?.wrong || 0) - (progress[a.key]?.wrong || 0));
 
-      const q = [...due];
-      for (const w of nw) { if (q.length >= targetCards) break; q.push(w); }
+      const q = [...nw];
+      for (const w of due) { if (q.length >= targetCards) break; q.push(w); }
       for (const w of weak) { if (q.length >= targetCards) break; q.push(w); }
       return q.slice(0, targetCards);
     }
@@ -1033,12 +1065,14 @@
       }
       
       const allBtn = document.createElement('button');
-      const allSelected = count > 0 && !S.lessonTest && S.lessons.length === count;
+      const randomCount = testRandomLessonCount(S.level);
+      const allSelected = randomCount > 0 && !S.lessonTest && S.lessons.length === randomCount &&
+        S.lessons.every((l, i) => l === i + 1);
       allBtn.className = 'tab' + (allSelected ? ' active' : '');
       allBtn.textContent = 'All Random';
       allBtn.addEventListener('click', () => {
         S.lessonTest = false;
-        S.lessons = Array.from({length: count}, (_, i) => i + 1);
+        S.lessons = testRandomLessons(S.level);
         renderSetupLessonTabs();
       });
       container.appendChild(allBtn);
@@ -1060,7 +1094,7 @@
       if (!container) return;
       const data = DATA[S.level];
       if (!data) { container.innerHTML = ''; return; }
-      const words = getWordPool(S.level, S.lessonTest ? 'all' : S.lessons);
+      const words = getWordPool(S.level, S.lessonTest ? testRandomLessons(S.level) : S.lessons);
       if (words.length === 0) {
         container.innerHTML = `<div class="browse-empty">No words for this selection</div>`;
         return;
@@ -1140,7 +1174,7 @@
       await dataPromise;
       if (!DATA[S.level]) { showToast('Failed to load word data'); return; }
 
-      S.wordPool = getWordPool(S.level, S.lessonTest ? 'all' : S.lessons);
+      S.wordPool = getWordPool(S.level, S.lessonTest ? testRandomLessons(S.level) : S.lessons);
       if (S.wordPool.length === 0) { showToast('No words found'); return; }
 
       if (S.modes.includes('puzzle')) { startPuzzle(); return; }
@@ -1153,11 +1187,11 @@
       let queue;
       if (S.lessonTest) {
         S.timeLimitMs = Infinity;
-        const today = todayStr();
-        queue = S.wordPool
-          .filter(w => isDueRec(S.progress[w.key], groups, today))
-          .sort((a, b) => soonestDue(S.progress[a.key], groups) < soonestDue(S.progress[b.key], groups) ? -1 : 1);
-        if (queue.length === 0) { showToast('No words due for review'); return; }
+        // Test covers the whole (capped) lesson range rather than only
+        // spaced-repetition due words — never-attempted and least-attempted
+        // characters go first so a test always has something fresh to cover.
+        queue = shuffle(S.wordPool).sort((a, b) =>
+          (S.progress[a.key]?.attempts || 0) - (S.progress[b.key]?.attempts || 0));
       } else {
         S.timeLimitMs = cfg.minutes * 60 * 1000;
         queue = buildQueue(S.wordPool, S.progress, cfg.cards, groups);
@@ -2457,6 +2491,8 @@
       document.getElementById('ss-proxy-url').value = cfg.proxyUrl;
       document.getElementById('ss-api-key').value = cfg.apiKey;
       document.getElementById('ss-threshold').value = cfg.threshold;
+      const maxLesson = getMaxLesson();
+      document.getElementById('ss-max-lesson').value = maxLesson > 0 ? maxLesson : '';
       document.getElementById('ss-test-status').textContent = '';
       resetConfirmStep(0);
       document.getElementById('speech-settings-modal').classList.add('open');
@@ -2511,8 +2547,15 @@
     document.getElementById('ss-close').addEventListener('click', () => {
       document.getElementById('speech-settings-modal').classList.remove('open');
     });
+    document.getElementById('ss-bugs-btn').addEventListener('click', () => {
+      document.getElementById('speech-settings-modal').classList.remove('open');
+      renderBugList();
+      showScreen('screen-bugs');
+    });
     document.getElementById('ss-save').addEventListener('click', () => {
       saveAzureConfig(readSpeechSettingsForm());
+      saveMaxLesson(parseInt(document.getElementById('ss-max-lesson').value, 10) || 0);
+      renderSetupLessonTabs();
       document.getElementById('speech-settings-modal').classList.remove('open');
       showToast('Speech settings saved');
       // Refresh the current card if it was waiting for a key
@@ -2639,10 +2682,6 @@
       renderBugList();
     }
 
-    document.getElementById('setup-bugs-btn').addEventListener('click', () => {
-      renderBugList();
-      showScreen('screen-bugs');
-    });
     document.getElementById('bugs-back-btn').addEventListener('click', () => showScreen('screen-setup'));
 
     // Stats table: speak button and click td-char to open character modal
@@ -3305,7 +3344,7 @@
     }
 
     function startPuzzle() {
-      const pool = getWordPool(S.level, S.lessonTest ? 'all' : S.lessons);
+      const pool = getWordPool(S.level, S.lessonTest ? testRandomLessons(S.level) : S.lessons);
       const candidates = extractPuzzleWords(pool);
       const { grid, placed } = generatePuzGrid(candidates, pool);
       if (placed.length < 2) { showToast('Not enough words — select more lessons'); return; }
