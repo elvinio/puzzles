@@ -23,13 +23,12 @@
     <div class="topbar">
       <div class="topbar-right" style="display:flex;gap:6px;flex-wrap:wrap">
         <a class="btn btn-outline btn-sm" href="../index.html">← Games</a>
-        <a class="btn btn-outline btn-sm" href="pinyin_tones.html">Pinyin</a>
-        <a class="btn btn-outline btn-sm" href="radicals.html">Radicals</a>
+        <a class="btn btn-outline btn-sm" href="pinyin_tones.html">拼音</a>
+        <a class="btn btn-outline btn-sm" href="radicals.html">部首</a>
         <a class="btn btn-outline btn-sm" href="polyphonic.html">多音字</a>
         <a class="btn btn-outline btn-sm" href="oral.html">口试</a>
         <button class="btn btn-outline btn-sm" id="setup-browse-btn">Browse</button>
         <button class="btn btn-outline btn-sm" id="setup-stats-btn">Stats</button>
-        <button class="btn btn-outline btn-sm" id="setup-bugs-btn">Bugs</button>
         <button class="btn btn-outline btn-sm" id="setup-spelling-btn">默写</button>
         <button class="btn btn-outline btn-sm" id="setup-speech-settings-btn" title="Settings">⚙</button>
       </div>
@@ -447,6 +446,15 @@
       <div class="char-modal-section" style="gap:4px">
         <div style="font-size:1.1rem;font-weight:800;color:var(--p-text)">⚙ Settings</div>
         <div style="font-size:0.8rem;color:var(--muted)">Speech settings power the 🎤 Speak mode using Microsoft Azure pronunciation scoring, via a Modal proxy that keeps the Azure key off this device.</div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Max Lesson (Test / All Random)</div>
+        <input type="number" id="ss-max-lesson" class="ss-input" min="1" step="1" placeholder="No limit">
+        <div style="font-size:0.75rem;color:var(--muted)">Caps Test and All Random to lessons 1 through this number. Leave blank for no limit.</div>
+      </div>
+      <div class="char-modal-section">
+        <div class="char-modal-sec-label">Bug Reports</div>
+        <button class="btn btn-outline btn-sm" id="ss-bugs-btn">🐛 View Bug Reports</button>
       </div>
       <div class="char-modal-section">
         <div class="char-modal-sec-label">Modal Proxy URL</div>
