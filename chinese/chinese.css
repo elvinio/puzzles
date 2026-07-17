@@ -43,7 +43,7 @@
     /* ── Topbar ── */
     .topbar {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       display: flex;
       flex-wrap: wrap;
       row-gap: 4px;
@@ -93,7 +93,7 @@
       text-transform: uppercase;
       align-self: flex-start;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     /* ── Avatar chip ── */
@@ -106,7 +106,7 @@
       border-radius: 40px;
       padding: 6px 18px 6px 6px;
       /* width: 100%; */
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .avatar-chip-name {
@@ -119,7 +119,7 @@
       font-size: 0.85rem;
       text-align: center;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     /* ── Tab rows ── */
@@ -128,7 +128,7 @@
       gap: 8px;
       flex-wrap: wrap;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .tab {
@@ -238,13 +238,13 @@
       flex-wrap: wrap;
       justify-content: center;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     /* ── Divider ── */
     .divider {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       height: 1px;
       background: var(--brd);
       opacity: 0.4;
@@ -259,7 +259,7 @@
       gap: 28px;
       align-items: center;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       justify-content: center;
       flex-shrink: 0;
     }
@@ -295,7 +295,7 @@
 
     .progress-bar-wrap {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       height: 6px;
       background: var(--surface);
       border-radius: 3px;
@@ -312,7 +312,7 @@
 
     .question-wrap {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -383,7 +383,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       flex-shrink: 0;
     }
 
@@ -506,7 +506,7 @@
       justify-content: center;
       gap: 12px;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       background: var(--surface);
       border: 2px solid var(--brd);
       border-radius: 14px;
@@ -556,7 +556,7 @@
       align-items: baseline;
       gap: 2px;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       padding: 8px 4px;
     }
 
@@ -605,7 +605,7 @@
       align-items: center;
       gap: 12px;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .ro-row {
@@ -682,7 +682,7 @@
       align-items: center;
       gap: 14px;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .pr-mic-btn {
@@ -875,7 +875,7 @@
       flex-wrap: wrap;
       justify-content: center;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .summary-stat {
@@ -915,7 +915,7 @@
 
     .result-list {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -989,7 +989,7 @@
       gap: 8px;
       flex-wrap: wrap;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .av-chip {
@@ -1024,7 +1024,7 @@
       flex-wrap: wrap;
       align-items: center;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .sort-select {
@@ -1040,7 +1040,7 @@
 
     .stats-table-wrap {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       overflow-x: auto;
       flex: 1;
     }
@@ -1117,7 +1117,7 @@
       font-size: 0.78rem;
       align-self: flex-start;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     /* ── Character Card Modal ── */
@@ -1361,7 +1361,7 @@
       gap: 6px;
       flex-wrap: wrap;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .browse-lesson-tab {
@@ -1391,7 +1391,7 @@
 
     .browse-word-grid {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       align-content: start;
@@ -1504,7 +1504,7 @@
       text-align: center;
       padding: 40px;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     /* ── Speaker button ── */
@@ -1565,7 +1565,7 @@
 
     .sp-test-list {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -1611,13 +1611,13 @@
       text-align: center;
       padding: 40px;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     /* ── Bug reports ── */
     .bug-list {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -1679,12 +1679,12 @@
       text-align: center;
       padding: 40px;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .sp-form {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -1695,7 +1695,7 @@
       flex-direction: column;
       gap: 6px;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .sp-label {
@@ -1735,12 +1735,12 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
     }
 
     .sp-question-card {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       background: var(--surface);
       border: 2px solid var(--brd);
       border-radius: 18px;
@@ -1813,7 +1813,7 @@
 
     .sp-results-section {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       display: flex;
       flex-direction: column;
       gap: 8px;
