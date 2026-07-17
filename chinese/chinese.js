@@ -172,7 +172,7 @@
     }
 
     function freshRecord() {
-      return { correct: 0, wrong: 0, totalTimeMs: 0, attempts: 0, lastTested: null, skills: freshSkills() };
+      return { correct: 0, wrong: 0, totalTimeMs: 0, attempts: 0, lastTested: null, lastCorrect: null, skills: freshSkills() };
     }
 
     function todayStr() { return new Date().toISOString().slice(0, 10); }
@@ -257,6 +257,7 @@
       rec.skills = { ...rec.skills };
       rec.attempts++;
       rec.lastTested = todayStr();
+      rec.lastCorrect = correct;
       rec.totalTimeMs += timeMs;
       correct ? rec.correct++ : rec.wrong++;
       rec.byMode = { ...(rec.byMode || {}) };
@@ -1441,7 +1442,7 @@
     // Total mistakes across the whole character (not just one stroke) at which
     // we stop trusting a later correct completion — this many wrong attempts
     // means the student doesn't know the character, hint or no hint.
-    const FC_REVEAL_AFTER_MISSES = 2;
+    const FC_REVEAL_AFTER_MISSES = 3;
 
     function fcCharDataLoader(char, onComplete, onError) {
       fetch(`hanzi-data/chars/${encodeURIComponent(char)}.json`)
@@ -2194,7 +2195,7 @@
 
       const tbody = document.getElementById('stats-tbody');
       if (rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="stats-empty">No practice data yet for this level.<br>Complete a session to see your progress here.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" class="stats-empty">No practice data yet for this level.<br>Complete a session to see your progress here.</td></tr>`;
         return;
       }
 
@@ -2205,6 +2206,8 @@
         const avg = avgMs ? (avgMs / 1000).toFixed(1) + 's' : '—';
         const wrongCls = r.wrong > 0 ? 'err' : 'ok';
         const correctCls = r.correct > 0 ? 'ok' : '';
+        const lastCls = r.lastCorrect == null ? '' : r.lastCorrect ? 'ok' : 'err';
+        const lastLbl = r.lastCorrect == null ? '—' : r.lastCorrect ? '✓' : '✗';
         const dueDate = statsDueDate(r);
         const dueCls = dueDate && dueDate <= today ? 'warn' : '';
         const byMode = r.byMode
@@ -2217,6 +2220,7 @@
       <td class="td-lesson">L${w.lessonNum}</td>
       <td class="${correctCls}" title="${byMode}">${r.correct}</td>
       <td class="${wrongCls}" title="${byMode}">${r.wrong}</td>
+      <td class="${lastCls}" title="Result of the most recent attempt">${lastLbl}</td>
       <td title="${esc(avgTimeTooltip(r))}">${avg}</td>
       <td title="${esc(r.lastTested || '')}">${esc(lastTestedLabel(r, today))}</td>
       <td class="${dueCls}" title="${esc(dueTooltip(r))}">${dueDate || '—'}</td>
@@ -2344,6 +2348,8 @@
       const dueDate = statsDueDate(rec);
       const dueCls = dueDate && dueDate <= today ? 'warn' : '';
       const tier = masteryTier(rec);
+      const lastCls = rec.lastCorrect == null ? '' : rec.lastCorrect ? 'ok' : 'err';
+      const lastLbl = rec.lastCorrect == null ? '—' : rec.lastCorrect ? '✓ Right' : '✗ Wrong';
       const skillsLine = attemptedGroups(rec)
         .map(g => `${g}: due ${getSkill(rec, g).dueDate || '—'}`)
         .join(' · ');
@@ -2351,6 +2357,7 @@
         <div class="cm-stats-row">
           <div class="cm-stat-tile"><div class="cm-stat-val ${rec.correct > 0 ? 'ok' : ''}">${rec.correct}</div><div class="cm-stat-lbl">Correct</div></div>
           <div class="cm-stat-tile"><div class="cm-stat-val ${rec.wrong > 0 ? 'err' : ''}">${rec.wrong}</div><div class="cm-stat-lbl">Wrong</div></div>
+          <div class="cm-stat-tile"><div class="cm-stat-val ${lastCls}">${esc(lastLbl)}</div><div class="cm-stat-lbl">Last Result</div></div>
           <div class="cm-stat-tile"><div class="cm-stat-val">${esc(avg)}</div><div class="cm-stat-lbl">Avg Time</div></div>
           <div class="cm-stat-tile"><div class="cm-stat-val ${dueCls}">${esc(dueDate || '—')}</div><div class="cm-stat-lbl">Next Due</div></div>
         </div>
