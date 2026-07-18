@@ -230,7 +230,7 @@
       'sentence-fill': 'recognition', 'choose-char': 'recognition',
       'tone-tap': 'recognition', 'reorder': 'recognition',
       'word-write': 'writing', 'find-correct': 'writing', 'passage-errors': 'writing',
-      'pronunciation': 'speaking',
+      'pronunciation': 'speaking', 'passage-mcq': 'recognition',
     };
 
     // Human-readable label per test mode / card type, reused by the setup
@@ -240,7 +240,7 @@
       'pinyin-chinese': 'Pinyin → 汉字', 'chinese-pinyin': '汉字 → Pinyin',
       'english-chinese': 'English → 汉字', 'listening': '🔊 听音',
       'word-fill': '词语', 'word-write': '写词', 'find-correct': '找错字',
-      'passage-errors': '短文改错',
+      'passage-errors': '短文改错', 'passage-mcq': '短文理解',
       'sentence-fill': '句子填空', 'choose-char': '选字', 'tone-tap': '声调',
       'reorder': '连词成句', 'mix': 'Mix All', 'pronunciation': '🎤 Speak',
     };
@@ -830,8 +830,8 @@
     // full built-in set 'mix' pulls from).
     function makeCard(word, pool, mode, dueGroups) {
       if (mode === 'mix' || Array.isArray(mode)) {
-        // english-chinese excluded — not in use for now.
-        const mixModes = Array.isArray(mode) ? mode.slice() : ['pinyin-chinese', 'chinese-pinyin', 'listening', 'word-fill', 'word-write', 'find-correct',
+        // english-chinese and pinyin-chinese excluded — not in use for now.
+        const mixModes = Array.isArray(mode) ? mode.slice() : ['chinese-pinyin', 'listening', 'word-fill', 'word-write', 'find-correct',
           'sentence-fill', 'choose-char', 'tone-tap', 'reorder'];
         if (!Array.isArray(mode) && isAzureConfigured()) mixModes.push('pronunciation');
         // Prefer submodes that exercise a skill this word is actually due in —
@@ -872,7 +872,7 @@
       level: 'p1',
       lessons: [1],
       lessonTest: false,
-      modes: ['pinyin-chinese'],
+      modes: ['chinese-pinyin'],
       cards: [],
       cardIndex: 0,
       results: [],
@@ -1134,9 +1134,10 @@
     // Test Mode tabs are multi-select — tapping several combines them into a
     // custom mix (see makeCard's Array.isArray(mode) branch), like ticking
     // several checkboxes rather than picking one radio option. 'puzzle',
-    // 'passage-errors' and 'mix' (Mix All) are shortcuts that replace the
-    // whole selection instead, since puzzle and passage-errors are each a
-    // different screen entirely and Mix All already means "every mode".
+    // 'passage-errors', 'passage-mcq' and 'mix' (Mix All) are shortcuts that
+    // replace the whole selection instead, since puzzle, passage-errors and
+    // passage-mcq are each a different screen entirely and Mix All already
+    // means "every mode".
     function renderSetupModeTabs() {
       document.querySelectorAll('#setup-mode-tabs .tab').forEach(tab => {
         tab.classList.toggle('active', S.modes.includes(tab.dataset.mode));
@@ -1158,10 +1159,10 @@
     document.querySelectorAll('#setup-mode-tabs .tab').forEach(tab => {
       tab.addEventListener('click', () => {
         const mode = tab.dataset.mode;
-        if (mode === 'puzzle' || mode === 'passage-errors' || mode === 'mix') {
+        if (mode === 'puzzle' || mode === 'passage-errors' || mode === 'passage-mcq' || mode === 'mix') {
           S.modes = [mode];
         } else {
-          let modes = S.modes.filter(m => m !== 'puzzle' && m !== 'passage-errors' && m !== 'mix');
+          let modes = S.modes.filter(m => m !== 'puzzle' && m !== 'passage-errors' && m !== 'passage-mcq' && m !== 'mix');
           if (modes.includes(mode)) {
             modes = modes.filter(m => m !== mode);
             if (modes.length === 0) modes = [mode]; // keep at least one selected
@@ -1201,6 +1202,7 @@
 
       if (S.modes.includes('puzzle')) { startPuzzle(); return; }
       if (S.modes.includes('passage-errors')) { startPassageErrors(); return; }
+      if (S.modes.includes('passage-mcq')) { startPassageMcq(); return; }
 
       const cfg = SESSION_CONFIG[S.level];
       S.progress = loadProgress(S.avatarId);
@@ -3741,6 +3743,105 @@
       if (PS) PS.cur = null; // abandon any correction in progress — unscored, like an untapped character
       document.getElementById('pe-write-panel').classList.remove('open');
       showSummary();
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PASSAGE MCQ MODE (短文理解) — read a whole passage, then answer its
+    // bank of multiple-choice comprehension questions (data/p3-passage.json
+    // "questions" — same passages buildPassageErrors uses, just the
+    // comprehension half instead of the planted-mistake half). Each question
+    // is scored against a character from the passage's characters_used
+    // (cycled through), so results still feed that character's recognition
+    // schedule like every other recognition-group mode.
+    // ═══════════════════════════════════════════════════════════════
+    let PM = null; // { lessonKey, passage, questions, idx, qStart }
+
+    async function startPassageMcq() {
+      await passageDataPromise;
+      const lessonNums = S.lessonTest ? testRandomLessons(S.level) : S.lessons;
+      const withQuestions = lessonNums.filter(n =>
+        (PASSAGE_DATA[`${S.level}-${n}`] || []).some(p => (p.questions || []).length));
+      if (!withQuestions.length) { showToast('No passage questions available for this lesson yet'); return; }
+
+      const lessonNum = withQuestions[Math.floor(Math.random() * withQuestions.length)];
+      const lessonKey = `${S.level}-${lessonNum}`;
+      const passages = PASSAGE_DATA[lessonKey].filter(p => (p.questions || []).length);
+      const passage = passages[Math.floor(Math.random() * passages.length)];
+
+      const pool = getWordPool(S.level, [lessonNum]);
+      const wordByChar = new Map(pool.map(w => [w.character, w]));
+      const usedChars = (passage.characters_used || []).filter(ch => wordByChar.has(ch));
+      if (!usedChars.length) { showToast('Could not link this passage to vocabulary — try again'); return; }
+
+      const questions = passage.questions.map((q, i) => ({
+        ...q,
+        word: wordByChar.get(usedChars[i % usedChars.length]),
+        shuffledOptions: shuffle(q.options),
+      }));
+
+      S.progress = loadProgress(S.avatarId);
+      S.results = [];
+      S.sessionStart = Date.now();
+
+      PM = { lessonKey, passage, questions, idx: 0, qStart: 0 };
+      showScreen('screen-passage-mcq');
+      renderPassageMcq();
+    }
+
+    function renderPassageMcq() {
+      const q = PM.questions[PM.idx];
+      document.getElementById('pm-passage-text').textContent = PM.passage.sentences.join('');
+      document.getElementById('pm-progress').textContent = `${PM.idx + 1} / ${PM.questions.length}`;
+      document.getElementById('pm-question').textContent = q.question;
+
+      const feedback = document.getElementById('pm-feedback');
+      feedback.style.display = 'none';
+      feedback.textContent = '';
+      document.getElementById('pm-next-row').style.display = 'none';
+
+      const grid = document.getElementById('pm-options-grid');
+      grid.innerHTML = '';
+      q.shuffledOptions.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn is-passage-opt';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => handlePassageMcqAnswer(opt));
+        grid.appendChild(btn);
+      });
+      PM.qStart = Date.now();
+    }
+
+    function handlePassageMcqAnswer(chosen) {
+      if (!PM) return;
+      const q = PM.questions[PM.idx];
+      const correct = chosen === q.answer;
+      const timeMs = Date.now() - PM.qStart;
+
+      document.querySelectorAll('#pm-options-grid .opt-btn').forEach(btn => {
+        if (btn.textContent === q.answer) btn.classList.add(correct ? 'flash-correct' : 'flash-reveal');
+        else if (btn.textContent === chosen && !correct) btn.classList.add('flash-wrong');
+        btn.disabled = true;
+      });
+
+      const grade = timeMs < 5000 ? 'easy' : timeMs < 10000 ? 'good' : 'hard';
+      let rec = S.progress[q.word.key] || freshRecord();
+      rec = updateRecord(rec, correct, timeMs, grade, MODE_GROUP['passage-mcq']);
+      S.progress[q.word.key] = rec;
+      saveProgress(S.avatarId, S.progress);
+      S.results.push({ word: q.word, correct, timeMs, type: 'passage-mcq' });
+
+      const feedback = document.getElementById('pm-feedback');
+      feedback.style.display = 'block';
+      feedback.textContent = correct ? '✓ Correct!' : `The correct answer was ${q.answer}`;
+      document.getElementById('pm-next-row').style.display = 'flex';
+    }
+
+    document.getElementById('pm-back').addEventListener('click', () => { PM = null; showScreen('screen-setup'); });
+    document.getElementById('pm-next-btn').addEventListener('click', () => {
+      if (!PM) return;
+      PM.idx++;
+      if (PM.idx >= PM.questions.length) { PM = null; showSummary(); }
+      else renderPassageMcq();
     });
 
     // ═══════════════════════════════════════════════════════════════

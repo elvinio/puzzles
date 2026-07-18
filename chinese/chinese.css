@@ -548,6 +548,23 @@
       pointer-events: none;
     }
 
+    /* Passage MCQ (短文理解) — answer choices can run a full sentence long,
+       so they read better as a left-aligned single-column list than the
+       big centered single-character grid the other MCQ modes use. */
+    .pm-options-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .opt-btn.is-passage-opt {
+      font-size: clamp(1.05rem, 4vw, 1.35rem);
+      font-weight: 700;
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      text-align: left;
+      justify-content: flex-start;
+      min-height: 0;
+      padding: 14px 16px;
+    }
+
     /* ── Wrong-answer feedback strip ── */
     .answer-feedback {
       display: flex;

@@ -59,8 +59,8 @@
       <div class="mode-group mode-group-mcq">
         <div class="mode-group-label">Multiple Choice</div>
         <div class="tab-row">
-          <button class="tab active" data-mode="pinyin-chinese">Pinyin → 汉字</button>
-          <button class="tab" data-mode="chinese-pinyin">汉字 → Pinyin</button>
+          <!-- Pinyin → 汉字 (data-mode="pinyin-chinese") disabled — not in use for now -->
+          <button class="tab active" data-mode="chinese-pinyin">汉字 → Pinyin</button>
           <!-- English → 汉字 (data-mode="english-chinese") removed — not in use for now -->
           <button class="tab" data-mode="word-fill">词语</button>
           <button class="tab" data-mode="sentence-fill">句子填空</button>
@@ -79,6 +79,7 @@
         <div class="tab-row">
           <button class="tab" data-mode="reorder">连词成句</button>
           <button class="tab" data-mode="puzzle">🔍 Puzzle</button>
+          <button class="tab" data-mode="passage-mcq">📖 短文理解</button>
         </div>
       </div>
       <div class="mode-group mode-group-writing">
@@ -446,6 +447,31 @@
 
     <div class="btn-row" style="width:100%;max-width:780px;margin-top:auto">
       <button class="btn" id="pe-submit-btn" style="width:100%">✓ Submit</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: PASSAGE MCQ (短文理解)
+════════════════════════════════════════════════ -->
+  <div id="screen-passage-mcq" class="screen">
+    <div class="topbar">
+      <button class="back-link" id="pm-back">← Back</button>
+      <h1>短文理解</h1>
+      <div style="width:60px"></div>
+    </div>
+
+    <div class="pe-progress" id="pm-progress"></div>
+
+    <div class="pe-passage-box" id="pm-passage-text"></div>
+
+    <div class="question-text is-sentence" id="pm-question" style="width:100%;max-width:780px"></div>
+
+    <div class="options-grid pm-options-grid" id="pm-options-grid"></div>
+
+    <div class="fc-feedback" id="pm-feedback" style="display:none"></div>
+
+    <div class="btn-row" id="pm-next-row" style="width:100%;max-width:780px;margin-top:auto;display:none">
+      <button class="btn" id="pm-next-btn" style="width:100%">Next →</button>
     </div>
   </div>
 
