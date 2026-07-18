@@ -728,7 +728,12 @@
     }
 
     function makeReorder(word, pool) {
-      const { chinese, english } = parseSentence(word.sentence);
+      // P3+ entries carry a "complex" field: three longer example sentences
+      // (the exam-style sentences those levels are tested on). Pick one at
+      // random each time instead of always using the single "sentence" field.
+      const sentences = (word.complex && word.complex.length) ? word.complex : [word.sentence];
+      const sentenceStr = sentences[Math.floor(Math.random() * sentences.length)];
+      const { chinese, english } = parseSentence(sentenceStr);
       if (!chinese) return null;
       const punct = (chinese.match(/[。？！]+$/) || ['。'])[0];
       const chunks = segmentSentence(chinese, word.level || S.level);
