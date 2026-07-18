@@ -1534,6 +1534,21 @@
         sentWrap.appendChild(span);
       });
 
+      // Reads the corrected sentence (distractor swapped back for correctChar),
+      // not the on-screen version with the wrong character — the audio should
+      // model the sentence as it's actually supposed to read.
+      const correctChars = card.chars.slice();
+      correctChars[card.wrongIndex] = card.correctChar;
+      const speakBtn = document.createElement('button');
+      speakBtn.className = 'speak-btn fc-speak-btn';
+      speakBtn.title = 'Listen';
+      speakBtn.textContent = '🔊';
+      speakBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        azureSpeak(correctChars.join(''), card.word.pinyin);
+      });
+      sentWrap.appendChild(speakBtn);
+
       feedback.textContent = 'Tap the character that looks wrong';
     }
 
