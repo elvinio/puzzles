@@ -656,6 +656,13 @@
       pointer-events: none;
     }
 
+    .fc-speak-btn {
+      font-size: clamp(1.3rem, 5vw, 1.7rem);
+      opacity: 0.55;
+      align-self: center;
+      margin-left: 4px;
+    }
+
     .fc-feedback {
       font-size: 0.85rem;
       font-weight: 700;
