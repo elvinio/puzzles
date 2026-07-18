@@ -35,7 +35,8 @@ chinese/
   pinyin_tones.html / .css / .js
   oral.html / .css / .js
   polyphonic.html / .css / .js
-  data/                  chinese-p{1,2,3}.json, chinese-idioms-p{1,3}.json, chinese-polyphonic.json
+  data/                  chinese-p{1,2,3}.json, chinese-idioms-p{1,3}.json, chinese-polyphonic.json,
+                         p3-passage.json (see data/README.md)
   fonts/                 KaiTiRegular.ttf  (the Chinese display font)
   pinyin_audio/          <syllable><tone>.mp3  (e.g. hao3.mp3) — 1500+ clips
   hanzi-data/
@@ -164,6 +165,11 @@ common readings:
   ]
 }
 ```
+
+`data/p3-passage.json` — reading passages + 5-question quizzes generated per
+P3 lesson from `chinese-p3.json`'s character lists. **Not yet consumed by any
+page.** Schema, generation workflow for new lessons, and the validation
+script are documented in [`data/README.md`](data/README.md).
 
 Per-character stroke data is lazy-loaded from `hanzi-data/chars/<char>.json` by
 the hanzi-writer library when a stroke animation is requested. If a character
