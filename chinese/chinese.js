@@ -539,7 +539,13 @@
     function makeFindCorrect(word, pool) {
       if (!word['same-sounding-character'] || word['same-sounding-character'].length === 0) return null;
 
-      const { chinese } = parseSentence(word.sentence);
+      // P3+ entries carry a "complex" field: three longer example sentences
+      // (the exam-style sentences those levels are tested on). Pick one at
+      // random each time instead of always using the single "sentence" field.
+      const sentences = (word.complex && word.complex.length) ? word.complex : [word.sentence];
+      const sentenceStr = sentences[Math.floor(Math.random() * sentences.length)];
+
+      const { chinese } = parseSentence(sentenceStr);
       if (!chinese || chinese.indexOf(word.character) === -1) return null;
 
       const wrongIndex = chinese.indexOf(word.character);
