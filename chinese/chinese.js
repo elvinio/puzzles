@@ -434,6 +434,8 @@
       return { type: 'chinese-pinyin', prompt: word.character, answer: correct, options: shuffle([correct, ...distractors.slice(0, n)]), word };
     }
 
+    // Not in use for now — removed as a selectable test mode / pill, but
+    // kept intact since makeCard still falls back to it as the last resort.
     function makeEnglishChinese(word, pool) {
       const n = mcqDistractorCount(word);
       const distractors = pickChars(pool, [word.character], n);
@@ -728,7 +730,12 @@
     }
 
     function makeReorder(word, pool) {
-      const { chinese, english } = parseSentence(word.sentence);
+      // P3+ entries carry a "complex" field: three longer example sentences
+      // (the exam-style sentences those levels are tested on). Pick one at
+      // random each time instead of always using the single "sentence" field.
+      const sentences = (word.complex && word.complex.length) ? word.complex : [word.sentence];
+      const sentenceStr = sentences[Math.floor(Math.random() * sentences.length)];
+      const { chinese, english } = parseSentence(sentenceStr);
       if (!chinese) return null;
       const punct = (chinese.match(/[。？！]+$/) || ['。'])[0];
       const chunks = segmentSentence(chinese, word.level || S.level);
@@ -815,7 +822,8 @@
     // full built-in set 'mix' pulls from).
     function makeCard(word, pool, mode, dueGroups) {
       if (mode === 'mix' || Array.isArray(mode)) {
-        const mixModes = Array.isArray(mode) ? mode.slice() : ['pinyin-chinese', 'chinese-pinyin', 'english-chinese', 'listening', 'word-fill', 'word-write', 'find-correct',
+        // english-chinese excluded — not in use for now.
+        const mixModes = Array.isArray(mode) ? mode.slice() : ['pinyin-chinese', 'chinese-pinyin', 'listening', 'word-fill', 'word-write', 'find-correct',
           'sentence-fill', 'choose-char', 'tone-tap', 'reorder'];
         if (!Array.isArray(mode) && isAzureConfigured()) mixModes.push('pronunciation');
         // Prefer submodes that exercise a skill this word is actually due in —
