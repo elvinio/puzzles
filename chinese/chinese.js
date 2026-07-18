@@ -3580,19 +3580,12 @@
     function renderPassageErrors() {
       const box = document.getElementById('pe-passage-text');
       box.innerHTML = '';
-      let sentenceIdx = -1, lineEl = null;
       PS.flat.forEach(f => {
-        if (f.sentenceIdx !== sentenceIdx) {
-          sentenceIdx = f.sentenceIdx;
-          lineEl = document.createElement('div');
-          lineEl.className = 'pe-line';
-          box.appendChild(lineEl);
-        }
         const span = document.createElement('span');
         span.className = 'pe-char';
         span.textContent = f.char;
         span.dataset.flatIdx = f.flatIdx;
-        lineEl.appendChild(span);
+        box.appendChild(span);
       });
 
       document.getElementById('pe-instructions').textContent =

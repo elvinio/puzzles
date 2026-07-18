@@ -2048,17 +2048,12 @@
       border-radius: 18px;
       padding: 20px 18px;
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .pe-line {
-      display: flex;
       flex-wrap: wrap;
-      line-height: 1.9;
+      line-height: 2.1;
     }
     .pe-char {
       font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
-      font-size: clamp(1.1rem, 4.4vw, 1.5rem);
+      font-size: clamp(1.3rem, 5.2vw, 1.8rem);
       font-weight: 700;
       color: var(--p-text);
       cursor: pointer;
