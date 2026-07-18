@@ -14,6 +14,10 @@
       --err: #dc2626;
       --err-lt: #b91c1c;
       --warn: #b45309;
+      --mode-listening: #2563eb;
+      --mode-reading: #b45309;
+      --mode-writing: #0891b2;
+      --mode-speaking: #db2777;
     }
 
     body {
@@ -174,6 +178,51 @@
       background: var(--p);
       border-color: var(--p-lt);
       color: #fff;
+    }
+
+    /* ── Test mode category groups ── */
+    .mode-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 780px;
+    }
+
+    .mode-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mode-group-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .mode-group-label::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.75;
+    }
+
+    .mode-group-listening .mode-group-label { color: var(--mode-listening); }
+    .mode-group-reading .mode-group-label { color: var(--mode-reading); }
+    .mode-group-writing .mode-group-label { color: var(--mode-writing); }
+    .mode-group-speaking .mode-group-label { color: var(--mode-speaking); }
+
+    .mode-group-mix {
+      padding-top: 6px;
+      border-top: 1px dashed var(--brd);
     }
 
     /* ── Buttons ── */
