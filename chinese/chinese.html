@@ -55,21 +55,50 @@
 
     <!-- Test mode -->
     <div class="section-label">Test Mode</div>
-    <div class="tab-row" id="setup-mode-tabs">
-      <button class="tab active" data-mode="pinyin-chinese">Pinyin → 汉字</button>
-      <button class="tab" data-mode="chinese-pinyin">汉字 → Pinyin</button>
-      <button class="tab" data-mode="english-chinese">English → 汉字</button>
-      <button class="tab" data-mode="listening">🔊 听音</button>
-      <button class="tab" data-mode="word-fill">词语</button>
-      <button class="tab" data-mode="word-write">✏️ 写词</button>
-      <button class="tab" data-mode="find-correct">✏️ 找错字</button>
-      <button class="tab" data-mode="sentence-fill">句子填空</button>
-      <button class="tab" data-mode="choose-char">选字</button>
-      <button class="tab" data-mode="tone-tap">声调</button>
-      <button class="tab" data-mode="reorder">连词成句</button>
-      <button class="tab" data-mode="mix">Mix All</button>
-      <button class="tab" data-mode="pronunciation">🎤 Speak</button>
-      <button class="tab" data-mode="puzzle">🔍 Puzzle</button>
+    <div class="mode-groups" id="setup-mode-tabs">
+      <div class="mode-group mode-group-mcq">
+        <div class="mode-group-label">Multiple Choice</div>
+        <div class="tab-row">
+          <button class="tab active" data-mode="pinyin-chinese">Pinyin → 汉字</button>
+          <button class="tab" data-mode="chinese-pinyin">汉字 → Pinyin</button>
+          <button class="tab" data-mode="english-chinese">English → 汉字</button>
+          <button class="tab" data-mode="word-fill">词语</button>
+          <button class="tab" data-mode="sentence-fill">句子填空</button>
+          <button class="tab" data-mode="choose-char">选字</button>
+          <button class="tab" data-mode="tone-tap">声调</button>
+        </div>
+      </div>
+      <div class="mode-group mode-group-listening">
+        <div class="mode-group-label">Listening</div>
+        <div class="tab-row">
+          <button class="tab" data-mode="listening">🔊 听音</button>
+        </div>
+      </div>
+      <div class="mode-group mode-group-reading">
+        <div class="mode-group-label">Reading</div>
+        <div class="tab-row">
+          <button class="tab" data-mode="reorder">连词成句</button>
+          <button class="tab" data-mode="puzzle">🔍 Puzzle</button>
+        </div>
+      </div>
+      <div class="mode-group mode-group-writing">
+        <div class="mode-group-label">Writing</div>
+        <div class="tab-row">
+          <button class="tab" data-mode="word-write">✏️ 写词</button>
+          <button class="tab" data-mode="find-correct">✏️ 找错字</button>
+        </div>
+      </div>
+      <div class="mode-group mode-group-speaking">
+        <div class="mode-group-label">Speaking</div>
+        <div class="tab-row">
+          <button class="tab" data-mode="pronunciation">🎤 Speak</button>
+        </div>
+      </div>
+      <div class="mode-group mode-group-mix">
+        <div class="tab-row">
+          <button class="tab" data-mode="mix">Mix All</button>
+        </div>
+      </div>
     </div>
 
     <div class="divider"></div>
