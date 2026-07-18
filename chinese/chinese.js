@@ -21,10 +21,17 @@
       fetch('data/chinese-p1.json').then(r => r.json()).catch(() => null),
       fetch('data/chinese-p2.json').then(r => r.json()).catch(() => null),
       fetch('data/chinese-p3.json').then(r => r.json()).catch(() => null),
-    ]).then(([p1, p2, p3]) => { 
-      DATA.p1 = p1; DATA.p2 = p2; DATA.p3 = p3; 
+    ]).then(([p1, p2, p3]) => {
+      DATA.p1 = p1; DATA.p2 = p2; DATA.p3 = p3;
       if (typeof renderSetupLessonTabs === 'function') renderSetupLessonTabs();
     });
+
+    // Reading passages for the 短文改错 (find the wrong character) mode, keyed
+    // by lesson id (e.g. "p3-1") regardless of level — see data/README.md.
+    // Only p3-1 is populated today; more lessons get merged in over time.
+    let PASSAGE_DATA = {};
+    const passageDataPromise = fetch('data/p3-passage.json').then(r => r.json()).catch(() => null)
+      .then(d => { PASSAGE_DATA = d || {}; });
 
     function getWordPool(level, lessons) {
       const data = DATA[level];
@@ -222,7 +229,7 @@
       'listening': 'recognition',
       'sentence-fill': 'recognition', 'choose-char': 'recognition',
       'tone-tap': 'recognition', 'reorder': 'recognition',
-      'word-write': 'writing', 'find-correct': 'writing',
+      'word-write': 'writing', 'find-correct': 'writing', 'passage-errors': 'writing',
       'pronunciation': 'speaking',
     };
 
@@ -233,6 +240,7 @@
       'pinyin-chinese': 'Pinyin → 汉字', 'chinese-pinyin': '汉字 → Pinyin',
       'english-chinese': 'English → 汉字', 'listening': '🔊 听音',
       'word-fill': '词语', 'word-write': '写词', 'find-correct': '找错字',
+      'passage-errors': '短文改错',
       'sentence-fill': '句子填空', 'choose-char': '选字', 'tone-tap': '声调',
       'reorder': '连词成句', 'mix': 'Mix All', 'pronunciation': '🎤 Speak',
     };
@@ -1125,10 +1133,10 @@
     }
     // Test Mode tabs are multi-select — tapping several combines them into a
     // custom mix (see makeCard's Array.isArray(mode) branch), like ticking
-    // several checkboxes rather than picking one radio option. 'puzzle' and
-    // 'mix' (Mix All) are shortcuts that replace the whole selection instead,
-    // since puzzle is a different screen entirely and Mix All already means
-    // "every mode".
+    // several checkboxes rather than picking one radio option. 'puzzle',
+    // 'passage-errors' and 'mix' (Mix All) are shortcuts that replace the
+    // whole selection instead, since puzzle and passage-errors are each a
+    // different screen entirely and Mix All already means "every mode".
     function renderSetupModeTabs() {
       document.querySelectorAll('#setup-mode-tabs .tab').forEach(tab => {
         tab.classList.toggle('active', S.modes.includes(tab.dataset.mode));
@@ -1150,10 +1158,10 @@
     document.querySelectorAll('#setup-mode-tabs .tab').forEach(tab => {
       tab.addEventListener('click', () => {
         const mode = tab.dataset.mode;
-        if (mode === 'puzzle' || mode === 'mix') {
+        if (mode === 'puzzle' || mode === 'passage-errors' || mode === 'mix') {
           S.modes = [mode];
         } else {
-          let modes = S.modes.filter(m => m !== 'puzzle' && m !== 'mix');
+          let modes = S.modes.filter(m => m !== 'puzzle' && m !== 'passage-errors' && m !== 'mix');
           if (modes.includes(mode)) {
             modes = modes.filter(m => m !== mode);
             if (modes.length === 0) modes = [mode]; // keep at least one selected
@@ -1192,6 +1200,7 @@
       if (S.wordPool.length === 0) { showToast('No words found'); return; }
 
       if (S.modes.includes('puzzle')) { startPuzzle(); return; }
+      if (S.modes.includes('passage-errors')) { startPassageErrors(); return; }
 
       const cfg = SESSION_CONFIG[S.level];
       S.progress = loadProgress(S.avatarId);
@@ -3493,6 +3502,253 @@
     document.getElementById('puz-back').addEventListener('click', () => showScreen('screen-setup'));
     document.getElementById('puz-again-btn').addEventListener('click', startPuzzle);
     document.getElementById('puz-exit-btn').addEventListener('click', () => showScreen('screen-setup'));
+
+    // ═══════════════════════════════════════════════════════════════
+    // PASSAGE ERRORS MODE (短文改错) — read a whole passage, tap every
+    // wrong character you can spot, then hand-write the correction.
+    // A random passage is picked from the selected lesson(s) each time
+    // (data/p3-passage.json — see data/README.md), and a handful of its
+    // characters_used are swapped for a same-sounding distractor to plant
+    // the mistakes. Reuses the fc-write-panel/HanziWriter plumbing from
+    // 找错字 (see FIND & CORRECT MODE above) for the actual writing step.
+    // ═══════════════════════════════════════════════════════════════
+    const PASSAGE_ERROR_COUNT = 4; // target planted mistakes; fewer if a passage lacks candidates
+
+    let PS = null; // { lessonKey, passage, flat, errors, cur }
+    // cur (while a correction is in progress): { err, mistakes, hintShown, selfCheck }
+
+    // Swap up to PASSAGE_ERROR_COUNT of the passage's characters_used for a
+    // same-sounding distractor, chosen from that character's own lesson entry
+    // (same source makeFindCorrect uses for the single-character mode).
+    function buildPassageErrors(passage, wordByChar) {
+      const flat = [];
+      passage.sentences.forEach((s, sentenceIdx) => {
+        Array.from(s).forEach(char => flat.push({ flatIdx: flat.length, sentenceIdx, char }));
+      });
+
+      const candidates = [];
+      for (const ch of new Set(passage.characters_used || [])) {
+        const word = wordByChar.get(ch);
+        const sameSound = word && word['same-sounding-character'];
+        if (!sameSound || !sameSound.length) continue;
+        const occ = flat.filter(f => f.char === ch).map(f => f.flatIdx);
+        if (!occ.length) continue;
+        const distractors = sameSound
+          .map(s => (s.match(/^([^\s(]+)/) || [])[1])
+          .filter(d => d && d !== ch);
+        if (!distractors.length) continue;
+        candidates.push({ ch, word, occ, distractors });
+      }
+      if (!candidates.length) return null;
+
+      const errors = [];
+      for (const c of shuffle(candidates).slice(0, PASSAGE_ERROR_COUNT)) {
+        const flatIdx = c.occ[Math.floor(Math.random() * c.occ.length)];
+        const distractor = c.distractors[Math.floor(Math.random() * c.distractors.length)];
+        flat[flatIdx] = { ...flat[flatIdx], char: distractor };
+        errors.push({ flatIdx, correctChar: c.ch, wrongChar: distractor, word: c.word, state: 'pending' });
+      }
+      if (!errors.length) return null;
+      return { flat, errors };
+    }
+
+    async function startPassageErrors() {
+      await passageDataPromise;
+      const lessonNums = S.lessonTest ? testRandomLessons(S.level) : S.lessons;
+      const withPassages = lessonNums.filter(n => (PASSAGE_DATA[`${S.level}-${n}`] || []).length > 0);
+      if (!withPassages.length) { showToast('No passages available for this lesson yet'); return; }
+
+      const lessonNum = withPassages[Math.floor(Math.random() * withPassages.length)];
+      const lessonKey = `${S.level}-${lessonNum}`;
+      const passages = PASSAGE_DATA[lessonKey];
+      const passage = passages[Math.floor(Math.random() * passages.length)];
+
+      const pool = getWordPool(S.level, [lessonNum]);
+      const wordByChar = new Map(pool.map(w => [w.character, w]));
+      const built = buildPassageErrors(passage, wordByChar);
+      if (!built) { showToast('Could not generate errors for this passage — try again'); return; }
+
+      S.progress = loadProgress(S.avatarId);
+      S.results = [];
+      S.sessionStart = Date.now();
+
+      PS = { lessonKey, passage, flat: built.flat, errors: built.errors, cur: null };
+      renderPassageErrors();
+      showScreen('screen-passage');
+    }
+
+    function renderPassageErrors() {
+      const box = document.getElementById('pe-passage-text');
+      box.innerHTML = '';
+      let sentenceIdx = -1, lineEl = null;
+      PS.flat.forEach(f => {
+        if (f.sentenceIdx !== sentenceIdx) {
+          sentenceIdx = f.sentenceIdx;
+          lineEl = document.createElement('div');
+          lineEl.className = 'pe-line';
+          box.appendChild(lineEl);
+        }
+        const span = document.createElement('span');
+        span.className = 'pe-char';
+        span.textContent = f.char;
+        span.dataset.flatIdx = f.flatIdx;
+        lineEl.appendChild(span);
+      });
+
+      document.getElementById('pe-instructions').textContent =
+        `Find and correct ${PS.errors.length} wrong character${PS.errors.length === 1 ? '' : 's'} in this passage`;
+      document.getElementById('pe-write-panel').classList.remove('open');
+      updatePeProgress();
+    }
+
+    function updatePeProgress() {
+      const found = PS.errors.filter(e => e.state !== 'pending').length;
+      document.getElementById('pe-progress').textContent = `${found} / ${PS.errors.length} found`;
+    }
+
+    document.getElementById('pe-passage-text').addEventListener('click', e => {
+      const span = e.target.closest('.pe-char');
+      if (!span || !PS || PS.cur) return;
+      const flatIdx = Number(span.dataset.flatIdx);
+      const err = PS.errors.find(er => er.flatIdx === flatIdx);
+      if (!err || err.state !== 'pending') {
+        span.classList.remove('pe-wrong-tap');
+        void span.offsetWidth; // restart animation if tapped again
+        span.classList.add('pe-wrong-tap');
+        setTimeout(() => span.classList.remove('pe-wrong-tap'), 600);
+        return;
+      }
+      span.classList.add('pe-marked');
+      err.startTime = Date.now();
+      peStartWriting(err);
+    });
+
+    function peResetHint() {
+      const hint = document.getElementById('pe-hint');
+      hint.classList.remove('revealed');
+      hint.textContent = '💡 Tap for hint';
+    }
+
+    document.getElementById('pe-hint').addEventListener('click', () => {
+      if (!PS || !PS.cur) return;
+      const hint = document.getElementById('pe-hint');
+      if (hint.classList.contains('revealed')) {
+        peResetHint();
+      } else {
+        hint.classList.add('revealed');
+        hint.textContent = PS.cur.err.correctChar;
+        PS.cur.hintShown = true;
+      }
+    });
+
+    let peWriter = null; // single reused HanziWriter instance, mirrors fcWriter
+
+    function peStartWriting(err) {
+      PS.cur = { err, mistakes: 0, hintShown: false, selfCheck: false };
+      document.getElementById('pe-write-panel').classList.add('open');
+      peResetHint();
+      document.getElementById('pe-reveal-row').style.display = 'none';
+      document.getElementById('pe-self-check-row').style.display = 'none';
+      document.getElementById('pe-feedback').textContent = 'Now write the correct character';
+      const target = document.getElementById('pe-writer-target');
+
+      fcCharDataLoader(err.correctChar, () => {
+        if (!peWriter) {
+          peWriter = HanziWriter.create(target, err.correctChar, {
+            width: target.clientWidth || 280,
+            height: target.clientHeight || 280,
+            padding: 12,
+            showOutline: false,
+            showCharacter: false,
+            showHintAfterMisses: FC_HINT_AFTER_MISSES,
+            markStrokeCorrectAfterMisses: FC_HINT_AFTER_MISSES,
+            charDataLoader: fcCharDataLoader
+          });
+        } else {
+          peWriter.setCharacter(err.correctChar);
+        }
+        peWriter.quiz({
+          onMistake: (strokeData) => {
+            if (!PS || !PS.cur) return;
+            PS.cur.mistakes++;
+            if (strokeData && strokeData.mistakesOnStroke >= FC_HINT_AFTER_MISSES) PS.cur.hintShown = true;
+            if (PS.cur.mistakes >= FC_REVEAL_AFTER_MISSES) {
+              PS.cur.hintShown = true;
+              document.getElementById('pe-reveal-row').style.display = 'flex';
+            }
+          },
+          onComplete: () => peFinishError(!PS || !PS.cur || !PS.cur.hintShown)
+        });
+      }, () => peMissingData(err));
+    }
+
+    function peMissingData(err) {
+      if (PS && PS.cur) PS.cur.selfCheck = true;
+      document.getElementById('pe-feedback').textContent = 'No stroke data for this character — write it on paper, then check yourself';
+      const target = document.getElementById('pe-writer-target');
+      target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:0.9rem;text-align:center;padding:8px">✍️ Write the character</div>`;
+      peWriter = null; // SVG this instance owned is now detached — force a fresh create() next time
+      document.getElementById('pe-self-check-row').style.display = 'flex';
+    }
+
+    document.getElementById('pe-reveal-btn').addEventListener('click', () => {
+      if (!PS || !PS.cur) return;
+      const target = document.getElementById('pe-writer-target');
+      target.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:'Kaiti SC','KaiTiRegular','STKaiti',serif;font-size:5rem;color:var(--ok-lt)">${esc(PS.cur.err.correctChar)}</div>`;
+      peWriter = null;
+      PS.cur.hintShown = true;
+      document.getElementById('pe-reveal-row').style.display = 'none';
+      document.getElementById('pe-feedback').textContent = 'Did you write it correctly?';
+      document.getElementById('pe-self-check-row').style.display = 'flex';
+    });
+
+    document.getElementById('pe-self-correct').addEventListener('click', () => { if (PS && PS.cur) peFinishError(!PS.cur.hintShown); });
+    document.getElementById('pe-self-wrong').addEventListener('click', () => { if (PS && PS.cur) peFinishError(false); });
+
+    // Marks the tapped character resolved (found), scores it, and reveals the
+    // fix in place. Characters never tapped stay 'pending' — no score either
+    // way — so a student can Submit without having found every mistake.
+    function peFinishError(correct) {
+      if (!PS || !PS.cur) return;
+      const { err, mistakes, hintShown, selfCheck } = PS.cur;
+      const timeMs = Date.now() - (err.startTime || Date.now());
+
+      document.getElementById('pe-self-check-row').style.display = 'none';
+      document.getElementById('pe-reveal-row').style.display = 'none';
+      document.getElementById('pe-write-panel').classList.remove('open');
+
+      err.state = correct ? 'correct' : 'wrong';
+      const span = document.querySelector(`#pe-passage-text .pe-char[data-flat-idx="${err.flatIdx}"]`);
+      if (span) {
+        span.classList.remove('pe-marked');
+        span.classList.add(correct ? 'pe-correct' : 'pe-incorrect');
+        span.textContent = err.correctChar;
+      }
+
+      // Grade writing by stroke mistakes, not elapsed time — mirrors fcFinish.
+      let grade;
+      if (selfCheck) grade = 'good';
+      else if (mistakes === 0) grade = 'easy';
+      else if (mistakes <= 2) grade = 'good';
+      else grade = 'hard';
+
+      let rec = S.progress[err.word.key] || freshRecord();
+      rec = updateRecord(rec, correct, timeMs, grade, 'writing');
+      S.progress[err.word.key] = rec;
+      saveProgress(S.avatarId, S.progress);
+      S.results.push({ word: err.word, correct, timeMs, type: 'passage-errors' });
+
+      document.getElementById('pe-feedback').textContent = correct ? '✓ Correct!' : `The correct character was ${err.correctChar}`;
+      PS.cur = null;
+      updatePeProgress();
+    }
+
+    document.getElementById('pe-back').addEventListener('click', () => { PS = null; showScreen('screen-setup'); });
+    document.getElementById('pe-submit-btn').addEventListener('click', () => {
+      if (PS) PS.cur = null; // abandon any correction in progress — unscored, like an untapped character
+      document.getElementById('pe-write-panel').classList.remove('open');
+      showSummary();
+    });
 
     // ═══════════════════════════════════════════════════════════════
     // INIT

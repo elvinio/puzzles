@@ -2024,3 +2024,67 @@
       font-size: 1.2rem; font-weight: 700; color: var(--p-xl);
       text-align: center;
     }
+
+    /* ── Passage errors mode (短文改错) ── */
+    .pe-instructions {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      width: 100%;
+      max-width: 780px;
+    }
+    .pe-progress {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--p-xl);
+      letter-spacing: 0.04em;
+    }
+    .pe-passage-box {
+      width: 100%;
+      max-width: 780px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 18px;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pe-line {
+      display: flex;
+      flex-wrap: wrap;
+      line-height: 1.9;
+    }
+    .pe-char {
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      font-size: clamp(1.1rem, 4.4vw, 1.5rem);
+      font-weight: 700;
+      color: var(--p-text);
+      cursor: pointer;
+      padding: 1px 2px;
+      border-radius: 5px;
+      transition: background 0.12s, color 0.12s;
+      touch-action: manipulation;
+    }
+    .pe-char:hover { background: var(--surface); }
+    .pe-char.pe-wrong-tap { animation: pe-flash-wrong 0.6s forwards; }
+    @keyframes pe-flash-wrong {
+      0%, 40% { background: var(--err); color: #fff; }
+      100%    { background: transparent; color: var(--p-text); }
+    }
+    .pe-char.pe-marked {
+      background: #dcfce7;
+      color: var(--ok-lt);
+      pointer-events: none;
+    }
+    .pe-char.pe-correct {
+      color: var(--ok-lt);
+      text-decoration: underline;
+      pointer-events: none;
+    }
+    .pe-char.pe-incorrect {
+      color: var(--err-lt);
+      text-decoration: underline wavy;
+      pointer-events: none;
+    }
