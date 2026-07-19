@@ -1897,13 +1897,18 @@
       if (!prAudioCtx) { try { prAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch { } }
       if (prAudioCtx && prAudioCtx.state === 'suspended') prAudioCtx.resume().catch(() => { });
 
-      if (!prStream) {
-        try {
-          prStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
-        } catch {
-          prSetStatus('Microphone blocked — allow it in browser settings');
-          return;
-        }
+      // Re-acquire a fresh mic stream on every hold rather than reusing one across turns —
+      // once the reference pronunciation plays through the audio element after a prior
+      // attempt, mobile browsers (notably iOS Safari) commonly end or permanently mute the
+      // previously-granted mic track while switching the audio session back from playback
+      // to recording. Reusing that dead track silently records 0 bytes, surfacing as a
+      // false "too short" error even though the child spoke for a normal duration.
+      if (prStream) { prStream.getTracks().forEach(t => t.stop()); prStream = null; }
+      try {
+        prStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+      } catch {
+        prSetStatus('Microphone blocked — allow it in browser settings');
+        return;
       }
       if (!PR || PR.busy || PR.recording) return; // state may have changed while awaiting
 
