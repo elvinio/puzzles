@@ -3754,6 +3754,31 @@
     }
 
     document.getElementById('pe-back').addEventListener('click', () => { PS = null; showScreen('screen-setup'); });
+
+    // Font size toggle for passage errors mode
+    let peFontSize = 1; // 1, 1.25, 1.5 multiplier
+    let peBaseFontSize = null;
+    document.getElementById('pe-font-btn').addEventListener('click', () => {
+      const passageBox = document.getElementById('pe-passage-text');
+      if (passageBox) {
+        const chars = passageBox.querySelectorAll('.pe-char');
+        if (chars.length === 0) return;
+
+        // Store base font size on first call
+        if (peBaseFontSize === null) {
+          peBaseFontSize = parseFloat(getComputedStyle(chars[0]).fontSize);
+        }
+
+        // Cycle through sizes: 1x → 1.25x → 1.5x → 1x
+        peFontSize = peFontSize === 1 ? 1.25 : peFontSize === 1.25 ? 1.5 : 1;
+
+        // Apply new size to all characters
+        chars.forEach(char => {
+          char.style.fontSize = (peBaseFontSize * peFontSize) + 'px';
+        });
+      }
+    });
+
     document.getElementById('pe-submit-btn').addEventListener('click', () => {
       if (PS) PS.cur = null; // abandon any correction in progress — unscored, like an untapped character
       document.getElementById('pe-write-panel').classList.remove('open');
