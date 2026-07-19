@@ -1,0 +1,834 @@
+{
+  "source": "3 photos of a children's Chinese workbook radical index (部首检字表), stroke groups 2-9",
+  "note": "Transcribed via OCR/manual reading of handwritten-style print. Entries flagged 'low'/'medium' confidence are visually ambiguous glyphs; repeat rows reflect the book listing a radical's standalone and bound/combining forms (or duplicate entries) separately, as printed.",
+  "entries": [
+    {
+      "radical": "厂",
+      "page": 7,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "广",
+      "page": 7,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "匚",
+      "page": 7,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "冂",
+      "page": 7,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "八",
+      "page": 7,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "丷",
+      "page": 7,
+      "stroke_group": 2,
+      "confidence": "medium"
+    },
+    {
+      "radical": "冫",
+      "page": 7,
+      "stroke_group": 2,
+      "confidence": "medium"
+    },
+    {
+      "radical": "人",
+      "page": 8,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "亻",
+      "page": 8,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "入",
+      "page": 9,
+      "stroke_group": 2,
+      "confidence": "medium"
+    },
+    {
+      "radical": "勹",
+      "page": 9,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "几",
+      "page": 10,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "凡",
+      "page": 10,
+      "stroke_group": 2,
+      "confidence": "medium"
+    },
+    {
+      "radical": "兀",
+      "page": 10,
+      "stroke_group": 2,
+      "confidence": "low"
+    },
+    {
+      "radical": "亠",
+      "page": 10,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "冫",
+      "page": 10,
+      "stroke_group": 2,
+      "confidence": "low"
+    },
+    {
+      "radical": "冖",
+      "page": 11,
+      "stroke_group": 2,
+      "confidence": "medium"
+    },
+    {
+      "radical": "卩",
+      "page": 11,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "刀",
+      "page": 11,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "刂",
+      "page": 11,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "夂",
+      "page": 11,
+      "stroke_group": 2,
+      "confidence": "low"
+    },
+    {
+      "radical": "力",
+      "page": 12,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "又",
+      "page": 12,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "乂",
+      "page": 12,
+      "stroke_group": 2,
+      "confidence": "low"
+    },
+    {
+      "radical": "厶",
+      "page": 13,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "夊",
+      "page": 13,
+      "stroke_group": 2,
+      "confidence": "low"
+    },
+    {
+      "radical": "阝",
+      "page": 39,
+      "stroke_group": 2,
+      "confidence": "high (右耳/right-ear form)"
+    },
+    {
+      "radical": "讠",
+      "page": 39,
+      "stroke_group": 2,
+      "confidence": "high"
+    },
+    {
+      "radical": "阝",
+      "page": 41,
+      "stroke_group": 2,
+      "confidence": "high (左耳/left-ear form)"
+    },
+    {
+      "radical": "工",
+      "page": 13,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "工",
+      "page": 13,
+      "stroke_group": 3,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "土",
+      "page": 13,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "士",
+      "page": 13,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "士",
+      "page": 14,
+      "stroke_group": 3,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "艹",
+      "page": 14,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "寸",
+      "page": 15,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "廾",
+      "page": 15,
+      "stroke_group": 3,
+      "confidence": "medium"
+    },
+    {
+      "radical": "大",
+      "page": 15,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "大",
+      "page": 15,
+      "stroke_group": 3,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "小",
+      "page": 15,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "小",
+      "page": 15,
+      "stroke_group": 3,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "口",
+      "page": 16,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "口",
+      "page": 17,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "山",
+      "page": 18,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "巾",
+      "page": 18,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "彳",
+      "page": 18,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "彡",
+      "page": 18,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "夕",
+      "page": 18,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "广",
+      "page": 19,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "扌",
+      "page": 19,
+      "stroke_group": 3,
+      "confidence": "medium"
+    },
+    {
+      "radical": "夂",
+      "page": 19,
+      "stroke_group": 3,
+      "confidence": "low"
+    },
+    {
+      "radical": "门",
+      "page": 19,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "宀",
+      "page": 20,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "辶",
+      "page": 20,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "弓",
+      "page": 21,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "尸",
+      "page": 21,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "子",
+      "page": 21,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "子",
+      "page": 21,
+      "stroke_group": 3,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "马",
+      "page": 21,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "女",
+      "page": 22,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "女",
+      "page": 22,
+      "stroke_group": 3,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "犭",
+      "page": 24,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "氵",
+      "page": 26,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "扌",
+      "page": 28,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "忄",
+      "page": 32,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "纟",
+      "page": 37,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "幺",
+      "page": 41,
+      "stroke_group": 3,
+      "confidence": "high"
+    },
+    {
+      "radical": "王",
+      "page": 22,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "王",
+      "page": 22,
+      "stroke_group": 4,
+      "confidence": "medium (repeat row, 玉 form)"
+    },
+    {
+      "radical": "木",
+      "page": 23,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "朩",
+      "page": 23,
+      "stroke_group": 4,
+      "confidence": "medium"
+    },
+    {
+      "radical": "木",
+      "page": 23,
+      "stroke_group": 4,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "车",
+      "page": 24,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "犬",
+      "page": 24,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "瓦",
+      "page": 24,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "止",
+      "page": 25,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "止",
+      "page": 25,
+      "stroke_group": 4,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "攵",
+      "page": 25,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "日",
+      "page": 25,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "曰",
+      "page": 26,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "贝",
+      "page": 26,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "见",
+      "page": 27,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "牛",
+      "page": 28,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "手",
+      "page": 28,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "爪",
+      "page": 29,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "爫",
+      "page": 29,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "父",
+      "page": 30,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "斤",
+      "page": 30,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "月",
+      "page": 30,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "欠",
+      "page": 31,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "方",
+      "page": 31,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "火",
+      "page": 31,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "灬",
+      "page": 31,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "户",
+      "page": 32,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "戶",
+      "page": 32,
+      "stroke_group": 4,
+      "confidence": "medium (repeat row, alt form)"
+    },
+    {
+      "radical": "心",
+      "page": 32,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "礻",
+      "page": 33,
+      "stroke_group": 4,
+      "confidence": "high"
+    },
+    {
+      "radical": "目",
+      "page": 33,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "石",
+      "page": 33,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "田",
+      "page": 33,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "皿",
+      "page": 33,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "矢",
+      "page": 34,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "禾",
+      "page": 34,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "禾",
+      "page": 34,
+      "stroke_group": 5,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "白",
+      "page": 34,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "鸟",
+      "page": 34,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "穴",
+      "page": 34,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "疒",
+      "page": 35,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "立",
+      "page": 35,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "立",
+      "page": 35,
+      "stroke_group": 5,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "衤",
+      "page": 37,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "钅",
+      "page": 40,
+      "stroke_group": 5,
+      "confidence": "high"
+    },
+    {
+      "radical": "耳",
+      "page": 35,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "西",
+      "page": 35,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "页",
+      "page": 35,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "虍",
+      "page": 35,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "虫",
+      "page": 36,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "舌",
+      "page": 36,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "竹",
+      "page": 36,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "舟",
+      "page": 36,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "舟",
+      "page": 36,
+      "stroke_group": 6,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "衣",
+      "page": 37,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "羊",
+      "page": 37,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "羊",
+      "page": 37,
+      "stroke_group": 6,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "羊",
+      "page": 37,
+      "stroke_group": 6,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "米",
+      "page": 37,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "羽",
+      "page": 37,
+      "stroke_group": 6,
+      "confidence": "high"
+    },
+    {
+      "radical": "纟",
+      "page": 37,
+      "stroke_group": 6,
+      "confidence": "medium (repeat of 3画 entry)"
+    },
+    {
+      "radical": "走",
+      "page": 38,
+      "stroke_group": 7,
+      "confidence": "high"
+    },
+    {
+      "radical": "里",
+      "page": 38,
+      "stroke_group": 7,
+      "confidence": "high"
+    },
+    {
+      "radical": "里",
+      "page": 38,
+      "stroke_group": 7,
+      "confidence": "medium (repeat row)"
+    },
+    {
+      "radical": "疋",
+      "page": 38,
+      "stroke_group": 7,
+      "confidence": "high"
+    },
+    {
+      "radical": "身",
+      "page": 39,
+      "stroke_group": 7,
+      "confidence": "high"
+    },
+    {
+      "radical": "鱼",
+      "page": 40,
+      "stroke_group": 8,
+      "confidence": "high"
+    },
+    {
+      "radical": "雨",
+      "page": 40,
+      "stroke_group": 8,
+      "confidence": "high"
+    },
+    {
+      "radical": "青",
+      "page": 41,
+      "stroke_group": 8,
+      "confidence": "high"
+    },
+    {
+      "radical": "革",
+      "page": 41,
+      "stroke_group": 9,
+      "confidence": "high"
+    },
+    {
+      "radical": "食",
+      "page": 41,
+      "stroke_group": 9,
+      "confidence": "high"
+    }
+  ]
+}
