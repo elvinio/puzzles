@@ -133,12 +133,90 @@
       margin-top: 3px;
       letter-spacing: 0.06em;
     }
+    .coin-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #f0c040;
+      margin-top: 3px;
+    }
     .avatar-card-actions {
       display: flex;
       gap: 6px;
       flex-shrink: 0;
       align-items: center;
     }
+    .btn-coins {
+      background: var(--bg);
+      border: 1.5px solid #f0c040;
+      border-radius: 8px;
+      color: #f0c040;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+    }
+    .btn-coins:active { background: rgba(240,192,64,0.15); }
+
+    .redeem-panel {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(240,192,64,0.08);
+      border: 1.5px solid #f0c040;
+      border-radius: 10px;
+      padding: 10px;
+      width: 100%;
+      max-width: 520px;
+    }
+    .redeem-panel.visible { display: flex; }
+    .redeem-title { font-size: 0.75rem; font-weight: 700; color: #f0c040; }
+    .redeem-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .redeem-row input {
+      flex: 1;
+      min-width: 90px;
+      background: var(--bg);
+      border: 2px solid var(--brd);
+      border-radius: 8px;
+      padding: 7px 10px;
+      color: var(--p-text);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      -webkit-user-select: text;
+      user-select: text;
+      touch-action: auto;
+    }
+    .redeem-row input:focus { border-color: #f0c040; }
+    .btn-redeem-submit {
+      background: #f0c040;
+      border: none;
+      border-radius: 8px;
+      color: #1c1730;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 7px 12px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+    }
+    .btn-redeem-cancel {
+      background: none;
+      border: 1.5px solid var(--muted);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 7px 12px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+    }
+    .redeem-error { font-size: 0.72rem; color: var(--danger-lt); font-weight: 700; min-height: 1em; }
     .btn-select {
       background: var(--p);
       border: none;
@@ -716,11 +794,13 @@
         '<div class="avatar-card-svg">' + renderSVG(avatar, '52') + '</div>' +
         '<div class="avatar-card-info">' +
           '<div class="avatar-card-name">' + escHtml(avatar.nickname) + '</div>' +
+          '<div class="coin-pill">🪙 ' + (avatar.coins || 0) + '</div>' +
           (isActive ? '<div class="active-pill">ACTIVE</div>' : '') +
         '</div>' +
         '<div class="avatar-card-actions">' +
           (!isActive ? '<button class="btn-select" data-id="' + avatar.id + '">Select</button>' :
                        '<button class="btn-select is-active" disabled>Active</button>') +
+          '<button class="btn-coins" data-id="' + avatar.id + '" title="Deduct coins">🪙</button>' +
           '<button class="btn-edit" data-id="' + avatar.id + '">Edit</button>' +
           (list.length > 1 ? '<button class="btn-delete" data-id="' + avatar.id + '" title="Delete">🗑</button>' : '') +
         '</div>';
@@ -733,8 +813,24 @@
         '<button class="btn-cancel-delete" data-id="' + avatar.id + '">Cancel</button>' +
         '<button class="btn-confirm-delete" data-id="' + avatar.id + '">Delete</button>';
 
+      var redeemRow = document.createElement('div');
+      redeemRow.className = 'redeem-panel';
+      redeemRow.id = 'redeem-' + avatar.id;
+      redeemRow.innerHTML =
+        '<div class="redeem-title">Deduct coins from ' + escHtml(avatar.nickname) + ' (balance: ' + (avatar.coins || 0) + ')</div>' +
+        '<div class="redeem-row">' +
+          '<input type="number" inputmode="numeric" min="1" step="1" class="redeem-amount" placeholder="Amount" data-id="' + avatar.id + '">' +
+          '<input type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" class="redeem-pin" placeholder="PIN" data-id="' + avatar.id + '">' +
+        '</div>' +
+        '<div class="redeem-row">' +
+          '<button class="btn-redeem-submit" data-id="' + avatar.id + '">Deduct</button>' +
+          '<button class="btn-redeem-cancel" data-id="' + avatar.id + '">Cancel</button>' +
+        '</div>' +
+        '<div class="redeem-error" id="redeem-error-' + avatar.id + '"></div>';
+
       container.appendChild(card);
       container.appendChild(confirmRow);
+      container.appendChild(redeemRow);
     });
 
     container.addEventListener('click', function(e) {
@@ -749,13 +845,72 @@
         showEditorView(id);
       } else if (t.classList.contains('btn-delete')) {
         container.querySelectorAll('.delete-confirm.visible').forEach(function(el){ el.classList.remove('visible'); });
+        container.querySelectorAll('.redeem-panel.visible').forEach(function(el){ el.classList.remove('visible'); });
         document.getElementById('confirm-' + id).classList.add('visible');
       } else if (t.classList.contains('btn-cancel-delete')) {
         document.getElementById('confirm-' + id).classList.remove('visible');
       } else if (t.classList.contains('btn-confirm-delete')) {
         deleteAvatar(id);
+      } else if (t.classList.contains('btn-coins')) {
+        container.querySelectorAll('.delete-confirm.visible').forEach(function(el){ el.classList.remove('visible'); });
+        var panel = document.getElementById('redeem-' + id);
+        var wasVisible = panel.classList.contains('visible');
+        container.querySelectorAll('.redeem-panel.visible').forEach(function(el){ el.classList.remove('visible'); });
+        if (!wasVisible) {
+          panel.classList.add('visible');
+          var amountInput = panel.querySelector('.redeem-amount');
+          if (amountInput) amountInput.focus();
+        }
+      } else if (t.classList.contains('btn-redeem-cancel')) {
+        closeRedeemPanel(id);
+      } else if (t.classList.contains('btn-redeem-submit')) {
+        submitRedeem(id);
       }
     });
+
+    container.addEventListener('keydown', function(e) {
+      if (e.key !== 'Enter') return;
+      var id = e.target.dataset.id;
+      if (id && (e.target.classList.contains('redeem-amount') || e.target.classList.contains('redeem-pin'))) {
+        e.preventDefault();
+        submitRedeem(id);
+      }
+    });
+  }
+
+  function closeRedeemPanel(id) {
+    var panel = document.getElementById('redeem-' + id);
+    if (!panel) return;
+    panel.classList.remove('visible');
+    panel.querySelector('.redeem-amount').value = '';
+    panel.querySelector('.redeem-pin').value = '';
+    document.getElementById('redeem-error-' + id).textContent = '';
+  }
+
+  var REDEEM_PIN = '9112';
+
+  function submitRedeem(id) {
+    var panel = document.getElementById('redeem-' + id);
+    var errorEl = document.getElementById('redeem-error-' + id);
+    var amount = parseInt(panel.querySelector('.redeem-amount').value, 10);
+    var pin = panel.querySelector('.redeem-pin').value.trim();
+
+    if (!amount || amount <= 0) {
+      errorEl.textContent = 'Enter a valid coin amount.';
+      return;
+    }
+    if (pin !== REDEEM_PIN) {
+      errorEl.textContent = 'Incorrect PIN.';
+      panel.querySelector('.redeem-pin').value = '';
+      return;
+    }
+    var newBalance = window.__avatarDeductCoins ? window.__avatarDeductCoins(id, amount) : null;
+    if (newBalance === null) {
+      errorEl.textContent = 'Insufficient balance.';
+      return;
+    }
+    closeRedeemPanel(id);
+    renderListView();
   }
 
   function deleteAvatar(id) {
@@ -907,10 +1062,12 @@
       var idx = list.findIndex(function(a){ return a.id === editingId; });
       if (idx >= 0) {
         var preserved = list[idx].scores || {};
-        list[idx] = Object.assign({}, editorState, { id: editingId, scores: preserved });
+        var preservedCoins = list[idx].coins || 0;
+        var preservedCoinsAt = list[idx].coinsUpdatedAt || null;
+        list[idx] = Object.assign({}, editorState, { id: editingId, scores: preserved, coins: preservedCoins, coinsUpdatedAt: preservedCoinsAt });
       }
     } else {
-      var newAvatar = Object.assign({}, editorState, { id: 'av_' + Date.now(), scores: {} });
+      var newAvatar = Object.assign({}, editorState, { id: 'av_' + Date.now(), scores: {}, coins: 0 });
       list.push(newAvatar);
       if (list.length === 1) {
         try { localStorage.setItem('puzzles-avatar-active', newAvatar.id); } catch(e) {}
@@ -947,6 +1104,12 @@
   buildOptions('hat-options',     'hatStyle');
 
   showListView();
+
+  // Keep coin balances current if a background sync updates them while the
+  // list view is open.
+  window.addEventListener('pz-avatar-coins-change', function() {
+    if (document.getElementById('view-list').style.display !== 'none') renderListView();
+  });
 
 })();
 </script>

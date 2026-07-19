@@ -69,6 +69,50 @@
     } catch (e) {}
   })();
 
+  // ── Coin balance ──────────────────────────────────────────────────────────
+  // Coins are earned by answering chinese.html test questions correctly (1
+  // coin, 2 for writing-mode cards) and spent via the PIN-gated deduct form
+  // on avatar.html when they're exchanged for something outside the app.
+  // coinsUpdatedAt is a plain timestamp (not a "best score") so cross-device
+  // sync can pick whichever side changed most recently — see mergeOne in
+  // sync-merge.js.
+
+  window.__avatarGetCoins = function (avatarId) {
+    var list = loadAvatars();
+    var avatar = list.find(function (a) { return a.id === avatarId; });
+    return avatar ? (avatar.coins || 0) : 0;
+  };
+
+  window.__avatarAddCoins = function (avatarId, amount) {
+    if (!avatarId || !amount) return;
+    try {
+      var list = loadAvatars();
+      var avatar = list.find(function (a) { return a.id === avatarId; });
+      if (!avatar) return;
+      avatar.coins = (avatar.coins || 0) + amount;
+      avatar.coinsUpdatedAt = new Date().toISOString();
+      saveAvatars(list);
+      try { window.dispatchEvent(new CustomEvent('pz-avatar-coins-change', { detail: { id: avatarId, coins: avatar.coins } })); } catch (e2) {}
+    } catch (e) {}
+  };
+
+  // Returns the new balance on success, or null if the balance was
+  // insufficient (caller should treat null as "not deducted").
+  window.__avatarDeductCoins = function (avatarId, amount) {
+    try {
+      var list = loadAvatars();
+      var avatar = list.find(function (a) { return a.id === avatarId; });
+      if (!avatar) return null;
+      var bal = avatar.coins || 0;
+      if (!(amount > 0) || amount > bal) return null;
+      avatar.coins = bal - amount;
+      avatar.coinsUpdatedAt = new Date().toISOString();
+      saveAvatars(list);
+      try { window.dispatchEvent(new CustomEvent('pz-avatar-coins-change', { detail: { id: avatarId, coins: avatar.coins } })); } catch (e2) {}
+      return avatar.coins;
+    } catch (e) { return null; }
+  };
+
   // ── Score saver ───────────────────────────────────────────────────────────
 
   window.__avatarSave = function (scoreKey, value, lowerIsBetter) {
