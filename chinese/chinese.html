@@ -95,6 +95,7 @@
         <div class="mode-group-label">Speaking</div>
         <div class="tab-row">
           <button class="tab" data-mode="pronunciation">🎤 Speak</button>
+          <button class="tab" data-mode="passage-speaking">📖🎤 朗读</button>
         </div>
       </div>
       <div class="mode-group mode-group-mix">
@@ -519,6 +520,61 @@
       <div class="fc-feedback" id="pl-feedback" style="display:none"></div>
       <div class="btn-row" id="pl-next-row" style="width:100%;max-width:780px;margin-top:auto;display:none">
         <button class="btn" id="pl-next-btn" style="width:100%">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: PASSAGE SPEAKING (朗读)
+════════════════════════════════════════════════ -->
+  <div id="screen-passage-speaking" class="screen">
+    <div class="topbar">
+      <button class="back-link" id="ps-back">← Back</button>
+      <h1>朗读</h1>
+      <div style="width:60px"></div>
+    </div>
+
+    <div class="tab-row" id="ps-flow-tabs">
+      <button class="tab active" data-flow="sentence">Sentence by Sentence</button>
+      <button class="tab" data-flow="whole">🎙 Whole Passage (beta)</button>
+    </div>
+
+    <div class="pe-progress" id="ps-progress"></div>
+
+    <div class="pe-passage-box" id="ps-passage-text"></div>
+    <div class="pr-status" id="ps-tap-detail"></div>
+
+    <div class="ps-subview ps-active" id="ps-record-view">
+      <div class="pr-score-wrap" id="ps-score-wrap" style="display:none">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <div class="pr-score-num" id="ps-score-num"></div>
+          <div class="pr-score-stars" id="ps-score-stars"></div>
+        </div>
+        <div class="pr-score-best" id="ps-score-best"></div>
+      </div>
+      <div class="pr-status" id="ps-status"></div>
+      <button class="pr-mic-btn" id="ps-mic-btn">🎤</button>
+      <div class="btn-row" id="ps-action-row">
+        <button class="btn" id="ps-next-btn" style="display:none">Next →</button>
+        <button class="btn btn-outline btn-sm" id="ps-skip-btn">Skip</button>
+      </div>
+      <div class="pr-unconfigured" id="ps-unconfigured" style="display:none">
+        <div style="font-size:2rem">🔑</div>
+        <div>Speaking practice needs a one-time setup.<br>Ask a parent to add the speech proxy details.</div>
+        <button class="btn btn-sm" id="ps-open-settings">⚙ Set up</button>
+      </div>
+    </div>
+
+    <div class="ps-subview" id="ps-recap-view">
+      <div class="pr-score-wrap" id="ps-recap-score-wrap" style="display:flex">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <div class="pr-score-num" id="ps-recap-score-num"></div>
+          <div class="pr-score-stars" id="ps-recap-score-stars"></div>
+        </div>
+        <div class="pr-score-best" id="ps-recap-subtitle">Passage complete!</div>
+      </div>
+      <div class="btn-row" style="width:100%">
+        <button class="btn" id="ps-finish-btn" style="width:100%">Finish</button>
       </div>
     </div>
   </div>

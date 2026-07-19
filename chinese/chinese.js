@@ -263,6 +263,7 @@
       'tone-tap': 'recognition', 'reorder': 'recognition',
       'word-write': 'writing', 'find-correct': 'writing', 'passage-errors': 'writing',
       'pronunciation': 'speaking', 'passage-mcq': 'recognition',
+      'passage-speaking': 'speaking',
     };
 
     // Human-readable label per test mode / card type, reused by the setup
@@ -273,7 +274,7 @@
       'english-chinese': 'English → 汉字', 'listening': '🔊 听音',
       'word-fill': '词语', 'word-write': '写词', 'find-correct': '找错字',
       'passage-errors': '短文改错', 'passage-mcq': '短文理解',
-      'passage-listening': '📖🔊 听力理解',
+      'passage-listening': '📖🔊 听力理解', 'passage-speaking': '📖🎤 朗读',
       'sentence-fill': '句子填空', 'choose-char': '选字', 'tone-tap': '声调',
       'reorder': '连词成句', 'mix': 'Mix All', 'pronunciation': '🎤 Speak',
     };
@@ -1169,7 +1170,7 @@
     // several checkboxes rather than picking one radio option. These modes
     // are shortcuts that replace the whole selection instead, since each is
     // a different screen entirely and Mix All already means "every mode".
-    const WHOLE_SCREEN_MODES = ['puzzle', 'passage-errors', 'passage-mcq', 'passage-listening', 'mix'];
+    const WHOLE_SCREEN_MODES = ['puzzle', 'passage-errors', 'passage-mcq', 'passage-listening', 'passage-speaking', 'mix'];
 
     function renderSetupModeTabs() {
       document.querySelectorAll('#setup-mode-tabs .tab').forEach(tab => {
@@ -1184,7 +1185,7 @@
       } else if (!S.avatarId) {
         startBtn.disabled = true;
       }
-      if (S.modes.includes('pronunciation') && !isAzureConfigured()) {
+      if ((S.modes.includes('pronunciation') || S.modes.includes('passage-speaking')) && !isAzureConfigured()) {
         showToast('Ask a parent to set up the speech key ⚙');
       }
     }
@@ -1237,6 +1238,7 @@
       if (S.modes.includes('passage-errors')) { startPassageErrors(); return; }
       if (S.modes.includes('passage-mcq')) { startPassageMcq(); return; }
       if (S.modes.includes('passage-listening')) { startPassageListening(); return; }
+      if (S.modes.includes('passage-speaking')) { startPassageSpeaking(); return; }
 
       const cfg = SESSION_CONFIG[S.level];
       S.progress = loadProgress(S.avatarId);
@@ -1855,17 +1857,118 @@
     });
 
     // ═══════════════════════════════════════════════════════════════
+    // SHARED HOLD-TO-RECORD CORE — used by 🎤 Speak (single word) and
+    // 📖🎤 朗读 (passage read-aloud). Only one recording can ever be in
+    // flight app-wide, so state lives in these module-level variables
+    // rather than duplicated per mode; each mode builds a `site` descriptor
+    // (DOM ids, timing, and callbacks into its own state) instead of
+    // forking its own copy of the MediaRecorder/WAV/network glue.
+    // ═══════════════════════════════════════════════════════════════
+    let recStream = null;
+    let recRecorder = null;
+    let recChunks = [];
+    let recMaxTimer = null;
+    let recAudioCtx = null;
+
+    function setStatusText(elId, msg) {
+      document.getElementById(elId).textContent = msg;
+    }
+
+    function recReleaseMic() {
+      if (recRecorder && recRecorder.state !== 'inactive') { try { recRecorder.stop(); } catch { } }
+      recRecorder = null;
+      if (recStream) { recStream.getTracks().forEach(t => t.stop()); recStream = null; }
+      clearTimeout(recMaxTimer);
+    }
+
+    // site: { micBtnId, statusElId, maxRecordMs, minDurationMs,
+    //         isActive(), onStarted(), onStopped(), onBlob(blob) }
+    async function recStartHold(site) {
+      // Create/resume the AudioContext inside the user gesture (required on iOS)
+      if (!recAudioCtx) { try { recAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch { } }
+      if (recAudioCtx && recAudioCtx.state === 'suspended') recAudioCtx.resume().catch(() => { });
+
+      // Re-acquire a fresh mic stream on every hold rather than reusing one across turns —
+      // once the reference pronunciation plays through the audio element after a prior
+      // attempt, mobile browsers (notably iOS Safari) commonly end or permanently mute the
+      // previously-granted mic track while switching the audio session back from playback
+      // to recording. Reusing that dead track silently records 0 bytes, surfacing as a
+      // false "too short" error even though the child spoke for a normal duration.
+      if (recStream) { recStream.getTracks().forEach(t => t.stop()); recStream = null; }
+      try {
+        recStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+      } catch {
+        setStatusText(site.statusElId, 'Microphone blocked — allow it in browser settings');
+        return;
+      }
+      if (!site.isActive()) return; // state may have changed while awaiting
+
+      recChunks = [];
+      try { recRecorder = new MediaRecorder(recStream); } catch {
+        setStatusText(site.statusElId, 'Recording not supported in this browser');
+        return;
+      }
+      recRecorder.ondataavailable = e => { if (e.data && e.data.size) recChunks.push(e.data); };
+      const startedAt = Date.now();
+      recRecorder.onstop = () => {
+        document.getElementById(site.micBtnId).classList.remove('recording');
+        site.onStopped();
+        const durMs = Date.now() - startedAt;
+        const blob = new Blob(recChunks, { type: recRecorder && recRecorder.mimeType || 'audio/webm' });
+        recChunks = [];
+        if (durMs < site.minDurationMs || !blob.size) {
+          setStatusText(site.statusElId, 'Too short — hold the button while you speak');
+          return;
+        }
+        site.onBlob(blob);
+      };
+      site.onStarted();
+      recRecorder.start();
+      document.getElementById(site.micBtnId).classList.add('recording');
+      setStatusText(site.statusElId, 'Listening… release when done');
+      clearTimeout(recMaxTimer);
+      recMaxTimer = setTimeout(recStopHold, site.maxRecordMs);
+    }
+
+    function recStopHold() {
+      clearTimeout(recMaxTimer);
+      if (!recRecorder || recRecorder.state === 'inactive') return;
+      try { recRecorder.stop(); } catch { }
+    }
+
+    // site: { micBtnId, statusElId, referenceText, parseResult(json),
+    //         onResult(result), setBusy(bool) }
+    async function processAttempt(blob, site) {
+      site.setBusy(true);
+      const mic = document.getElementById(site.micBtnId);
+      mic.disabled = true;
+      setStatusText(site.statusElId, 'Checking… 🤔');
+      try {
+        const wav = await blobToWav16kMono(blob);
+        const json = await assessPronunciation(wav, site.referenceText, site.networkTimeoutMs || 10000);
+        const result = site.parseResult(json);
+        if (result.noSpeech) {
+          setStatusText(site.statusElId, "I couldn't hear you — try again!");
+        } else {
+          site.onResult(result);
+        }
+      } catch (err) {
+        if (err && err.kind === 'auth') setStatusText(site.statusElId, 'Speech key problem — ask a parent to check settings ⚙');
+        else if (err && err.kind === 'network') setStatusText(site.statusElId, 'No internet — try again in a moment');
+        else setStatusText(site.statusElId, 'Something went wrong — try again');
+      } finally {
+        site.setBusy(false);
+        mic.disabled = false;
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // PRONUNCIATION MODE (🎤 Speak) — hold-to-record, Azure scoring
     // ═══════════════════════════════════════════════════════════════
-    let PR = null; // { card, attempts, bestScore, recording, busy, recStart }
-    let prStream = null;
-    let prRecorder = null;
-    let prChunks = [];
-    let prMaxTimer = null;
-    let prAudioCtx = null;
+    let PR = null; // { card, attempts, bestScore, recording, busy }
 
     function renderPronunciation(card) {
-      PR = { card, attempts: 0, bestScore: -1, firstScore: null, recording: false, busy: false, recStart: 0 };
+      PR = { card, attempts: 0, bestScore: -1, firstScore: null, recording: false, busy: false };
       const panel = document.getElementById('pr-panel');
       panel.style.display = 'flex';
       document.getElementById('pr-score-wrap').style.display = 'none';
@@ -1881,93 +1984,30 @@
     }
 
     function prSetStatus(msg) {
-      document.getElementById('pr-status').textContent = msg;
+      setStatusText('pr-status', msg);
     }
 
-    function prReleaseMic() {
-      if (prRecorder && prRecorder.state !== 'inactive') { try { prRecorder.stop(); } catch { } }
-      prRecorder = null;
-      if (prStream) { prStream.getTracks().forEach(t => t.stop()); prStream = null; }
-      clearTimeout(prMaxTimer);
-    }
-
-    async function prStartRecording() {
-      if (!PR || PR.busy || PR.recording || !isAzureConfigured()) return;
-      // Create/resume the AudioContext inside the user gesture (required on iOS)
-      if (!prAudioCtx) { try { prAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch { } }
-      if (prAudioCtx && prAudioCtx.state === 'suspended') prAudioCtx.resume().catch(() => { });
-
-      // Re-acquire a fresh mic stream on every hold rather than reusing one across turns —
-      // once the reference pronunciation plays through the audio element after a prior
-      // attempt, mobile browsers (notably iOS Safari) commonly end or permanently mute the
-      // previously-granted mic track while switching the audio session back from playback
-      // to recording. Reusing that dead track silently records 0 bytes, surfacing as a
-      // false "too short" error even though the child spoke for a normal duration.
-      if (prStream) { prStream.getTracks().forEach(t => t.stop()); prStream = null; }
-      try {
-        prStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
-      } catch {
-        prSetStatus('Microphone blocked — allow it in browser settings');
-        return;
-      }
-      if (!PR || PR.busy || PR.recording) return; // state may have changed while awaiting
-
-      prChunks = [];
-      try { prRecorder = new MediaRecorder(prStream); } catch {
-        prSetStatus('Recording not supported in this browser');
-        return;
-      }
-      prRecorder.ondataavailable = e => { if (e.data && e.data.size) prChunks.push(e.data); };
-      prRecorder.onstop = () => {
-        document.getElementById('pr-mic-btn').classList.remove('recording');
-        if (!PR) return;
-        PR.recording = false;
-        const durMs = Date.now() - PR.recStart;
-        const blob = new Blob(prChunks, { type: prRecorder && prRecorder.mimeType || 'audio/webm' });
-        prChunks = [];
-        if (durMs < 400 || !blob.size) {
-          prSetStatus('Too short — hold the button while you speak');
-          return;
-        }
-        prProcessAttempt(blob);
+    // Builds a fresh recorder/processing descriptor each time it's needed so
+    // it always reads the live PR (card, busy/recording flags) rather than a
+    // stale snapshot from an earlier hold.
+    function prSite() {
+      return {
+        micBtnId: 'pr-mic-btn', statusElId: 'pr-status',
+        maxRecordMs: 6000, minDurationMs: 400,
+        isActive: () => !!PR && !PR.busy && !PR.recording,
+        onStarted: () => { PR.recording = true; },
+        onStopped: () => { if (PR) PR.recording = false; },
+        onBlob: (blob) => processAttempt(blob, prSite()),
+        referenceText: PR.card.refHanzi,
+        parseResult: (json) => parsePronResult(json, PR.card),
+        onResult: (result) => prShowScore(result),
+        setBusy: (v) => { if (PR) PR.busy = v; },
       };
-      PR.recording = true;
-      PR.recStart = Date.now();
-      prRecorder.start();
-      document.getElementById('pr-mic-btn').classList.add('recording');
-      prSetStatus('Listening… release when done');
-      clearTimeout(prMaxTimer);
-      prMaxTimer = setTimeout(prStopRecording, 6000);
     }
 
-    function prStopRecording() {
-      clearTimeout(prMaxTimer);
-      if (!PR || !PR.recording || !prRecorder || prRecorder.state === 'inactive') return;
-      try { prRecorder.stop(); } catch { }
-    }
-
-    async function prProcessAttempt(blob) {
-      PR.busy = true;
-      const mic = document.getElementById('pr-mic-btn');
-      mic.disabled = true;
-      prSetStatus('Checking… 🤔');
-      try {
-        const wav = await blobToWav16kMono(blob);
-        const json = await assessPronunciation(wav, PR.card.refHanzi);
-        const result = parsePronResult(json, PR.card);
-        if (result.noSpeech) {
-          prSetStatus("I couldn't hear you — try again!");
-        } else {
-          prShowScore(result);
-        }
-      } catch (err) {
-        if (err && err.kind === 'auth') prSetStatus('Speech key problem — ask a parent to check settings ⚙');
-        else if (err && err.kind === 'network') prSetStatus('No internet — try again in a moment');
-        else prSetStatus('Something went wrong — try again');
-      } finally {
-        if (PR) PR.busy = false;
-        mic.disabled = false;
-      }
+    function prStartRecording() {
+      if (!PR || PR.busy || PR.recording || !isAzureConfigured()) return;
+      recStartHold(prSite());
     }
 
     function revealPronunciationAnswer(card) {
@@ -2074,8 +2114,8 @@
         prStartRecording();
       });
       const releasePointer = e => { try { micBtn.releasePointerCapture(e.pointerId); } catch { } };
-      micBtn.addEventListener('pointerup', e => { releasePointer(e); prStopRecording(); });
-      micBtn.addEventListener('pointercancel', e => { releasePointer(e); prStopRecording(); });
+      micBtn.addEventListener('pointerup', e => { releasePointer(e); recStopHold(); });
+      micBtn.addEventListener('pointercancel', e => { releasePointer(e); recStopHold(); });
       micBtn.addEventListener('contextmenu', e => e.preventDefault());
 
       document.getElementById('pr-next-btn').addEventListener('click', () => {
@@ -2094,8 +2134,8 @@
     // ── Audio: MediaRecorder blob → 16 kHz mono PCM WAV ──
     async function blobToWav16kMono(blob) {
       const buf = await blob.arrayBuffer();
-      if (!prAudioCtx) prAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const decoded = await prAudioCtx.decodeAudioData(buf);
+      if (!recAudioCtx) recAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const decoded = await recAudioCtx.decodeAudioData(buf);
       const rate = 16000;
       const offline = new OfflineAudioContext(1, Math.max(1, Math.ceil(decoded.duration * rate)), rate);
       const src = offline.createBufferSource();
@@ -2136,7 +2176,7 @@
       return btoa(String.fromCharCode(...new TextEncoder().encode(str)));
     }
 
-    async function assessPronunciation(wavBlob, referenceText) {
+    async function assessPronunciation(wavBlob, referenceText, timeoutMs = 10000) {
       const cfg = getAzureConfig();
       const params = b64Utf8(JSON.stringify({
         ReferenceText: referenceText,
@@ -2145,7 +2185,7 @@
         Dimension: 'Comprehensive',
       }));
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 10000);
+      const timer = setTimeout(() => ctrl.abort(), timeoutMs);
       let res;
       try {
         res = await fetch(`${cfg.proxyUrl}/?action=STT&language=zh-CN&format=detailed&token=${encodeURIComponent(cfg.apiKey)}`, {
@@ -2168,6 +2208,21 @@
       return res.json();
     }
 
+    // Flattens an Azure NBest result into one entry per recognized syllable
+    // (one per hanzi for zh-CN), in utterance order — shared by the
+    // single-word and passage-text parsers below.
+    function flattenPronUnits(nb, fallbackScore) {
+      const units = [];
+      (nb.Words || []).forEach(w => {
+        const sylls = w.Syllables && w.Syllables.length ? w.Syllables : [w];
+        sylls.forEach(s => units.push({
+          score: s.PronunciationAssessment?.AccuracyScore ?? s.AccuracyScore ?? fallbackScore,
+          errorType: s.PronunciationAssessment?.ErrorType ?? s.ErrorType ?? w.PronunciationAssessment?.ErrorType ?? w.ErrorType ?? 'None',
+        }));
+      });
+      return units;
+    }
+
     function parsePronResult(json, card) {
       if (!json || json.RecognitionStatus !== 'Success' || !json.NBest || !json.NBest.length) {
         return { noSpeech: true };
@@ -2175,16 +2230,8 @@
       const nb = json.NBest[0];
       // Detailed REST responses may put scores at NBest level or under PronunciationAssessment
       const score = nb.PronunciationAssessment?.AccuracyScore ?? nb.AccuracyScore ?? 0;
-
-      // One syllable per hanzi for zh-CN; align to reference pinyin by index
-      const units = [];
-      (nb.Words || []).forEach(w => {
-        const sylls = w.Syllables && w.Syllables.length ? w.Syllables : [w];
-        sylls.forEach(s => units.push({
-          score: s.PronunciationAssessment?.AccuracyScore ?? s.AccuracyScore ?? score,
-          errorType: s.PronunciationAssessment?.ErrorType ?? s.ErrorType ?? w.PronunciationAssessment?.ErrorType ?? w.ErrorType ?? 'None',
-        }));
-      });
+      // Align to reference pinyin by index
+      const units = flattenPronUnits(nb, score);
       const syllables = card.refPinyinSyllables.map((pinyin, i) => ({
         pinyin,
         score: units[i] ? units[i].score : 0,
@@ -2193,9 +2240,32 @@
       return { score, syllables };
     }
 
+    // Same alignment idea as parsePronResult, but for arbitrary passage text
+    // rather than a single vocab word's known pinyin: walks the reference
+    // text and consumes one flattened unit per Han character, leaving
+    // punctuation unscored (Azure never emits a syllable/word for it)
+    // instead of hardcoding a punctuation whitelist — the passage data
+    // already mixes ASCII commas with full-width marks like 、。《》.
+    const HAN_CHAR_RE = /[一-鿿]/;
+    function parsePronResultForText(json, text) {
+      if (!json || json.RecognitionStatus !== 'Success' || !json.NBest || !json.NBest.length) {
+        return { noSpeech: true };
+      }
+      const nb = json.NBest[0];
+      const score = nb.PronunciationAssessment?.AccuracyScore ?? nb.AccuracyScore ?? 0;
+      const units = flattenPronUnits(nb, score);
+      let unitIdx = 0;
+      const chars = Array.from(text).map(char => {
+        if (!HAN_CHAR_RE.test(char)) return { char, isPunct: true, score: null, errorType: null };
+        const u = units[unitIdx++];
+        return { char, isPunct: false, score: u ? u.score : 0, errorType: u ? u.errorType : 'Omission' };
+      });
+      return { score, chars };
+    }
+
     // Game → end session manually
     document.getElementById('game-end-btn').addEventListener('click', () => {
-      prReleaseMic();
+      recReleaseMic();
       PR = null;
       stopTimer();
       showSummary();
@@ -2213,7 +2283,7 @@
     // SUMMARY SCREEN
     // ═══════════════════════════════════════════════════════════════
     function showSummary() {
-      prReleaseMic();
+      recReleaseMic();
       PR = null;
       const elapsed = Date.now() - S.sessionStart;
       const correct = S.results.filter(r => r.correct).length;
@@ -2244,7 +2314,7 @@
         <div class="result-pinyin" style="display:flex;align-items:center;gap:4px"><span>${esc(r.word.pinyin)}</span></div>
         <div class="result-english">${esc(r.word.english)}</div>
       </div>
-      <div class="result-time">${r.type === 'pronunciation' ? `${r.score} pts ` : `${(r.timeMs / 1000).toFixed(1)}s `}${r.correct ? '✓' : '✗'}</div>`);
+      <div class="result-time">${['pronunciation', 'passage-speaking'].includes(r.type) ? `${r.score} pts ` : `${(r.timeMs / 1000).toFixed(1)}s `}${r.correct ? '✓' : '✗'}</div>`);
         item.querySelector('.result-pinyin').appendChild(makeSpeakBtn(r.word.character, r.word.pinyin));
         list.appendChild(item);
       });
@@ -4067,6 +4137,363 @@
       PL.idx++;
       if (PL.idx >= PL.questions.length) { PL = null; showSummary(); }
       else renderPassageListeningQuestion();
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PASSAGE SPEAKING MODE (朗读) — read a passage aloud and get per-
+    // character Azure pronunciation scoring, sentence by sentence by
+    // default (or the whole passage in one continuous take via the flow
+    // toggle — labeled beta since a 60-190s single utterance pushes well
+    // past what Azure's short-audio endpoint is tuned for). Every
+    // character gets colored by accuracy so a long passage still reads as
+    // one paragraph instead of a wall of per-syllable chips (see 🎤 Speak's
+    // pr-syllables). Only characters in the current lesson's word pool are
+    // persisted to that character's SRS record, under the same 'speaking'
+    // skill group 🎤 Speak already uses — reading a passage aloud exercises
+    // the same oral-production skill (see MODE_GROUP's comment above).
+    // ═══════════════════════════════════════════════════════════════
+    let RA = null;
+    // RA: { lessonKey, passage, wordByChar, flow ('sentence'|'whole'),
+    //       sentences, charMeta[{char,isPunct,sentenceIdx,score,errorType}],
+    //       sentenceIdx, unitStart, attempts, firstScore, bestScore,
+    //       busy, recording, unitDone }
+    let raElapsedTimer = null;
+
+    function psMinDurationMs(charCount) { return Math.max(400, charCount * 60); }
+    function psSentenceMaxRecordMs(n) { return Math.min(26000, Math.max(6000, n * 400 + 3000)); }
+    function psWholeMaxRecordMs(n) { return Math.min(190000, Math.max(70000, n * 700)); }
+
+    function raReferenceText() {
+      return RA.flow === 'whole' ? RA.sentences.join('') : RA.sentences[RA.sentenceIdx];
+    }
+
+    // Flat charMeta indices belonging to the unit currently being recorded —
+    // one sentence's worth by default, the whole passage at once in the
+    // beta flow.
+    function raUnitIndices() {
+      if (RA.flow === 'whole') return RA.charMeta.map((_, i) => i);
+      const out = [];
+      RA.charMeta.forEach((m, i) => { if (m.sentenceIdx === RA.sentenceIdx) out.push(i); });
+      return out;
+    }
+
+    function raIsDone() {
+      return RA.flow === 'whole' ? RA.unitDone : RA.sentenceIdx >= RA.sentences.length;
+    }
+
+    async function startPassageSpeaking() {
+      await passageDataPromise;
+      const lessonNums = S.lessonTest ? testRandomLessons(S.level) : S.lessons;
+      const withPassages = lessonNums.filter(n => (PASSAGE_DATA[`${S.level}-${n}`] || []).length > 0);
+      if (!withPassages.length) { showToast('No passages available for this lesson yet'); return; }
+
+      const lessonNum = withPassages[Math.floor(Math.random() * withPassages.length)];
+      const lessonKey = `${S.level}-${lessonNum}`;
+      const passage = PASSAGE_DATA[lessonKey][Math.floor(Math.random() * PASSAGE_DATA[lessonKey].length)];
+
+      const pool = getWordPool(S.level, [lessonNum]);
+      const wordByChar = new Map(pool.map(w => [w.character, w]));
+
+      S.progress = loadProgress(S.avatarId);
+      S.results = [];
+      S.sessionStart = Date.now();
+
+      const charMeta = [];
+      passage.sentences.forEach((s, sentenceIdx) => {
+        Array.from(s).forEach(char => charMeta.push({ char, isPunct: !HAN_CHAR_RE.test(char), sentenceIdx, score: null, errorType: null }));
+      });
+
+      RA = {
+        lessonKey, passage, wordByChar,
+        flow: 'sentence',
+        sentences: passage.sentences,
+        charMeta,
+        sentenceIdx: 0, unitStart: Date.now(),
+        attempts: 0, firstScore: null, bestScore: -1,
+        busy: false, recording: false, unitDone: false,
+      };
+      document.querySelectorAll('#ps-flow-tabs .tab').forEach(t => t.classList.toggle('active', t.dataset.flow === 'sentence'));
+      document.querySelectorAll('#screen-passage-speaking .ps-subview').forEach(v => v.classList.remove('ps-active'));
+      document.getElementById('ps-record-view').classList.add('ps-active');
+      showScreen('screen-passage-speaking');
+      renderPassageSpeakingUnit();
+    }
+
+    function psTier(score) {
+      const threshold = getAzureConfig().threshold;
+      if (score >= 85) return 3;
+      if (score >= threshold) return 2;
+      if (score >= 50) return 1;
+      return 0;
+    }
+
+    function renderPassageSpeakingText() {
+      const box = document.getElementById('ps-passage-text');
+      box.innerHTML = '';
+      const done = raIsDone();
+      RA.charMeta.forEach((m, i) => {
+        const span = document.createElement('span');
+        span.textContent = m.char;
+        span.dataset.flatIdx = i;
+        let cls = 'pe-char';
+        if (m.isPunct) {
+          cls += ' ps-punct';
+        } else {
+          if (RA.flow === 'sentence' && !done && m.sentenceIdx !== RA.sentenceIdx) cls += ' ps-char-dim';
+          if (m.score != null) cls += ` ps-tier-${psTier(m.score)}`;
+        }
+        span.className = cls;
+        box.appendChild(span);
+      });
+    }
+
+    function renderPassageSpeakingUnit() {
+      RA.unitStart = Date.now();
+      renderPassageSpeakingText();
+      setStatusText('ps-tap-detail', '');
+      document.getElementById('ps-score-wrap').style.display = 'none';
+      document.getElementById('ps-score-best').textContent = '';
+      document.getElementById('ps-next-btn').style.display = 'none';
+      document.getElementById('ps-skip-btn').style.display = '';
+      document.getElementById('ps-mic-btn').classList.remove('recording');
+
+      const configured = isAzureConfigured();
+      document.getElementById('ps-mic-btn').style.display = configured ? '' : 'none';
+      document.getElementById('ps-unconfigured').style.display = configured ? 'none' : 'flex';
+
+      if (!configured) {
+        document.getElementById('ps-progress').textContent = '';
+      } else if (RA.flow === 'whole') {
+        document.getElementById('ps-progress').textContent = 'Whole passage';
+      } else {
+        document.getElementById('ps-progress').textContent = `${RA.sentenceIdx + 1} / ${RA.sentences.length}`;
+      }
+      setStatusText('ps-status', configured ? 'Hold the mic and read it aloud!' : '');
+    }
+
+    // Builds a fresh recorder/processing descriptor each time it's needed so
+    // it always reads the live RA (flow, sentenceIdx, busy/recording flags)
+    // rather than a stale snapshot from an earlier hold.
+    function psSite() {
+      const text = raReferenceText();
+      const charCount = Array.from(text).length;
+      const isWhole = RA.flow === 'whole';
+      return {
+        micBtnId: 'ps-mic-btn', statusElId: 'ps-status',
+        maxRecordMs: isWhole ? psWholeMaxRecordMs(charCount) : psSentenceMaxRecordMs(charCount),
+        minDurationMs: psMinDurationMs(charCount),
+        networkTimeoutMs: isWhole ? 90000 : 15000,
+        isActive: () => !!RA && !RA.busy && !RA.recording,
+        onStarted: () => {
+          RA.recording = true;
+          if (isWhole) {
+            const startedAt = Date.now();
+            clearInterval(raElapsedTimer);
+            raElapsedTimer = setInterval(() => {
+              const s = Math.floor((Date.now() - startedAt) / 1000);
+              setStatusText('ps-status', `🎙 Recording… ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`);
+            }, 500);
+          }
+        },
+        onStopped: () => {
+          clearInterval(raElapsedTimer);
+          if (RA) RA.recording = false;
+        },
+        onBlob: (blob) => processAttempt(blob, psSite()),
+        referenceText: text,
+        parseResult: (json) => parsePronResultForText(json, text),
+        onResult: (result) => psShowScore(result),
+        setBusy: (v) => { if (RA) RA.busy = v; },
+      };
+    }
+
+    function psStartRecording() {
+      if (!RA || RA.busy || RA.recording || !isAzureConfigured()) return;
+      recStartHold(psSite());
+    }
+
+    function psUnitAvgScore(result) {
+      const scored = result.chars.filter(c => !c.isPunct);
+      if (!scored.length) return 0;
+      return scored.reduce((sum, c) => sum + c.score, 0) / scored.length;
+    }
+
+    // Only the first attempt's per-character scores get painted into
+    // charMeta and persisted — retries only move the live "Best" readout,
+    // mirroring 🎤 Speak's "first counts for SRS" contract so the recap's
+    // colors never contradict what was actually saved.
+    function applyResultToCharMeta(result) {
+      const indices = raUnitIndices();
+      result.chars.forEach((c, k) => {
+        const idx = indices[k];
+        if (idx === undefined) return;
+        RA.charMeta[idx].score = c.score;
+        RA.charMeta[idx].errorType = c.errorType;
+      });
+    }
+
+    function psShowScore(result) {
+      RA.attempts++;
+      const avg = psUnitAvgScore(result);
+      if (RA.firstScore === null) {
+        RA.firstScore = avg;
+        applyResultToCharMeta(result);
+      }
+      RA.bestScore = Math.max(RA.bestScore, avg);
+
+      renderPassageSpeakingText();
+      const threshold = getAzureConfig().threshold;
+      const wrap = document.getElementById('ps-score-wrap');
+      const numEl = document.getElementById('ps-score-num');
+      const starsEl = document.getElementById('ps-score-stars');
+      wrap.style.display = 'flex';
+      numEl.textContent = Math.round(avg);
+      let stars, cls;
+      if (avg >= 85) { stars = '🌟🌟🌟 Amazing!'; cls = 'pr-good'; }
+      else if (avg >= threshold) { stars = '🌟🌟 Good!'; cls = 'pr-good'; }
+      else if (avg >= 50) { stars = '🌟 Almost — try again!'; cls = 'pr-mid'; }
+      else { stars = 'Keep trying! 💪'; cls = 'pr-bad'; }
+      starsEl.textContent = stars;
+      numEl.className = `pr-score-num ${cls}`;
+      document.getElementById('ps-score-best').textContent =
+        RA.attempts > 1 ? `First (counts for SRS): ${Math.round(RA.firstScore)} · Best: ${Math.round(RA.bestScore)} (attempt ${RA.attempts})` : '';
+
+      document.getElementById('ps-next-btn').style.display = '';
+      document.getElementById('ps-skip-btn').style.display = 'none';
+      setStatusText('ps-status', '');
+    }
+
+    // Persists every unique in-pool character in the just-finished unit —
+    // once per character, averaging repeated occurrences, so a passage
+    // repeating 的/了/是 doesn't inflate rec.attempts or over-advance the
+    // SRS interval from what is really one continuous performance.
+    function psPersistUnit() {
+      const timeMs = Date.now() - RA.unitStart;
+      const byChar = new Map();
+      raUnitIndices().forEach(i => {
+        const m = RA.charMeta[i];
+        if (m.isPunct || !RA.wordByChar.has(m.char)) return;
+        if (!byChar.has(m.char)) byChar.set(m.char, []);
+        byChar.get(m.char).push(m.score == null ? 0 : m.score);
+      });
+
+      const threshold = getAzureConfig().threshold;
+      byChar.forEach((scores, char) => {
+        const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+        const correct = avg >= threshold;
+        const grade = correct ? (avg >= 85 ? 'easy' : 'good') : 'hard';
+        const word = RA.wordByChar.get(char);
+        let rec = S.progress[word.key] || freshRecord();
+        rec = updateRecord(rec, correct, timeMs, grade, MODE_GROUP['passage-speaking']);
+        S.progress[word.key] = rec;
+        S.results.push({ word, correct, timeMs, type: 'passage-speaking', score: Math.round(avg) });
+      });
+      saveProgress(S.avatarId, S.progress);
+    }
+
+    // Only the first submission's score counts toward each character's SRS
+    // record — later retries just let the student practice (mirrors
+    // 🎤 Speak's prFinish exactly).
+    function psFinish() {
+      if (!RA) return;
+      psPersistUnit();
+      psAdvanceUnit();
+    }
+
+    // Skipping without attempting counts every in-pool character in this
+    // unit as wrong, mirroring 🎤 Speak's prRegisterSkip.
+    function psRegisterSkip() {
+      if (!RA) return;
+      raUnitIndices().forEach(i => { RA.charMeta[i].score = 0; RA.charMeta[i].errorType = 'Omission'; });
+      psPersistUnit();
+      psAdvanceUnit();
+    }
+
+    function psAdvanceUnit() {
+      if (RA.flow === 'whole') {
+        RA.unitDone = true;
+        psShowRecap();
+        return;
+      }
+      RA.sentenceIdx++;
+      if (RA.sentenceIdx >= RA.sentences.length) { psShowRecap(); return; }
+      RA.attempts = 0; RA.firstScore = null; RA.bestScore = -1;
+      renderPassageSpeakingUnit();
+    }
+
+    function psShowRecap() {
+      document.querySelectorAll('#screen-passage-speaking .ps-subview').forEach(v => v.classList.remove('ps-active'));
+      document.getElementById('ps-recap-view').classList.add('ps-active');
+      renderPassageSpeakingText(); // re-render undimmed now that raIsDone() is true
+
+      const scored = RA.charMeta.filter(m => !m.isPunct && m.score != null);
+      const avg = scored.length ? scored.reduce((s, m) => s + m.score, 0) / scored.length : 0;
+      const threshold = getAzureConfig().threshold;
+      let stars, cls;
+      if (avg >= 85) { stars = '🌟🌟🌟 Amazing reading!'; cls = 'pr-good'; }
+      else if (avg >= threshold) { stars = '🌟🌟 Good reading!'; cls = 'pr-good'; }
+      else if (avg >= 50) { stars = '🌟 Nice try!'; cls = 'pr-mid'; }
+      else { stars = 'Keep practicing! 💪'; cls = 'pr-bad'; }
+      const numEl = document.getElementById('ps-recap-score-num');
+      numEl.textContent = Math.round(avg);
+      numEl.className = `pr-score-num ${cls}`;
+      document.getElementById('ps-recap-score-stars').textContent = stars;
+    }
+
+    // Tap-and-hold wiring (bound once)
+    {
+      const micBtn = document.getElementById('ps-mic-btn');
+      micBtn.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        try { micBtn.setPointerCapture(e.pointerId); } catch { }
+        psStartRecording();
+      });
+      const releasePointer = e => { try { micBtn.releasePointerCapture(e.pointerId); } catch { } };
+      micBtn.addEventListener('pointerup', e => { releasePointer(e); recStopHold(); });
+      micBtn.addEventListener('pointercancel', e => { releasePointer(e); recStopHold(); });
+      micBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+      const psAdvanceOrSkip = () => { if (!RA) return; if (RA.attempts === 0) psRegisterSkip(); else psFinish(); };
+      document.getElementById('ps-next-btn').addEventListener('click', psAdvanceOrSkip);
+      document.getElementById('ps-skip-btn').addEventListener('click', psAdvanceOrSkip);
+      document.getElementById('ps-open-settings').addEventListener('click', openSpeechSettings);
+    }
+
+    document.getElementById('ps-passage-text').addEventListener('click', e => {
+      const span = e.target.closest('.pe-char');
+      if (!span || !RA) return;
+      const m = RA.charMeta[Number(span.dataset.flatIdx)];
+      if (!m || m.isPunct) return;
+      if (m.score == null) { setStatusText('ps-tap-detail', 'Not read yet'); return; }
+      setStatusText('ps-tap-detail', m.errorType && m.errorType !== 'None'
+        ? `${m.char} — ${Math.round(m.score)}/100 · ${m.errorType}`
+        : `${m.char} — ${Math.round(m.score)}/100`);
+      azureSpeak(m.char);
+    });
+
+    document.getElementById('ps-flow-tabs').addEventListener('click', e => {
+      const tab = e.target.closest('.tab');
+      if (!tab || !RA || tab.dataset.flow === RA.flow) return;
+      document.querySelectorAll('#ps-flow-tabs .tab').forEach(t => t.classList.toggle('active', t === tab));
+      RA.flow = tab.dataset.flow;
+      RA.sentenceIdx = 0;
+      RA.attempts = 0; RA.firstScore = null; RA.bestScore = -1;
+      RA.unitDone = false;
+      RA.charMeta.forEach(m => { m.score = null; m.errorType = null; });
+      document.querySelectorAll('#screen-passage-speaking .ps-subview').forEach(v => v.classList.remove('ps-active'));
+      document.getElementById('ps-record-view').classList.add('ps-active');
+      renderPassageSpeakingUnit();
+    });
+
+    document.getElementById('ps-back').addEventListener('click', () => {
+      recReleaseMic();
+      RA = null;
+      showScreen('screen-setup');
+    });
+
+    document.getElementById('ps-finish-btn').addEventListener('click', () => {
+      RA = null;
+      showSummary();
     });
 
     // ═══════════════════════════════════════════════════════════════

@@ -2282,6 +2282,51 @@
       width: 100%;
     }
 
+    /* ── Passage speaking mode (朗读) ── */
+    .ps-subview {
+      display: none;
+    }
+
+    .ps-subview.ps-active {
+      display: contents;
+    }
+
+    /* Dims characters outside the sentence currently being recorded, so the
+       passage still reads as one paragraph with the active sentence popped. */
+    .ps-char-dim {
+      opacity: 0.35;
+    }
+
+    /* Punctuation never gets a score, so it opts out of the tap-for-detail
+       affordance entirely (pointer-events:none keeps it out of the delegated
+       click handler's target, not just visually non-interactive). */
+    .pe-char.ps-punct {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* Score-tier coloring, layered on .pe-char — reuses the same color
+       families as .pe-char.pe-marked / .lm-dot.lm-tier-* / .pr-syl so scored
+       passage text reads consistently with the rest of the app. Appended
+       after .pe-char:hover so a tapped/scored character's tier color still
+       wins over the plain hover tint. */
+    .pe-char.ps-tier-3 {
+      background: #dcfce7;
+      color: var(--ok-lt);
+    }
+    .pe-char.ps-tier-2 {
+      background: #d1fae5;
+      color: var(--ok-lt);
+    }
+    .pe-char.ps-tier-1 {
+      background: #fef3c7;
+      color: var(--warn);
+    }
+    .pe-char.ps-tier-0 {
+      background: #fef2f2;
+      color: var(--err-lt);
+    }
+
     /* Responsive: stack on narrow screens */
     @media (max-width: 900px) {
       .pe-container {
