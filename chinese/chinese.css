@@ -195,6 +195,29 @@
       gap: 6px;
     }
 
+    .mode-group .tab-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .mode-group .tab-row .tab {
+      padding-left: 8px;
+      padding-right: 8px;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .mode-group .tab-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 420px) {
+      .mode-group .tab-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     .mode-group-label {
       display: flex;
       align-items: center;
