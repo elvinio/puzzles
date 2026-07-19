@@ -72,6 +72,7 @@
         <div class="mode-group-label">Listening</div>
         <div class="tab-row">
           <button class="tab" data-mode="listening">🔊 听音</button>
+          <button class="tab" data-mode="passage-listening">📖🔊 听力理解</button>
         </div>
       </div>
       <div class="mode-group mode-group-reading">
@@ -481,6 +482,34 @@
 
     <div class="btn-row" id="pm-next-row" style="width:100%;max-width:780px;margin-top:auto;display:none">
       <button class="btn" id="pm-next-btn" style="width:100%">Next →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+     SCREEN: PASSAGE LISTENING (听力理解)
+════════════════════════════════════════════════ -->
+  <div id="screen-passage-listening" class="screen">
+    <div class="topbar">
+      <button class="back-link" id="pl-back">← Back</button>
+      <h1>听力理解</h1>
+      <div style="width:60px"></div>
+    </div>
+
+    <div class="pe-progress" id="pl-progress"></div>
+
+    <div class="pl-audio-bar">
+      <audio id="pl-audio" preload="auto"></audio>
+      <button class="btn" id="pl-play-btn">▶ Play Passage</button>
+      <div class="pl-audio-hint" id="pl-audio-hint">Listen carefully — the questions appear after the passage finishes.</div>
+    </div>
+
+    <div class="pl-quiz" id="pl-quiz" style="display:none">
+      <div class="question-text is-sentence" id="pl-question" style="width:100%;max-width:780px"></div>
+      <div class="options-grid pm-options-grid" id="pl-options-grid"></div>
+      <div class="fc-feedback" id="pl-feedback" style="display:none"></div>
+      <div class="btn-row" id="pl-next-row" style="width:100%;max-width:780px;margin-top:auto;display:none">
+        <button class="btn" id="pl-next-btn" style="width:100%">Next →</button>
+      </div>
     </div>
   </div>
 

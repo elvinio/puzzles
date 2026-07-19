@@ -8,9 +8,12 @@ more lessons.
 ## `p3-passage.json`
 
 Reading passages generated from the character list of each P3 lesson in
-`chinese-p3.json`, each paired with a 5-question multiple-choice quiz.
-**Not yet wired into any page** — it's a standalone dataset for a future
-reading-comprehension mode.
+`chinese-p3.json`, each paired with a 5-question multiple-choice quiz. Feeds
+three `chinese.html` test modes: 短文改错 (passage-errors, plant-a-mistake
+writing drill), 短文理解 (passage-mcq, read the passage as text then answer
+the questions) and 听力理解 (passage-listening, hear the passage — via audio
+from `../passage_audio/`, see below — then answer the same questions). All
+three pick a random lesson + passage from whatever's available.
 
 Keyed by lesson id, matching the keys in `chinese-p3.json` (`"p3-1"`,
 `"p3-2"`, …). Each lesson maps to an array of passage objects:
@@ -107,3 +110,27 @@ If this dataset is later extended to P1/P2 as well, it'll need either a
 separate `p1-passage.json`/`p2-passage.json` per level (mirroring the
 `chinese-p{1,2,3}.json` split) or a rename to something level-agnostic —
 not yet decided, so don't assume `p3-passage.json` will hold non-P3 lessons.
+
+## `../passage_audio/` (听力理解 audio)
+
+Generated, not hand-written — see `tools/gen-passage-audio.py`. Synthesizes
+every passage in `p3-passage.json` via Azure Cognitive Services Speech
+(`zh-CN-XiaoxiaoNeural`, the same voice `chinese.html`'s other TTS uses) into
+`chinese/passage_audio/`:
+
+```
+passage_audio/
+  manifest.json          { voice, rate, lessons: { "p3-1": [...] } }
+  p3-1/
+    p3-1-passage-1.mp3          whole passage, used by 听力理解
+    p3-1-passage-1-s01.mp3      sentence 1 (review/replay, not used by the test itself)
+    p3-1-passage-1-s02.mp3      ...
+```
+
+Not committed by default — this directory and its contents need an Azure
+Speech key to generate (`AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION`; see the
+script's docstring). Without it, `chinese.html` fetches `manifest.json`,
+gets a 404, and 听力理解 just reports "No listening audio available for this
+lesson yet" for every lesson — everything else keeps working. Re-run the
+script after adding new lessons/passages to `p3-passage.json`; it skips
+files that already exist unless `--force`.
