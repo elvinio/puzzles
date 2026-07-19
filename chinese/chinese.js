@@ -1531,11 +1531,11 @@
     // Once HanziWriter reveals a stroke's outline as a hint, the student is
     // tracing rather than recalling it — that stroke no longer demonstrates
     // they know the character, so the card is graded wrong.
-    const FC_HINT_AFTER_MISSES = 3;
+    const FC_HINT_AFTER_MISSES = 5;
     // Total mistakes across the whole character (not just one stroke) at which
     // we stop trusting a later correct completion — this many wrong attempts
     // means the student doesn't know the character, hint or no hint.
-    const FC_REVEAL_AFTER_MISSES = 3;
+    const FC_REVEAL_AFTER_MISSES = 5;
 
     function fcCharDataLoader(char, onComplete, onError) {
       fetch(`hanzi-data/chars/${encodeURIComponent(char)}.json`)
