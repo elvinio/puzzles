@@ -1468,6 +1468,9 @@
       S.progress[card.word.key] = rec;
       saveProgress(S.avatarId, S.progress);
       S.results.push({ word: card.word, correct, timeMs, type: card.type, ...(extra || {}) });
+      if (correct && S.avatarId && window.__avatarAddCoins) {
+        window.__avatarAddCoins(S.avatarId, MODE_GROUP[card.type] === 'writing' ? 2 : 1);
+      }
       if (!correct) {
         const retry = makeCard(card.word, S.wordPool, effectiveMode());
         if (retry) { retry.isRetry = true; S.cards.push(retry); }
@@ -2215,6 +2218,9 @@
       document.getElementById('summary-wrong').textContent = wrong;
       const m = Math.floor(elapsed / 60000), sec = Math.floor((elapsed % 60000) / 1000);
       document.getElementById('summary-time').textContent = `${m}:${String(sec).padStart(2, '0')}`;
+
+      const coinsEarned = S.results.reduce((sum, r) => r.correct ? sum + (MODE_GROUP[r.type] === 'writing' ? 2 : 1) : sum, 0);
+      document.getElementById('summary-coins').textContent = coinsEarned;
 
       const list = document.getElementById('summary-result-list');
       list.innerHTML = '';

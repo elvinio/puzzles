@@ -58,6 +58,13 @@
     // Object.assign: later wins -> local profile fields take precedence.
     var merged = Object.assign({}, remoteAv, localAv);
     merged.scores = mergeScores(localAv.scores, remoteAv.scores);
+    // Coins are a spendable balance (earned AND deducted), so "local always
+    // wins" would silently resurrect coins spent on the other device. Pick
+    // whichever side touched the balance most recently instead.
+    var lt = String(localAv.coinsUpdatedAt || ''), rt = String(remoteAv.coinsUpdatedAt || '');
+    var newer = lt >= rt ? localAv : remoteAv;
+    merged.coins = newer.coins || 0;
+    merged.coinsUpdatedAt = newer.coinsUpdatedAt || null;
     return merged;
   }
 
