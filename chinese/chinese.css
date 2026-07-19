@@ -2162,6 +2162,32 @@
       display: flex !important;
     }
 
+    /* ── Passage listening mode (听力理解) ── */
+    .pl-audio-bar {
+      width: 100%;
+      max-width: 780px;
+      background: var(--surface);
+      border: 2px solid var(--brd);
+      border-radius: 18px;
+      padding: 28px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .pl-audio-hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .pl-quiz {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
     /* Responsive: stack on narrow screens */
     @media (max-width: 900px) {
       .pe-container {

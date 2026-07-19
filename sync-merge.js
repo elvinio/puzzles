@@ -79,7 +79,13 @@
     });
     if (a.skills || b.skills) {
       out.skills = {};
-      ['recognition', 'writing', 'speaking'].forEach(function (g) {
+      // Union of whatever group names either side has — not a fixed list —
+      // so a group rename/add on one device (e.g. recognition -> mcq, or a
+      // new 'listening' group) merges cleanly with an un-migrated snapshot
+      // from the other; migrateProgress folds legacy names on next load.
+      var groups = {};
+      Object.keys(a.skills || {}).concat(Object.keys(b.skills || {})).forEach(function (g) { groups[g] = 1; });
+      Object.keys(groups).forEach(function (g) {
         var sa = a.skills && a.skills[g], sb = b.skills && b.skills[g];
         var pick = !sa ? sb : !sb ? sa
                  : (String(sa.lastTested || '') >= String(sb.lastTested || '') ? sa : sb);
