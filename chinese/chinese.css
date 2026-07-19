@@ -588,6 +588,69 @@
       padding: 14px 16px;
     }
 
+    /* Passage MCQ layout (短文理解) — 50/50 split: passage on the left in
+       Kaiti, question + answer choices on the right. All three share one
+       font size so nothing looks small or oversized next to the others. */
+    .pm-topbar {
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .pm-container {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      max-width: 1200px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .pm-left,
+    .pm-right {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pm-right {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .pm-passage-box {
+      max-width: 100%;
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    }
+
+    #screen-passage-mcq .pm-question-text {
+      width: 100%;
+      max-width: none;
+      text-align: left;
+      font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    }
+
+    #screen-passage-mcq .pm-options-grid {
+      width: 100%;
+      max-width: none;
+    }
+
+    #screen-passage-mcq .is-passage-opt {
+      font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    }
+
+    #screen-passage-mcq #pm-next-row {
+      width: 100%;
+      max-width: none;
+      margin-top: auto;
+    }
+
+    @media (max-width: 900px) {
+      .pm-container {
+        flex-direction: column;
+      }
+    }
+
     /* ── Wrong-answer feedback strip ── */
     .answer-feedback {
       display: flex;

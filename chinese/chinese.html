@@ -468,7 +468,7 @@
      SCREEN: PASSAGE MCQ (短文理解)
 ════════════════════════════════════════════════ -->
   <div id="screen-passage-mcq" class="screen">
-    <div class="topbar">
+    <div class="topbar pm-topbar">
       <button class="back-link" id="pm-back">← Back</button>
       <h1>短文理解</h1>
       <div style="width:60px"></div>
@@ -476,16 +476,22 @@
 
     <div class="pe-progress" id="pm-progress"></div>
 
-    <div class="pe-passage-box" id="pm-passage-text"></div>
+    <div class="pm-container">
+      <div class="pm-left">
+        <div class="pe-passage-box pm-passage-box" id="pm-passage-text"></div>
+      </div>
 
-    <div class="question-text is-sentence" id="pm-question" style="width:100%;max-width:780px"></div>
+      <div class="pm-right">
+        <div class="question-text is-sentence pm-question-text" id="pm-question"></div>
 
-    <div class="options-grid pm-options-grid" id="pm-options-grid"></div>
+        <div class="options-grid pm-options-grid" id="pm-options-grid"></div>
 
-    <div class="fc-feedback" id="pm-feedback" style="display:none"></div>
+        <div class="fc-feedback" id="pm-feedback" style="display:none"></div>
 
-    <div class="btn-row" id="pm-next-row" style="width:100%;max-width:780px;margin-top:auto;display:none">
-      <button class="btn" id="pm-next-btn" style="width:100%">Next →</button>
+        <div class="btn-row" id="pm-next-row" style="display:none">
+          <button class="btn" id="pm-next-btn" style="width:100%">Next →</button>
+        </div>
+      </div>
     </div>
   </div>
 
