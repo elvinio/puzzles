@@ -421,31 +421,40 @@
      SCREEN: PASSAGE ERRORS (短文改错)
 ════════════════════════════════════════════════ -->
   <div id="screen-passage" class="screen">
-    <div class="topbar">
+    <div class="topbar pe-topbar">
       <button class="back-link" id="pe-back">← Back</button>
       <h1>短文改错</h1>
-      <div style="width:60px"></div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-outline btn-sm pe-font-btn" id="pe-font-btn" title="Change font size">aA</button>
+        <div style="width:60px"></div>
+      </div>
     </div>
 
     <div class="pe-instructions" id="pe-instructions"></div>
     <div class="pe-progress" id="pe-progress"></div>
 
-    <div class="pe-passage-box" id="pe-passage-text"></div>
-
-    <div class="fc-write-panel" id="pe-write-panel">
-      <div class="fc-feedback" id="pe-feedback"></div>
-      <div class="fc-hint" id="pe-hint">💡 Tap for hint</div>
-      <div class="fc-writer-target" id="pe-writer-target"></div>
-      <div class="btn-row" id="pe-reveal-row" style="display:none">
-        <button class="btn btn-outline btn-sm" id="pe-reveal-btn">Show Answer</button>
+    <div class="pe-container">
+      <div class="pe-left">
+        <div class="pe-passage-box" id="pe-passage-text"></div>
       </div>
-      <div class="btn-row" id="pe-self-check-row" style="display:none">
-        <button class="btn btn-sm" id="pe-self-correct">✓ Got it right</button>
-        <button class="btn btn-outline btn-sm" id="pe-self-wrong">✗ Got it wrong</button>
+
+      <div class="pe-right">
+        <div class="fc-write-panel pe-write-panel-open" id="pe-write-panel">
+          <div class="fc-feedback" id="pe-feedback"></div>
+          <div class="fc-hint" id="pe-hint">💡 Tap for hint</div>
+          <div class="fc-writer-target" id="pe-writer-target"></div>
+          <div class="btn-row" id="pe-reveal-row" style="display:none">
+            <button class="btn btn-outline btn-sm" id="pe-reveal-btn">Show Answer</button>
+          </div>
+          <div class="btn-row" id="pe-self-check-row" style="display:none">
+            <button class="btn btn-sm" id="pe-self-correct">✓ Got it right</button>
+            <button class="btn btn-outline btn-sm" id="pe-self-wrong">✗ Got it wrong</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="btn-row" style="width:100%;max-width:780px;margin-top:auto">
+    <div class="btn-row" style="width:100%;max-width:1200px;margin-top:auto">
       <button class="btn" id="pe-submit-btn" style="width:100%">✓ Submit</button>
     </div>
   </div>

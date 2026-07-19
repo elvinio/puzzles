@@ -3754,6 +3754,21 @@
     }
 
     document.getElementById('pe-back').addEventListener('click', () => { PS = null; showScreen('screen-setup'); });
+
+    // Font size toggle for passage errors mode
+    let peFontSize = 1; // 1, 1.25, 1.5 multiplier
+    document.getElementById('pe-font-btn').addEventListener('click', () => {
+      peFontSize = peFontSize === 1 ? 1.25 : peFontSize === 1.25 ? 1.5 : 1;
+      const passageBox = document.getElementById('pe-passage-text');
+      if (passageBox) {
+        const chars = passageBox.querySelectorAll('.pe-char');
+        const baseSize = parseFloat(getComputedStyle(chars[0]).fontSize) / peFontSize;
+        chars.forEach(char => {
+          char.style.fontSize = (baseSize * peFontSize) + 'px';
+        });
+      }
+    });
+
     document.getElementById('pe-submit-btn').addEventListener('click', () => {
       if (PS) PS.cur = null; // abandon any correction in progress — unscored, like an untapped character
       document.getElementById('pe-write-panel').classList.remove('open');
