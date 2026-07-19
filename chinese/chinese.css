@@ -182,8 +182,8 @@
 
     /* ── Test mode category groups ── */
     .mode-groups {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
       gap: 12px;
       width: 100%;
       max-width: 780px;
@@ -196,8 +196,9 @@
     }
 
     .mode-group .tab-row {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .mode-group .tab-row .tab {
@@ -206,15 +207,21 @@
       text-align: center;
     }
 
-    @media (max-width: 640px) {
-      .mode-group .tab-row {
+    @media (max-width: 900px) {
+      .mode-groups {
         grid-template-columns: repeat(3, 1fr);
       }
     }
 
-    @media (max-width: 420px) {
-      .mode-group .tab-row {
+    @media (max-width: 640px) {
+      .mode-groups {
         grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 420px) {
+      .mode-groups {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -244,6 +251,7 @@
     .mode-group-speaking .mode-group-label { color: var(--mode-speaking); }
 
     .mode-group-mix {
+      grid-column: 1 / -1;
       padding-top: 6px;
       border-top: 1px dashed var(--brd);
     }
