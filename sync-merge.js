@@ -80,9 +80,10 @@
     if (a.skills || b.skills) {
       out.skills = {};
       // Union of whatever group names either side has — not a fixed list —
-      // so a group rename/add on one device (e.g. recognition -> mcq, or a
-      // new 'listening' group) merges cleanly with an un-migrated snapshot
-      // from the other; migrateProgress folds legacy names on next load.
+      // so a group rename/split on one device (e.g. the new 'listening'
+      // group splitting off 'recognition') merges cleanly with an
+      // un-migrated snapshot from the other; migrateProgress folds legacy
+      // names on next load.
       var groups = {};
       Object.keys(a.skills || {}).concat(Object.keys(b.skills || {})).forEach(function (g) { groups[g] = 1; });
       Object.keys(groups).forEach(function (g) {

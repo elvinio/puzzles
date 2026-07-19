@@ -112,18 +112,18 @@
           delete r.interval; delete r.easeFactor; delete r.dueDate;
           changed = true;
         }
-        // Skill groups were renamed/split (recognition -> mcq, plus a new
-        // 'listening' group) when passage listening comprehension shipped.
-        // A record already on the per-skill shape keeps its recognition
-        // schedule under the new 'mcq' name; 'listening' starts fresh since
+        // A new 'listening' group split off from 'recognition' when passage
+        // listening comprehension shipped (an intermediate build briefly
+        // renamed 'recognition' to 'mcq' — fold that back for anyone who
+        // synced during that window). 'listening' itself starts fresh since
         // it tracks a capability that didn't exist before.
-        if (r.skills && 'recognition' in r.skills && !('mcq' in r.skills)) {
+        if (r.skills && 'mcq' in r.skills && !('recognition' in r.skills)) {
           r = { ...r, skills: { ...r.skills } };
-          r.skills.mcq = r.skills.recognition;
-          delete r.skills.recognition;
-          if (r.byMode && r.byMode.recognition && !r.byMode.mcq) {
-            r.byMode = { ...r.byMode, mcq: r.byMode.recognition };
-            delete r.byMode.recognition;
+          r.skills.recognition = r.skills.mcq;
+          delete r.skills.mcq;
+          if (r.byMode && r.byMode.mcq && !r.byMode.recognition) {
+            r.byMode = { ...r.byMode, recognition: r.byMode.mcq };
+            delete r.byMode.mcq;
           }
           changed = true;
         }
@@ -215,10 +215,10 @@
     }
 
     // Each record carries one schedule per skill group (rec.skills) so
-    // MCQ success can't postpone writing practice. The top-level
+    // recognition success can't postpone writing practice. The top-level
     // lastTested tracks the most recent practice in any group (used by the
     // sync merge and the reset tombstone).
-    const SKILL_GROUPS = ['listening', 'mcq', 'writing', 'speaking'];
+    const SKILL_GROUPS = ['listening', 'recognition', 'writing', 'speaking'];
 
     function freshSkill() {
       return { interval: 1, easeFactor: 2.5, dueDate: todayStr(), lastTested: null };
@@ -254,15 +254,15 @@
     // 'listening' groups 听音 (hear a word, pick its written form) with the
     // new 听力理解 passage test — both are graded purely by ear, no text on
     // screen. Every other multiple-choice mode (including 短文理解, which is
-    // the same passage question bank read as text) buckets under 'mcq'.
+    // the same passage question bank read as text) buckets under 'recognition'.
     const MODE_GROUP = {
-      'pinyin-chinese': 'mcq', 'chinese-pinyin': 'mcq',
-      'english-chinese': 'mcq', 'word-fill': 'mcq',
+      'pinyin-chinese': 'recognition', 'chinese-pinyin': 'recognition',
+      'english-chinese': 'recognition', 'word-fill': 'recognition',
       'listening': 'listening', 'passage-listening': 'listening',
-      'sentence-fill': 'mcq', 'choose-char': 'mcq',
-      'tone-tap': 'mcq', 'reorder': 'mcq',
+      'sentence-fill': 'recognition', 'choose-char': 'recognition',
+      'tone-tap': 'recognition', 'reorder': 'recognition',
       'word-write': 'writing', 'find-correct': 'writing', 'passage-errors': 'writing',
-      'pronunciation': 'speaking', 'passage-mcq': 'mcq',
+      'pronunciation': 'speaking', 'passage-mcq': 'recognition',
     };
 
     // Human-readable label per test mode / card type, reused by the setup
@@ -322,7 +322,7 @@
     // punished for inherently taking longer than a multiple-choice tap.
     function updateRecord(rec, correct, timeMs, grade = 'good', modeGroup = null) {
       rec = { ...rec };
-      const group = modeGroup || 'mcq';
+      const group = modeGroup || 'recognition';
       rec.skills = { ...rec.skills };
       rec.attempts++;
       rec.lastTested = todayStr();
@@ -869,7 +869,7 @@
         if (!Array.isArray(mode) && isAzureConfigured()) mixModes.push('pronunciation');
         // Prefer submodes that exercise a skill this word is actually due in —
         // otherwise a word pulled into the mix because writing is due could be
-        // dealt an mcq card and leave the writing schedule untouched.
+        // dealt a recognition card and leave the writing schedule untouched.
         let ordered = shuffle(mixModes);
         if (dueGroups && dueGroups.length) {
           ordered = [...ordered.filter(m => dueGroups.includes(MODE_GROUP[m])),
@@ -2347,12 +2347,12 @@
       return `${days}d ago`;
     }
 
-    // MCQ-only average when per-mode time exists — the overall average
+    // Recognition-only average when per-mode time exists — the overall average
     // mixes 3s MCQ taps with 40s writing sessions and means little. Records
     // graded only before per-mode time was tracked fall back to the lifetime
     // average.
     function avgTimeMs(rec) {
-      const m = rec.byMode && rec.byMode.mcq;
+      const m = rec.byMode && rec.byMode.recognition;
       if (m && m.timed) return m.timeMs / m.timed;
       return rec.attempts ? rec.totalTimeMs / rec.attempts : 0;
     }
@@ -3185,7 +3185,7 @@
     function recordSpellingAnswer(q, correct) {
       if (!S.avatarId || !q.progressKey) { showToast('Select an avatar first to save progress'); return false; }
       let rec = S.progress[q.progressKey] || freshRecord();
-      rec = updateRecord(rec, correct, 0, 'good', q.type === 'writing' ? 'writing' : 'mcq');
+      rec = updateRecord(rec, correct, 0, 'good', q.type === 'writing' ? 'writing' : 'recognition');
       S.progress[q.progressKey] = rec;
       saveProgress(S.avatarId, S.progress);
       return true;
@@ -3825,8 +3825,8 @@
     // "questions" — same passages buildPassageErrors uses, just the
     // comprehension half instead of the planted-mistake half). Each question
     // is scored against a character from the passage's characters_used
-    // (cycled through), so results still feed that character's mcq
-    // schedule like every other mcq-group mode. Shares buildPassageQuestions
+    // (cycled through), so results still feed that character's recognition
+    // schedule like every other recognition-group mode. Shares buildPassageQuestions
     // with 听力理解 (passage-listening) below — same question bank, the only
     // difference is whether the passage is read as text or heard as audio.
     // ═══════════════════════════════════════════════════════════════

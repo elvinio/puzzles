@@ -28,10 +28,10 @@ the char modal, tappable modal chips, and per-lesson mastery bars.
 - [x] **听力理解 (passage listening comprehension)**: shipped as the `passage-listening` mode —
   plays a passage's whole-audio clip (`tools/gen-passage-audio.py` output, `passage_audio/`), no
   text shown; the p3-passage.json question bank reveals once the audio has played through, with
-  replay always available. Reuses passage-mcq's question-building logic. Also reworked the SKILL_GROUPS
-  split from `recognition/writing/speaking` to `listening/mcq/writing/speaking` — 听音 (single-word
-  audio recognition) now buckets under 'listening' too instead of 'recognition'/'mcq'; migrateProgress
-  renames old records in place.
+  replay always available. Reuses passage-mcq's question-building logic. Also split a new 'listening'
+  group off SKILL_GROUPS (`recognition/writing/speaking` -> `listening/recognition/writing/speaking`) —
+  听音 (single-word audio recognition) now buckets under 'listening' too instead of 'recognition';
+  migrateProgress adds the new group to old records in place.
 - [ ] **量词 (measure word) drills**: needs a small data addition (measure word per noun) —
   flag entries in chinese-p*.json first.
 - [ ] **Adaptive stroke scaffolding**: in 写词/找错字, pass `showOutline: true` to HanziWriter when
