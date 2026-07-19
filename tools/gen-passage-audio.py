@@ -38,6 +38,7 @@ Re-run anytime the passage text changes — existing files are skipped unless
 --force, so it's cheap to re-run after adding a new lesson.
 """
 import argparse
+import http.client
 import json
 import os
 import sys
@@ -116,7 +117,8 @@ class AzureTts:
                 )
                 with urllib.request.urlopen(req, timeout=30) as resp:
                     return resp.read()
-            except (urllib.error.URLError, urllib.error.HTTPError) as e:
+            except (urllib.error.URLError, urllib.error.HTTPError, http.client.HTTPException,
+                    ConnectionError, TimeoutError) as e:
                 last_err = e
                 if isinstance(e, urllib.error.HTTPError) and e.code == 401:
                     self._token = None  # force re-issue, then retry
