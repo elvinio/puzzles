@@ -202,6 +202,21 @@
       } catch { }
     }
 
+    // Playback speed for passage listening audio (e.g. 0.75x-1.25x); 1 = normal.
+    const PLAYBACK_SPEED_KEY = 'chinese-playback-speed';
+
+    function getPlaybackSpeed() {
+      const v = parseFloat(localStorage.getItem(PLAYBACK_SPEED_KEY) || '');
+      return Number.isFinite(v) && v > 0 ? v : 1;
+    }
+
+    function savePlaybackSpeed(v) {
+      try {
+        if (v && v !== 1) localStorage.setItem(PLAYBACK_SPEED_KEY, String(v));
+        else localStorage.removeItem(PLAYBACK_SPEED_KEY);
+      } catch { }
+    }
+
     // Lessons 1..N eligible for Test / All Random: the level's own lesson
     // count, narrowed by the Max Lesson setting when one is configured.
     function testRandomLessonCount(level) {
@@ -2648,6 +2663,7 @@
       document.getElementById('ss-threshold').value = cfg.threshold;
       const maxLesson = getMaxLesson();
       document.getElementById('ss-max-lesson').value = maxLesson > 0 ? maxLesson : '';
+      document.getElementById('ss-playback-speed').value = String(getPlaybackSpeed());
       document.getElementById('ss-test-status').textContent = '';
       resetConfirmStep(0);
       document.getElementById('speech-settings-modal').classList.add('open');
@@ -2710,6 +2726,7 @@
     document.getElementById('ss-save').addEventListener('click', () => {
       saveAzureConfig(readSpeechSettingsForm());
       saveMaxLesson(parseInt(document.getElementById('ss-max-lesson').value, 10) || 0);
+      savePlaybackSpeed(parseFloat(document.getElementById('ss-playback-speed').value) || 1);
       renderSetupLessonTabs();
       document.getElementById('speech-settings-modal').classList.remove('open');
       showToast('Speech settings saved');
@@ -4058,6 +4075,7 @@
     function renderPassageListening() {
       const audio = document.getElementById('pl-audio');
       audio.src = PL.audioSrc;
+      audio.playbackRate = getPlaybackSpeed();
       document.getElementById('pl-progress').textContent = '';
       document.getElementById('pl-play-btn').textContent = '▶ Play Passage';
       document.getElementById('pl-audio-hint').textContent = 'Listen carefully — the questions appear after the passage finishes.';
@@ -4068,6 +4086,7 @@
       if (!PL) return;
       const audio = document.getElementById('pl-audio');
       audio.currentTime = 0;
+      audio.playbackRate = getPlaybackSpeed();
       audio.play().catch(() => showToast('Could not play the audio'));
       document.getElementById('pl-play-btn').textContent = '🔁 Replay Audio';
     });
