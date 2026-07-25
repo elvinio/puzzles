@@ -296,7 +296,6 @@
   'use strict';
 
   var loadAvatars  = window.__avatarLoadAvatars;
-  var getActiveId  = window.__avatarGetActiveId;
   var getActive    = window.__avatarGetActive;
   var renderSVG    = window.__avatarRender;
 
@@ -464,7 +463,8 @@
       panel.querySelector('.exchange-pin').value = '';
       return;
     }
-    var activeId = getActiveId();
+    var activeAvatar = getActive();
+    var activeId = activeAvatar && activeAvatar.id;
     var newBalance = window.__avatarRedeem ? window.__avatarRedeem(activeId, reward.title, reward.cost) : null;
     if (newBalance === null) {
       errorEl.textContent = 'Insufficient balance.';
@@ -484,7 +484,8 @@
       panel.querySelector('.earn-pin').value = '';
       return;
     }
-    var activeId = getActiveId();
+    var activeAvatar = getActive();
+    var activeId = activeAvatar && activeAvatar.id;
     if (activeId && openEarnAmount && window.__avatarAddCoins) {
       window.__avatarAddCoins(activeId, openEarnAmount);
     }
