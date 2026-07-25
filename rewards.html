@@ -163,6 +163,21 @@
     .btn-exchange:active { background: var(--p-lt); }
     .btn-exchange:disabled { opacity: 0.4; pointer-events: none; }
 
+    .btn-earn-item {
+      background: var(--earn);
+      border: none;
+      border-radius: 10px;
+      color: #0b2c17;
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 8px 14px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+      flex-shrink: 0;
+    }
+    .btn-earn-item:active { background: #16a34a; }
+
     .exchange-panel {
       display: none;
       flex-direction: column;
@@ -304,9 +319,17 @@
     { id: 'movie',  icon: '🎬', title: 'Watch a movie',  cost: 60 }
   ];
 
+  var EARN_ITEMS = [
+    { id: 'brush-teeth',  icon: '🪥', title: 'Brush teeth',              amount: 1 },
+    { id: 'chinese-100',  icon: '🇨🇳', title: '100% Chinese spelling',    amount: 20 },
+    { id: 'english-100',  icon: '🇬🇧', title: '100% English spelling',    amount: 10 }
+  ];
+
   var EXCHANGE_PIN = '9112';
   var openExchangeId = null;
   var openEarnAmount = null;
+  var openEarnKey = null;
+  var openEarnLabel = null;
 
   var root = document.getElementById('rewards-root');
 
@@ -366,7 +389,20 @@
           '<button class="btn-earn" data-earn="5">+5</button>' +
           '<button class="btn-earn" data-earn="10">+10</button>' +
           '<button class="btn-earn" data-earn="20">+20</button>' +
-        '</div>' +
+        '</div>';
+
+    EARN_ITEMS.forEach(function (it) {
+      html +=
+        '<div class="reward-card">' +
+          '<div class="reward-icon">' + it.icon + '</div>' +
+          '<div class="reward-info">' +
+            '<div class="reward-title">' + escHtml(it.title) + '</div>' +
+          '</div>' +
+          '<button class="btn-earn-item" data-earn-item="' + it.id + '">+' + it.amount + '</button>' +
+        '</div>';
+    });
+
+    html +=
         '<div class="exchange-panel earn-panel" id="earn-panel">' +
           '<div class="exchange-panel-title" id="earn-panel-title"></div>' +
           '<div class="exchange-row">' +
@@ -434,10 +470,11 @@
         if (pinInput) pinInput.focus();
       }
     }
-    if (openEarnAmount) {
+    if (openEarnKey) {
       var earnPanel = document.getElementById('earn-panel');
       if (earnPanel) {
-        document.getElementById('earn-panel-title').textContent = 'Add ' + openEarnAmount + ' coins — enter PIN';
+        var earnTitle = 'Add ' + openEarnAmount + ' coins' + (openEarnLabel ? ' for ' + openEarnLabel : '') + ' — enter PIN';
+        document.getElementById('earn-panel-title').textContent = earnTitle;
         earnPanel.classList.add('visible');
         var earnPinInput = earnPanel.querySelector('.earn-pin');
         if (earnPinInput) earnPinInput.focus();
@@ -449,6 +486,8 @@
     root.querySelectorAll('.exchange-panel.visible').forEach(function (el) { el.classList.remove('visible'); });
     openExchangeId = null;
     openEarnAmount = null;
+    openEarnKey = null;
+    openEarnLabel = null;
   }
 
   function submitExchange(rewardId) {
@@ -490,6 +529,8 @@
       window.__avatarAddCoins(activeId, openEarnAmount);
     }
     openEarnAmount = null;
+    openEarnKey = null;
+    openEarnLabel = null;
     render();
   }
 
@@ -498,15 +539,38 @@
 
     if (t.classList.contains('btn-earn')) {
       var amount = parseInt(t.dataset.earn, 10);
-      var wasVisible = openEarnAmount === amount;
+      var key = 'amt:' + amount;
+      var wasVisible = openEarnKey === key;
       closeExchangePanels();
       if (!wasVisible && amount) {
+        openEarnKey = key;
         openEarnAmount = amount;
+        openEarnLabel = null;
         var panel = document.getElementById('earn-panel');
         document.getElementById('earn-panel-title').textContent = 'Add ' + amount + ' coins — enter PIN';
         panel.classList.add('visible');
         var pinInput = panel.querySelector('.earn-pin');
         if (pinInput) pinInput.focus();
+      }
+      return;
+    }
+
+    if (t.classList.contains('btn-earn-item')) {
+      var itemId = t.dataset.earnItem;
+      var item = EARN_ITEMS.filter(function (it) { return it.id === itemId; })[0];
+      if (!item) return;
+      var itemKey = 'item:' + itemId;
+      var itemWasVisible = openEarnKey === itemKey;
+      closeExchangePanels();
+      if (!itemWasVisible) {
+        openEarnKey = itemKey;
+        openEarnAmount = item.amount;
+        openEarnLabel = item.title;
+        var itemPanel = document.getElementById('earn-panel');
+        document.getElementById('earn-panel-title').textContent = 'Add ' + item.amount + ' coins for ' + item.title + ' — enter PIN';
+        itemPanel.classList.add('visible');
+        var itemPinInput = itemPanel.querySelector('.earn-pin');
+        if (itemPinInput) itemPinInput.focus();
       }
       return;
     }
