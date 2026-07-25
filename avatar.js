@@ -404,10 +404,10 @@
         // Narrow forehead, wide jawline
         face = '<path d="M50,20 Q62,20 66,35 Q70,50 78,68 Q82,84 50,90 Q18,84 22,68 Q30,50 34,35 Q38,20 50,20 Z" fill="' + sc + '"/>'; break;
       case 'elongated':
-        // Round, broad-domed crown (top y≈18) tapering to a narrower
+        // Round, broad-domed crown (top y≈16) tapering to a sharp
         // pointed chin — headroom for headwear like the arrow tattoo
         // without an overly stretched face.
-        face = '<path d="M50,90 C25,90 19,72 19,56 Q19,20 50,18 Q81,20 81,56 C81,72 75,90 50,90 Z" fill="' + sc + '"/>'; break;
+        face = '<path d="M18,54 Q18,18 50,16 Q82,18 82,54 C82,70 64,84 50,90 C36,84 18,70 18,54 Z" fill="' + sc + '"/>'; break;
       default:
         // circle — classic round ellipse
         face = '<ellipse cx="50" cy="55" rx="30" ry="28" fill="' + sc + '"/>'; break;
@@ -610,7 +610,7 @@
           // Airbender-style arrow tattoo: a plain shaft down the crown
           // tipped by a small downward arrowhead on the brow — pairs best
           // with hairStyle 'none' and faceShape 'elongated' (crown top
-          // y≈18) so the shaft stays within the head instead of jutting
+          // y≈16) so the shaft stays within the head instead of jutting
           // past it.
           hat = '<path d="M50,20 L50,30" stroke="' + tc + '" stroke-width="6" stroke-linecap="round"/>' +
                 '<polygon points="50,40 43,30 57,30" fill="' + tc + '"/>'; break;
