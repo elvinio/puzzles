@@ -95,12 +95,17 @@
     strip.innerHTML = list.map(function (a) {
       var isActive = a.id === activeId;
       var svg = window.__avatarRender ? window.__avatarRender(a, '40') : '';
-      return '<button class="pz-avatar-chip' + (isActive ? ' is-active' : '') + '" ' +
-        'data-act="switch-avatar" data-id="' + a.id + '" ' +
-        'aria-label="Switch to ' + esc(a.nickname || 'avatar') + '" ' +
-        (isActive ? 'aria-current="true"' : '') + '>' + svg + '</button>';
+      return '<div class="pz-avatar-item">' +
+        '<button class="pz-avatar-chip' + (isActive ? ' is-active' : '') + '" ' +
+          'data-act="switch-avatar" data-id="' + a.id + '" ' +
+          'aria-label="Switch to ' + esc(a.nickname || 'avatar') + '" ' +
+          (isActive ? 'aria-current="true"' : '') + '>' + svg + '</button>' +
+        '<div class="pz-avatar-coins">🪙 ' + (a.coins || 0) + '</div>' +
+      '</div>';
     }).join('') +
-      '<a class="pz-avatar-chip pz-avatar-chip-add" href="avatar.html" aria-label="Create new avatar">+</a>';
+      '<div class="pz-avatar-item">' +
+        '<a class="pz-avatar-chip pz-avatar-chip-add" href="avatar.html" aria-label="Create new avatar">+</a>' +
+      '</div>';
   }
 
   function updateHead() {
@@ -214,6 +219,12 @@
     if (/access_denied|popup|interaction/i.test(m)) return 'Sign-in was cancelled.';
     return 'Sync failed. Please try again.';
   }
+
+  // Keep the strip's coin balances current if a background sync or a redeem
+  // on another page updates them while this menu is open.
+  window.addEventListener('pz-avatar-coins-change', function () {
+    if (overlay) renderAvatarStrip();
+  });
 
   window.PZSyncUI = { openMenu: openMenu, close: close };
 })();

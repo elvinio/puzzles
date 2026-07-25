@@ -90,6 +90,7 @@
       var avatar = list.find(function (a) { return a.id === avatarId; });
       if (!avatar) return;
       avatar.coins = (avatar.coins || 0) + amount;
+      avatar.totalEarned = (avatar.totalEarned || 0) + amount;
       avatar.coinsUpdatedAt = new Date().toISOString();
       saveAvatars(list);
       try { window.dispatchEvent(new CustomEvent('pz-avatar-coins-change', { detail: { id: avatarId, coins: avatar.coins } })); } catch (e2) {}
@@ -106,11 +107,49 @@
       var bal = avatar.coins || 0;
       if (!(amount > 0) || amount > bal) return null;
       avatar.coins = bal - amount;
+      avatar.totalSpent = (avatar.totalSpent || 0) + amount;
       avatar.coinsUpdatedAt = new Date().toISOString();
       saveAvatars(list);
       try { window.dispatchEvent(new CustomEvent('pz-avatar-coins-change', { detail: { id: avatarId, coins: avatar.coins } })); } catch (e2) {}
       return avatar.coins;
     } catch (e) { return null; }
+  };
+
+  // Lifetime coin stats: { balance, earned, spent }. earned/spent accumulate
+  // forever (never decrease), independent of the current spendable balance.
+  window.__avatarGetCoinStats = function (avatarId) {
+    var list = loadAvatars();
+    var avatar = list.find(function (a) { return a.id === avatarId; });
+    if (!avatar) return { balance: 0, earned: 0, spent: 0 };
+    return { balance: avatar.coins || 0, earned: avatar.totalEarned || 0, spent: avatar.totalSpent || 0 };
+  };
+
+  // Deducts coins for a reward exchange (e.g. "watch a movie") and records it
+  // in the avatar's exchange history. Returns the new balance on success, or
+  // null if the balance was insufficient.
+  window.__avatarRedeem = function (avatarId, label, cost) {
+    try {
+      var list = loadAvatars();
+      var avatar = list.find(function (a) { return a.id === avatarId; });
+      if (!avatar) return null;
+      var bal = avatar.coins || 0;
+      if (!(cost > 0) || cost > bal) return null;
+      avatar.coins = bal - cost;
+      avatar.totalSpent = (avatar.totalSpent || 0) + cost;
+      avatar.coinsUpdatedAt = new Date().toISOString();
+      if (!avatar.exchanges) avatar.exchanges = [];
+      avatar.exchanges.unshift({ label: label, cost: cost, at: avatar.coinsUpdatedAt });
+      if (avatar.exchanges.length > 200) avatar.exchanges.length = 200;
+      saveAvatars(list);
+      try { window.dispatchEvent(new CustomEvent('pz-avatar-coins-change', { detail: { id: avatarId, coins: avatar.coins } })); } catch (e2) {}
+      return avatar.coins;
+    } catch (e) { return null; }
+  };
+
+  window.__avatarGetExchanges = function (avatarId) {
+    var list = loadAvatars();
+    var avatar = list.find(function (a) { return a.id === avatarId; });
+    return (avatar && avatar.exchanges) || [];
   };
 
   // ── Score saver ───────────────────────────────────────────────────────────
