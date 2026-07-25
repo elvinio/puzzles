@@ -142,6 +142,12 @@
       color: #f0c040;
       margin-top: 3px;
     }
+    .lifetime-stats {
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 2px;
+    }
     .avatar-card-actions {
       display: flex;
       gap: 6px;
@@ -161,8 +167,21 @@
       font-family: inherit;
     }
     .btn-coins:active { background: rgba(240,192,64,0.15); }
+    .btn-add-coins {
+      background: var(--bg);
+      border: 1.5px solid #22c55e;
+      border-radius: 8px;
+      color: #22c55e;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+    }
+    .btn-add-coins:active { background: rgba(34,197,94,0.15); }
 
-    .redeem-panel {
+    .redeem-panel, .add-panel {
       display: none;
       flex-direction: column;
       gap: 8px;
@@ -173,8 +192,38 @@
       width: 100%;
       max-width: 520px;
     }
-    .redeem-panel.visible { display: flex; }
+    .add-panel { background: rgba(34,197,94,0.08); border-color: #22c55e; }
+    .redeem-panel.visible, .add-panel.visible { display: flex; }
     .redeem-title { font-size: 0.75rem; font-weight: 700; color: #f0c040; }
+    .add-panel .redeem-title { color: #22c55e; }
+    .quick-amounts { display: flex; gap: 6px; flex-wrap: wrap; }
+    .quick-amount-btn {
+      background: var(--bg);
+      border: 1.5px solid #f0c040;
+      border-radius: 8px;
+      color: #f0c040;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+    }
+    .quick-amount-btn:active { background: rgba(240,192,64,0.15); }
+    .add-panel .quick-amount-btn { border-color: #22c55e; color: #22c55e; }
+    .add-panel .quick-amount-btn:active { background: rgba(34,197,94,0.15); }
+    .btn-add-submit {
+      background: #22c55e;
+      border: none;
+      border-radius: 8px;
+      color: #0b2c17;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 7px 12px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+    }
     .redeem-row { display: flex; gap: 6px; flex-wrap: wrap; }
     .redeem-row input {
       flex: 1;
@@ -192,6 +241,7 @@
       touch-action: auto;
     }
     .redeem-row input:focus { border-color: #f0c040; }
+    .add-panel .redeem-row input:focus { border-color: #22c55e; }
     .btn-redeem-submit {
       background: #f0c040;
       border: none;
@@ -795,11 +845,13 @@
         '<div class="avatar-card-info">' +
           '<div class="avatar-card-name">' + escHtml(avatar.nickname) + '</div>' +
           '<div class="coin-pill">🪙 ' + (avatar.coins || 0) + '</div>' +
+          '<div class="lifetime-stats">Lifetime: +' + (avatar.totalEarned || 0) + ' earned · -' + (avatar.totalSpent || 0) + ' spent</div>' +
           (isActive ? '<div class="active-pill">ACTIVE</div>' : '') +
         '</div>' +
         '<div class="avatar-card-actions">' +
           (!isActive ? '<button class="btn-select" data-id="' + avatar.id + '">Select</button>' :
                        '<button class="btn-select is-active" disabled>Active</button>') +
+          '<button class="btn-add-coins" data-id="' + avatar.id + '" title="Add coins">➕</button>' +
           '<button class="btn-coins" data-id="' + avatar.id + '" title="Deduct coins">🪙</button>' +
           '<button class="btn-edit" data-id="' + avatar.id + '">Edit</button>' +
           (list.length > 1 ? '<button class="btn-delete" data-id="' + avatar.id + '" title="Delete">🗑</button>' : '') +
@@ -813,11 +865,37 @@
         '<button class="btn-cancel-delete" data-id="' + avatar.id + '">Cancel</button>' +
         '<button class="btn-confirm-delete" data-id="' + avatar.id + '">Delete</button>';
 
+      var addRow = document.createElement('div');
+      addRow.className = 'add-panel';
+      addRow.id = 'addcoins-' + avatar.id;
+      addRow.innerHTML =
+        '<div class="redeem-title">Add coins to ' + escHtml(avatar.nickname) + ' (balance: ' + (avatar.coins || 0) + ')</div>' +
+        '<div class="quick-amounts">' +
+          '<button class="quick-amount-btn" data-id="' + avatar.id + '" data-panel="add" data-amount="1">+1</button>' +
+          '<button class="quick-amount-btn" data-id="' + avatar.id + '" data-panel="add" data-amount="5">+5</button>' +
+          '<button class="quick-amount-btn" data-id="' + avatar.id + '" data-panel="add" data-amount="10">+10</button>' +
+          '<button class="quick-amount-btn" data-id="' + avatar.id + '" data-panel="add" data-amount="20">+20</button>' +
+        '</div>' +
+        '<div class="redeem-row">' +
+          '<input type="number" inputmode="numeric" min="1" step="1" class="add-amount" placeholder="Amount" data-id="' + avatar.id + '">' +
+        '</div>' +
+        '<div class="redeem-row">' +
+          '<button class="btn-add-submit" data-id="' + avatar.id + '">Add</button>' +
+          '<button class="btn-redeem-cancel" data-id="' + avatar.id + '" data-panel="add">Cancel</button>' +
+        '</div>' +
+        '<div class="redeem-error" id="add-error-' + avatar.id + '"></div>';
+
       var redeemRow = document.createElement('div');
       redeemRow.className = 'redeem-panel';
       redeemRow.id = 'redeem-' + avatar.id;
       redeemRow.innerHTML =
         '<div class="redeem-title">Deduct coins from ' + escHtml(avatar.nickname) + ' (balance: ' + (avatar.coins || 0) + ')</div>' +
+        '<div class="quick-amounts">' +
+          '<button class="quick-amount-btn" data-id="' + avatar.id + '" data-panel="redeem" data-amount="1">-1</button>' +
+          '<button class="quick-amount-btn" data-id="' + avatar.id + '" data-panel="redeem" data-amount="5">-5</button>' +
+          '<button class="quick-amount-btn" data-id="' + avatar.id + '" data-panel="redeem" data-amount="10">-10</button>' +
+          '<button class="quick-amount-btn" data-id="' + avatar.id + '" data-panel="redeem" data-amount="20">-20</button>' +
+        '</div>' +
         '<div class="redeem-row">' +
           '<input type="number" inputmode="numeric" min="1" step="1" class="redeem-amount" placeholder="Amount" data-id="' + avatar.id + '">' +
           '<input type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" class="redeem-pin" placeholder="PIN" data-id="' + avatar.id + '">' +
@@ -830,6 +908,7 @@
 
       container.appendChild(card);
       container.appendChild(confirmRow);
+      container.appendChild(addRow);
       container.appendChild(redeemRow);
     });
 
@@ -844,38 +923,62 @@
       } else if (t.classList.contains('btn-edit')) {
         showEditorView(id);
       } else if (t.classList.contains('btn-delete')) {
-        container.querySelectorAll('.delete-confirm.visible').forEach(function(el){ el.classList.remove('visible'); });
-        container.querySelectorAll('.redeem-panel.visible').forEach(function(el){ el.classList.remove('visible'); });
+        closeAllPanels();
         document.getElementById('confirm-' + id).classList.add('visible');
       } else if (t.classList.contains('btn-cancel-delete')) {
         document.getElementById('confirm-' + id).classList.remove('visible');
       } else if (t.classList.contains('btn-confirm-delete')) {
         deleteAvatar(id);
       } else if (t.classList.contains('btn-coins')) {
-        container.querySelectorAll('.delete-confirm.visible').forEach(function(el){ el.classList.remove('visible'); });
         var panel = document.getElementById('redeem-' + id);
         var wasVisible = panel.classList.contains('visible');
-        container.querySelectorAll('.redeem-panel.visible').forEach(function(el){ el.classList.remove('visible'); });
+        closeAllPanels();
         if (!wasVisible) {
           panel.classList.add('visible');
           var amountInput = panel.querySelector('.redeem-amount');
           if (amountInput) amountInput.focus();
         }
+      } else if (t.classList.contains('btn-add-coins')) {
+        var addPanel = document.getElementById('addcoins-' + id);
+        var addWasVisible = addPanel.classList.contains('visible');
+        closeAllPanels();
+        if (!addWasVisible) {
+          addPanel.classList.add('visible');
+          var addAmountInput = addPanel.querySelector('.add-amount');
+          if (addAmountInput) addAmountInput.focus();
+        }
+      } else if (t.classList.contains('quick-amount-btn')) {
+        var field = t.dataset.panel === 'add' ?
+          document.querySelector('#addcoins-' + id + ' .add-amount') :
+          document.querySelector('#redeem-' + id + ' .redeem-amount');
+        if (field) field.value = t.dataset.amount;
       } else if (t.classList.contains('btn-redeem-cancel')) {
-        closeRedeemPanel(id);
+        if (t.dataset.panel === 'add') closeAddPanel(id); else closeRedeemPanel(id);
       } else if (t.classList.contains('btn-redeem-submit')) {
         submitRedeem(id);
+      } else if (t.classList.contains('btn-add-submit')) {
+        submitAdd(id);
       }
     });
 
     container.addEventListener('keydown', function(e) {
       if (e.key !== 'Enter') return;
       var id = e.target.dataset.id;
-      if (id && (e.target.classList.contains('redeem-amount') || e.target.classList.contains('redeem-pin'))) {
+      if (!id) return;
+      if (e.target.classList.contains('redeem-amount') || e.target.classList.contains('redeem-pin')) {
         e.preventDefault();
         submitRedeem(id);
+      } else if (e.target.classList.contains('add-amount')) {
+        e.preventDefault();
+        submitAdd(id);
       }
     });
+  }
+
+  function closeAllPanels() {
+    document.querySelectorAll('.delete-confirm.visible').forEach(function(el){ el.classList.remove('visible'); });
+    document.querySelectorAll('.redeem-panel.visible').forEach(function(el){ el.classList.remove('visible'); });
+    document.querySelectorAll('.add-panel.visible').forEach(function(el){ el.classList.remove('visible'); });
   }
 
   function closeRedeemPanel(id) {
@@ -885,6 +988,14 @@
     panel.querySelector('.redeem-amount').value = '';
     panel.querySelector('.redeem-pin').value = '';
     document.getElementById('redeem-error-' + id).textContent = '';
+  }
+
+  function closeAddPanel(id) {
+    var panel = document.getElementById('addcoins-' + id);
+    if (!panel) return;
+    panel.classList.remove('visible');
+    panel.querySelector('.add-amount').value = '';
+    document.getElementById('add-error-' + id).textContent = '';
   }
 
   var REDEEM_PIN = '9112';
@@ -910,6 +1021,21 @@
       return;
     }
     closeRedeemPanel(id);
+    renderListView();
+  }
+
+  function submitAdd(id) {
+    var panel = document.getElementById('addcoins-' + id);
+    var errorEl = document.getElementById('add-error-' + id);
+    var amount = parseInt(panel.querySelector('.add-amount').value, 10);
+
+    if (!amount || amount <= 0) {
+      errorEl.textContent = 'Enter a valid coin amount.';
+      return;
+    }
+    if (!window.__avatarAddCoins) return;
+    window.__avatarAddCoins(id, amount);
+    closeAddPanel(id);
     renderListView();
   }
 
