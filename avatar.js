@@ -1,9 +1,27 @@
 (function () {
   'use strict';
 
+  // Resolve avatar.html relative to wherever this script itself was loaded
+  // from (e.g. "../avatar.js" for pages under chinese/), so badge/menu links
+  // work regardless of how deep the current page is nested.
+  var AVATAR_HTML_URL = (function () {
+    try {
+      var scripts = document.getElementsByTagName('script');
+      for (var i = 0; i < scripts.length; i++) {
+        var src = scripts[i].getAttribute('src');
+        if (src && /(^|\/)avatar\.js(\?.*)?$/.test(src)) {
+          return src.replace(/avatar\.js(\?.*)?$/, 'avatar.html');
+        }
+      }
+    } catch (e) {}
+    return 'avatar.html';
+  })();
+  window.__avatarHtmlUrl = AVATAR_HTML_URL;
+
   var DEFAULTS = {
     nickname: 'Player',
     bgColor: '#6d28d9',
+    bgScene: 'none',
     faceShape: 'circle',
     skinColor: '#f5cba7',
     eyeStyle: 'round',
@@ -171,10 +189,101 @@
     } catch (e) {}
   };
 
+  // ── Background scenes ─────────────────────────────────────────────────────
+  // Small decorative icons scattered in a ring around the edge of the canvas,
+  // drawn right after the background fill — so the hair/face (the "head")
+  // always sit in front of them, per layer order below.
+
+  function iconNote(cx, cy, rot, scale, color) {
+    return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + rot + ') scale(' + scale + ')">' +
+      '<text x="0" y="4" text-anchor="middle" font-size="13" fill="' + color + '">♪</text></g>';
+  }
+  function iconSword(cx, cy, rot, scale, color) {
+    return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + rot + ') scale(' + scale + ')">' +
+      '<rect x="-1.2" y="-10" width="2.4" height="14" fill="' + color + '"/>' +
+      '<rect x="-4.5" y="3" width="9" height="2" fill="' + color + '"/>' +
+      '<rect x="-1" y="5" width="2" height="4.5" fill="' + color + '"/></g>';
+  }
+  function iconTree(cx, cy, rot, scale, color) {
+    return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + rot + ') scale(' + scale + ')">' +
+      '<polygon points="0,-14 -7,-3 7,-3" fill="' + color + '"/>' +
+      '<polygon points="0,-8 -6,2 6,2" fill="' + color + '"/>' +
+      '<rect x="-1.5" y="2" width="3" height="5" fill="#6b4423"/></g>';
+  }
+  function iconMountain(cx, cy, rot, scale, color) {
+    return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + rot + ') scale(' + scale + ')">' +
+      '<polygon points="0,-13 -13,9 13,9" fill="' + color + '"/>' +
+      '<polygon points="0,-13 -5,-3 5,-3" fill="white" opacity="0.85"/></g>';
+  }
+  function iconFlower(cx, cy, rot, scale, color) {
+    return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + rot + ') scale(' + scale + ')">' +
+      '<circle cx="0" cy="-5" r="3.4" fill="' + color + '"/>' +
+      '<circle cx="4.8" cy="-1.5" r="3.4" fill="' + color + '"/>' +
+      '<circle cx="3" cy="4" r="3.4" fill="' + color + '"/>' +
+      '<circle cx="-3" cy="4" r="3.4" fill="' + color + '"/>' +
+      '<circle cx="-4.8" cy="-1.5" r="3.4" fill="' + color + '"/>' +
+      '<circle cx="0" cy="0" r="2.4" fill="#f0c040"/></g>';
+  }
+  function iconDiamond(cx, cy, rot, scale, color) {
+    return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + rot + ') scale(' + scale + ')">' +
+      '<polygon points="0,-9 6,-2 0,9 -6,-2" fill="' + color + '"/>' +
+      '<polygon points="0,-9 6,-2 -6,-2" fill="white" opacity="0.35"/></g>';
+  }
+  function iconCoin(cx, cy, rot, scale, color) {
+    return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + rot + ') scale(' + scale + ')">' +
+      '<circle cx="0" cy="0" r="7" fill="' + color + '" stroke="#a67c00" stroke-width="1"/>' +
+      '<circle cx="0" cy="0" r="4" fill="none" stroke="#a67c00" stroke-width="1"/></g>';
+  }
+  function iconCat(cx, cy, rot, scale, color) {
+    return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + rot + ') scale(' + scale + ')">' +
+      '<circle cx="0" cy="1" r="7" fill="' + color + '"/>' +
+      '<polygon points="-7,-3 -9,-11 -2,-5" fill="' + color + '"/>' +
+      '<polygon points="7,-3 9,-11 2,-5" fill="' + color + '"/></g>';
+  }
+  function iconPuppy(cx, cy, rot, scale, color) {
+    return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + rot + ') scale(' + scale + ')">' +
+      '<circle cx="0" cy="0" r="7" fill="' + color + '"/>' +
+      '<ellipse cx="-8" cy="2" rx="3.6" ry="6" fill="' + color + '"/>' +
+      '<ellipse cx="8" cy="2" rx="3.6" ry="6" fill="' + color + '"/></g>';
+  }
+
+  var SCENE_ICON = {
+    notes: iconNote, swords: iconSword, trees: iconTree, mountain: iconMountain,
+    flowers: iconFlower, diamonds: iconDiamond, coins: iconCoin, cats: iconCat, puppies: iconPuppy
+  };
+  var SCENE_COLOR = {
+    notes: '#f8fafc', swords: '#cbd5e1', trees: '#15803d', mountain: '#94a3b8',
+    flowers: '#f472b6', diamonds: '#67e8f9', coins: '#f0c040', cats: '#1a1a2e', puppies: '#8b5e3c'
+  };
+  // Icons with a fixed "up" (trees, mountains, animal faces) stay upright —
+  // only decorative/symmetric icons follow the ring's per-slot rotation.
+  var SCENE_ALLOW_ROTATE = { notes: true, swords: true, diamonds: true };
+  // A ring of positions/rotations around the canvas edge — the centre is left
+  // clear since the head sits there and would cover it anyway.
+  var SCENE_RING = [
+    { x: 14, y: 16, r: -20 }, { x: 50, y: 7, r: 0 }, { x: 86, y: 16, r: 20 },
+    { x: 93, y: 50, r: 90 }, { x: 86, y: 85, r: 160 }, { x: 50, y: 95, r: 180 },
+    { x: 14, y: 85, r: -160 }, { x: 7, y: 50, r: -90 }
+  ];
+
+  function renderBgScene(scene) {
+    var icon = SCENE_ICON[scene];
+    if (!icon) return '';
+    var color = SCENE_COLOR[scene] || '#ffffff';
+    var allowRotate = !!SCENE_ALLOW_ROTATE[scene];
+    var out = '';
+    for (var i = 0; i < SCENE_RING.length; i++) {
+      var p = SCENE_RING[i];
+      var scale = (i % 2 === 0) ? 0.95 : 1.2;
+      out += icon(p.x, p.y, allowRotate ? p.r : 0, scale, color);
+    }
+    return '<g opacity="0.55">' + out + '</g>';
+  }
+
   // ── SVG render ────────────────────────────────────────────────────────────
   // viewBox="0 0 100 100"
   // Face centre: (50, 55). Hair dome sides land at y≈52, inner fill y≈39.
-  // Layer order: bg → hairBack → face → hairFront → brows → eyes → nose → mouth → dimples → glasses → hat
+  // Layer order: bg → bgScene → hairBack → face → hairFront → brows → eyes → nose → mouth → dimples → glasses → hat
 
   function renderAvatarSVG(state, size) {
     var s = Object.assign({}, DEFAULTS, state);
@@ -182,6 +291,7 @@
 
     // ── Background ────────────────────────────────────────────────────────
     var bg = '<rect width="100" height="100" fill="' + s.bgColor + '" rx="16"/>';
+    var bgScene = renderBgScene(s.bgScene);
 
     // ── Hair (back layer, drawn before face) ──────────────────────────────
     // Inner arc baseline sits at y≈39; sides meet face at y≈52.
@@ -284,6 +394,15 @@
       case 'square':
         // Boxy / angular — small corner radius
         face = '<rect x="20" y="27" width="60" height="56" rx="6" fill="' + sc + '"/>'; break;
+      case 'heart':
+        // Wide, lobed forehead tapering to a narrow pointed chin
+        face = '<path d="M50,92 C20,80 14,55 18,38 Q20,24 32,20 Q42,17 50,26 Q58,17 68,20 Q80,24 82,38 C86,55 80,80 50,92 Z" fill="' + sc + '"/>'; break;
+      case 'diamond':
+        // Narrow forehead and chin, widest at the cheekbones
+        face = '<path d="M50,15 Q66,28 78,55 Q66,82 50,95 Q34,82 22,55 Q34,28 50,15 Z" fill="' + sc + '"/>'; break;
+      case 'pear':
+        // Narrow forehead, wide jawline
+        face = '<path d="M50,20 Q62,20 66,35 Q70,50 78,68 Q82,84 50,90 Q18,84 22,68 Q30,50 34,35 Q38,20 50,20 Z" fill="' + sc + '"/>'; break;
       default:
         // circle — classic round ellipse
         face = '<ellipse cx="50" cy="55" rx="30" ry="28" fill="' + sc + '"/>'; break;
@@ -482,11 +601,19 @@
           hat = '<path d="M18,32 Q18,6 50,6 Q82,6 82,32 Q66,18 50,18 Q34,18 18,32 Z" fill="' + tc + '"/>' +
                 '<path d="M50,18 L43,32 L57,32 Z" fill="' + tc + '" opacity="0.7"/>' +
                 '<path d="M78,26 L94,36 L89,20 Z" fill="' + tc + '"/>'; break;
+        case 'arrow':
+          // Airbender-style arrow tattoo: a shaft down the crown that forks
+          // toward the temples, tipped by a downward arrowhead on the brow —
+          // pairs best with hairStyle 'none' for the classic bald look.
+          hat = '<path d="M50,10 L50,36" stroke="' + tc + '" stroke-width="5" stroke-linecap="round"/>' +
+                '<path d="M50,16 L26,34" stroke="' + tc + '" stroke-width="5" stroke-linecap="round"/>' +
+                '<path d="M50,16 L74,34" stroke="' + tc + '" stroke-width="5" stroke-linecap="round"/>' +
+                '<polygon points="50,44 41,32 59,32" fill="' + tc + '"/>'; break;
       }
     }
 
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="' + sz + '" height="' + sz + '">' +
-      bg + hairBack + face + hairFront + brows + eyes + nose + mouth + dimples + glasses + hat + '</svg>';
+      bg + bgScene + hairBack + face + hairFront + brows + eyes + nose + mouth + dimples + glasses + hat + '</svg>';
   }
 
   window.__avatarRender = renderAvatarSVG;
@@ -565,7 +692,7 @@
         if (window.PZSyncUI && typeof window.PZSyncUI.openMenu === 'function') {
           window.PZSyncUI.openMenu();
         } else {
-          window.location.href = 'avatar.html';
+          window.location.href = AVATAR_HTML_URL;
         }
       });
 
