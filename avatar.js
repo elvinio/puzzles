@@ -609,12 +609,12 @@
                 '<path d="M78,26 L94,36 L89,20 Z" fill="' + tc + '"/>'; break;
         case 'arrow':
           // Airbender-style arrow tattoo: a plain shaft down the crown
-          // tipped by a small downward arrowhead on the brow — pairs best
-          // with hairStyle 'none' and faceShape 'elongated' (crown top
-          // y≈16) so the shaft stays within the head instead of jutting
-          // past it.
+          // tipped by a downward arrowhead on the brow — pairs best with
+          // hairStyle 'none' and faceShape 'elongated' (crown top y≈16)
+          // so the shaft stays within the head instead of jutting past
+          // it.
           hat = '<path d="M50,20 L50,30" stroke="' + tc + '" stroke-width="6" stroke-linecap="round"/>' +
-                '<polygon points="50,40 43,30 57,30" fill="' + tc + '"/>'; break;
+                '<polygon points="50,45 39,30 61,30" fill="' + tc + '"/>'; break;
       }
     }
 
