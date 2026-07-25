@@ -403,6 +403,12 @@
       case 'pear':
         // Narrow forehead, wide jawline
         face = '<path d="M50,20 Q62,20 66,35 Q70,50 78,68 Q82,84 50,90 Q18,84 22,68 Q30,50 34,35 Q38,20 50,20 Z" fill="' + sc + '"/>'; break;
+      case 'elongated':
+        // Round, broad-domed crown (top y≈16) tapering to a softly
+        // rounded chin (narrower than the jaw, but not a sharp point) —
+        // headroom for headwear like the arrow tattoo without an overly
+        // stretched face.
+        face = '<path d="M18,54 Q18,18 50,16 Q82,18 82,54 C82,66 74,78 64,84 Q50,90 36,84 C26,78 18,66 18,54 Z" fill="' + sc + '"/>'; break;
       default:
         // circle — classic round ellipse
         face = '<ellipse cx="50" cy="55" rx="30" ry="28" fill="' + sc + '"/>'; break;
@@ -602,13 +608,13 @@
                 '<path d="M50,18 L43,32 L57,32 Z" fill="' + tc + '" opacity="0.7"/>' +
                 '<path d="M78,26 L94,36 L89,20 Z" fill="' + tc + '"/>'; break;
         case 'arrow':
-          // Airbender-style arrow tattoo: a shaft down the crown that forks
-          // toward the temples, tipped by a downward arrowhead on the brow —
-          // pairs best with hairStyle 'none' for the classic bald look.
-          hat = '<path d="M50,10 L50,36" stroke="' + tc + '" stroke-width="5" stroke-linecap="round"/>' +
-                '<path d="M50,16 L26,34" stroke="' + tc + '" stroke-width="5" stroke-linecap="round"/>' +
-                '<path d="M50,16 L74,34" stroke="' + tc + '" stroke-width="5" stroke-linecap="round"/>' +
-                '<polygon points="50,44 41,32 59,32" fill="' + tc + '"/>'; break;
+          // Airbender-style arrow tattoo: a plain shaft down the crown
+          // tipped by a downward arrowhead on the brow — pairs best with
+          // hairStyle 'none' and faceShape 'elongated' (crown top y≈16)
+          // so the shaft stays within the head instead of jutting past
+          // it.
+          hat = '<path d="M50,20 L50,30" stroke="' + tc + '" stroke-width="6" stroke-linecap="round"/>' +
+                '<polygon points="50,45 39,30 61,30" fill="' + tc + '"/>'; break;
       }
     }
 
