@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Behavioral Interview Prep</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg, #13111c);
+      color: var(--p-text, #e2d9f3);
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 24px;
+      gap: 20px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    a.back {
+      display: inline-block;
+      color: var(--muted, #7c6fa0);
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+    a.back:hover { color: var(--p-xl, #a78bfa); }
+
+    h1 {
+      font-size: clamp(1.4rem, 5vw, 1.9rem);
+      font-weight: 900;
+      color: var(--p-xl, #a78bfa);
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      color: var(--muted, #7c6fa0);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    .qa-card {
+      background: var(--surface, #1c1730);
+      border: 1px solid var(--brd, #4c1d95);
+      border-radius: 16px;
+      padding: 20px 22px;
+    }
+
+    .q-number {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #0c2a30;
+      background: #67e8f9;
+      border-radius: 999px;
+      padding: 3px 10px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--p-text, #e2d9f3);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .note {
+      font-size: 0.8rem;
+      color: var(--muted, #7c6fa0);
+      background: rgba(124, 58, 237, .12);
+      border: 1px solid var(--brd, #4c1d95);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .step {
+      margin-bottom: 16px;
+    }
+
+    .step-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--p-xl, #a78bfa);
+      margin-bottom: 6px;
+    }
+
+    .step p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--p-text, #e2d9f3);
+    }
+
+    .step ul {
+      margin: 6px 0 0 20px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .fill {
+      color: #f0c040;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="index.html">&larr; Back</a>
+
+    <h1>Behavioral Interview Prep</h1>
+    <div class="subtitle">Answers drafted in STAR format (Situation, Task, Action, Result)</div>
+
+    <div class="qa-card">
+      <div class="q-number">Question 18</div>
+      <h2>Tell me about a time you worked effectively across a large timezone gap.</h2>
+
+      <div class="note">
+        This is a template answer with placeholder specifics in <span class="fill">italic yellow</span> —
+        swap those for your own team, project, and numbers before using it in an interview.
+      </div>
+
+      <div class="step">
+        <div class="step-label">Situation</div>
+        <p>
+          I was working on <span class="fill">[project/initiative]</span> with teammates split between
+          <span class="fill">[your region, e.g. Singapore]</span> and <span class="fill">[counterpart region, e.g. the US West Coast]</span>,
+          a gap of roughly <span class="fill">[N]</span> hours with almost no working-hours overlap.
+          Decisions and reviews kept stalling because everything defaulted to "let's discuss it live,"
+          which meant a one-line question could cost a full day's turnaround.
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Task</div>
+        <p>
+          I needed to keep <span class="fill">[project]</span> moving on schedule without relying on both
+          sides being awake at the same time, and without burning out either team with off-hours meetings.
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Action</div>
+        <ul>
+          <li>Made written updates the default: every handoff included context (what, why, current blockers, and the specific decision or input needed) so the other side could act without waiting for a live conversation.</li>
+          <li>Kept a single shared doc (<span class="fill">[e.g. Notion/Confluence page]</span>) as the source of truth for decisions and open questions, instead of letting context live in chat threads or people's heads.</li>
+          <li>Recorded short async video walkthroughs (<span class="fill">[e.g. Loom]</span>) for anything visual — demos, design reviews — instead of scheduling a call.</li>
+          <li>Negotiated one narrow "golden hours" window per week for the few things that genuinely needed real-time discussion, and rotated who took the inconvenient time slot so the cost wasn't always on one region.</li>
+          <li>Set clear async SLAs (e.g. same-day response within each team's working hours) so people knew what to expect instead of chasing replies.</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Result</div>
+        <p>
+          <span class="fill">[Project]</span> shipped <span class="fill">[on time / ahead of schedule]</span>,
+          and average time-to-unblock on cross-region questions dropped from <span class="fill">[e.g. 1 day]</span>
+          to <span class="fill">[e.g. a few hours]</span>. The async-first habits we set up were adopted by
+          <span class="fill">[other teams/the wider org]</span>, and teammates on both sides reported feeling
+          more included since decisions no longer defaulted to whoever was awake first.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
