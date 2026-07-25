@@ -219,59 +219,63 @@
       <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
     </div>
 
-    <div class="question-wrap" id="question-wrap">
-      <div class="question-type-label" id="question-type-label"></div>
-      <div class="question-text" id="question-text"></div>
-    </div>
-
-    <div class="options-grid" id="options-grid"></div>
-
-    <div class="fc-sentence-wrap" id="fc-sentence-wrap" style="display:none"></div>
-    <div class="fc-feedback" id="fc-feedback" style="display:none"></div>
-    <div class="fc-write-panel" id="fc-write-panel">
-      <div class="fc-hint" id="fc-hint">💡 Tap for hint</div>
-      <div class="fc-writer-target" id="fc-writer-target"></div>
-      <div class="btn-row" id="fc-reveal-row" style="display:none">
-        <button class="btn btn-outline btn-sm" id="fc-reveal-btn">Show Answer</button>
+    <div class="game-content" id="game-content">
+      <div class="question-wrap" id="question-wrap">
+        <div class="question-type-label" id="question-type-label"></div>
+        <div class="question-text" id="question-text"></div>
       </div>
-      <div class="btn-row" id="fc-self-check-row" style="display:none">
-        <button class="btn btn-sm" id="fc-self-correct">✓ Got it right</button>
-        <button class="btn btn-outline btn-sm" id="fc-self-wrong">✗ Got it wrong</button>
-      </div>
-    </div>
 
-    <div class="ro-panel" id="ro-panel" style="display:none">
-      <div class="ro-row ro-answer" id="ro-answer"></div>
-      <div class="ro-row" id="ro-bank"></div>
-      <div class="fc-feedback" id="ro-feedback"></div>
-      <div class="btn-row" id="ro-clear-row">
-        <button class="btn btn-outline btn-sm" id="ro-clear-btn">↺ Clear</button>
-      </div>
-    </div>
+      <div class="options-grid" id="options-grid"></div>
 
-    <div class="pr-panel" id="pr-panel" style="display:none">
-      <div class="pr-score-wrap" id="pr-score-wrap" style="display:none">
-        <div style="display:flex;align-items:baseline;gap:10px">
-          <div class="pr-score-num" id="pr-score-num"></div>
-          <div class="pr-score-stars" id="pr-score-stars"></div>
+      <div class="fc-sentence-wrap" id="fc-sentence-wrap" style="display:none"></div>
+      <div class="fc-feedback" id="fc-feedback" style="display:none"></div>
+      <div class="fc-write-panel" id="fc-write-panel">
+        <div class="fc-write-row">
+          <div class="fc-writer-target" id="fc-writer-target"></div>
+          <div class="fc-hint" id="fc-hint">💡 Tap for hint</div>
         </div>
-        <div class="pr-score-best" id="pr-score-best"></div>
+        <div class="btn-row" id="fc-reveal-row" style="display:none">
+          <button class="btn btn-outline btn-sm" id="fc-reveal-btn">Show Answer</button>
+        </div>
+        <div class="btn-row" id="fc-self-check-row" style="display:none">
+          <button class="btn btn-sm" id="fc-self-correct">✓ Got it right</button>
+          <button class="btn btn-outline btn-sm" id="fc-self-wrong">✗ Got it wrong</button>
+        </div>
       </div>
-      <div class="pr-syllables" id="pr-syllables"></div>
-      <div class="pr-status" id="pr-status"></div>
-      <button class="pr-mic-btn" id="pr-mic-btn">🎤</button>
-      <div class="btn-row" id="pr-action-row">
-        <button class="btn" id="pr-next-btn" style="display:none">Next →</button>
-        <button class="btn btn-outline btn-sm" id="pr-skip-btn">Skip</button>
-      </div>
-      <div class="pr-unconfigured" id="pr-unconfigured" style="display:none">
-        <div style="font-size:2rem">🔑</div>
-        <div>Speaking practice needs a one-time setup.<br>Ask a parent to add the speech proxy details.</div>
-        <button class="btn btn-sm" id="pr-open-settings">⚙ Set up</button>
-      </div>
-    </div>
 
-    <div class="answer-feedback" id="answer-feedback" style="display:none"></div>
+      <div class="ro-panel" id="ro-panel" style="display:none">
+        <div class="ro-row ro-answer" id="ro-answer"></div>
+        <div class="ro-row" id="ro-bank"></div>
+        <div class="fc-feedback" id="ro-feedback"></div>
+        <div class="btn-row" id="ro-clear-row">
+          <button class="btn btn-outline btn-sm" id="ro-clear-btn">↺ Clear</button>
+        </div>
+      </div>
+
+      <div class="pr-panel" id="pr-panel" style="display:none">
+        <div class="pr-score-wrap" id="pr-score-wrap" style="display:none">
+          <div style="display:flex;align-items:baseline;gap:10px">
+            <div class="pr-score-num" id="pr-score-num"></div>
+            <div class="pr-score-stars" id="pr-score-stars"></div>
+          </div>
+          <div class="pr-score-best" id="pr-score-best"></div>
+        </div>
+        <div class="pr-syllables" id="pr-syllables"></div>
+        <div class="pr-status" id="pr-status"></div>
+        <button class="pr-mic-btn" id="pr-mic-btn">🎤</button>
+        <div class="btn-row" id="pr-action-row">
+          <button class="btn" id="pr-next-btn" style="display:none">Next →</button>
+          <button class="btn btn-outline btn-sm" id="pr-skip-btn">Skip</button>
+        </div>
+        <div class="pr-unconfigured" id="pr-unconfigured" style="display:none">
+          <div style="font-size:2rem">🔑</div>
+          <div>Speaking practice needs a one-time setup.<br>Ask a parent to add the speech proxy details.</div>
+          <button class="btn btn-sm" id="pr-open-settings">⚙ Set up</button>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="answer-feedback" style="display:none"></div>
+    </div>
 
     <div class="btn-row" id="continue-row" style="display:none">
       <button class="btn" id="continue-btn">Continue →</button>
@@ -447,8 +451,10 @@
       <div class="pe-right">
         <div class="fc-write-panel pe-write-panel-open" id="pe-write-panel">
           <div class="fc-feedback" id="pe-feedback"></div>
-          <div class="fc-hint" id="pe-hint">💡 Tap for hint</div>
-          <div class="fc-writer-target" id="pe-writer-target"></div>
+          <div class="fc-write-row">
+            <div class="fc-writer-target" id="pe-writer-target"></div>
+            <div class="fc-hint" id="pe-hint">💡 Tap for hint</div>
+          </div>
           <div class="btn-row" id="pe-reveal-row" style="display:none">
             <button class="btn btn-outline btn-sm" id="pe-reveal-btn">Show Answer</button>
           </div>

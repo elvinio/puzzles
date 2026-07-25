@@ -1494,6 +1494,21 @@
       }
     }
 
+    // Advances to the next card after a pause, unless the student clicks
+    // Continue first — the continue-btn handler bumps S.renderToken, which
+    // invalidates this callback (same staleness pattern as the think-beat
+    // timeout above).
+    function autoAdvance(delay) {
+      const token = S.renderToken;
+      setTimeout(() => {
+        if (token !== S.renderToken) return;
+        S.cardIndex++;
+        const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
+        if (done) { stopTimer(); showSummary(); }
+        else renderCard();
+      }, delay);
+    }
+
     function handleAnswer(chosen, card) {
       const timeMs = Date.now() - S.cardStart;
       const correct = chosen === card.answer;
@@ -1503,31 +1518,24 @@
         if (btn.textContent === card.answer) btn.classList.add(correct ? 'flash-correct' : 'flash-reveal');
         else if (btn.textContent === chosen && !correct) btn.classList.add('flash-wrong');
         btn.disabled = true;
+        btn.blur(); // drop the focus ring immediately — the next question's buttons are new elements
       });
 
       const grade = timeMs < 5000 ? 'easy' : timeMs < 10000 ? 'good' : 'hard';
       registerResult(card, correct, timeMs, grade);
 
-      if (correct && card.type === 'sentence-fill') {
-        // 句子填空 doesn't auto-advance: pause on a Continue button so the
-        // tested character (tappable into the full character card) stays
-        // on screen instead of flashing past.
-        showAnswerFeedback(card.word);
-        document.getElementById('continue-row').style.display = 'flex';
-      } else if (correct) {
+      if (correct && card.type !== 'sentence-fill') {
         // Reinforce a correct answer with the sound of what was tested
         // (wrong answers already get audio via showAnswerFeedback).
         if (card.speakAfter) azureSpeak(card.speakAfter.hanzi, card.speakAfter.pinyin);
-        setTimeout(() => {
-          S.cardIndex++;
-          const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
-          if (done) { stopTimer(); showSummary(); }
-          else renderCard();
-        }, 1500);
+        autoAdvance(1500);
       } else {
+        // 句子填空 (and every wrong answer) doesn't auto-advance: pause on a
+        // Continue button so the tested character (tappable into the full
+        // character card) stays on screen instead of flashing past.
         showAnswerFeedback(card.word);
-        document.getElementById('continue-row').style.display = 'flex';
       }
+      document.getElementById('continue-row').style.display = 'flex';
     }
 
     // Turn a correct 句子填空 answer or a wrong answer (any mode) into a
@@ -1744,12 +1752,8 @@
       registerResult(card, correct, timeMs, grade);
       FC = null;
 
-      setTimeout(() => {
-        S.cardIndex++;
-        const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
-        if (done) { stopTimer(); showSummary(); }
-        else renderCard();
-      }, correct ? 1200 : 2200);
+      document.getElementById('continue-row').style.display = 'flex';
+      autoAdvance(correct ? 1200 : 2200);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -1835,20 +1839,15 @@
         document.getElementById('question-text').innerHTML = '';
         document.getElementById('ro-feedback').textContent = '✓ Correct!';
         azureSpeak(card.chinese + card.punct, card.word.pinyin);
-        setTimeout(() => {
-          S.cardIndex++;
-          const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
-          if (done) { stopTimer(); showSummary(); }
-          else renderCard();
-        }, 1500);
+        autoAdvance(1500);
       } else {
         const qt = document.getElementById('question-text');
         qt.innerHTML = `<div>${esc(card.chinese)}${esc(card.punct)}</div>`;
         qt.className = 'question-text ro-reveal';
         document.getElementById('ro-feedback').textContent = '✗ Not quite — correct sentence above';
         showAnswerFeedback(card.word);
-        document.getElementById('continue-row').style.display = 'flex';
       }
+      document.getElementById('continue-row').style.display = 'flex';
     }
 
     document.getElementById('ro-clear-btn').addEventListener('click', () => {
@@ -2288,6 +2287,7 @@
 
     // Game → continue to next card
     document.getElementById('continue-btn').addEventListener('click', () => {
+      S.renderToken++; // invalidate any pending autoAdvance() timer so it doesn't double-advance
       S.cardIndex++;
       const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
       if (done) { stopTimer(); showSummary(); }
@@ -4006,6 +4006,7 @@
         if (btn.textContent === q.answer) btn.classList.add(correct ? 'flash-correct' : 'flash-reveal');
         else if (btn.textContent === chosen && !correct) btn.classList.add('flash-wrong');
         btn.disabled = true;
+        btn.blur();
       });
 
       const grade = timeMs < 5000 ? 'easy' : timeMs < 10000 ? 'good' : 'hard';
@@ -4131,6 +4132,7 @@
         if (btn.textContent === q.answer) btn.classList.add(correct ? 'flash-correct' : 'flash-reveal');
         else if (btn.textContent === chosen && !correct) btn.classList.add('flash-wrong');
         btn.disabled = true;
+        btn.blur();
       });
 
       const grade = timeMs < 5000 ? 'easy' : timeMs < 10000 ? 'good' : 'hard';
