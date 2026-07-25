@@ -104,7 +104,7 @@
       '</div>';
     }).join('') +
       '<div class="pz-avatar-item">' +
-        '<a class="pz-avatar-chip pz-avatar-chip-add" href="avatar.html" aria-label="Create new avatar">+</a>' +
+        '<a class="pz-avatar-chip pz-avatar-chip-add" href="' + esc(window.__avatarHtmlUrl || 'avatar.html') + '" aria-label="Create new avatar">+</a>' +
       '</div>';
   }
 
@@ -168,7 +168,7 @@
   function handleAct(act, el) {
     var D = Drive();
     if (act === 'close')   return close();
-    if (act === 'avatars') { window.location.href = 'avatar.html'; return; }
+    if (act === 'avatars') { window.location.href = window.__avatarHtmlUrl || 'avatar.html'; return; }
 
     if (act === 'switch-avatar') {
       var id = el.getAttribute('data-id');
