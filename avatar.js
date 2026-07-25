@@ -602,13 +602,11 @@
                 '<path d="M50,18 L43,32 L57,32 Z" fill="' + tc + '" opacity="0.7"/>' +
                 '<path d="M78,26 L94,36 L89,20 Z" fill="' + tc + '"/>'; break;
         case 'arrow':
-          // Airbender-style arrow tattoo: a shaft down the crown that forks
-          // toward the temples, tipped by a downward arrowhead on the brow —
-          // pairs best with hairStyle 'none' for the classic bald look.
-          hat = '<path d="M50,10 L50,36" stroke="' + tc + '" stroke-width="5" stroke-linecap="round"/>' +
-                '<path d="M50,16 L26,34" stroke="' + tc + '" stroke-width="5" stroke-linecap="round"/>' +
-                '<path d="M50,16 L74,34" stroke="' + tc + '" stroke-width="5" stroke-linecap="round"/>' +
-                '<polygon points="50,44 41,32 59,32" fill="' + tc + '"/>'; break;
+          // Airbender-style arrow tattoo: a plain shaft down the crown
+          // tipped by a downward arrowhead on the brow — pairs best with
+          // hairStyle 'none' for the classic bald look.
+          hat = '<path d="M50,8 L50,34" stroke="' + tc + '" stroke-width="6" stroke-linecap="round"/>' +
+                '<polygon points="50,44 38,30 62,30" fill="' + tc + '"/>'; break;
       }
     }
 
