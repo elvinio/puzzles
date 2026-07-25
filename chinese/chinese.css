@@ -390,6 +390,32 @@
       transition: width 0.4s ease;
     }
 
+    /* Capped to the viewport so #continue-row always stays on-screen —
+       if the question/options content is too tall to fit, that content
+       scrolls internally inside #game-content instead of growing the
+       page and pushing the Continue button below the fold. */
+    #screen-game.screen {
+      height: 100dvh;
+      max-height: 100dvh;
+      overflow: hidden;
+    }
+
+    .game-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+    }
+
+    #continue-row {
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+
     .question-wrap {
       width: 100%;
       max-width: 780px;
@@ -498,12 +524,20 @@
       cursor: pointer;
       transition: border-color 0.12s, background 0.12s, transform 0.1s;
       touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 80px;
       line-height: 1;
       font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+    }
+
+    /* Graded options are disabled, which already drops native focus in
+       compliant browsers — this belt-and-braces rule stops any lingering
+       focus ring from visually surviving into the next question. */
+    .opt-btn:focus:not(:focus-visible) {
+      outline: none;
     }
 
     .opt-btn.is-pinyin-opt {
@@ -995,19 +1029,31 @@
       display: flex !important;
     }
 
+    /* Writer + hint sit side by side, hint to the right — wraps to below
+       only if the viewport is too narrow to fit both. */
+    .fc-write-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      width: 100%;
+    }
+
     .fc-writer-target {
-      width: min(70vw, 280px);
-      height: min(70vw, 280px);
+      width: min(55vw, 220px);
+      height: min(55vw, 220px);
       background: var(--surface);
       border: 2px solid var(--brd);
       border-radius: 14px;
       touch-action: none;
+      flex-shrink: 0;
     }
 
     .pe-right .fc-writer-target {
-      width: 100%;
-      height: 280px;
-      aspect-ratio: 1;
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
     }
 
     .fc-hint {
@@ -1020,6 +1066,16 @@
       border-radius: 20px;
       user-select: none;
       transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+
+    /* Compact variant for the hint that sits beside the hanzi writer
+       (rather than above the sentence, like the reorder-mode hint does). */
+    .fc-write-row .fc-hint {
+      font-size: 0.78rem;
+      padding: 6px 12px;
+      flex-shrink: 0;
+      max-width: 120px;
+      text-align: center;
     }
 
     .fc-hint:hover {
