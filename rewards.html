@@ -217,6 +217,22 @@
     }
     .exchange-error { font-size: 0.72rem; color: var(--danger-lt); font-weight: 700; min-height: 1em; }
 
+    .earn-panel { background: rgba(34,197,94,0.1); border-color: var(--earn); }
+    .earn-panel .exchange-panel-title { color: var(--earn); }
+    .earn-panel .exchange-row input:focus { border-color: var(--earn); }
+    .btn-earn-confirm {
+      background: var(--earn);
+      border: none;
+      border-radius: 8px;
+      color: #0b2c17;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 7px 12px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+    }
+
     /* ── History ── */
     .history-list { display: flex; flex-direction: column; gap: 6px; }
     .history-row {
@@ -291,6 +307,7 @@
 
   var EXCHANGE_PIN = '9112';
   var openExchangeId = null;
+  var openEarnAmount = null;
 
   var root = document.getElementById('rewards-root');
 
@@ -351,6 +368,17 @@
           '<button class="btn-earn" data-earn="10">+10</button>' +
           '<button class="btn-earn" data-earn="20">+20</button>' +
         '</div>' +
+        '<div class="exchange-panel earn-panel" id="earn-panel">' +
+          '<div class="exchange-panel-title" id="earn-panel-title"></div>' +
+          '<div class="exchange-row">' +
+            '<input type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" class="earn-pin" placeholder="PIN">' +
+          '</div>' +
+          '<div class="exchange-row">' +
+            '<button class="btn-earn-confirm">Confirm</button>' +
+            '<button class="btn-exchange-cancel">Cancel</button>' +
+          '</div>' +
+          '<div class="exchange-error" id="earn-error"></div>' +
+        '</div>' +
       '</div>';
 
     // ── Exchange section ────────────────────────────────────────────────
@@ -407,11 +435,21 @@
         if (pinInput) pinInput.focus();
       }
     }
+    if (openEarnAmount) {
+      var earnPanel = document.getElementById('earn-panel');
+      if (earnPanel) {
+        document.getElementById('earn-panel-title').textContent = 'Add ' + openEarnAmount + ' coins — enter PIN';
+        earnPanel.classList.add('visible');
+        var earnPinInput = earnPanel.querySelector('.earn-pin');
+        if (earnPinInput) earnPinInput.focus();
+      }
+    }
   }
 
   function closeExchangePanels() {
     root.querySelectorAll('.exchange-panel.visible').forEach(function (el) { el.classList.remove('visible'); });
     openExchangeId = null;
+    openEarnAmount = null;
   }
 
   function submitExchange(rewardId) {
@@ -436,16 +474,44 @@
     render();
   }
 
+  function submitEarn() {
+    var panel = document.getElementById('earn-panel');
+    var errorEl = document.getElementById('earn-error');
+    var pin = panel.querySelector('.earn-pin').value.trim();
+
+    if (pin !== EXCHANGE_PIN) {
+      errorEl.textContent = 'Incorrect PIN.';
+      panel.querySelector('.earn-pin').value = '';
+      return;
+    }
+    var activeId = getActiveId();
+    if (activeId && openEarnAmount && window.__avatarAddCoins) {
+      window.__avatarAddCoins(activeId, openEarnAmount);
+    }
+    openEarnAmount = null;
+    render();
+  }
+
   root.addEventListener('click', function (e) {
     var t = e.target;
 
     if (t.classList.contains('btn-earn')) {
       var amount = parseInt(t.dataset.earn, 10);
-      var activeId = getActiveId();
-      if (activeId && amount && window.__avatarAddCoins) {
-        window.__avatarAddCoins(activeId, amount);
-        render();
+      var wasVisible = openEarnAmount === amount;
+      closeExchangePanels();
+      if (!wasVisible && amount) {
+        openEarnAmount = amount;
+        var panel = document.getElementById('earn-panel');
+        document.getElementById('earn-panel-title').textContent = 'Add ' + amount + ' coins — enter PIN';
+        panel.classList.add('visible');
+        var pinInput = panel.querySelector('.earn-pin');
+        if (pinInput) pinInput.focus();
       }
+      return;
+    }
+
+    if (t.classList.contains('btn-earn-confirm')) {
+      submitEarn();
       return;
     }
 
@@ -479,6 +545,9 @@
     if (e.target.classList.contains('exchange-pin')) {
       e.preventDefault();
       submitExchange(e.target.dataset.reward);
+    } else if (e.target.classList.contains('earn-pin')) {
+      e.preventDefault();
+      submitEarn();
     }
   });
 

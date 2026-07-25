@@ -878,6 +878,7 @@
         '</div>' +
         '<div class="redeem-row">' +
           '<input type="number" inputmode="numeric" min="1" step="1" class="add-amount" placeholder="Amount" data-id="' + avatar.id + '">' +
+          '<input type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" class="add-pin" placeholder="PIN" data-id="' + avatar.id + '">' +
         '</div>' +
         '<div class="redeem-row">' +
           '<button class="btn-add-submit" data-id="' + avatar.id + '">Add</button>' +
@@ -968,7 +969,7 @@
       if (e.target.classList.contains('redeem-amount') || e.target.classList.contains('redeem-pin')) {
         e.preventDefault();
         submitRedeem(id);
-      } else if (e.target.classList.contains('add-amount')) {
+      } else if (e.target.classList.contains('add-amount') || e.target.classList.contains('add-pin')) {
         e.preventDefault();
         submitAdd(id);
       }
@@ -995,6 +996,7 @@
     if (!panel) return;
     panel.classList.remove('visible');
     panel.querySelector('.add-amount').value = '';
+    panel.querySelector('.add-pin').value = '';
     document.getElementById('add-error-' + id).textContent = '';
   }
 
@@ -1028,9 +1030,15 @@
     var panel = document.getElementById('addcoins-' + id);
     var errorEl = document.getElementById('add-error-' + id);
     var amount = parseInt(panel.querySelector('.add-amount').value, 10);
+    var pin = panel.querySelector('.add-pin').value.trim();
 
     if (!amount || amount <= 0) {
       errorEl.textContent = 'Enter a valid coin amount.';
+      return;
+    }
+    if (pin !== REDEEM_PIN) {
+      errorEl.textContent = 'Incorrect PIN.';
+      panel.querySelector('.add-pin').value = '';
       return;
     }
     if (!window.__avatarAddCoins) return;
