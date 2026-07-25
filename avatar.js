@@ -404,10 +404,11 @@
         // Narrow forehead, wide jawline
         face = '<path d="M50,20 Q62,20 66,35 Q70,50 78,68 Q82,84 50,90 Q18,84 22,68 Q30,50 34,35 Q38,20 50,20 Z" fill="' + sc + '"/>'; break;
       case 'elongated':
-        // Round, broad-domed crown (top y≈16) tapering to a sharp
-        // pointed chin — headroom for headwear like the arrow tattoo
-        // without an overly stretched face.
-        face = '<path d="M18,54 Q18,18 50,16 Q82,18 82,54 C82,70 64,84 50,90 C36,84 18,70 18,54 Z" fill="' + sc + '"/>'; break;
+        // Round, broad-domed crown (top y≈16) tapering to a softly
+        // rounded chin (narrower than the jaw, but not a sharp point) —
+        // headroom for headwear like the arrow tattoo without an overly
+        // stretched face.
+        face = '<path d="M18,54 Q18,18 50,16 Q82,18 82,54 C82,68 70,80 58,86 Q50,91 42,86 C30,80 18,68 18,54 Z" fill="' + sc + '"/>'; break;
       default:
         // circle — classic round ellipse
         face = '<ellipse cx="50" cy="55" rx="30" ry="28" fill="' + sc + '"/>'; break;
