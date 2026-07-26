@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rolling Thunder – How It Works</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0e1a;
+    color: #e8eaf0;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 48px;
+  }
+
+  h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(1rem, 4vw, 1.4rem);
+    letter-spacing: 0.08em;
+    color: #7dd3fc;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 32px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .panel-label {
+    width: 100%;
+    max-width: 640px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: #475569;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .diagram-wrap {
+    width: 100%;
+    max-width: 640px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 20px 16px 16px;
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+
+  svg { width: 100%; height: auto; display: block; }
+  .label { font-family: 'Space Mono', monospace; font-size: 11px; }
+
+  /* ── whole-channel flash at the instant of discharge ── */
+  .bolt-flash { animation: bolt-flash 4.8s linear infinite; }
+  @keyframes bolt-flash {
+    0%   { opacity: 1; }
+    5%   { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  /* ── expanding sound wavefronts, one per channel segment ──
+       All four share identical timing, so they expand at the
+       same constant speed — arrival time differs only because
+       each source sits at a different distance from the listener. */
+  .ring { animation: ring-expand 4.8s linear infinite; opacity: 0; }
+  @keyframes ring-expand {
+    0%   { r: 2;   opacity: 0.85; }
+    70%  { opacity: 0.35; }
+    83%  { r: 520; opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  /* ── the moment each wavefront reaches the listener ── */
+  .pulse { animation: hear-pulse 4.8s linear infinite; opacity: 0; }
+  @keyframes hear-pulse {
+    0%   { r: 4;  opacity: 1; }
+    8%   { r: 18; opacity: 0; }
+    100% { opacity: 0; }
+  }
+  .pulse.p1 { animation-delay: 1.00s; }
+  .pulse.p2 { animation-delay: 1.96s; }
+  .pulse.p3 { animation-delay: 2.83s; }
+  .pulse.p4 { animation-delay: 3.37s; }
+  .ring.p1  { animation-delay: 0s; }
+  .ring.p2  { animation-delay: 0s; }
+  .ring.p3  { animation-delay: 0s; }
+  .ring.p4  { animation-delay: 0s; }
+
+  /* ── playhead sweeping the waveform, same cycle as the rings ── */
+  .playhead { animation: playhead-sweep 4.8s linear infinite; }
+  @keyframes playhead-sweep {
+    0%   { transform: translateX(0); opacity: 1; }
+    83%  { transform: translateX(560px); opacity: 1; }
+    84%  { opacity: 0; }
+    100% { transform: translateX(560px); opacity: 0; }
+  }
+
+  .badge-text { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; fill: #0a0e1a; }
+
+  /* ── legend / steps ── */
+  .steps {
+    width: 100%;
+    max-width: 640px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: #0ea5e9;
+    background: #0c2036;
+    border: 1px solid #0ea5e944;
+    border-radius: 6px;
+    padding: 3px 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-text { font-size: 0.82rem; line-height: 1.6; color: #94a3b8; }
+  .step-text strong { color: #e2e8f0; font-weight: 500; }
+
+  .callout {
+    width: 100%;
+    max-width: 640px;
+    background: #1a1330;
+    border: 1px solid #4c1d9566;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-top: 4px;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: #c4b5fd;
+  }
+  .callout strong { color: #e9d5ff; }
+</style>
+</head>
+<body>
+
+<h1>Rolling Thunder</h1>
+<p class="subtitle">// why a lightning strike doesn't just go BANG</p>
+
+<p class="panel-label">01 · the channel & the listener</p>
+<div class="diagram-wrap">
+<svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow-white" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-cyan" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-green" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-amber" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-pink" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- sky / ground -->
+  <line x1="20" y1="360" x2="620" y2="360" stroke="#1e293b" stroke-width="2"/>
+  <text x="24" y="378" class="label" fill="#334155" font-size="9">ground</text>
+
+  <!-- cloud -->
+  <ellipse cx="270" cy="30" rx="72" ry="22" fill="#334155" opacity="0.9"/>
+  <ellipse cx="335" cy="22" rx="52" ry="19" fill="#3b4a63" opacity="0.9"/>
+  <ellipse cx="215" cy="34" rx="48" ry="17" fill="#2d3a52" opacity="0.9"/>
+
+  <!-- ════════ dashed guide lines: source → listener ════════ -->
+  <line x1="295" y1="45"  x2="595" y2="340" stroke="#f87171" stroke-width="1" stroke-dasharray="3 4" opacity="0.35"/>
+  <line x1="365" y1="255" x2="595" y2="340" stroke="#4ade80" stroke-width="1" stroke-dasharray="3 4" opacity="0.35"/>
+  <line x1="245" y1="290" x2="595" y2="340" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3 4" opacity="0.35"/>
+  <line x1="470" y1="350" x2="595" y2="340" stroke="#22d3ee" stroke-width="1" stroke-dasharray="3 4" opacity="0.35"/>
+
+  <!-- ════════ lightning channel (static) ════════ -->
+  <polyline points="295,45 255,100 320,150 270,205 365,255 330,300 470,350"
+            fill="none" stroke="#c4b5fd" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+  <!-- branch -->
+  <polyline points="270,205 230,250 245,290"
+            fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- flash: same paths, bright + blurred, pulses once per cycle -->
+  <g class="bolt-flash" filter="url(#glow-white)">
+    <polyline points="295,45 255,100 320,150 270,205 365,255 330,300 470,350"
+              fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="270,205 230,250 245,290"
+              fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+  </g>
+
+  <!-- ════════ expanding wavefronts — same speed, different distances ════════ -->
+  <circle class="ring p4" cx="295" cy="45"  r="2" fill="none" stroke="#f87171" stroke-width="2" filter="url(#glow-pink)"/>
+  <circle class="ring p2" cx="365" cy="255" r="2" fill="none" stroke="#4ade80" stroke-width="2" filter="url(#glow-green)"/>
+  <circle class="ring p3" cx="245" cy="290" r="2" fill="none" stroke="#fbbf24" stroke-width="2" filter="url(#glow-amber)"/>
+  <circle class="ring p1" cx="470" cy="350" r="2" fill="none" stroke="#22d3ee" stroke-width="2" filter="url(#glow-cyan)"/>
+
+  <!-- ════════ source badges (order they're heard: 1 first … 4 last) ════════ -->
+  <circle cx="470" cy="350" r="10" fill="#22d3ee"/><text x="470" y="354" text-anchor="middle" class="badge-text">1</text>
+  <circle cx="365" cy="255" r="10" fill="#4ade80"/><text x="365" y="259" text-anchor="middle" class="badge-text">2</text>
+  <circle cx="245" cy="290" r="10" fill="#fbbf24"/><text x="245" y="294" text-anchor="middle" class="badge-text">3</text>
+  <circle cx="295" cy="45"  r="10" fill="#f87171"/><text x="295" y="49"  text-anchor="middle" class="badge-text">4</text>
+
+  <text x="470" y="332" text-anchor="middle" class="label" fill="#22d3ee" font-size="9">ground strike</text>
+  <text x="380" y="238" text-anchor="middle" class="label" fill="#4ade80" font-size="9">mid-channel</text>
+  <text x="195" y="284" text-anchor="middle" class="label" fill="#fbbf24" font-size="9">side branch</text>
+  <text x="295" y="20"  text-anchor="middle" class="label" fill="#f87171" font-size="9">near cloud top</text>
+
+  <!-- ════════ listener ════════ -->
+  <g class="pulse p1" style="transform-origin:595px 340px"><circle cx="595" cy="340" r="4" fill="none" stroke="#22d3ee" stroke-width="2"/></g>
+  <g class="pulse p2" style="transform-origin:595px 340px"><circle cx="595" cy="340" r="4" fill="none" stroke="#4ade80" stroke-width="2"/></g>
+  <g class="pulse p3" style="transform-origin:595px 340px"><circle cx="595" cy="340" r="4" fill="none" stroke="#fbbf24" stroke-width="2"/></g>
+  <g class="pulse p4" style="transform-origin:595px 340px"><circle cx="595" cy="340" r="4" fill="none" stroke="#f87171" stroke-width="2"/></g>
+
+  <circle cx="595" cy="325" r="9" fill="#1c1730" stroke="#7dd3fc" stroke-width="1.5"/>
+  <rect x="588" y="333" width="14" height="27" rx="6" fill="#1c1730" stroke="#7dd3fc" stroke-width="1.5"/>
+  <text x="595" y="382" text-anchor="middle" class="label" fill="#7dd3fc" font-size="9">YOU</text>
+</svg>
+</div>
+<p style="width:100%;max-width:640px;font-size:0.72rem;color:#334155;font-family:'Space Mono',monospace;margin:-14px 0 22px;">not to scale — illustrating relative distance &amp; timing only</p>
+
+<p class="panel-label">02 · what you actually hear, over time</p>
+<div class="diagram-wrap">
+<svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+  <line x1="20" y1="100" x2="580" y2="100" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <polyline points="20,100 118,100 124,50 130,140 136,60 142,125 148,90 154,100
+                    215,100 228,78 241,118 254,85 267,112 280,100
+                    310,100 325,88 340,110 355,90 370,108 385,100
+                    390,100 405,93 420,106 435,95 450,103 465,100
+                    580,100"
+            fill="none" stroke="#a78bfa" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round" filter="url(#glow-cyan)"/>
+
+  <!-- badges above each acoustic event, matching the source badges above -->
+  <circle cx="137" cy="30" r="9" fill="#22d3ee"/><text x="137" y="34" text-anchor="middle" class="badge-text">1</text>
+  <circle cx="250" cy="30" r="9" fill="#4ade80"/><text x="250" y="34" text-anchor="middle" class="badge-text">2</text>
+  <circle cx="350" cy="30" r="9" fill="#fbbf24"/><text x="350" y="34" text-anchor="middle" class="badge-text">3</text>
+  <circle cx="416" cy="30" r="9" fill="#f87171"/><text x="416" y="34" text-anchor="middle" class="badge-text">4</text>
+
+  <text x="137" y="152" text-anchor="middle" class="label" fill="#67e8f9" font-size="9">sharp crack</text>
+  <text x="250" y="152" text-anchor="middle" class="label" fill="#86efac" font-size="9">rumble</text>
+  <text x="350" y="152" text-anchor="middle" class="label" fill="#fde68a" font-size="9">duller</text>
+  <text x="416" y="152" text-anchor="middle" class="label" fill="#fca5a5" font-size="9">fainter</text>
+
+  <text x="580" y="170" text-anchor="end" class="label" fill="#475569" font-size="9">time →</text>
+
+  <!-- playhead: crosses each bump exactly when its ring reaches the listener above -->
+  <g class="playhead">
+    <line x1="20" y1="40" x2="20" y2="160" stroke="#e9d5ff" stroke-width="2"/>
+  </g>
+</svg>
+</div>
+
+<!-- Step-by-step legend -->
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text"><strong>The strike superheats the air.</strong> A lightning channel can hit roughly <strong>30,000 K</strong> — hotter than the sun's surface — in a fraction of a second. That air expands explosively, sending out the shockwave we hear as thunder.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">02</span>
+    <p class="step-text"><strong>The channel is long, not a single point.</strong> A bolt plus its branches can stretch several kilometers across the sky. Every segment discharges at essentially the same instant and produces its own burst of sound.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">03</span>
+    <p class="step-text"><strong>Each segment is a different distance away.</strong> The nearest part — often the ground strike <span style="color:#67e8f9">①</span> — is close, so its sound arrives almost immediately as a sharp crack. Segments higher up <span style="color:#f87171">④</span> or off to the side <span style="color:#fde68a">③</span> are farther, so their sound arrives later — stretching one instantaneous event into several seconds of rumbling.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">04</span>
+    <p class="step-text"><strong>Distance also dulls the sound.</strong> High frequencies fade faster over distance than low ones. The near segment still sounds like a crisp crack, while sound from farther segments loses its sharp "snap" in transit and reaches you as a duller, lower rumble.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">05</span>
+    <p class="step-text"><strong>Echoes smear it even further.</strong> Reflections off clouds, terrain, and buildings add more delayed copies of the sound, blending everything into one continuous roll instead of distinct claps.</p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Why a nearby strike just goes CRACK:</strong> almost its whole channel is close to you, so almost all the sound arrives in one instant. A distant storm's channel is far away and spread out, so you're hearing it end-to-end — the far segments' sound simply takes noticeably longer to reach you than the near ones, smoothing it into a long, low rumble.
+</div>
+
+</body>
+</html>
