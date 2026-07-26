@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#ffe7d1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="sushi/style.css">
+  <title>Tamago's Sushi Bar</title>
+
+  <script type="importmap">
+  { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
+</head>
+<body>
+
+  <div id="stage"></div>
+
+  <!-- ── heads-up display ────────────────────────────────────────────────── -->
+  <div id="hud">
+    <div class="hud-row top">
+      <div class="pill"><span class="ico">😄</span><span id="hudHappy">0</span></div>
+      <div id="timeWrap"><div id="timeFill"></div></div>
+      <div class="pill"><span class="ico">⭐</span><span id="hudScore">0</span></div>
+      <div class="pill" id="hudCombo"></div>
+      <button class="icon-btn" id="btnMute" aria-label="Sound on or off">🔊</button>
+      <button class="icon-btn" id="btnPause" aria-label="Pause">⏸</button>
+    </div>
+
+    <div class="hud-row bottom">
+      <button id="btnClear">🗑 Clear plate</button>
+    </div>
+  </div>
+
+  <div id="rotate">🔄 Turn your iPad sideways for the best view</div>
+  <div id="toast"></div>
+
+  <!-- ── start ───────────────────────────────────────────────────────────── -->
+  <div class="screen open" id="startScreen">
+    <div class="card">
+      <div class="mascot">🍣</div>
+      <h1 class="title">Tamago's <span class="accent">Sushi Bar</span></h1>
+      <p class="subtitle">
+        Tamago the chef needs a hand! Every customer holds up a number.<br>
+        Stack ingredients whose numbers <b>add up to it</b>, then serve them before they leave.
+      </p>
+
+      <div class="how">
+        <div class="how-step"><b>🐻</b>A customer wants <span class="k">14</span></div>
+        <div class="how-step"><b>👆</b>Tap <span class="k">6</span> + <span class="k">8</span>, or <span class="k">5</span> + <span class="k">4</span> + <span class="k">5</span></div>
+        <div class="how-step"><b>🍣</b>Tap the customer to serve — the ring shows how long they'll wait</div>
+        <div class="how-step"><b>↩️</b>Tap a piece on the plate to take it back off</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn mint" data-start="120">2 min<small>quick service</small></button>
+        <button class="btn" data-start="180">3 min<small>just right</small></button>
+        <button class="btn ghost" data-start="300">5 min<small>big rush</small></button>
+      </div>
+
+      <div class="strip">
+        <span>🍳</span><span>🐟</span><span>🦐</span><span>🥑</span><span>🥒</span><span>🦑</span>
+        <span>🐙</span><span>🍄</span><span>🦀</span><span>🌽</span><span>🧀</span><span>🍥</span>
+        <span>🌶️</span><span>🍵</span><span>⭐</span>
+      </div>
+
+      <a class="home-link" href="index.html">← back to puzzles</a>
+    </div>
+  </div>
+
+  <!-- ── pause ───────────────────────────────────────────────────────────── -->
+  <div class="screen" id="pauseScreen">
+    <div class="card">
+      <div class="mascot">🍵</div>
+      <h2 class="title">Tea break</h2>
+      <p class="subtitle">The customers are waiting patiently.</p>
+      <div class="btn-row">
+        <button class="btn" id="btnResume">Keep cooking</button>
+        <button class="btn ghost" id="btnQuit">Finish up</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── results ─────────────────────────────────────────────────────────── -->
+  <div class="screen" id="overScreen">
+    <div class="card">
+      <div class="mascot">🥚</div>
+      <h2 class="title" id="overTitle">Service over!</h2>
+      <div class="stars" id="overStars">☆☆☆</div>
+
+      <div class="big-score-k">Score</div>
+      <div class="big-score" id="overScore">0</div>
+
+      <div class="stats">
+        <div class="stat"><div class="v" id="overHappy">0</div><div class="k">Happy</div></div>
+        <div class="stat"><div class="v" id="overLost">0</div><div class="k">Left sad</div></div>
+        <div class="stat"><div class="v" id="overStreak">0</div><div class="k">Best streak</div></div>
+        <div class="stat"><div class="v" id="overBest">0</div><div class="k">Your best</div></div>
+      </div>
+
+      <p class="note" id="overNote"></p>
+
+      <div class="btn-row">
+        <button class="btn" id="btnAgain">Cook again</button>
+        <button class="btn ghost" id="btnMenu">Change time</button>
+      </div>
+
+      <a class="home-link" href="index.html">← back to puzzles</a>
+    </div>
+  </div>
+
+  <script type="module" src="sushi/main.js"></script>
+
+  <script src="version.js"></script>
+  <script src="sync-registry.js"></script>
+  <script src="sync-merge.js"></script>
+  <script src="sync-drive.js"></script>
+  <script src="sync-ui.js"></script>
+  <script src="avatar.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

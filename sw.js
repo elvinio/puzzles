@@ -23,7 +23,11 @@ const PRECACHE = [
   'english-proverbs.html', 'english.html', 'goblet.html', 'hangman.html', 'mastermind.html',
   'mathblitz.html', 'memory.html', 'minesweeper.html', 'number.html',
   'science.html', 'spaceinvaders.html', 'sudoku.html', 'tower.html', 'tower2.html',
-  'typingtutor.html', 'whackamole.html', 'wordle.html',
+  'typingtutor.html', 'whackamole.html', 'wordle.html', 'sushi.html',
+  // Tamago's Sushi Bar (three.js game: page + modules + vendored library)
+  'sushi/style.css', 'sushi/main.js', 'sushi/models.js', 'sushi/faces.js',
+  'sushi/game.js', 'sushi/fx.js', 'sushi/audio.js',
+  'vendor/three.module.min.js', 'vendor/three.core.min.js',
   // shared js/css
   'styles.css', 'app.js', 'avatar.js', 'version.js',
   'sync-registry.js', 'sync-merge.js', 'sync-drive.js', 'sync-ui.js',
