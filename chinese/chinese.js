@@ -2590,7 +2590,7 @@
       document.getElementById('cm-lesson').textContent = word.lessonKey || (word.level ? `${word.level}-${word.lessonNum}` : '');
       document.getElementById('cm-pinyin').textContent = word.pinyin;
       const cmSpeak = document.getElementById('cm-speak-btn');
-      cmSpeak.onclick = e => { e.stopPropagation(); speakChinese(word.pinyin || word.character); };
+      cmSpeak.onclick = e => { e.stopPropagation(); azureSpeak(word.character, word.pinyin); };
       document.getElementById('cm-eng').textContent = word.english;
       renderCmStats(word, avatarId);
       document.getElementById('cm-def-en').textContent = word['definition-english'] || '';
