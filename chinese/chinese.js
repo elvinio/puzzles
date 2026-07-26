@@ -1372,7 +1372,7 @@
         qText.className = 'question-text';
         document.getElementById('options-grid').innerHTML = '';
         document.getElementById('options-grid').style.display = 'none';
-        document.getElementById('continue-row').style.display = 'none';
+        document.getElementById('continue-row').classList.remove('is-visible');
         renderPronunciation(card);
         S.cardStart = Date.now();
         return;
@@ -1383,7 +1383,7 @@
         renderFindCorrect(card);
         document.getElementById('options-grid').innerHTML = '';
         document.getElementById('options-grid').style.display = 'none';
-        document.getElementById('continue-row').style.display = 'none';
+        document.getElementById('continue-row').classList.remove('is-visible');
         S.cardStart = Date.now();
         return;
       } else if (card.type === 'reorder') {
@@ -1392,7 +1392,7 @@
         qText.className = 'question-text';
         document.getElementById('options-grid').innerHTML = '';
         document.getElementById('options-grid').style.display = 'none';
-        document.getElementById('continue-row').style.display = 'none';
+        document.getElementById('continue-row').classList.remove('is-visible');
         renderReorder(card);
         S.cardStart = Date.now();
         return;
@@ -1403,7 +1403,7 @@
         qText.className = 'question-text';
         document.getElementById('options-grid').innerHTML = '';
         document.getElementById('options-grid').style.display = 'none';
-        document.getElementById('continue-row').style.display = 'none';
+        document.getElementById('continue-row').classList.remove('is-visible');
         renderWordWrite(card);
         S.cardStart = Date.now();
         return;
@@ -1448,7 +1448,15 @@
       const isPinyinOpt = card.type === 'chinese-pinyin';
       const isToneOpt = card.type === 'tone-tap';
 
-      document.getElementById('continue-row').style.display = 'none';
+      document.getElementById('continue-row').classList.remove('is-visible');
+
+      // Pre-fill the feedback strip with this card's word and reserve its
+      // layout space now (display set, but invisible) — so however the
+      // answer goes, revealing it later is a visibility flip, not a resize
+      // that would push the options above it around.
+      const afEl = fillAnswerFeedback(card.word);
+      afEl.style.display = 'flex';
+      afEl.style.visibility = 'hidden';
 
       // Retrieval-before-recognition: hold the options back for a short beat
       // so the question is met with recall first, not a scan of the choices.
@@ -1528,14 +1536,24 @@
         // Reinforce a correct answer with the sound of what was tested
         // (wrong answers already get audio via showAnswerFeedback).
         if (card.speakAfter) azureSpeak(card.speakAfter.hanzi, card.speakAfter.pinyin);
-        autoAdvance(1500);
       } else {
-        // 句子填空 (and every wrong answer) doesn't auto-advance: pause on a
-        // Continue button so the tested character (tappable into the full
-        // character card) stays on screen instead of flashing past.
+        // 句子填空 (and every wrong answer): pause on a Continue button so the
+        // tested character (tappable into the full character card) stays on
+        // screen instead of flashing past.
         showAnswerFeedback(card.word);
       }
-      document.getElementById('continue-row').style.display = 'flex';
+      // Every MCQ answer waits on a manual Continue tap — no auto-advance.
+      document.getElementById('continue-row').classList.add('is-visible');
+    }
+
+    // Fills #answer-feedback with a word's card (character/pinyin/english),
+    // without making it visible — called both to pre-reserve its layout
+    // space (see renderCard) and by showAnswerFeedback itself.
+    function fillAnswerFeedback(word) {
+      const el = document.getElementById('answer-feedback');
+      el.innerHTML = `<span class="af-char">${esc(word.character)}</span><span class="af-pinyin">${esc(word.pinyin)}</span><span class="af-eng">${esc(word.english)}</span><span class="af-more">ⓘ</span>`;
+      el.onclick = () => showCharModal(word);
+      return el;
     }
 
     // Turn a correct 句子填空 answer or a wrong answer (any mode) into a
@@ -1543,10 +1561,9 @@
     // pinyin and meaning, play its audio, and open the full character card
     // on tap.
     function showAnswerFeedback(word) {
-      const el = document.getElementById('answer-feedback');
-      el.innerHTML = `<span class="af-char">${esc(word.character)}</span><span class="af-pinyin">${esc(word.pinyin)}</span><span class="af-eng">${esc(word.english)}</span><span class="af-more">ⓘ</span>`;
-      el.onclick = () => showCharModal(word);
+      const el = fillAnswerFeedback(word);
       el.style.display = 'flex';
+      el.style.visibility = 'visible';
       azureSpeak(word.character, word.pinyin);
     }
 
@@ -1752,7 +1769,7 @@
       registerResult(card, correct, timeMs, grade);
       FC = null;
 
-      document.getElementById('continue-row').style.display = 'flex';
+      document.getElementById('continue-row').classList.add('is-visible');
       autoAdvance(correct ? 1200 : 2200);
     }
 
@@ -1847,7 +1864,7 @@
         document.getElementById('ro-feedback').textContent = '✗ Not quite — correct sentence above';
         showAnswerFeedback(card.word);
       }
-      document.getElementById('continue-row').style.display = 'flex';
+      document.getElementById('continue-row').classList.add('is-visible');
     }
 
     document.getElementById('ro-clear-btn').addEventListener('click', () => {
