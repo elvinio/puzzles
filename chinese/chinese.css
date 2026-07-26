@@ -411,9 +411,17 @@
       overflow-y: auto;
     }
 
+    /* Always occupies its row in the flex column, even before an answer is
+       given — visibility (not display) is toggled so the space it needs is
+       already reserved and the options above never shift when it appears. */
     #continue-row {
       flex-shrink: 0;
       margin-top: auto;
+      visibility: hidden;
+    }
+
+    #continue-row.is-visible {
+      visibility: visible;
     }
 
     .question-wrap {
