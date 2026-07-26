@@ -15,6 +15,7 @@
         || scoreKey === 'mastermind';
     // Everything else is higher-is-better: spaceinvaders, 2048-, carjam,
     // whackamole-, *-accuracy, hangman-wins, mathblitz-, typing-tutor-lvl-,
+    // sushi-best,
     // battleship, breakout, ...
   }
 
@@ -28,6 +29,7 @@
     { match: 'tower2_state',             strategy: 'lastWrite' },
     { match: 'breakout-best',            strategy: 'maxNumber' },
     { match: 'si-best',                  strategy: 'maxNumber' },
+    { match: 'sushi-best',               strategy: 'maxNumber' },
     { match: 'spelling-tests',           strategy: 'unionArray' },
     { match: /^puzzles-2048-best-/,      strategy: 'maxNumber' },
     { match: 'puzzles-2048-theme',       strategy: 'lastWrite' },
