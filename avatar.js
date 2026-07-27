@@ -621,16 +621,6 @@
       }
     }
 
-    // ── No head ───────────────────────────────────────────────────────────
-    // faceShape 'none' removes the head entirely, so anything positioned
-    // relative to it (eyes, nose, mouth, brows, dimples, glasses, hat, and
-    // hair — except 'hands', which draws limbs rather than a hairdo) is
-    // dropped too. Only bg/bgScene survive.
-    if (s.faceShape === 'none') {
-      eyes = nose = mouth = dimples = brows = glasses = hat = '';
-      if (s.hairStyle !== 'hands') { hairBack = hairFront = ''; }
-    }
-
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="' + sz + '" height="' + sz + '">' +
       bg + bgScene + hairBack + face + hairFront + brows + eyes + nose + mouth + dimples + glasses + hat + '</svg>';
   }
