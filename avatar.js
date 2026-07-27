@@ -409,6 +409,9 @@
         // headroom for headwear like the arrow tattoo without an overly
         // stretched face.
         face = '<path d="M18,54 Q18,18 50,16 Q82,18 82,54 C82,66 74,78 64,84 Q50,90 36,84 C26,78 18,66 18,54 Z" fill="' + sc + '"/>'; break;
+      case 'none':
+        // No head — face and everything drawn on it is omitted below.
+        face = ''; break;
       default:
         // circle — classic round ellipse
         face = '<ellipse cx="50" cy="55" rx="30" ry="28" fill="' + sc + '"/>'; break;
@@ -616,6 +619,16 @@
           hat = '<path d="M50,20 L50,30" stroke="' + tc + '" stroke-width="6" stroke-linecap="round"/>' +
                 '<polygon points="50,45 39,30 61,30" fill="' + tc + '"/>'; break;
       }
+    }
+
+    // ── No head ───────────────────────────────────────────────────────────
+    // faceShape 'none' removes the head entirely, so anything positioned
+    // relative to it (eyes, nose, mouth, brows, dimples, glasses, hat, and
+    // hair — except 'hands', which draws limbs rather than a hairdo) is
+    // dropped too. Only bg/bgScene survive.
+    if (s.faceShape === 'none') {
+      eyes = nose = mouth = dimples = brows = glasses = hat = '';
+      if (s.hairStyle !== 'hands') { hairBack = hairFront = ''; }
     }
 
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="' + sz + '" height="' + sz + '">' +
