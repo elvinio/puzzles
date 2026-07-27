@@ -409,6 +409,9 @@
         // headroom for headwear like the arrow tattoo without an overly
         // stretched face.
         face = '<path d="M18,54 Q18,18 50,16 Q82,18 82,54 C82,66 74,78 64,84 Q50,90 36,84 C26,78 18,66 18,54 Z" fill="' + sc + '"/>'; break;
+      case 'none':
+        // No head — face and everything drawn on it is omitted below.
+        face = ''; break;
       default:
         // circle — classic round ellipse
         face = '<ellipse cx="50" cy="55" rx="30" ry="28" fill="' + sc + '"/>'; break;
