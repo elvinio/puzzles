@@ -1856,7 +1856,6 @@
         document.getElementById('question-text').innerHTML = '';
         document.getElementById('ro-feedback').textContent = '✓ Correct!';
         azureSpeak(card.chinese + card.punct, card.word.pinyin);
-        autoAdvance(1500);
       } else {
         const qt = document.getElementById('question-text');
         qt.innerHTML = `<div>${esc(card.chinese)}${esc(card.punct)}</div>`;
