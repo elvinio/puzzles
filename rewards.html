@@ -263,6 +263,7 @@
     .history-label { font-weight: 700; }
     .history-time { color: var(--muted); font-size: 0.7rem; }
     .history-cost { color: var(--danger-lt); font-weight: 800; flex-shrink: 0; }
+    .history-cost.history-gain { color: var(--earn); }
     .history-empty { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 10px 0; }
 
     .empty-state {
@@ -315,8 +316,9 @@
   var renderSVG    = window.__avatarRender;
 
   var REWARDS = [
-    { id: 'series', icon: '📺', title: 'Watch a series', cost: 20 },
-    { id: 'movie',  icon: '🎬', title: 'Watch a movie',  cost: 60 }
+    { id: 'series',   icon: '📺', title: 'Watch a series',        cost: 20 },
+    { id: 'movie',    icon: '🎬', title: 'Watch a movie',         cost: 60 },
+    { id: 'nintendo', icon: '🎮', title: '30 mins Nintendo play', cost: 50 }
   ];
 
   var EARN_ITEMS = [
@@ -444,18 +446,19 @@
     html += '</div>';
 
     // ── History section ─────────────────────────────────────────────────
-    html += '<div class="section"><div class="section-label">Exchange History</div><div class="history-list">';
+    html += '<div class="section"><div class="section-label">History</div><div class="history-list">';
     if (exchanges.length === 0) {
-      html += '<div class="history-empty">No exchanges yet.</div>';
+      html += '<div class="history-empty">No history yet.</div>';
     } else {
       exchanges.forEach(function (ex) {
+        var isEarn = ex.type === 'earn';
         html +=
           '<div class="history-row">' +
             '<div>' +
               '<div class="history-label">' + escHtml(ex.label) + '</div>' +
               '<div class="history-time">' + relTime(ex.at) + '</div>' +
             '</div>' +
-            '<div class="history-cost">-' + ex.cost + '</div>' +
+            '<div class="history-cost' + (isEarn ? ' history-gain' : '') + '">' + (isEarn ? '+' + ex.amount : '-' + ex.cost) + '</div>' +
           '</div>';
       });
     }
@@ -526,7 +529,7 @@
     var activeAvatar = getActive();
     var activeId = activeAvatar && activeAvatar.id;
     if (activeId && openEarnAmount && window.__avatarAddCoins) {
-      window.__avatarAddCoins(activeId, openEarnAmount);
+      window.__avatarAddCoins(activeId, openEarnAmount, openEarnLabel || 'Coins added');
     }
     openEarnAmount = null;
     openEarnKey = null;

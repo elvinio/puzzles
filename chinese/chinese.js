@@ -2311,6 +2311,9 @@
 
       const coinsEarned = S.results.reduce((sum, r) => r.correct ? sum + (MODE_GROUP[r.type] === 'writing' ? 2 : 1) : sum, 0);
       document.getElementById('summary-coins').textContent = coinsEarned;
+      if (coinsEarned > 0 && S.avatarId && window.__avatarLogCoinGain) {
+        window.__avatarLogCoinGain(S.avatarId, 'Chinese test', coinsEarned);
+      }
 
       const list = document.getElementById('summary-result-list');
       list.innerHTML = '';

@@ -101,7 +101,10 @@
     return avatar ? (avatar.coins || 0) : 0;
   };
 
-  window.__avatarAddCoins = function (avatarId, amount) {
+  // `label`, if given, also records this gain in the avatar's coin history
+  // (avatar.exchanges, shared with spend entries — see __avatarRedeem) so it
+  // shows up on the rewards page alongside exchanges.
+  window.__avatarAddCoins = function (avatarId, amount, label) {
     if (!avatarId || !amount) return;
     try {
       var list = loadAvatars();
@@ -110,8 +113,30 @@
       avatar.coins = (avatar.coins || 0) + amount;
       avatar.totalEarned = (avatar.totalEarned || 0) + amount;
       avatar.coinsUpdatedAt = new Date().toISOString();
+      if (label) {
+        if (!avatar.exchanges) avatar.exchanges = [];
+        avatar.exchanges.unshift({ label: label, amount: amount, at: avatar.coinsUpdatedAt, type: 'earn' });
+        if (avatar.exchanges.length > 200) avatar.exchanges.length = 200;
+      }
       saveAvatars(list);
       try { window.dispatchEvent(new CustomEvent('pz-avatar-coins-change', { detail: { id: avatarId, coins: avatar.coins } })); } catch (e2) {}
+    } catch (e) {}
+  };
+
+  // Records a coin gain already applied elsewhere (e.g. per-card additions
+  // during a chinese.html test session) as a single history entry, without
+  // touching the balance again. Used to log one summary row per session
+  // instead of one row per card.
+  window.__avatarLogCoinGain = function (avatarId, label, amount) {
+    if (!avatarId || !amount) return;
+    try {
+      var list = loadAvatars();
+      var avatar = list.find(function (a) { return a.id === avatarId; });
+      if (!avatar) return;
+      if (!avatar.exchanges) avatar.exchanges = [];
+      avatar.exchanges.unshift({ label: label, amount: amount, at: new Date().toISOString(), type: 'earn' });
+      if (avatar.exchanges.length > 200) avatar.exchanges.length = 200;
+      saveAvatars(list);
     } catch (e) {}
   };
 
