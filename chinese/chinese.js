@@ -1502,21 +1502,6 @@
       }
     }
 
-    // Advances to the next card after a pause, unless the student clicks
-    // Continue first — the continue-btn handler bumps S.renderToken, which
-    // invalidates this callback (same staleness pattern as the think-beat
-    // timeout above).
-    function autoAdvance(delay) {
-      const token = S.renderToken;
-      setTimeout(() => {
-        if (token !== S.renderToken) return;
-        S.cardIndex++;
-        const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
-        if (done) { stopTimer(); showSummary(); }
-        else renderCard();
-      }, delay);
-    }
-
     function handleAnswer(chosen, card) {
       const timeMs = Date.now() - S.cardStart;
       const correct = chosen === card.answer;
@@ -1770,7 +1755,6 @@
       FC = null;
 
       document.getElementById('continue-row').classList.add('is-visible');
-      autoAdvance(correct ? 1200 : 2200);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -1856,7 +1840,6 @@
         document.getElementById('question-text').innerHTML = '';
         document.getElementById('ro-feedback').textContent = '✓ Correct!';
         azureSpeak(card.chinese + card.punct, card.word.pinyin);
-        autoAdvance(1500);
       } else {
         const qt = document.getElementById('question-text');
         qt.innerHTML = `<div>${esc(card.chinese)}${esc(card.punct)}</div>`;
@@ -2304,7 +2287,7 @@
 
     // Game → continue to next card
     document.getElementById('continue-btn').addEventListener('click', () => {
-      S.renderToken++; // invalidate any pending autoAdvance() timer so it doesn't double-advance
+      S.renderToken++; // invalidate any pending think-beat timeout from the outgoing card
       S.cardIndex++;
       const done = S.cardIndex >= S.cards.length || S.timeLimitReached;
       if (done) { stopTimer(); showSummary(); }
