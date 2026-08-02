@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#05060d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="../icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <link rel="stylesheet" href="solar-system.css">
+  <title>The Solar System</title>
+
+  <script type="importmap">
+  { "imports": { "three": "../vendor/three.module.min.js" } }
+  </script>
+</head>
+<body>
+
+  <div id="stage"></div>
+  <div id="labels"></div>
+
+  <!-- ── clock, back, view toggles ───────────────────────────────────────── -->
+  <header class="hud top">
+    <a class="back panel-surface" href="../science.html" aria-label="Back to Science">←</a>
+
+    <div class="clock panel-surface">
+      <div class="clock-main">
+        <div class="unit"><span class="k">Year</span><span class="v" id="yearNum">2026</span></div>
+        <div class="sep"></div>
+        <div class="unit"><span class="k">Day</span><span class="v" id="dayNum">1</span></div>
+      </div>
+      <div class="clock-sub" id="dateText">1 January 2026</div>
+      <div class="clock-lap" id="lapText"></div>
+    </div>
+
+    <div class="toggles">
+      <button class="chip-btn on" id="btnOrbits">◌ Orbits</button>
+      <button class="chip-btn on" id="btnLabels">◆ Names</button>
+      <button class="chip-btn" id="btnScale">↔ <span>Squeezed</span></button>
+    </div>
+  </header>
+
+  <!-- ── time controls ───────────────────────────────────────────────────── -->
+  <div class="hud bottom">
+    <div class="bar panel-surface">
+      <button class="rbtn" id="btnTimeReset" aria-label="Back to 1 January 2026">⏮</button>
+      <button class="rbtn" id="btnSlower" aria-label="Slow down time">⏪</button>
+      <button class="rbtn play on" id="btnPlay" aria-label="Pause time">⏸</button>
+      <button class="rbtn" id="btnFaster" aria-label="Speed up time">⏩</button>
+      <div class="speed" id="speedLabel">1 day/s</div>
+      <div class="divider"></div>
+      <button class="rbtn" id="btnView" aria-label="Reset the view">⌖</button>
+    </div>
+  </div>
+
+  <!-- ── fact panel ──────────────────────────────────────────────────────── -->
+  <aside id="panel" class="panel-surface">
+    <button id="panelClose" aria-label="Close">✕</button>
+    <div id="panelBody"></div>
+  </aside>
+
+  <div id="hint">Tap a planet for its story · pinch to zoom · drag to swing the view</div>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    <div>Building the solar system…</div>
+  </div>
+
+  <script type="module" src="solar-system.js"></script>
+
+  <script src="../version.js"></script>
+  <script src="../sync-registry.js"></script>
+  <script src="../sync-merge.js"></script>
+  <script src="../sync-drive.js"></script>
+  <script src="../sync-ui.js"></script>
+  <script src="../avatar.js"></script>
+  <script src="../app.js"></script>
+</body>
+</html>
