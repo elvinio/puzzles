@@ -1401,6 +1401,15 @@
       PR = null;
       RO = null;
 
+      // Speaker icon for the question itself — only wired up (and shown) by
+      // the modes below whose prompt is Chinese text worth hearing before
+      // answering. Modes that already have their own dedicated audio control
+      // (听音's big replay button, 找错字's sentence speaker) or where hearing
+      // the answer would give it away (连词成句, 🎤 Speak) leave it hidden.
+      const qtSpeak = document.getElementById('qt-speak-btn');
+      qtSpeak.style.display = 'none';
+      qtSpeak.onclick = null;
+
       if (card.type === 'pronunciation') {
         typeLabel.textContent = '';
         qText.innerHTML = `<div>${esc(card.refHanzi)}</div>`;
@@ -1439,6 +1448,8 @@
         document.getElementById('options-grid').innerHTML = '';
         document.getElementById('options-grid').style.display = 'none';
         document.getElementById('continue-row').classList.remove('is-visible');
+        qtSpeak.style.display = 'flex';
+        qtSpeak.onclick = () => azureSpeakBlanked(card.prompt, card.word.pinyin);
         renderWordWrite(card);
         S.cardStart = Date.now();
         return;
@@ -1456,11 +1467,15 @@
         typeLabel.textContent = 'Which pinyin is correct?';
         qText.textContent = card.prompt;
         qText.className = 'question-text';
+        qtSpeak.style.display = 'flex';
+        qtSpeak.onclick = () => azureSpeak(card.prompt, card.answer);
       } else if (card.type === 'word-fill') {
         typeLabel.textContent = '';
         const pinyinHint = card.phrasePinyin ? `<div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.phrasePinyin)}</div>` : '';
         qText.innerHTML = `<div>${esc(card.prompt)}</div>${pinyinHint}<div style="font-size:0.3em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.english)}</div>`;
         qText.className = 'question-text';
+        qtSpeak.style.display = 'flex';
+        qtSpeak.onclick = () => azureSpeakBlanked(card.prompt, card.word.pinyin);
       } else if (card.type === 'sentence-fill' || card.type === 'choose-char') {
         typeLabel.textContent = card.type === 'choose-char' ? '选字填空 — which character fits?' : 'Fill in the sentence';
         // The pinyin hint is only safe for choose-char: every option sounds
@@ -1468,10 +1483,14 @@
         const pinyinHint = card.pinyinHint ? `<div style="font-size:0.55em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.pinyinHint)}</div>` : '';
         qText.innerHTML = `<div>${esc(card.prompt)}</div>${pinyinHint}<div style="font-size:0.55em;color:var(--muted);margin-top:8px;font-weight:500;font-family:system-ui,-apple-system,sans-serif">${esc(card.english)}</div>`;
         qText.className = 'question-text is-sentence';
+        qtSpeak.style.display = 'flex';
+        qtSpeak.onclick = () => azureSpeakBlanked(card.prompt, card.word.pinyin);
       } else if (card.type === 'tone-tap') {
         typeLabel.textContent = '这是第几声? — Which tone?';
         qText.innerHTML = `<div>${esc(card.prompt)}</div><div style="font-size:0.28em;color:var(--p-xl);margin-top:6px;font-weight:700;font-family:system-ui,-apple-system,sans-serif;letter-spacing:0.03em">${esc(card.toneless)}</div>`;
         qText.className = 'question-text';
+        qtSpeak.style.display = 'flex';
+        qtSpeak.onclick = () => azureSpeak(card.prompt, card.word.pinyin);
       } else {
         typeLabel.textContent = 'Which character means this?';
         qText.textContent = card.prompt;
@@ -3041,30 +3060,31 @@
       } catch { }
     }
 
-    async function azureSpeak(hanzi, pinyinFallback) {
-      const fallback = () => speakChinese(pinyinFallback || hanzi);
+    // Fetches (or reuses a cached) TTS clip for `cacheKey`, building the SSML
+    // body lazily via `buildSsml` only on a cache miss, and plays it — falling
+    // back to `fallback` on any failure or when Azure isn't configured.
+    async function ttsPlay(cacheKey, buildSsml, fallback) {
       if (!isAzureConfigured()) { fallback(); return; }
       try {
-        let url = _ttsCache.get(hanzi);
+        let url = _ttsCache.get(cacheKey);
         if (!url) {
-          let blob = await ttsDbGet(hanzi);
+          let blob = await ttsDbGet(cacheKey);
           if (!blob) {
             const cfg = getAzureConfig();
-            const ssml = `<speak version='1.0' xml:lang='zh-CN'><voice name='zh-CN-XiaoxiaoNeural'><prosody rate='-15%'>${esc(hanzi)}</prosody></voice></speak>`;
             const res = await fetch(`${cfg.proxyUrl}/?action=TTS&token=${encodeURIComponent(cfg.apiKey)}`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/ssml+xml',
                 'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
               },
-              body: ssml,
+              body: buildSsml(),
             });
             if (!res.ok) throw new Error(`tts ${res.status}`);
             blob = await res.blob();
-            ttsDbPut(hanzi, blob); // fire-and-forget persist for future sessions
+            ttsDbPut(cacheKey, blob); // fire-and-forget persist for future sessions
           }
           url = URL.createObjectURL(blob);
-          _ttsCache.set(hanzi, url);
+          _ttsCache.set(cacheKey, url);
         }
         if (_ttsAudio) _ttsAudio.pause();
         _ttsAudio = new Audio(url);
@@ -3072,6 +3092,27 @@
       } catch {
         fallback();
       }
+    }
+
+    async function azureSpeak(hanzi, pinyinFallback) {
+      const fallback = () => speakChinese(pinyinFallback || hanzi);
+      await ttsPlay(hanzi,
+        () => `<speak version='1.0' xml:lang='zh-CN'><voice name='zh-CN-XiaoxiaoNeural'><prosody rate='-15%'>${esc(hanzi)}</prosody></voice></speak>`,
+        fallback);
+    }
+
+    // Reads a fill-in-the-blank prompt aloud. Cloze prompts in this app mark
+    // their blank(s) with '_' (see makeSentenceBlank / makeWordFill /
+    // makeWordWrite) — turn each run of underscores into a spoken pause
+    // (SSML <break>) instead of silently skipping past it, so the sentence's
+    // rhythm and surrounding words are audible before the answer is.
+    async function azureSpeakBlanked(promptText, pinyinFallback) {
+      if (!promptText.includes('_')) { await azureSpeak(promptText, pinyinFallback); return; }
+      const fallback = () => speakChinese(pinyinFallback || promptText.replace(/_+/g, ''));
+      await ttsPlay('blanked:' + promptText, () => {
+        const body = promptText.split(/_+/).map(esc).join(`<break time='600ms'/>`);
+        return `<speak version='1.0' xml:lang='zh-CN'><voice name='zh-CN-XiaoxiaoNeural'><prosody rate='-15%'>${body}</prosody></voice></speak>`;
+      }, fallback);
     }
 
     // ═══════════════════════════════════════════════════════════════
