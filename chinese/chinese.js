@@ -253,7 +253,17 @@
       return { correct: 0, wrong: 0, totalTimeMs: 0, attempts: 0, lastTested: null, lastCorrect: null, skills: freshSkills() };
     }
 
-    function todayStr() { return new Date().toISOString().slice(0, 10); }
+    // Due dates are plain YYYY-MM-DD strings compared against the student's own
+    // calendar day, so they must be formatted in LOCAL time. toISOString() emits
+    // the UTC day, which in UTC+8 rolls back a day for anything before 08:00 —
+    // a card graded at 7am was stamped with yesterday's date and could read as
+    // already due a few hours later.
+    function dateStr(d) {
+      const p = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+    }
+
+    function todayStr() { return dateStr(new Date()); }
 
     // Cards graded together would otherwise stay due on the same future day
     // forever; ±5% jitter on the calendar offset spreads them out. The stored
@@ -328,7 +338,7 @@
       sched.lastTested = todayStr();
       const due = new Date();
       due.setDate(due.getDate() + fuzzedDueOffset(sched.interval));
-      sched.dueDate = due.toISOString().slice(0, 10);
+      sched.dueDate = dateStr(due);
       return sched;
     }
 
@@ -366,9 +376,34 @@
       return g ? [g] : SKILL_GROUPS;
     }
 
+    // Groups the student has actually practiced this word in. A never-touched
+    // group still carries the due-today schedule it was seeded with at record
+    // creation, so it must be excluded wherever "is this word due?" is asked
+    // about a word we already know something about.
+    function attemptedGroups(rec) {
+      return SKILL_GROUPS.filter(g => {
+        const m = rec.byMode && rec.byMode[g];
+        return m && (m.correct + m.wrong) > 0;
+      });
+    }
+
+    // Which of a session's groups this word is actually due in.
+    //
+    // Untouched groups sit at their seeded due-today date forever, so counting
+    // them would make every attempted word permanently due in any multi-group
+    // session (Mix All, a custom multi-mode pick) — spacing would never apply.
+    // They're only consulted when the session's groups have no practiced
+    // schedule to go on, which is what makes a word the student has read but
+    // never written still show up in a writing-only session.
+    function dueGroupsFor(rec, groups, today) {
+      const practiced = attemptedGroups(rec);
+      const overlap = groups.filter(g => practiced.includes(g));
+      return (overlap.length ? overlap : groups)
+        .filter(g => { const s = getSkill(rec, g); return !s || !s.dueDate || s.dueDate <= today; });
+    }
+
     function isDueRec(rec, groups, today) {
-      return !!rec && rec.attempts > 0 &&
-        groups.some(g => { const s = getSkill(rec, g); return !s.dueDate || s.dueDate <= today; });
+      return !!rec && rec.attempts > 0 && dueGroupsFor(rec, groups, today).length > 0;
     }
 
     function soonestDue(rec, groups) {
@@ -2415,8 +2450,6 @@
         const correctCls = r.correct > 0 ? 'ok' : '';
         const lastCls = r.lastCorrect == null ? '' : r.lastCorrect ? 'ok' : 'err';
         const lastLbl = r.lastCorrect == null ? '—' : r.lastCorrect ? '✓' : '✗';
-        const dueDate = statsDueDate(r);
-        const dueCls = dueDate && dueDate <= today ? 'warn' : '';
         const byMode = r.byMode
           ? esc(Object.entries(r.byMode).map(([g, m]) => `${g} ${m.correct}✓ ${m.wrong}✗`).join(' · '))
           : '';
@@ -2430,7 +2463,7 @@
       <td class="${lastCls}" title="Result of the most recent attempt">${lastLbl}</td>
       <td title="${esc(avgTimeTooltip(r))}">${avg}</td>
       <td title="${esc(r.lastTested || '')}">${esc(lastTestedLabel(r, today))}</td>
-      <td class="${dueCls}" title="${esc(dueTooltip(r))}">${dueDate || '—'}</td>
+      <td class="td-due">${dueCellHtml(r, today)}</td>
     </tr>`;
       }).join('');
     }
@@ -2464,25 +2497,39 @@
         .join(' · ');
     }
 
-    // Groups the student has actually practiced this word in — never-touched
-    // groups sit at their seeded due-today schedule and would otherwise make
-    // every row read as permanently due.
-    function attemptedGroups(rec) {
-      return SKILL_GROUPS.filter(g => {
-        const m = rec.byMode && rec.byMode[g];
-        return m && (m.correct + m.wrong) > 0;
-      });
-    }
-
+    // Soonest due across the practiced skills — the whole-word "needs
+    // attention by" date, used for sorting rather than display.
     function statsDueDate(rec) {
       const groups = attemptedGroups(rec);
       return soonestDue(rec, groups.length ? groups : SKILL_GROUPS);
     }
 
-    function dueTooltip(rec) {
-      return attemptedGroups(rec)
-        .map(g => `${g} ${getSkill(rec, g).dueDate || '—'}`)
-        .join(' · ');
+    // Compact labels for the four schedules, echoing the setup screen's mode
+    // groups (Multiple Choice / Listening / Reading all bucket as 读).
+    const SKILL_LABELS = {
+      listening: { short: '听', full: 'Listening' },
+      recognition: { short: '读', full: 'Reading / multiple choice' },
+      writing: { short: '写', full: 'Writing' },
+      speaking: { short: '说', full: 'Speaking' },
+    };
+
+    // Each skill keeps its own schedule, so one date can't say "reading is fine,
+    // writing is three weeks overdue" — the row lists every practiced skill and
+    // reddens the overdue ones individually. Skills the student has never tried
+    // are omitted (their seeded due-today date says nothing); a record too old
+    // to carry per-mode counters falls back to a single unlabelled date.
+    function dueCellHtml(rec, today, inline) {
+      const cls = 'due-list' + (inline ? ' due-list-inline' : '');
+      const row = (date, lbl) => {
+        const warn = date && date <= today ? ' warn' : '';
+        const tag = lbl ? `<span class="due-g" title="${esc(lbl.full)}">${esc(lbl.short)}</span>` : '';
+        return `<span class="due-row${warn}">${tag}${esc(date || '—')}</span>`;
+      };
+      const groups = attemptedGroups(rec);
+      if (!groups.length) return `<div class="${cls}">${row(soonestDue(rec, SKILL_GROUPS), null)}</div>`;
+      return `<div class="${cls}">${groups
+        .map(g => row(getSkill(rec, g).dueDate || '', SKILL_LABELS[g] || { short: g, full: g }))
+        .join('')}</div>`;
     }
 
     // Stats level tabs
@@ -2557,19 +2604,17 @@
       const tier = masteryTier(rec);
       const lastCls = rec.lastCorrect == null ? '' : rec.lastCorrect ? 'ok' : 'err';
       const lastLbl = rec.lastCorrect == null ? '—' : rec.lastCorrect ? '✓ Right' : '✗ Wrong';
-      const skillsLine = attemptedGroups(rec)
-        .map(g => `${g}: due ${getSkill(rec, g).dueDate || '—'}`)
-        .join(' · ');
+      const skillsLine = dueCellHtml(rec, today, true);
       el.innerHTML = `
         <div class="cm-stats-row">
           <div class="cm-stat-tile"><div class="cm-stat-val ${rec.correct > 0 ? 'ok' : ''}">${rec.correct}</div><div class="cm-stat-lbl">Correct</div></div>
           <div class="cm-stat-tile"><div class="cm-stat-val ${rec.wrong > 0 ? 'err' : ''}">${rec.wrong}</div><div class="cm-stat-lbl">Wrong</div></div>
           <div class="cm-stat-tile"><div class="cm-stat-val ${lastCls}">${esc(lastLbl)}</div><div class="cm-stat-lbl">Last Result</div></div>
           <div class="cm-stat-tile"><div class="cm-stat-val">${esc(avg)}</div><div class="cm-stat-lbl">Avg Time</div></div>
-          <div class="cm-stat-tile"><div class="cm-stat-val ${dueCls}">${esc(dueDate || '—')}</div><div class="cm-stat-lbl">Next Due</div></div>
+          <div class="cm-stat-tile"><div class="cm-stat-val ${dueCls}">${esc(dueDate || '—')}</div><div class="cm-stat-lbl">Soonest Due</div></div>
         </div>
         <div><span class="cm-mastery-badge">${esc(MASTERY_TIER_LABELS[tier] || 'Learning')}</span></div>
-        ${skillsLine ? `<div class="cm-stats-skills">${esc(skillsLine)}</div>` : ''}`;
+        <div class="cm-stats-skills"><span class="cm-stats-skills-lbl">Due by skill</span>${skillsLine}</div>`;
     }
 
     function showCharModal(word, avatarId = S.avatarId) {
