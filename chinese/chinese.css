@@ -1346,6 +1346,52 @@
       background: rgba(109, 40, 217, 0.1);
     }
 
+    /* Per-skill due dates: one row per schedule the student has practiced, so
+       an overdue 写 can go red without dragging the whole cell with it. */
+    .stats-table td.td-due {
+      white-space: nowrap;
+    }
+
+    .due-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .due-list-inline {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+    }
+
+    .due-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+    }
+
+    .due-row.warn {
+      color: var(--warn);
+      font-weight: 700;
+    }
+
+    .due-g {
+      font-family: "Kaiti SC", "KaiTiRegular", "STKaiti", serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1;
+      min-width: 1.1em;
+      text-align: center;
+      color: var(--p-xl);
+    }
+
+    .due-row.warn .due-g {
+      color: inherit;
+    }
+
     .stats-empty {
       text-align: center;
       color: var(--muted);
@@ -1580,7 +1626,19 @@
     }
 
     .cm-stats-skills {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px 10px;
       font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .cm-stats-skills-lbl {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       color: var(--muted);
     }
 
