@@ -36,11 +36,33 @@
     </div>
 
     <div class="toggles">
+      <button class="chip-btn rocket" id="btnRocket">🚀 Fly</button>
       <button class="chip-btn on" id="btnOrbits">◌ Orbits</button>
       <button class="chip-btn on" id="btnLabels">◆ Names</button>
       <button class="chip-btn" id="btnScale">↔ <span>Squeezed</span></button>
     </div>
   </header>
+
+  <!-- ── cockpit overlay ─────────────────────────────────────────────────── -->
+  <div id="cockpitHud" hidden>
+    <div class="ck-frame"></div>
+    <div class="ck-reticle" id="hudReticle"></div>
+    <div class="ck-target" id="hudTargetMark"></div>
+    <div class="ck-readout">
+      <div class="ck-speed" id="hudSpeed"></div>
+      <div class="ck-body" id="hudBody"></div>
+      <div class="ck-tgt" id="hudTarget"></div>
+      <div class="ck-eta" id="hudEta"></div>
+    </div>
+  </div>
+
+  <!-- ── mission control ─────────────────────────────────────────────────── -->
+  <div class="hud mission-views" id="mViews" hidden>
+    <button class="chip-btn" data-view="map">🗺 Map</button>
+    <button class="chip-btn on" data-view="chase">🎥 Chase</button>
+    <button class="chip-btn" data-view="cockpit">👁 Cockpit</button>
+  </div>
+
 
   <!-- ── time controls ───────────────────────────────────────────────────── -->
   <div class="hud bottom">
@@ -59,6 +81,17 @@
   <aside id="panel" class="panel-surface">
     <button id="panelClose" aria-label="Close">✕</button>
     <div id="panelBody"></div>
+  </aside>
+
+  <!-- Sits after the fact panel so a narrow screen can hide one for the other. -->
+  <aside id="missionBar" class="panel-surface" hidden>
+    <div class="m-status" id="mStatus"></div>
+    <div class="m-detail" id="mDetail"></div>
+    <div class="m-fuel">
+      <div class="m-fuel-track"><div class="m-fuel-fill" id="mFuelFill"></div></div>
+      <div class="m-fuel-text" id="mFuelText"></div>
+    </div>
+    <div class="m-actions" id="mActions"></div>
   </aside>
 
   <div id="hint">Tap a planet for its story · pinch to zoom · drag to swing the view</div>
