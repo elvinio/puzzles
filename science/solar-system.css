@@ -83,6 +83,10 @@ body {
   pointer-events: none;
 }
 
+/* .hud sets display:flex, which would otherwise win over the [hidden]
+   attribute and leave hidden bars on screen. */
+.hud[hidden] { display: none; }
+
 .hud > * { pointer-events: auto; }
 .hud.top { top: 0; }
 .hud.bottom {
@@ -348,6 +352,146 @@ body {
 }
 .chip:active { background: rgba(109, 40, 217, 0.5); }
 
+/* ── mission control ──────────────────────────────────────────────────── */
+.chip-btn.rocket.on { background: rgba(37, 99, 235, 0.7); border-color: #60a5fa; }
+
+/* While aiming, the drag belongs to the launch vector, not the camera. */
+#stage canvas.aiming { cursor: crosshair; }
+
+#missionBar {
+  position: fixed;
+  left: calc(var(--pad) + env(safe-area-inset-left));
+  bottom: calc(84px + env(safe-area-inset-bottom));
+  width: min(340px, 76vw);
+  padding: 13px 15px 14px;
+  border-radius: 18px;
+  z-index: 6;
+}
+
+.m-status {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #fff;
+}
+
+.m-detail {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+.m-detail .good { color: #86efac; }
+.m-detail .warn { color: #fca5a5; }
+.m-detail .m-hint { color: var(--muted); }
+.m-detail .m-burn { color: #c9c1ec; font-weight: 600; font-size: 0.74rem; }
+
+.m-fuel { margin-top: 10px; }
+.m-fuel-track {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  overflow: hidden;
+}
+.m-fuel-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #60a5fa, #a78bfa);
+  transition: width 0.3s ease, background 0.3s ease;
+}
+.m-fuel-fill.low { background: linear-gradient(90deg, #f87171, #fb923c); }
+.m-fuel-text {
+  margin-top: 4px;
+  font-size: 0.68rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.m-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+.m-actions .chip.world { min-height: 30px; padding: 0 9px; font-size: 0.72rem; }
+.m-actions .chip.primary {
+  background: rgba(37, 99, 235, 0.75);
+  border-color: #60a5fa;
+  color: #fff;
+}
+.m-actions .chip:disabled { opacity: 0.4; }
+
+/* With a mission running, the fact panel has to stop short of the view
+   switcher parked in the bottom-right corner. */
+body.mission #panel {
+  max-height: calc(100dvh - 210px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+
+.mission-views {
+  top: auto;
+  bottom: calc(84px + env(safe-area-inset-bottom));
+  justify-content: flex-end;
+  gap: 6px;
+  z-index: 6;
+}
+.mission-views button { flex-shrink: 0; }
+
+/* ── cockpit ──────────────────────────────────────────────────────────── */
+#cockpitHud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* A soft vignette reading as a canopy, rather than a modelled cockpit. */
+.ck-frame {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 78% 68% at 50% 50%, transparent 58%, rgba(5, 6, 13, 0.82) 100%);
+  border: 1px solid rgba(159, 208, 255, 0.12);
+}
+
+.ck-reticle {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 46px; height: 46px;
+  margin: -23px 0 0 -23px;
+  border: 1px solid rgba(159, 208, 255, 0.5);
+  border-radius: 50%;
+}
+.ck-reticle::before, .ck-reticle::after {
+  content: '';
+  position: absolute;
+  background: rgba(159, 208, 255, 0.5);
+}
+.ck-reticle::before { left: 50%; top: -9px; width: 1px; height: 8px; }
+.ck-reticle::after { top: 50%; left: -9px; height: 1px; width: 8px; }
+
+.ck-target {
+  position: absolute;
+  width: 30px; height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 1.5px solid #ffd88a;
+  border-radius: 4px;
+  box-shadow: 0 0 12px rgba(255, 216, 138, 0.5);
+}
+
+/* Top-left, under the back button: the bottom of the screen belongs to the
+   mission bar, which would otherwise sit right on top of these readouts. */
+.ck-readout {
+  position: absolute;
+  left: calc(var(--pad) + 8px + env(safe-area-inset-left));
+  top: calc(var(--pad) + 66px + env(safe-area-inset-top));
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+.ck-speed { font-size: 1.5rem; font-weight: 800; color: #cfe6ff; }
+.ck-body { font-size: 0.76rem; font-weight: 600; color: #9fd0ff; }
+.ck-tgt { font-size: 0.76rem; color: #ffd88a; margin-top: 4px; }
+.ck-eta { font-size: 0.68rem; color: var(--muted); }
+
 /* ── hint & loading ───────────────────────────────────────────────────── */
 #hint {
   position: fixed;
@@ -400,7 +544,19 @@ body {
 /* ── narrow / upright iPad: panel becomes a bottom sheet ──────────────── */
 @media (max-width: 820px), (orientation: portrait) {
   .clock-lap { display: none; }
-  .toggles { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; max-width: 40vw; }
+
+  /* Four chips will not fit beside the clock on a phone unless this row is
+     allowed to give way — flex-shrink:0 pushes them off the right edge. */
+  .toggles {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex-shrink: 1;
+    min-width: 0;
+    max-width: 42vw;
+  }
+  .toggles .chip-btn { padding: 0 9px; font-size: 0.68rem; min-height: 30px; }
+  .clock { padding: 6px 12px 7px; }
 
   #panel {
     top: auto;
@@ -412,4 +568,15 @@ body {
     transform: translateY(18px);
   }
   #hint { display: none; }
+
+  /* The mission bar and the fact panel both want the bottom of a narrow
+     screen, so stack the mission bar above and let it span the width. */
+  #missionBar {
+    left: calc(var(--pad) + env(safe-area-inset-left));
+    right: calc(var(--pad) + env(safe-area-inset-right));
+    width: auto;
+    bottom: calc(136px + env(safe-area-inset-bottom));
+  }
+  #panel.open ~ #missionBar { display: none; }
+  .mission-views { bottom: calc(84px + env(safe-area-inset-bottom)); }
 }

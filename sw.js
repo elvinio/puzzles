@@ -28,6 +28,11 @@ const PRECACHE = [
   'sushi/style.css', 'sushi/main.js', 'sushi/models.js', 'sushi/faces.js',
   'sushi/game.js', 'sushi/fx.js', 'sushi/audio.js',
   'vendor/three.module.min.js', 'vendor/three.core.min.js',
+  // The Solar System (science/ subdir: page + ES modules, all three.js)
+  'science/solar-system.html', 'science/solar-system.css',
+  'science/solar-system.js', 'science/solar-system-data.js',
+  'science/solar-system-ephem.js', 'science/solar-system-textures.js',
+  'science/solar-system-flight.js', 'science/solar-system-rocket.js',
   // shared js/css
   'styles.css', 'app.js', 'avatar.js', 'version.js',
   'sync-registry.js', 'sync-merge.js', 'sync-drive.js', 'sync-ui.js',

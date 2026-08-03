@@ -23,6 +23,7 @@ import {
   surfaceTexture, cloudTexture, sunTexture, ringTexture,
   dotTexture, glowTexture, skyTexture
 } from './solar-system-textures.js';
+import { initRocket } from './solar-system-rocket.js';
 
 // ── Scale ──────────────────────────────────────────────────────────────────
 const AU_UNITS   = 10;      // scene units for 1 au once compression is undone
@@ -64,7 +65,13 @@ let playing = true;
 
 // ── Renderer, scene, camera ────────────────────────────────────────────────
 const stage = document.getElementById('stage');
-const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+const renderer = new THREE.WebGLRenderer({
+  antialias: true, powerPreference: 'high-performance',
+  // The cockpit view sits a few thousandths of a unit off the hull while
+  // Neptune is still hundreds of units away. A logarithmic depth buffer is
+  // what lets one camera span that range without the far planets z-fighting.
+  logarithmicDepthBuffer: true
+});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -74,7 +81,7 @@ stage.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = skyTexture();
 
-const camera = new THREE.PerspectiveCamera(45, 1, 0.02, 6000);
+const camera = new THREE.PerspectiveCamera(45, 1, 0.0015, 6000);
 
 // A little ambient light so night sides read as dark blue rather than a hole.
 scene.add(new THREE.AmbientLight(0xb9c7ff, 0.2));
@@ -371,6 +378,12 @@ const canvas = renderer.domElement;
 const ptrs = new Map();
 let pinchDist = 0, pinchMid = null, tapStart = null;
 
+/* The rocket is built at boot, but the gesture handlers below have to know
+   whether it is currently claiming the drag — while you are aiming a launch,
+   or while a chase/cockpit camera is flying itself. */
+let rocket = null;
+const rocketHasDrag = () => rocket && (rocket.isAiming() || rocket.ownsCamera());
+
 canvas.addEventListener('pointerdown', e => {
   canvas.setPointerCapture(e.pointerId);
   ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -385,6 +398,7 @@ canvas.addEventListener('pointermove', e => {
   p.x = e.clientX; p.y = e.clientY;
 
   if (ptrs.size === 1) {
+    if (rocketHasDrag()) return;          // aiming a launch, or riding the ship
     view.theta -= dx * 0.006;
     view.phi = Math.min(Math.PI - 0.06, Math.max(0.06, view.phi - dy * 0.006));
   } else if (ptrs.size === 2) {
@@ -400,7 +414,7 @@ canvas.addEventListener('pointermove', e => {
 });
 
 function endPointer(e) {
-  if (tapStart && ptrs.size === 1) {
+  if (tapStart && ptrs.size === 1 && !(rocket && rocket.isAiming())) {
     const moved = Math.hypot(e.clientX - tapStart.x, e.clientY - tapStart.y);
     if (moved < 12 && performance.now() - tapStart.t < 400) pickAt(e.clientX, e.clientY);
   }
@@ -435,6 +449,7 @@ function panBy(dx, dy) {
 
 canvas.addEventListener('wheel', e => {
   e.preventDefault();
+  if (rocket && rocket.ownsCamera()) return;
   zoomBy(Math.exp(e.deltaY * 0.0012));
 }, { passive: false });
 
@@ -481,8 +496,12 @@ function pickAt(clientX, clientY) {
   ndc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(ndc, camera);
   const hits = raycaster.intersectObjects(pickables, false);
-  if (hits.length) select(hits[0].object.userData.id);
-  else select(null);
+  const id = hits.length ? hits[0].object.userData.id : null;
+
+  // While a mission is choosing its launch pad or its destination, a tap on a
+  // planet means "that one" rather than "tell me about it".
+  if (rocket && rocket.handlePick(id)) return;
+  select(id);
 }
 
 // ── Labels (HTML, so the text stays crisp on a retina screen) ──────────────
@@ -510,7 +529,9 @@ function placeLabel(rec, w, h) {
   // Moon labels only make sense once you have flown in close to their planet.
   const near = rec.kind !== 'moon' ||
     (host && camera.position.distanceTo(host.group.position) < host.systemRadius * 7);
-  if (!showLabels || !near) { el.style.display = 'none'; return; }
+  // Riding the ship, floating name tags would sit between you and the view.
+  const riding = rocket && rocket.ownsCamera();
+  if (!showLabels || !near || riding) { el.style.display = 'none'; return; }
 
   (rec.mesh || rec.group).getWorldPosition(_wp);
   _wp.project(camera);
@@ -711,12 +732,19 @@ btnLabels.addEventListener('click', () => {
 });
 
 const btnScale = document.getElementById('btnScale');
-btnScale.addEventListener('click', () => {
-  realDistances = !realDistances;
-  btnScale.classList.toggle('on', realDistances);
-  btnScale.querySelector('span').textContent = realDistances ? 'Real gaps' : 'Squeezed';
+
+function setRealDistances(on) {
+  if (realDistances === on) return;
+  realDistances = on;
+  btnScale.classList.toggle('on', on);
+  btnScale.querySelector('span').textContent = on ? 'Real gaps' : 'Squeezed';
   for (const rec of planetRecs) rec.path.userData.rebuild();
   updateKuiper(jd - J2000);
+  updateBodies(0);
+}
+
+btnScale.addEventListener('click', () => {
+  setRealDistances(!realDistances);
   resetView();
 });
 
@@ -742,14 +770,83 @@ function frame(now = performance.now()) {
 
   updateBodies(dtDays);
 
-  if (follow) (follow.mesh || follow.group).getWorldPosition(goalTarget);
-  view.target.lerp(goalTarget, follow ? 0.16 : 0.09);
+  // The rocket gets to move itself and, in chase or cockpit view, to fly the
+  // camera. When it does, the orrery's own rig stands down for the frame.
+  const camTaken = rocket ? rocket.update(dt) : false;
+  const trailing = rocket && rocket.followsShip();
+
+  if (trailing) goalTarget.copy(rocket.shipPosition());
+  else if (follow) (follow.mesh || follow.group).getWorldPosition(goalTarget);
+  view.target.lerp(goalTarget, follow || trailing ? 0.16 : 0.09);
   view.dist += (goalDist - view.dist) * 0.09;
-  applyCamera();
+  if (!camTaken) applyCamera();
 
   updateLabels();
   updateClockUI();
   renderer.render(scene, camera);
+}
+
+// ── The rocket ─────────────────────────────────────────────────────────────
+/* Mission mode forces "Real gaps" on, and puts it back the way it was on the
+   way out. The squeezed view is a lovely picture but it bends straight lines,
+   so nothing flown inside it would be true; at real distances the map is a
+   plain uniform scaling and the trajectories mean what they look like. */
+const btnRocket = document.getElementById('btnRocket');
+let scaleBeforeMission = false;
+
+{
+  const radiusScene = { sun: sunRadius };
+  for (const rec of planetRecs) radiusScene[rec.id] = rec.radius;
+
+  rocket = initRocket({
+    scene, camera, canvas, AU_UNITS, radiusScene,
+
+    getJd: () => jd,
+    setJd: v => { jd = v; updateBodies(0); updateClockUI(); },
+    setPlaying,
+    setSpeedDays: v => {
+      const i = SPEEDS.findIndex(s => s.v >= v);
+      setSpeed(i < 0 ? SPEEDS.length - 1 : i);
+    },
+
+    viewDist: () => view.dist,
+    focusScene: (vec, dist) => {
+      follow = null;
+      goalTarget.copy(vec);
+      goalDist = Math.min(maxDist, dist);
+      minDist = 0.02;
+    },
+
+    selectBody: id => select(id),
+    nameOf: id => (BY_ID[id] ? BY_ID[id].name : id),
+    colorOf: id => (BY_ID[id] ? BY_ID[id].color : '#fff'),
+
+    beginMission: () => {
+      scaleBeforeMission = realDistances;
+      setRealDistances(true);
+      btnScale.disabled = true;
+      btnRocket.classList.add('on');
+      document.body.classList.add('mission');
+      select(null);
+      // Frame Jupiter's orbit rather than Neptune's: at real distances the
+      // whole-system view squashes everything worth launching from into a
+      // knot a few pixels across.
+      follow = null;
+      goalTarget.set(0, 0, 0);
+      view.theta = HOME.theta;
+      view.phi = 0.55;                       // nearer overhead, so aiming reads flat
+      goalDist = Math.min(maxDist, fitDistance(orbitRadius(5.5)));
+      minDist = 0.02;
+    },
+    endMission: () => {
+      setRealDistances(scaleBeforeMission);
+      btnScale.disabled = false;
+      btnRocket.classList.remove('on');
+      document.body.classList.remove('mission');
+      minDist = 1.2;
+      resetView();
+    }
+  });
 }
 
 // ── Boot ───────────────────────────────────────────────────────────────────
