@@ -1362,6 +1362,15 @@
     // just recognizing it among the choices.
     const THINK_BEAT_MS = 900;
 
+    // The CORRECT cell has to be repainted the moment a result is recorded,
+    // not just on the next renderCard — the writing modes (写词 / 找错字) keep
+    // the finished card on screen until Continue is tapped, so a counter that
+    // only refreshed on the next card left "✓ Correct!" sitting above a score
+    // that hadn't moved.
+    function syncHudCorrect() {
+      document.getElementById('hud-correct').textContent = S.results.filter(r => r.correct).length;
+    }
+
     function renderCard() {
       const card = S.cards[S.cardIndex];
       const total = S.cards.length;
@@ -1369,7 +1378,7 @@
 
       document.getElementById('hud-card').textContent = `${S.cardIndex + 1}/${total}`;
       document.getElementById('progress-fill').style.width = `${(S.cardIndex / total) * 100}%`;
-      document.getElementById('hud-correct').textContent = S.results.filter(r => r.correct).length;
+      syncHudCorrect();
 
       const typeLabel = document.getElementById('question-type-label');
       const qText = document.getElementById('question-text');
@@ -1547,6 +1556,7 @@
       S.progress[card.word.key] = rec;
       saveProgress(S.avatarId, S.progress);
       S.results.push({ word: card.word, correct, timeMs, type: card.type, ...(extra || {}) });
+      syncHudCorrect();
       if (correct && S.avatarId && window.__avatarAddCoins) {
         window.__avatarAddCoins(S.avatarId, MODE_GROUP[card.type] === 'writing' ? 2 : 1);
       }
@@ -1796,7 +1806,11 @@
       const timeMs = Date.now() - S.cardStart;
       document.getElementById('fc-self-check-row').style.display = 'none';
       document.getElementById('fc-reveal-row').style.display = 'none';
-      document.getElementById('fc-feedback').textContent = correct ? '✓ Correct!' : `✗ The answer was ${card.correctChar}`;
+      // A retry card repeats a word already missed this session, so
+      // registerResult deliberately doesn't score it. Say so on the card —
+      // a bare "✓ Correct!" above an unchanged CORRECT count reads as a bug.
+      const retryNote = card.isRetry ? ' (retry — practice only)' : '';
+      document.getElementById('fc-feedback').textContent = correct ? `✓ Correct!${retryNote}` : `✗ The answer was ${card.correctChar}`;
 
       // Grade writing by stroke mistakes, not elapsed time — writing always
       // takes >10s, so a latency-based grade would permanently mark it "hard".
@@ -1892,7 +1906,7 @@
 
       if (correct) {
         document.getElementById('question-text').innerHTML = '';
-        document.getElementById('ro-feedback').textContent = '✓ Correct!';
+        document.getElementById('ro-feedback').textContent = card.isRetry ? '✓ Correct! (retry — practice only)' : '✓ Correct!';
         azureSpeak(card.chinese + card.punct, card.word.pinyin);
       } else {
         const qt = document.getElementById('question-text');
