@@ -1362,6 +1362,15 @@
     // just recognizing it among the choices.
     const THINK_BEAT_MS = 900;
 
+    // The CORRECT cell has to be repainted the moment a result is recorded,
+    // not just on the next renderCard — the writing modes (写词 / 找错字) keep
+    // the finished card on screen until Continue is tapped, so a counter that
+    // only refreshed on the next card left "✓ Correct!" sitting above a score
+    // that hadn't moved.
+    function syncHudCorrect() {
+      document.getElementById('hud-correct').textContent = S.results.filter(r => r.correct).length;
+    }
+
     function renderCard() {
       const card = S.cards[S.cardIndex];
       const total = S.cards.length;
@@ -1369,7 +1378,7 @@
 
       document.getElementById('hud-card').textContent = `${S.cardIndex + 1}/${total}`;
       document.getElementById('progress-fill').style.width = `${(S.cardIndex / total) * 100}%`;
-      document.getElementById('hud-correct').textContent = S.results.filter(r => r.correct).length;
+      syncHudCorrect();
 
       const typeLabel = document.getElementById('question-type-label');
       const qText = document.getElementById('question-text');
@@ -1537,20 +1546,25 @@
     // ═══════════════════════════════════════════════════════════════
     // HANDLE ANSWER
     // ═══════════════════════════════════════════════════════════════
-    // Records one card outcome. In-session retries are practice only — they
-    // never touch the SRS record or the results list. A failed first attempt
-    // re-queues the word once at the end of the session.
+    // Records one card outcome. A failed first attempt re-queues the word once
+    // at the end of the session; getting that retry right counts for the
+    // session like any other card (results list, CORRECT counter, coins).
+    // Only the SRS schedule stays out of it — the word was missed today, and
+    // a retry seconds later shouldn't push its next review out as if it were
+    // known. The retry itself is never re-queued, so a word can't loop.
     function registerResult(card, correct, timeMs, grade, extra) {
-      if (card.isRetry) return;
-      let rec = S.progress[card.word.key] || freshRecord();
-      rec = updateRecord(rec, correct, timeMs, grade, MODE_GROUP[card.type] || null);
-      S.progress[card.word.key] = rec;
-      saveProgress(S.avatarId, S.progress);
-      S.results.push({ word: card.word, correct, timeMs, type: card.type, ...(extra || {}) });
+      if (!card.isRetry) {
+        let rec = S.progress[card.word.key] || freshRecord();
+        rec = updateRecord(rec, correct, timeMs, grade, MODE_GROUP[card.type] || null);
+        S.progress[card.word.key] = rec;
+        saveProgress(S.avatarId, S.progress);
+      }
+      S.results.push({ word: card.word, correct, timeMs, type: card.type, isRetry: !!card.isRetry, ...(extra || {}) });
+      syncHudCorrect();
       if (correct && S.avatarId && window.__avatarAddCoins) {
         window.__avatarAddCoins(S.avatarId, MODE_GROUP[card.type] === 'writing' ? 2 : 1);
       }
-      if (!correct) {
+      if (!correct && !card.isRetry) {
         const retry = makeCard(card.word, S.wordPool, effectiveMode());
         if (retry) { retry.isRetry = true; S.cards.push(retry); }
       }
@@ -2386,7 +2400,7 @@
         <div class="result-pinyin" style="display:flex;align-items:center;gap:4px"><span>${esc(r.word.pinyin)}</span></div>
         <div class="result-english">${esc(r.word.english)}</div>
       </div>
-      <div class="result-time">${['pronunciation', 'passage-speaking'].includes(r.type) ? `${r.score} pts ` : `${(r.timeMs / 1000).toFixed(1)}s `}${r.correct ? '✓' : '✗'}</div>`);
+      <div class="result-time">${r.isRetry ? 'retry · ' : ''}${['pronunciation', 'passage-speaking'].includes(r.type) ? `${r.score} pts ` : `${(r.timeMs / 1000).toFixed(1)}s `}${r.correct ? '✓' : '✗'}</div>`);
         item.querySelector('.result-pinyin').appendChild(makeSpeakBtn(r.word.character, r.word.pinyin));
         list.appendChild(item);
       });
