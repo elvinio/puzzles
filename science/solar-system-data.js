@@ -28,6 +28,8 @@ export const SUN = {
     'Every second the Sun turns about 600 million tonnes of hydrogen into helium, and converts roughly 4 million tonnes of that into pure energy.',
     'Sunlight takes 8 minutes 20 seconds to reach Earth — so you always see the Sun as it was eight minutes ago.',
     'The Sun is not solid, so it does not spin as one piece: its equator laps its poles every few weeks. That twisting is what makes sunspots and solar flares.',
+    'In August 2026 the Inouye telescope in Hawaii took the sharpest pictures of the Sun ever made, and found tiny whirlpools — mostly about 65 km apart, the smallest only 25 km across — swirling along the edge of every magnetic patch. Nobody expected any stirring to be happening there at all.',
+    'Those whirlpools keep twisting the Sun’s magnetic field lines until they braid like plaited hair. Every so often a braid snaps and dumps its energy as heat, and that may be the answer to a decades-old puzzle: why the Sun’s outer atmosphere is a million °C while the surface below it is a mere 5,500 °C.',
     'It is so massive that its gravity holds Neptune in place from 4.5 billion km away.'
   ]
 };
