@@ -89,11 +89,11 @@
 
   // ── Coin balance ──────────────────────────────────────────────────────────
   // Coins are earned by answering chinese.html test questions correctly (1
-  // coin, 2 for writing-mode cards) and spent via the PIN-gated deduct form
-  // on avatar.html when they're exchanged for something outside the app.
-  // coinsUpdatedAt is a plain timestamp (not a "best score") so cross-device
-  // sync can pick whichever side changed most recently — see mergeOne in
-  // sync-merge.js.
+  // coin, 2 for writing-mode cards) and spent via the PIN-gated add/deduct
+  // panels on rewards.html when they're exchanged for something outside the
+  // app. coinsUpdatedAt is a plain timestamp (not a "best score") so
+  // cross-device sync can pick whichever side changed most recently — see
+  // mergeOne in sync-merge.js.
 
   window.__avatarGetCoins = function (avatarId) {
     var list = loadAvatars();

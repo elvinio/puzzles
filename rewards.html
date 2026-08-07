@@ -206,18 +206,6 @@
       touch-action: auto;
     }
     .exchange-row input:focus { border-color: var(--p-lt); }
-    .btn-exchange-confirm {
-      background: var(--p);
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 800;
-      padding: 7px 12px;
-      cursor: pointer;
-      touch-action: manipulation;
-      font-family: inherit;
-    }
     .btn-exchange-cancel {
       background: none;
       border: 1.5px solid var(--muted);
@@ -235,18 +223,52 @@
     .earn-panel { background: rgba(34,197,94,0.1); border-color: var(--earn); }
     .earn-panel .exchange-panel-title { color: var(--earn); }
     .earn-panel .exchange-row input:focus { border-color: var(--earn); }
-    .btn-earn-confirm {
+
+    /* ── Custom amount ── */
+    .btn-custom-add {
       background: var(--earn);
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       color: #0b2c17;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 800;
-      padding: 7px 12px;
+      padding: 8px 14px;
       cursor: pointer;
       touch-action: manipulation;
       font-family: inherit;
+      flex-shrink: 0;
     }
+    .btn-custom-add:active { background: #16a34a; }
+    .btn-custom-deduct {
+      background: var(--danger);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 8px 14px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+      flex-shrink: 0;
+    }
+    .btn-custom-deduct:active { background: var(--danger-lt); }
+
+    /* ── Color-circle PIN gate ── */
+    .color-gate { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 6px 0; }
+    .color-dot {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.25);
+      padding: 0;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    .color-dot:active { transform: scale(0.9); }
+    .color-dot.selected { border-color: #fff; transform: scale(1.1); }
+    .gate-hint { font-size: 0.72rem; color: var(--muted); text-align: center; }
 
     /* ── History ── */
     .history-list { display: flex; flex-direction: column; gap: 6px; }
@@ -327,11 +349,23 @@
     { id: 'english-100',  icon: '🇬🇧', title: '100% English spelling',    amount: 10 }
   ];
 
-  var EXCHANGE_PIN = '9112';
+  var COLORS = [
+    { name: 'red',    hex: '#ef4444' },
+    { name: 'blue',   hex: '#3b82f6' },
+    { name: 'green',  hex: '#22c55e' },
+    { name: 'yellow', hex: '#eab308' },
+    { name: 'purple', hex: '#a855f7' },
+    { name: 'orange', hex: '#f97316' }
+  ];
+  var CORRECT_COLORS = ['blue', 'red'];
+
   var openExchangeId = null;
   var openEarnAmount = null;
   var openEarnKey = null;
   var openEarnLabel = null;
+  var openCustomMode = null;
+  var openCustomAmount = null;
+  var gateSelections = {};
 
   var root = document.getElementById('rewards-root');
 
@@ -350,6 +384,24 @@
     if (d < 3600000) return Math.floor(d / 60000) + ' min ago';
     if (d < 86400000) return Math.floor(d / 3600000) + ' hr ago';
     return Math.floor(d / 86400000) + ' day(s) ago';
+  }
+
+  function shuffledColors() {
+    var arr = COLORS.slice();
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr;
+  }
+
+  function renderColorGate(gateKey) {
+    var html = '<div class="gate-hint">Tap the 2 correct color circles</div><div class="color-gate">';
+    shuffledColors().forEach(function (c) {
+      html += '<button type="button" class="color-dot" data-gate="' + gateKey + '" data-color="' + c.name + '" style="background:' + c.hex + '" aria-label="color circle"></button>';
+    });
+    html += '</div>';
+    return html;
   }
 
   function render() {
@@ -407,14 +459,39 @@
     html +=
         '<div class="exchange-panel earn-panel" id="earn-panel">' +
           '<div class="exchange-panel-title" id="earn-panel-title"></div>' +
+          renderColorGate('earn') +
           '<div class="exchange-row">' +
-            '<input type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" class="earn-pin" placeholder="PIN">' +
-          '</div>' +
-          '<div class="exchange-row">' +
-            '<button class="btn-earn-confirm">Confirm</button>' +
             '<button class="btn-exchange-cancel">Cancel</button>' +
           '</div>' +
           '<div class="exchange-error" id="earn-error"></div>' +
+        '</div>' +
+      '</div>';
+
+    // ── Custom amount section ───────────────────────────────────────────
+    html +=
+      '<div class="section">' +
+        '<div class="section-label">Custom Amount</div>' +
+        '<div class="exchange-row">' +
+          '<input type="number" inputmode="numeric" min="1" step="1" id="custom-amount-input" placeholder="Amount">' +
+          '<button class="btn-custom-add">➕ Add</button>' +
+          '<button class="btn-custom-deduct">➖ Deduct</button>' +
+        '</div>' +
+        '<div class="exchange-error" id="custom-input-error"></div>' +
+        '<div class="exchange-panel earn-panel" id="custom-add-panel">' +
+          '<div class="exchange-panel-title" id="custom-add-title"></div>' +
+          renderColorGate('custom-add') +
+          '<div class="exchange-row">' +
+            '<button class="btn-exchange-cancel">Cancel</button>' +
+          '</div>' +
+          '<div class="exchange-error" id="custom-add-error"></div>' +
+        '</div>' +
+        '<div class="exchange-panel" id="custom-deduct-panel">' +
+          '<div class="exchange-panel-title" id="custom-deduct-title"></div>' +
+          renderColorGate('custom-deduct') +
+          '<div class="exchange-row">' +
+            '<button class="btn-exchange-cancel">Cancel</button>' +
+          '</div>' +
+          '<div class="exchange-error" id="custom-deduct-error"></div>' +
         '</div>' +
       '</div>';
 
@@ -433,12 +510,9 @@
         '</div>' +
         '<div class="exchange-panel" id="exchange-' + r.id + '">' +
           '<div class="exchange-panel-title">Redeem "' + escHtml(r.title) + '" for ' + r.cost + ' coins</div>' +
+          renderColorGate('exchange-' + r.id) +
           '<div class="exchange-row">' +
-            '<input type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" class="exchange-pin" placeholder="PIN" data-reward="' + r.id + '">' +
-          '</div>' +
-          '<div class="exchange-row">' +
-            '<button class="btn-exchange-confirm" data-reward="' + r.id + '">Confirm</button>' +
-            '<button class="btn-exchange-cancel" data-reward="' + r.id + '">Cancel</button>' +
+            '<button class="btn-exchange-cancel">Cancel</button>' +
           '</div>' +
           '<div class="exchange-error" id="exchange-error-' + r.id + '"></div>' +
         '</div>';
@@ -467,65 +541,60 @@
     root.innerHTML = html;
     if (openExchangeId) {
       var panel = document.getElementById('exchange-' + openExchangeId);
-      if (panel) {
-        panel.classList.add('visible');
-        var pinInput = panel.querySelector('.exchange-pin');
-        if (pinInput) pinInput.focus();
-      }
+      if (panel) panel.classList.add('visible');
     }
     if (openEarnKey) {
       var earnPanel = document.getElementById('earn-panel');
       if (earnPanel) {
-        var earnTitle = 'Add ' + openEarnAmount + ' coins' + (openEarnLabel ? ' for ' + openEarnLabel : '') + ' — enter PIN';
+        var earnTitle = 'Add ' + openEarnAmount + ' coins' + (openEarnLabel ? ' for ' + openEarnLabel : '');
         document.getElementById('earn-panel-title').textContent = earnTitle;
         earnPanel.classList.add('visible');
-        var earnPinInput = earnPanel.querySelector('.earn-pin');
-        if (earnPinInput) earnPinInput.focus();
+      }
+    }
+    if (openCustomMode === 'add') {
+      var addPanel = document.getElementById('custom-add-panel');
+      if (addPanel) {
+        document.getElementById('custom-add-title').textContent = 'Add ' + openCustomAmount + ' coins';
+        addPanel.classList.add('visible');
+      }
+    }
+    if (openCustomMode === 'deduct') {
+      var deductPanel = document.getElementById('custom-deduct-panel');
+      if (deductPanel) {
+        document.getElementById('custom-deduct-title').textContent = 'Deduct ' + openCustomAmount + ' coins';
+        deductPanel.classList.add('visible');
       }
     }
   }
 
   function closeExchangePanels() {
     root.querySelectorAll('.exchange-panel.visible').forEach(function (el) { el.classList.remove('visible'); });
+    root.querySelectorAll('.exchange-error').forEach(function (el) { el.textContent = ''; });
+    gateSelections = {};
     openExchangeId = null;
     openEarnAmount = null;
     openEarnKey = null;
     openEarnLabel = null;
+    openCustomMode = null;
+    openCustomAmount = null;
   }
 
-  function submitExchange(rewardId) {
-    var panel = document.getElementById('exchange-' + rewardId);
-    var errorEl = document.getElementById('exchange-error-' + rewardId);
-    var pin = panel.querySelector('.exchange-pin').value.trim();
+  function doExchange(rewardId) {
     var reward = REWARDS.filter(function (r) { return r.id === rewardId; })[0];
     if (!reward) return;
-
-    if (pin !== EXCHANGE_PIN) {
-      errorEl.textContent = 'Incorrect PIN.';
-      panel.querySelector('.exchange-pin').value = '';
-      return;
-    }
     var activeAvatar = getActive();
     var activeId = activeAvatar && activeAvatar.id;
     var newBalance = window.__avatarRedeem ? window.__avatarRedeem(activeId, reward.title, reward.cost) : null;
     if (newBalance === null) {
-      errorEl.textContent = 'Insufficient balance.';
+      var errorEl = document.getElementById('exchange-error-' + rewardId);
+      if (errorEl) errorEl.textContent = 'Insufficient balance.';
       return;
     }
     openExchangeId = null;
     render();
   }
 
-  function submitEarn() {
-    var panel = document.getElementById('earn-panel');
-    var errorEl = document.getElementById('earn-error');
-    var pin = panel.querySelector('.earn-pin').value.trim();
-
-    if (pin !== EXCHANGE_PIN) {
-      errorEl.textContent = 'Incorrect PIN.';
-      panel.querySelector('.earn-pin').value = '';
-      return;
-    }
+  function doEarn() {
     var activeAvatar = getActive();
     var activeId = activeAvatar && activeAvatar.id;
     if (activeId && openEarnAmount && window.__avatarAddCoins) {
@@ -537,8 +606,94 @@
     render();
   }
 
+  function doCustomAdd() {
+    var activeAvatar = getActive();
+    var activeId = activeAvatar && activeAvatar.id;
+    if (activeId && openCustomAmount && window.__avatarAddCoins) {
+      window.__avatarAddCoins(activeId, openCustomAmount, 'Custom top-up');
+    }
+    openCustomMode = null;
+    openCustomAmount = null;
+    render();
+  }
+
+  function doCustomDeduct() {
+    var activeAvatar = getActive();
+    var activeId = activeAvatar && activeAvatar.id;
+    var newBalance = (activeId && openCustomAmount && window.__avatarRedeem) ?
+      window.__avatarRedeem(activeId, 'Custom deduction', openCustomAmount) : null;
+    if (newBalance === null) {
+      var errorEl = document.getElementById('custom-deduct-error');
+      if (errorEl) errorEl.textContent = 'Insufficient balance.';
+      return;
+    }
+    openCustomMode = null;
+    openCustomAmount = null;
+    render();
+  }
+
+  function runGateAction(gateKey) {
+    if (gateKey === 'earn') { doEarn(); return; }
+    if (gateKey === 'custom-add') { doCustomAdd(); return; }
+    if (gateKey === 'custom-deduct') { doCustomDeduct(); return; }
+    if (gateKey.indexOf('exchange-') === 0) { doExchange(gateKey.slice('exchange-'.length)); return; }
+  }
+
+  function gateErrorEl(gateKey) {
+    if (gateKey === 'earn') return document.getElementById('earn-error');
+    if (gateKey === 'custom-add') return document.getElementById('custom-add-error');
+    if (gateKey === 'custom-deduct') return document.getElementById('custom-deduct-error');
+    if (gateKey.indexOf('exchange-') === 0) return document.getElementById('exchange-error-' + gateKey.slice('exchange-'.length));
+    return null;
+  }
+
+  function resetGate(gateKey) {
+    gateSelections[gateKey] = [];
+    root.querySelectorAll('.color-dot[data-gate="' + gateKey + '"]').forEach(function (el) {
+      el.classList.remove('selected');
+    });
+  }
+
+  function handleColorDotClick(dot) {
+    var gateKey = dot.dataset.gate;
+    var color = dot.dataset.color;
+    if (!gateSelections[gateKey]) gateSelections[gateKey] = [];
+    var sel = gateSelections[gateKey];
+    var idx = sel.indexOf(color);
+
+    if (idx !== -1) {
+      sel.splice(idx, 1);
+      dot.classList.remove('selected');
+      return;
+    }
+    if (sel.length >= 2) return;
+
+    sel.push(color);
+    dot.classList.add('selected');
+
+    if (sel.length === 2) {
+      var picked = sel.slice().sort();
+      var correct = CORRECT_COLORS.slice().sort();
+      var isCorrect = picked.length === correct.length && picked.every(function (c, i) { return c === correct[i]; });
+      setTimeout(function () {
+        if (isCorrect) {
+          runGateAction(gateKey);
+        } else {
+          var errorEl = gateErrorEl(gateKey);
+          if (errorEl) errorEl.textContent = 'Wrong colors. Try again.';
+          resetGate(gateKey);
+        }
+      }, 200);
+    }
+  }
+
   root.addEventListener('click', function (e) {
     var t = e.target;
+
+    if (t.classList.contains('color-dot')) {
+      handleColorDotClick(t);
+      return;
+    }
 
     if (t.classList.contains('btn-earn')) {
       var amount = parseInt(t.dataset.earn, 10);
@@ -549,12 +704,8 @@
         openEarnKey = key;
         openEarnAmount = amount;
         openEarnLabel = null;
-        var panel = document.getElementById('earn-panel');
-        document.getElementById('earn-panel-title').textContent = 'Add ' + amount + ' coins — enter PIN';
-        panel.classList.add('visible');
-        var pinInput = panel.querySelector('.earn-pin');
-        if (pinInput) pinInput.focus();
       }
+      render();
       return;
     }
 
@@ -569,17 +720,44 @@
         openEarnKey = itemKey;
         openEarnAmount = item.amount;
         openEarnLabel = item.title;
-        var itemPanel = document.getElementById('earn-panel');
-        document.getElementById('earn-panel-title').textContent = 'Add ' + item.amount + ' coins for ' + item.title + ' — enter PIN';
-        itemPanel.classList.add('visible');
-        var itemPinInput = itemPanel.querySelector('.earn-pin');
-        if (itemPinInput) itemPinInput.focus();
       }
+      render();
       return;
     }
 
-    if (t.classList.contains('btn-earn-confirm')) {
-      submitEarn();
+    if (t.classList.contains('btn-custom-add')) {
+      var addInput = document.getElementById('custom-amount-input');
+      var addInputError = document.getElementById('custom-input-error');
+      var addAmount = parseInt(addInput.value, 10);
+      if (!addAmount || addAmount <= 0) {
+        addInputError.textContent = 'Enter a valid coin amount.';
+        return;
+      }
+      closeExchangePanels();
+      openCustomMode = 'add';
+      openCustomAmount = addAmount;
+      render();
+      return;
+    }
+
+    if (t.classList.contains('btn-custom-deduct')) {
+      var deductInput = document.getElementById('custom-amount-input');
+      var deductInputError = document.getElementById('custom-input-error');
+      var deductAmount = parseInt(deductInput.value, 10);
+      var activeAvatar = getActive();
+      var currentBalance = activeAvatar ? (activeAvatar.coins || 0) : 0;
+      if (!deductAmount || deductAmount <= 0) {
+        deductInputError.textContent = 'Enter a valid coin amount.';
+        return;
+      }
+      if (deductAmount > currentBalance) {
+        deductInputError.textContent = 'Insufficient balance.';
+        return;
+      }
+      closeExchangePanels();
+      openCustomMode = 'deduct';
+      openCustomAmount = deductAmount;
+      render();
       return;
     }
 
@@ -589,33 +767,15 @@
       closeExchangePanels();
       if (!wasVisible) {
         openExchangeId = rewardId;
-        var panel = document.getElementById('exchange-' + rewardId);
-        panel.classList.add('visible');
-        var pinInput = panel.querySelector('.exchange-pin');
-        if (pinInput) pinInput.focus();
       }
+      render();
       return;
     }
 
     if (t.classList.contains('btn-exchange-cancel')) {
       closeExchangePanels();
+      render();
       return;
-    }
-
-    if (t.classList.contains('btn-exchange-confirm')) {
-      submitExchange(t.dataset.reward);
-      return;
-    }
-  });
-
-  root.addEventListener('keydown', function (e) {
-    if (e.key !== 'Enter') return;
-    if (e.target.classList.contains('exchange-pin')) {
-      e.preventDefault();
-      submitExchange(e.target.dataset.reward);
-    } else if (e.target.classList.contains('earn-pin')) {
-      e.preventDefault();
-      submitEarn();
     }
   });
 
