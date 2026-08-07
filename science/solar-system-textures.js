@@ -494,22 +494,6 @@ export function cloudTexture() {
   return tex;
 }
 
-/** The Sun's boiling photosphere. */
-export function sunTexture() {
-  if (cache.has('sun')) return cache.get('sun');
-  const s = stopsOf([
-    [0.0, 0xd94a12], [0.35, 0xf78c1c], [0.6, 0xffc247], [0.85, 0xffe9a8], [1.0, 0xfffbe8]
-  ]);
-  const { c } = paint(512, 256, (u, v) => {
-    const grain = fbm(u, v, 3, { octaves: 6, base: 14 });
-    const cell = fbm(u, v, 55, { octaves: 3, base: 40 });
-    return ramp(s, grain * 0.7 + cell * 0.45);
-  });
-  const tex = toTexture(c);
-  cache.set('sun', tex);
-  return tex;
-}
-
 /** Saturn/Uranus ring band: a 1-D strip read across the ring's radius. */
 export function ringTexture(kind = 'saturn') {
   const key = 'ring:' + kind;

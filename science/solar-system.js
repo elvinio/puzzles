@@ -20,10 +20,11 @@ import {
 } from './solar-system-ephem.js';
 import { SUN, PLANETS, BY_ID } from './solar-system-data.js';
 import {
-  surfaceTexture, cloudTexture, sunTexture, ringTexture,
+  surfaceTexture, cloudTexture, ringTexture,
   dotTexture, glowTexture, skyTexture
 } from './solar-system-textures.js';
 import { initRocket } from './solar-system-rocket.js';
+import { initSun } from './solar-system-sun.js';
 
 // ── Scale ──────────────────────────────────────────────────────────────────
 const AU_UNITS   = 10;      // scene units for 1 au once compression is undone
@@ -121,23 +122,34 @@ const sunRadius = bodyRadius(SUN.radiusKm);
 const sunGroup = new THREE.Group();
 scene.add(sunGroup);
 
-const sunMesh = new THREE.Mesh(
-  new THREE.SphereGeometry(sunRadius, 48, 32),
-  new THREE.MeshBasicMaterial({ map: sunTexture() })
-);
-sunGroup.add(sunMesh);
+/* A star rather than a painted ball — boiling granulation, a corona, rays and
+   prominences. See solar-system-sun.js; the costly layers only switch on once
+   you are close enough to make them out. */
+const sun = initSun({
+  renderer,
+  radius: sunRadius,
+  lowres: window.matchMedia('(pointer: coarse)').matches ||
+          Math.min(window.innerWidth, window.innerHeight) < 700
+});
+sunGroup.add(sun.group);
+const sunMesh = sun.mesh;
 
-for (const [scale, tex, opacity] of [
+/* Sprite haloes, so the Sun still reads as a bright spot from out past
+   Neptune where its disc is barely a pixel. They bow out as you close in and
+   the shader corona takes the job over. */
+const sunHaloes = [
   [5.2, glowTexture('rgba(255,214,140,0.55)', 'rgba(255,120,20,0)'), 0.85],
-  [12,  glowTexture('rgba(255,180,90,0.22)',  'rgba(255,90,10,0)'), 0.5]
-]) {
+  [12,  glowTexture('rgba(255,180,90,0.22)',  'rgba(255,90,10,0)'),  0.5]
+].map(([scale, map, opacity]) => {
   const halo = new THREE.Sprite(new THREE.SpriteMaterial({
-    map: tex, transparent: true, opacity, depthWrite: false,
+    map, transparent: true, opacity, depthWrite: false,
     blending: THREE.AdditiveBlending
   }));
   halo.scale.setScalar(sunRadius * scale);
+  halo.userData.opacity = opacity;
   sunGroup.add(halo);
-}
+  return halo;
+});
 
 // ── Planets, moons, rings, orbit paths ─────────────────────────────────────
 const orbitGroup = new THREE.Group();       // dotted paths live here so they toggle as one
@@ -664,7 +676,7 @@ function updateBodies(dtDays) {
     }
   }
 
-  sunMesh.rotation.y += (dtDays * Math.min(1, 12 / SPEEDS[speedIdx].v)) / 25.4 * Math.PI * 2;
+  sun.spin.rotation.y += (dtDays * Math.min(1, 12 / SPEEDS[speedIdx].v)) / 25.4 * Math.PI * 2;
   updateAsteroids(days);
 }
 
@@ -780,6 +792,16 @@ function frame(now = performance.now()) {
   view.target.lerp(goalTarget, follow || trailing ? 0.16 : 0.09);
   view.dist += (goalDist - view.dist) * 0.09;
   if (!camTaken) applyCamera();
+
+  /* The Sun's rays and prominences are worth the money only when you are near
+     enough to see them; the distance haloes fade out over the same stretch so
+     the two never double up. Everything is measured from the origin, which is
+     where the Sun sits. */
+  const sunEye = camera.position.length();
+  sun.setDetail(selected === 'sun' || sunEye < sunRadius * 18);
+  const haloFade = Math.min(1, Math.max(0, (sunEye - sunRadius * 4) / (sunRadius * 12)));
+  for (const halo of sunHaloes) halo.material.opacity = halo.userData.opacity * haloFade;
+  sun.update(dt, camera);
 
   updateLabels();
   updateClockUI();
