@@ -33,6 +33,16 @@ const PRECACHE = [
   'science/solar-system.js', 'science/solar-system-data.js',
   'science/solar-system-ephem.js', 'science/solar-system-textures.js',
   'science/solar-system-flight.js', 'science/solar-system-rocket.js',
+  'science/solar-system-sun.js', 'science/solar-system-earth.js',
+  // ...and its real photo textures, one folder per body (CC BY 4.0, solarsystemscope.com)
+  'science/textures/earth/2k_earth_daymap.jpg', 'science/textures/earth/2k_earth_nightmap.jpg',
+  'science/textures/earth/2k_earth_clouds.jpg', 'science/textures/earth/2k_earth_normal_map.png',
+  'science/textures/earth/2k_earth_specular_map.png',
+  'science/textures/mercury/2k_mercury.jpg', 'science/textures/venus/2k_venus_atmosphere.jpg',
+  'science/textures/mars/2k_mars.jpg', 'science/textures/jupiter/2k_jupiter.jpg',
+  'science/textures/saturn/2k_saturn.jpg', 'science/textures/saturn/2k_saturn_ring_alpha.png',
+  'science/textures/uranus/2k_uranus.jpg', 'science/textures/neptune/2k_neptune.jpg',
+  'science/textures/moon/2k_moon.jpg',
   // shared js/css
   'styles.css', 'app.js', 'avatar.js', 'version.js',
   'sync-registry.js', 'sync-merge.js', 'sync-drive.js', 'sync-ui.js',

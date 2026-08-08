@@ -1,14 +1,18 @@
 /* ============================================================================
-   solar-system-textures.js — every surface, painted in code (Earth excepted).
+   solar-system-textures.js — every surface, real where we can get one.
 
-   Every world but Earth is generated once at start-up on a 2D canvas from
-   tileable value noise, then handed to three.js as a texture — offline-
-   friendly, and lets each planet keep its own character: banded gas giants,
-   cratered rock, cracked ice.
+   The Sun renders as a procedural star instead of a texture (see
+   solar-system-sun.js). Earth, the other planets and the Moon use real
+   photographic maps: Earth gets day/night/cloud/normal/specular layers (see
+   earthMaps()), everyone else a single diffuse map (see PHOTO_TEXTURES) —
+   all NASA-derived imagery from solarsystemscope.com/textures, CC BY 4.0,
+   one folder per body under textures/.
 
-   Earth uses real photographic maps instead (see earthMaps() below) — day,
-   night, clouds, normal and specular JPG/PNG files in textures/earth/,
-   sourced from solarsystemscope.com/textures (CC BY 4.0, NASA-derived).
+   Bodies with no public map of their own — the smaller moons, plus Uranus's
+   faint rings — fall back to a painter: a 2D canvas filled at start-up from
+   tileable value noise and handed to three.js as a texture. That keeps those
+   worlds offline-friendly and lets each keep its own character: cratered
+   rock, cracked ice, banded haze.
 
    Maps are equirectangular: x wraps around the equator, y runs pole to pole.
    ========================================================================== */
@@ -207,124 +211,9 @@ function banded(w, h, seed, stops, opts = {}) {
   }).c;
 }
 
-// ── The painters, one per `texture` name in solar-system-data.js ───────────
-const W = 512, H = 256;
-
+// ── The painters, one per `texture` name in solar-system-data.js that has no
+//    photographic map (see PHOTO_TEXTURES below) ───────────────────────────
 const PAINTERS = {
-  mercury: () => rocky(W, H, 11, [
-    [0.0, 0x4a423c], [0.35, 0x7d7267], [0.6, 0x9a8d7e], [0.85, 0xb5a795], [1.0, 0xcdbfa9]
-  ], { craters: 190, maxR: 22, dark: 0.42, rim: 0.30 }),
-
-  venus: () => {
-    const { c, ctx } = (() => {
-      const s = stopsOf([
-        [0.0, 0xc9a25e], [0.3, 0xe8cf95], [0.5, 0xf3e2b4], [0.7, 0xe2c584], [1.0, 0xc59a55]
-      ]);
-      return paint(W, H, (u, v) => {
-        const warp = (fbm(u, v, 23, { octaves: 5, base: 3, sx: 6, sy: 2 }) - 0.5) * 0.30;
-        const cloud = fbm(u + warp, v, 41, { octaves: 5, base: 5, sx: 4 });
-        return ramp(s, v * 0.5 + cloud * 0.5);
-      });
-    })();
-    ctx.globalAlpha = 0.25;                                        // hazy overall wash
-    ctx.fillStyle = '#f7e6bd';
-    ctx.fillRect(0, 0, W, H);
-    return c;
-  },
-
-  mars: () => {
-    const c = rocky(W, H, 17, [
-      [0.0, 0x6b2f1c], [0.3, 0x9c4a26], [0.55, 0xc06437], [0.78, 0xd98750], [1.0, 0xecab74]
-    ], { craters: 150, maxR: 20, dark: 0.30, rim: 0.22, ice: 0.9 });
-    const ctx = c.getContext('2d');
-    // Dark albedo regions — the markings early astronomers mistook for seas.
-    ctx.globalAlpha = 0.35;
-    const rnd = mulberry32(88);
-    ctx.fillStyle = '#5a2d1d';
-    for (let i = 0; i < 14; i++) {
-      const x = rnd() * W, y = 0.25 * H + rnd() * 0.5 * H;
-      const rx = 20 + rnd() * 70, ry = 8 + rnd() * 22;
-      ctx.beginPath();
-      ctx.ellipse(x, y, rx, ry, (rnd() - 0.5) * 0.6, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    return c;
-  },
-
-  jupiter: () => {
-    const c = banded(W * 2, H * 2, 7, [
-      [0.00, 0xa98b6b], [0.10, 0xdcc4a3], [0.20, 0xb98b5e], [0.30, 0xe8d6bb],
-      [0.40, 0xc08a5c], [0.48, 0xe3cdae], [0.56, 0xb87a4e], [0.66, 0xe8d9c0],
-      [0.78, 0xc39a72], [0.90, 0xd9c3a4], [1.00, 0x8d7358]
-    ], { swirl: 0.075, detail: 0.4 });
-    const ctx = c.getContext('2d');
-    // The Great Red Spot: south of the equator, about 1.3 Earths wide.
-    const gx = W * 0.62, gy = H * 2 * 0.63, grx = W * 0.16, gry = H * 0.30;
-    for (const dx of [-W * 2, 0, W * 2]) {
-      const g = ctx.createRadialGradient(gx + dx, gy, grx * 0.1, gx + dx, gy, grx);
-      g.addColorStop(0.0, 'rgba(190,86,50,0.95)');
-      g.addColorStop(0.6, 'rgba(206,116,72,0.75)');
-      g.addColorStop(1.0, 'rgba(214,150,110,0)');
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.ellipse(gx + dx, gy, grx, gry, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    return c;
-  },
-
-  saturn: () => banded(W * 2, H * 2, 13, [
-    [0.00, 0xa88a5f], [0.14, 0xe6d3a8], [0.30, 0xd9c194], [0.44, 0xf0e2bd],
-    [0.58, 0xdcc79a], [0.72, 0xefe0ba], [0.86, 0xc8ab7c], [1.00, 0x94794f]
-  ], { swirl: 0.05, detail: 0.22 }),
-
-  uranus: () => banded(W, H, 19, [
-    [0.00, 0x86c3cc], [0.25, 0xaadfe4], [0.5, 0xbfe9ec], [0.75, 0xa5dde2], [1.00, 0x7fbcc6]
-  ], { swirl: 0.03, detail: 0.10 }),
-
-  neptune: () => {
-    const c = banded(W, H, 29, [
-      [0.00, 0x1f3a8f], [0.22, 0x3f63c8], [0.42, 0x5a83e0], [0.58, 0x4a71d4],
-      [0.78, 0x33539f], [1.00, 0x1b2f78]
-    ], { swirl: 0.06, detail: 0.28 });
-    const ctx = c.getContext('2d');
-    // A dark storm plus the bright methane-cirrus streaks that chase it.
-    const sx = W * 0.35, sy = H * 0.36;
-    for (const dx of [-W, 0, W]) {
-      const g = ctx.createRadialGradient(sx + dx, sy, 4, sx + dx, sy, W * 0.10);
-      g.addColorStop(0, 'rgba(12,26,74,0.85)');
-      g.addColorStop(1, 'rgba(20,40,110,0)');
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.ellipse(sx + dx, sy, W * 0.10, H * 0.07, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 0.5;
-    cracks(ctx, W, H, 8, 91, 'rgba(230,240,255,0.5)', 2.2);
-    ctx.globalAlpha = 1;
-    return c;
-  },
-
-  // ── moons ────────────────────────────────────────────────────────────────
-  moon: () => {
-    const c = rocky(W, H, 37, [
-      [0.0, 0x5c5a55], [0.4, 0x8e8b84], [0.7, 0xa9a59c], [1.0, 0xc6c1b6]
-    ], { craters: 240, maxR: 20, dark: 0.34, rim: 0.28 });
-    const ctx = c.getContext('2d');
-    ctx.globalAlpha = 0.42;                                        // the dark maria
-    ctx.fillStyle = '#3f3e3c';
-    const rnd = mulberry32(4);
-    for (let i = 0; i < 9; i++) {
-      const x = rnd() * W, y = 0.2 * H + rnd() * 0.6 * H;
-      ctx.beginPath();
-      ctx.ellipse(x, y, 16 + rnd() * 42, 12 + rnd() * 28, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    return c;
-  },
-
   io: () => {
     const c = rocky(256, 128, 43, [
       [0.0, 0xa8721f], [0.3, 0xd9a72f], [0.55, 0xf0d768], [0.8, 0xf7ecae], [1.0, 0xe4b64a]
@@ -424,11 +313,48 @@ const PAINTERS = {
 // ── Public API ─────────────────────────────────────────────────────────────
 const cache = new Map();
 
-/** Surface map for a body, painted on first use. */
+// ── Planets and the Moon: real photographic maps, one folder per body ──────
+const PHOTO_TEX_ROOT = new URL('./textures/', import.meta.url);
+const photoLoader = new THREE.TextureLoader();
+
+/** Bodies with a real photographic map, keyed the same as `texture` in
+ *  solar-system-data.js, each living in its own textures/<name>/ folder —
+ *  the same layout as Earth's (see EARTH_TEX_DIR below). Venus uses its
+ *  cloud deck, not the (invisible) radar-mapped surface — that's what the
+ *  planet actually looks like from outside. */
+const PHOTO_TEXTURES = {
+  mercury: '2k_mercury.jpg',
+  venus: '2k_venus_atmosphere.jpg',
+  mars: '2k_mars.jpg',
+  jupiter: '2k_jupiter.jpg',
+  saturn: '2k_saturn.jpg',
+  uranus: '2k_uranus.jpg',
+  neptune: '2k_neptune.jpg',
+  moon: '2k_moon.jpg'
+};
+
+/**
+ * Load a real photo for surfaceTexture()/ringTexture(). Unlike
+ * loadEarthTexture() below this does carry the sRGB flag: these feed a
+ * plain MeshStandardMaterial, which expects a colour-managed albedo, not
+ * Earth's raw, self-lit shader.
+ */
+function loadPhotoTexture(body, file, { repeatWrap = true } = {}) {
+  const dir = new URL(`${body}/`, PHOTO_TEX_ROOT);
+  const tex = photoLoader.load(new URL(file, dir).href);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  if (repeatWrap) tex.wrapS = THREE.RepeatWrapping;
+  tex.anisotropy = 4;
+  return tex;
+}
+
+/** Surface map for a body: a real photo where we have one, else painted on first use. */
 export function surfaceTexture(name) {
   if (!cache.has(name)) {
-    const painter = PAINTERS[name] || PAINTERS.rock;
-    cache.set(name, toTexture(painter()));
+    const tex = PHOTO_TEXTURES[name]
+      ? loadPhotoTexture(name, PHOTO_TEXTURES[name])
+      : toTexture((PAINTERS[name] || PAINTERS.rock)());
+    cache.set(name, tex);
   }
   return cache.get(name);
 }
@@ -475,38 +401,33 @@ export function cloudTexture() {
   return cache.get('clouds');
 }
 
-/** Saturn/Uranus ring band: a 1-D strip read across the ring's radius. */
+/** Saturn's ring band: a real radial alpha map, from the same folder as its
+ *  surface map. Uranus has no public map for its faint, near-invisible
+ *  rings, so those stay a painted 1-D strip. */
 export function ringTexture(kind = 'saturn') {
   const key = 'ring:' + kind;
   if (cache.has(key)) return cache.get(key);
+
+  if (kind === 'saturn') {
+    const tex = loadPhotoTexture('saturn', '2k_saturn_ring_alpha.png', { repeatWrap: false });
+    cache.set(key, tex);
+    return tex;
+  }
+
   const w = 1024, h = 4;
   const c = canvas(w, h);
   const ctx = c.getContext('2d');
   const img = ctx.createImageData(w, h);
   const d = img.data;
-  const rnd = mulberry32(kind === 'saturn' ? 7 : 21);
+  const rnd = mulberry32(21);
   const jitter = new Float32Array(w);
   for (let i = 0; i < w; i++) jitter[i] = rnd();
 
   for (let x = 0; x < w; x++) {
     const t = x / w;
-    let alpha, col;
-    if (kind === 'saturn') {
-      // C ring, B ring, Cassini division, A ring, Encke gap, then nothing.
-      if (t < 0.12) alpha = 0.20 + t * 0.6;
-      else if (t < 0.46) alpha = 0.80 + Math.sin(t * 60) * 0.06;
-      else if (t < 0.53) alpha = 0.12;                              // Cassini division
-      else if (t < 0.86) alpha = 0.62 + Math.sin(t * 90) * 0.07;
-      else if (t < 0.885) alpha = 0.05;                             // Encke gap
-      else if (t < 0.97) alpha = 0.45;
-      else alpha = 0;
-      const shade = 0.72 + 0.28 * (0.5 + 0.5 * Math.sin(t * 24));
-      col = mix(rgb(0xa08a68), rgb(0xf3e6cd), shade);
-    } else {
-      alpha = (t > 0.55 && t < 0.62) || (t > 0.78 && t < 0.83) || (t > 0.93 && t < 0.97)
-        ? 0.5 : 0.06;
-      col = rgb(0x9fb6bd);
-    }
+    const alpha = (t > 0.55 && t < 0.62) || (t > 0.78 && t < 0.83) || (t > 0.93 && t < 0.97)
+      ? 0.5 : 0.06;
+    const col = rgb(0x9fb6bd);
     // A little graininess so the rings don't look like flat plastic.
     const grain = 0.85 + jitter[x] * 0.3;
     for (let y = 0; y < h; y++) {
