@@ -124,7 +124,8 @@ export const PLANETS = [
           'Long ago the Moon spun faster. Earth pulled harder on its near side than its far side, stretching it a little — and that stretch acted like a brake, slowing the spin down over millions of years until it matched the orbit, locking the same face toward us forever.',
           'It is drifting away from us by about 3.8 cm a year — the same rate your fingernails grow.',
           'Its gravity raises our tides, and steadies Earth\'s tilt, which keeps our seasons from wandering wildly.',
-          'It probably formed when a Mars-sized world smashed into the young Earth about 4.5 billion years ago.'
+          'It probably formed when a Mars-sized world smashed into the young Earth about 4.5 billion years ago.',
+          'The Moon\'s path around Earth is tilted slightly, so most months it passes just above or below the Sun instead of straight in front of it. A solar eclipse only happens on the rare occasions it lines up exactly, which is just a couple of times a year.'
         ]
       }
     ]
