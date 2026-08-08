@@ -206,6 +206,19 @@
       touch-action: auto;
     }
     .exchange-row input:focus { border-color: var(--p-lt); }
+    .exchange-row select {
+      flex: 1;
+      min-width: 120px;
+      background: var(--bg);
+      border: 2px solid var(--brd);
+      border-radius: 8px;
+      padding: 7px 10px;
+      color: var(--p-text);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+    }
+    .exchange-row select:focus { border-color: var(--p-lt); }
     .btn-exchange-cancel {
       background: none;
       border: 1.5px solid var(--muted);
@@ -239,6 +252,20 @@
       flex-shrink: 0;
     }
     .btn-custom-add:active { background: #16a34a; }
+    .btn-transfer-submit {
+      background: var(--p);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 8px 14px;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-family: inherit;
+      flex-shrink: 0;
+    }
+    .btn-transfer-submit:active { background: var(--p-lt); }
     .btn-custom-deduct {
       background: var(--danger);
       border: none;
@@ -340,7 +367,8 @@
   var REWARDS = [
     { id: 'series',   icon: '📺', title: 'Watch a series',        cost: 20 },
     { id: 'movie',    icon: '🎬', title: 'Watch a movie',         cost: 60 },
-    { id: 'nintendo', icon: '🎮', title: '30 mins Nintendo play', cost: 50 }
+    { id: 'nintendo', icon: '🎮', title: '30 mins Nintendo play', cost: 50 },
+    { id: 'pokopia',  icon: '⚡', title: 'Pokopia (Pokémon)',     cost: 2000 }
   ];
 
   var EARN_ITEMS = [
@@ -365,6 +393,9 @@
   var openEarnLabel = null;
   var openCustomMode = null;
   var openCustomAmount = null;
+  var openTransferTo = null;
+  var openTransferAmount = null;
+  var openTransferToName = null;
   var gateSelections = {};
 
   var root = document.getElementById('rewards-root');
@@ -495,6 +526,35 @@
         '</div>' +
       '</div>';
 
+    // ── Transfer section ────────────────────────────────────────────────
+    var otherAvatars = (window.__avatarLoadAvatars ? window.__avatarLoadAvatars() : [])
+      .filter(function (a) { return a.id !== avatar.id; });
+
+    if (otherAvatars.length > 0) {
+      html +=
+        '<div class="section">' +
+          '<div class="section-label">Transfer Coins</div>' +
+          '<div class="exchange-row">' +
+            '<select id="transfer-target-select">' +
+              otherAvatars.map(function (a) {
+                return '<option value="' + a.id + '">' + escHtml(a.nickname) + '</option>';
+              }).join('') +
+            '</select>' +
+            '<input type="number" inputmode="numeric" min="1" step="1" id="transfer-amount-input" placeholder="Amount">' +
+            '<button class="btn-transfer-submit">↔️ Send</button>' +
+          '</div>' +
+          '<div class="exchange-error" id="transfer-input-error"></div>' +
+          '<div class="exchange-panel earn-panel" id="transfer-panel">' +
+            '<div class="exchange-panel-title" id="transfer-panel-title"></div>' +
+            renderColorGate('transfer') +
+            '<div class="exchange-row">' +
+              '<button class="btn-exchange-cancel">Cancel</button>' +
+            '</div>' +
+            '<div class="exchange-error" id="transfer-error"></div>' +
+          '</div>' +
+        '</div>';
+    }
+
     // ── Exchange section ────────────────────────────────────────────────
     html += '<div class="section"><div class="section-label">Exchange Coins</div>';
     REWARDS.forEach(function (r) {
@@ -565,6 +625,13 @@
         deductPanel.classList.add('visible');
       }
     }
+    if (openTransferTo) {
+      var transferPanel = document.getElementById('transfer-panel');
+      if (transferPanel) {
+        document.getElementById('transfer-panel-title').textContent = 'Send ' + openTransferAmount + ' coins to ' + (openTransferToName || 'them');
+        transferPanel.classList.add('visible');
+      }
+    }
   }
 
   function closeExchangePanels() {
@@ -577,6 +644,9 @@
     openEarnLabel = null;
     openCustomMode = null;
     openCustomAmount = null;
+    openTransferTo = null;
+    openTransferAmount = null;
+    openTransferToName = null;
   }
 
   function doExchange(rewardId) {
@@ -632,10 +702,33 @@
     render();
   }
 
+  function doTransfer() {
+    var activeAvatar = getActive();
+    var activeId = activeAvatar && activeAvatar.id;
+    if (!(activeId && openTransferTo && openTransferAmount && window.__avatarTransferCoins)) {
+      openTransferTo = null;
+      openTransferAmount = null;
+      openTransferToName = null;
+      render();
+      return;
+    }
+    var result = window.__avatarTransferCoins(activeId, openTransferTo, openTransferAmount);
+    if (!result) {
+      var errorEl = document.getElementById('transfer-error');
+      if (errorEl) errorEl.textContent = 'Insufficient balance.';
+      return;
+    }
+    openTransferTo = null;
+    openTransferAmount = null;
+    openTransferToName = null;
+    render();
+  }
+
   function runGateAction(gateKey) {
     if (gateKey === 'earn') { doEarn(); return; }
     if (gateKey === 'custom-add') { doCustomAdd(); return; }
     if (gateKey === 'custom-deduct') { doCustomDeduct(); return; }
+    if (gateKey === 'transfer') { doTransfer(); return; }
     if (gateKey.indexOf('exchange-') === 0) { doExchange(gateKey.slice('exchange-'.length)); return; }
   }
 
@@ -643,6 +736,7 @@
     if (gateKey === 'earn') return document.getElementById('earn-error');
     if (gateKey === 'custom-add') return document.getElementById('custom-add-error');
     if (gateKey === 'custom-deduct') return document.getElementById('custom-deduct-error');
+    if (gateKey === 'transfer') return document.getElementById('transfer-error');
     if (gateKey.indexOf('exchange-') === 0) return document.getElementById('exchange-error-' + gateKey.slice('exchange-'.length));
     return null;
   }
@@ -757,6 +851,35 @@
       closeExchangePanels();
       openCustomMode = 'deduct';
       openCustomAmount = deductAmount;
+      render();
+      return;
+    }
+
+    if (t.classList.contains('btn-transfer-submit')) {
+      var targetSelect = document.getElementById('transfer-target-select');
+      var transferAmountInput = document.getElementById('transfer-amount-input');
+      var transferInputError = document.getElementById('transfer-input-error');
+      var targetId = targetSelect ? targetSelect.value : '';
+      var transferAmount = parseInt(transferAmountInput.value, 10);
+      var activeAvatarForTransfer = getActive();
+      var currentBalanceForTransfer = activeAvatarForTransfer ? (activeAvatarForTransfer.coins || 0) : 0;
+      if (!targetId) {
+        transferInputError.textContent = 'Choose someone to send coins to.';
+        return;
+      }
+      if (!transferAmount || transferAmount <= 0) {
+        transferInputError.textContent = 'Enter a valid coin amount.';
+        return;
+      }
+      if (transferAmount > currentBalanceForTransfer) {
+        transferInputError.textContent = 'Insufficient balance.';
+        return;
+      }
+      var targetAvatar = (window.__avatarLoadAvatars ? window.__avatarLoadAvatars() : []).filter(function (a) { return a.id === targetId; })[0];
+      closeExchangePanels();
+      openTransferTo = targetId;
+      openTransferAmount = transferAmount;
+      openTransferToName = targetAvatar ? targetAvatar.nickname : '';
       render();
       return;
     }
