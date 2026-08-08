@@ -52,6 +52,8 @@ const bodyRadius = km => EARTH_SIZE * Math.pow(km / 6371, SIZE_POW);
 // ── Time ───────────────────────────────────────────────────────────────────
 const START_JD = jdFromDate(new Date(Date.UTC(2026, 0, 1)));
 const SPEEDS = [
+  { v: 1 / 24, label: '1 hour/s' },
+  { v: 3 / 24, label: '3 hours/s' },
   { v: 0.25, label: '¼ day/s' },
   { v: 1,    label: '1 day/s' },
   { v: 3,    label: '3 days/s' },
@@ -61,8 +63,9 @@ const SPEEDS = [
   { v: 365,  label: '1 year/s' },
   { v: 1825, label: '5 years/s' }
 ];
+const DEFAULT_SPEED_IDX = 3;    // 1 day/s
 let jd = START_JD;
-let speedIdx = 1;
+let speedIdx = DEFAULT_SPEED_IDX;
 let playing = true;
 
 // ── Renderer, scene, camera ────────────────────────────────────────────────
@@ -219,6 +222,20 @@ function buildRing(planet, radius) {
   return mesh;
 }
 
+/** A line through the poles, shown only while its planet is the selected one. */
+function buildAxisLine(radius) {
+  const len = radius * 2.4;
+  const geo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, -len, 0), new THREE.Vector3(0, len, 0)
+  ]);
+  const mat = new THREE.LineBasicMaterial({
+    color: 0xffffff, transparent: true, opacity: 0.6, depthWrite: false
+  });
+  const line = new THREE.Line(geo, mat);
+  line.visible = false;
+  return line;
+}
+
 function buildMoon(planet, moon, planetRadius, aMax, ringOuter) {
   const radius = Math.max(0.028, planetRadius * Math.pow(moon.radiusKm / planet.radiusKm, 0.55));
   const base = ringOuter ? ringOuter + 0.55 : 1.7;
@@ -258,6 +275,10 @@ function buildPlanet(planet) {
   const axis = new THREE.Group();
   axis.rotation.z = planet.tilt * DEG;
   group.add(axis);
+
+  // Drawn only while this planet is the selected one; see select() and updateBodies().
+  const axisLine = buildAxisLine(radius);
+  axis.add(axisLine);
 
   const spin = new THREE.Group();
   axis.add(spin);
@@ -322,7 +343,7 @@ function buildPlanet(planet) {
 
   const rec = {
     id: planet.id, data: planet, kind: 'planet',
-    group, axis, spin, mesh, clouds, marker, radius, moons, earth,
+    group, axis, spin, mesh, clouds, marker, radius, moons, earth, axisLine,
     path: buildPlanetOrbit(planet),
     systemRadius: moons.reduce((m, x) => Math.max(m, x.dist), radius * 3)
   };
@@ -680,6 +701,10 @@ function updateBodies(dtDays) {
     rec.marker.scale.setScalar(Math.max(want, floor));
     rec.marker.material.opacity = 0.09 + 0.76 * t * t;
 
+    // The rotation axis only shows for the planet you tapped to view, and
+    // shares the Orbits toggle so it hides whenever orbit paths do.
+    rec.axisLine.visible = showOrbits && selected === rec.id;
+
     for (const m of rec.moons) {
       const ang = m.phase + m.dir * (days / m.data.periodDays) * Math.PI * 2;
       m.pivot.position.set(Math.cos(ang) * m.dist, 0, Math.sin(ang) * m.dist);
@@ -736,7 +761,7 @@ document.getElementById('btnFaster').addEventListener('click', () => setSpeed(sp
 document.getElementById('btnSlower').addEventListener('click', () => setSpeed(speedIdx - 1));
 document.getElementById('btnTimeReset').addEventListener('click', () => {
   jd = START_JD;
-  setSpeed(1);
+  setSpeed(DEFAULT_SPEED_IDX);
   updateBodies(0);
   updateClockUI();
 });
