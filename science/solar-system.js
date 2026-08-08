@@ -29,11 +29,13 @@ import { buildEarth } from './solar-system-earth.js';
 
 // ── Scale ──────────────────────────────────────────────────────────────────
 const AU_UNITS   = 10;      // scene units for 1 au once compression is undone
+const AU_KM      = 149_597_870.7;   // 1 au in km, for a literal (uncompressed) size scale
 const COMPRESS   = 0.48;    // r^0.48 keeps Neptune on screen beside Mercury
 const EARTH_SIZE = 0.30;    // scene units for Earth's radius
 const SIZE_POW   = 0.42;    // how much big planets are allowed to dwarf small
 
 let realDistances = false;
+let trueSizes = false;      // draw bodies at their real size relative to an au (mostly invisible)
 
 function orbitRadius(rAU) {
   return realDistances ? AU_UNITS * rAU : AU_UNITS * Math.pow(rAU, COMPRESS);
@@ -48,6 +50,7 @@ function toScene(p, out) {
 }
 
 const bodyRadius = km => EARTH_SIZE * Math.pow(km / 6371, SIZE_POW);
+const trueRadiusKm = km => km * AU_UNITS / AU_KM;
 
 // ── Time ───────────────────────────────────────────────────────────────────
 const START_JD = jdFromDate(new Date(Date.UTC(2026, 0, 1)));
@@ -123,8 +126,14 @@ buildStars();
 
 // ── The Sun ────────────────────────────────────────────────────────────────
 const sunRadius = bodyRadius(SUN.radiusKm);
+const sunTrueScale = trueRadiusKm(SUN.radiusKm) / sunRadius;
 const sunGroup = new THREE.Group();
 scene.add(sunGroup);
+
+// The mesh scales down for "True size"; haloes and the hit sphere stay at the
+// compressed radius below so the Sun is still findable and clickable.
+const sunSizeGroup = new THREE.Group();
+sunGroup.add(sunSizeGroup);
 
 /* A star rather than a painted ball — boiling granulation, a corona, rays and
    prominences. See solar-system-sun.js; the costly layers only switch on once
@@ -135,7 +144,7 @@ const sun = initSun({
   lowres: window.matchMedia('(pointer: coarse)').matches ||
           Math.min(window.innerWidth, window.innerHeight) < 700
 });
-sunGroup.add(sun.group);
+sunSizeGroup.add(sun.group);
 const sunMesh = sun.mesh;
 
 /* Sprite haloes, so the Sun still reads as a bright spot from out past
@@ -268,13 +277,20 @@ function buildMoon(planet, moon, planetRadius, aMax, ringOuter) {
 
 function buildPlanet(planet) {
   const radius = bodyRadius(planet.radiusKm);
+  const trueScale = trueRadiusKm(planet.radiusKm) / radius;
   const group = new THREE.Group();
   scene.add(group);
+
+  // The mesh, ring and axis line all live under here so "True size" can scale
+  // them together; the marker and hit sphere stay at the compressed radius
+  // (added straight to `group` below) so the planet stays findable and tappable.
+  const sizeGroup = new THREE.Group();
+  group.add(sizeGroup);
 
   // Obliquity: the axis stays pointing the same way all the way round the Sun.
   const axis = new THREE.Group();
   axis.rotation.z = planet.tilt * DEG;
-  group.add(axis);
+  sizeGroup.add(axis);
 
   // Drawn only while this planet is the selected one; see select() and updateBodies().
   const axisLine = buildAxisLine(radius);
@@ -326,9 +342,11 @@ function buildPlanet(planet) {
   group.add(marker);
 
   // Moons ride in the planet's equatorial plane — except ours, which tracks
-  // the ecliptic far more closely than Earth's equator.
+  // the ecliptic far more closely than Earth's equator. Both attach under
+  // sizeGroup (not axis) so Earth's moon isn't tilted, but still shrinks
+  // along with its planet in "True size" mode.
   const moonPlane = new THREE.Group();
-  if (planet.id === 'earth') { group.add(moonPlane); moonPlane.rotation.z = 5.14 * DEG; }
+  if (planet.id === 'earth') { sizeGroup.add(moonPlane); moonPlane.rotation.z = 5.14 * DEG; }
   else axis.add(moonPlane);
 
   const moons = [];
@@ -343,7 +361,7 @@ function buildPlanet(planet) {
 
   const rec = {
     id: planet.id, data: planet, kind: 'planet',
-    group, axis, spin, mesh, clouds, marker, radius, moons, earth, axisLine,
+    group, sizeGroup, trueScale, axis, spin, mesh, clouds, marker, radius, moons, earth, axisLine,
     path: buildPlanetOrbit(planet),
     systemRadius: moons.reduce((m, x) => Math.max(m, x.dist), radius * 3)
   };
@@ -797,6 +815,32 @@ btnScale.addEventListener('click', () => {
   resetView();
 });
 
+const btnTrueSize = document.getElementById('btnTrueSize');
+let scaleBeforeTrueSize = false;
+
+function applyTrueSizes() {
+  sunSizeGroup.scale.setScalar(trueSizes ? sunTrueScale : 1);
+  for (const rec of planetRecs) rec.sizeGroup.scale.setScalar(trueSizes ? rec.trueScale : 1);
+}
+
+function setTrueSizes(on) {
+  if (trueSizes === on) return;
+  trueSizes = on;
+  btnTrueSize.classList.toggle('on', on);
+  // True size only means anything next to real gaps — squeezed distances
+  // with true sizes would just be an empty screen either way.
+  btnScale.disabled = on;
+  applyTrueSizes();
+}
+
+btnTrueSize.addEventListener('click', () => {
+  const on = !trueSizes;
+  if (on) scaleBeforeTrueSize = realDistances;
+  setTrueSizes(on);
+  setRealDistances(on ? true : scaleBeforeTrueSize);
+  resetView();
+});
+
 // ── Resize ─────────────────────────────────────────────────────────────────
 function resize() {
   const w = stage.clientWidth, h = stage.clientHeight;
@@ -852,6 +896,7 @@ function frame(now = performance.now()) {
    plain uniform scaling and the trajectories mean what they look like. */
 const btnRocket = document.getElementById('btnRocket');
 let scaleBeforeMission = false;
+let trueSizeBeforeMission = false;
 
 {
   const radiusScene = { sun: sunRadius };
@@ -882,8 +927,11 @@ let scaleBeforeMission = false;
 
     beginMission: () => {
       scaleBeforeMission = realDistances;
+      trueSizeBeforeMission = trueSizes;
+      setTrueSizes(false);          // true-size planets would be invisible to fly to
       setRealDistances(true);
       btnScale.disabled = true;
+      btnTrueSize.disabled = true;
       btnRocket.classList.add('on');
       document.body.classList.add('mission');
       select(null);
@@ -899,7 +947,8 @@ let scaleBeforeMission = false;
     },
     endMission: () => {
       setRealDistances(scaleBeforeMission);
-      btnScale.disabled = false;
+      setTrueSizes(trueSizeBeforeMission);
+      btnTrueSize.disabled = false;
       btnRocket.classList.remove('on');
       document.body.classList.remove('mission');
       minDist = 1.2;
