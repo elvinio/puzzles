@@ -18,7 +18,7 @@ import {
   ELEMENTS, positionAt, orbitPath, jdFromDate, dateFromJd,
   dayOfYear, daysInYear, J2000, DEG
 } from './solar-system-ephem.js';
-import { SUN, PLANETS, BY_ID } from './solar-system-data.js';
+import { SUN, PLANETS, ASTEROID_BELT, BY_ID } from './solar-system-data.js';
 import {
   surfaceTexture, earthMaps, cloudTexture, ringTexture,
   dotTexture, glowTexture, skyTexture
@@ -378,9 +378,6 @@ sunGroup.add(makeHitSphere(sunRadius * 1.6, 'sun'));
 bodies.push({ id: 'sun', data: SUN, kind: 'star', group: sunGroup, mesh: sunMesh, radius: sunRadius });
 recById.sun = bodies[bodies.length - 1];
 
-// Who wins a crowded patch of screen: the Sun, then planets, then moons.
-const labelOrder = [recById.sun, ...planetRecs, ...bodies.filter(b => b.kind === 'moon')];
-
 // ── Asteroid belt & Kuiper belt ────────────────────────────────────────────
 function buildBelt(count, aMin, aMax, spread, colour, size, opacity) {
   const rocks = [];
@@ -417,6 +414,36 @@ function buildBelt(count, aMin, aMax, spread, colour, size, opacity) {
 }
 const updateAsteroids = buildBelt(1500, 2.1, 3.4, 0.34, 0xb59b7a, 1.5, 0.55);
 const updateKuiper    = buildBelt(1800, 33, 49, 0.5, 0x8fa6c8, 1.3, 0.3);
+
+// A single labelled, clickable waypoint riding round the belt's mean orbit
+// (2.7 au — Kepler gives it a ~4.4-year lap), so the belt reads as a place
+// you can tap, exactly like a planet, rather than just a haze of dots.
+const BELT_A = 2.7;
+const beltGroup = new THREE.Group();
+scene.add(beltGroup);
+const beltRadius = bodyRadius(4000);   // roughly Ceres-sized, just for a visible marker
+const beltMarker = new THREE.Sprite(new THREE.SpriteMaterial({
+  map: glowTexture('rgba(230,205,165,0.85)', 'rgba(230,205,165,0)'),
+  color: new THREE.Color(ASTEROID_BELT.color), transparent: true,
+  depthWrite: false, blending: THREE.AdditiveBlending
+}));
+beltGroup.add(beltMarker);
+beltGroup.add(makeHitSphere(Math.max(beltRadius * 2.4, 0.34), ASTEROID_BELT.id));
+
+const beltRec = {
+  id: ASTEROID_BELT.id, data: ASTEROID_BELT, kind: 'belt',
+  group: beltGroup, marker: beltMarker, radius: beltRadius
+};
+bodies.push(beltRec);
+recById[beltRec.id] = beltRec;
+
+// Who wins a crowded patch of screen: the Sun, then planets and the belt, then moons.
+const marsIdx = planetRecs.findIndex(r => r.id === 'mars');
+const labelOrder = [
+  recById.sun,
+  ...planetRecs.slice(0, marsIdx + 1), beltRec, ...planetRecs.slice(marsIdx + 1),
+  ...bodies.filter(b => b.kind === 'moon')
+];
 
 // ── Camera rig: orbit, pinch-zoom, two-finger pan ──────────────────────────
 const view = { target: new THREE.Vector3(), dist: 140, theta: 0.95, phi: 0.92 };
@@ -525,6 +552,7 @@ function focusOn(rec) {
   follow = rec;
   const span = rec.kind === 'planet' ? Math.max(rec.systemRadius * 2.3, rec.radius * 8)
     : rec.kind === 'star' ? rec.radius * 7
+    : rec.kind === 'belt' ? orbitRadius(3.4) * 2.2
       : rec.radius * 9;
   goalDist = Math.min(maxDist, span);
   minDist = Math.max(0.08, rec.radius * 1.6);
@@ -733,6 +761,15 @@ function updateBodies(dtDays) {
 
   sun.spin.rotation.y += (dtDays * Math.min(1, 12 / SPEEDS[speedIdx].v)) / 25.4 * Math.PI * 2;
   updateAsteroids(days);
+
+  const beltAng = (days / (365.25 * Math.pow(BELT_A, 1.5))) * Math.PI * 2;
+  const beltR = orbitRadius(BELT_A);
+  beltGroup.position.set(Math.cos(beltAng) * beltR, 0, Math.sin(beltAng) * beltR);
+  const beltEye = camera.position.distanceTo(beltGroup.position);
+  const beltWant = beltEye * 0.013, beltFloor = beltRec.radius * 2.7;
+  const beltT = Math.min(1, beltWant / beltFloor);
+  beltMarker.scale.setScalar(Math.max(beltWant, beltFloor));
+  beltMarker.material.opacity = 0.09 + 0.76 * beltT * beltT;
 }
 
 // ── Clock readout ──────────────────────────────────────────────────────────

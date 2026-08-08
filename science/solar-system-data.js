@@ -465,9 +465,32 @@ export const PLANETS = [
   }
 ];
 
+export const ASTEROID_BELT = {
+  id: 'asteroid-belt',
+  name: 'Asteroid Belt',
+  kind: 'belt',
+  color: '#b59b7a',
+  blurb: 'A sparse ring of rocky leftovers from the solar system\'s birth, orbiting between Mars and Jupiter.',
+  stats: [
+    ['Location', 'between Mars and Jupiter, 2.2–3.2 AU from the Sun'],
+    ['Width', 'about 1 AU (roughly 150 million km) across'],
+    ['Total mass', '~2.4×10²¹ kg — only about 3% of the Moon\'s mass'],
+    ['Contains', 'over a million asteroids wider than 1 km, plus the dwarf planet Ceres'],
+    ['Largest member', 'Ceres — 940 km across, about a third of the belt\'s total mass']
+  ],
+  facts: [
+    'The belt formed from the same disc of dust and rock that built the planets, but Jupiter\'s huge gravity kept stirring these leftover chunks up before they could collide gently enough to stick together into a planet.',
+    'It looks crowded in movies, but it is almost entirely empty space: the average distance between two sizeable asteroids is roughly a million kilometres, and every spacecraft sent through it has passed clean through without a planned dodge.',
+    'Ceres, discovered in 1801, was the first asteroid found and is now classed as a dwarf planet — the only one in the inner solar system. It alone holds about a third of the belt\'s entire mass.',
+    'Jupiter\'s gravity carves empty lanes called Kirkwood gaps at distances where an asteroid\'s orbit would repeat a simple fraction of Jupiter\'s own — 1:3, 2:5, 3:7 — resonances that shake those orbits unstable over millions of years.',
+    'NASA\'s Dawn spacecraft orbited both Vesta (2011) and Ceres (2015), the first mission ever to orbit two different worlds beyond Earth.',
+    'A handful of belt asteroids even have their own tiny moons.'
+  ]
+};
+
 /** Flat lookup: id → body record (planets and moons alike). */
 export const BY_ID = (() => {
-  const map = { sun: SUN };
+  const map = { sun: SUN, 'asteroid-belt': ASTEROID_BELT };
   for (const p of PLANETS) {
     map[p.id] = p;
     for (const m of p.moons || []) { m.parent = p; map[m.id] = m; }
