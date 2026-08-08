@@ -286,7 +286,7 @@ function buildPlanet(planet) {
     clouds = new THREE.Mesh(
       new THREE.SphereGeometry(radius * 1.014, 40, 26),
       new THREE.MeshStandardMaterial({
-        map: cloudTexture(), transparent: true, opacity: 0.6,
+        color: 0xffffff, alphaMap: cloudTexture(), transparent: true,
         roughness: 1, depthWrite: false
       })
     );
