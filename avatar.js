@@ -195,6 +195,45 @@
     return (avatar && avatar.exchanges) || [];
   };
 
+  // Moves coins from one avatar to another in a single localStorage write
+  // (so a mid-way failure can't debit one side without crediting the
+  // other), logging a matching pair of history entries. Returns
+  // { fromBalance, toBalance } on success, or null if the transfer is
+  // invalid (unknown avatar, self-transfer, bad amount, insufficient funds).
+  window.__avatarTransferCoins = function (fromId, toId, amount) {
+    try {
+      if (!fromId || !toId || fromId === toId) return null;
+      var list = loadAvatars();
+      var from = list.find(function (a) { return a.id === fromId; });
+      var to = list.find(function (a) { return a.id === toId; });
+      if (!from || !to) return null;
+      var bal = from.coins || 0;
+      if (!(amount > 0) || amount > bal) return null;
+      var now = new Date().toISOString();
+
+      from.coins = bal - amount;
+      from.totalSpent = (from.totalSpent || 0) + amount;
+      from.coinsUpdatedAt = now;
+      if (!from.exchanges) from.exchanges = [];
+      from.exchanges.unshift({ label: 'Sent to ' + (to.nickname || 'another user'), cost: amount, at: now });
+      if (from.exchanges.length > 200) from.exchanges.length = 200;
+
+      to.coins = (to.coins || 0) + amount;
+      to.totalEarned = (to.totalEarned || 0) + amount;
+      to.coinsUpdatedAt = now;
+      if (!to.exchanges) to.exchanges = [];
+      to.exchanges.unshift({ label: 'Received from ' + (from.nickname || 'another user'), amount: amount, at: now, type: 'earn' });
+      if (to.exchanges.length > 200) to.exchanges.length = 200;
+
+      saveAvatars(list);
+      try {
+        window.dispatchEvent(new CustomEvent('pz-avatar-coins-change', { detail: { id: fromId, coins: from.coins } }));
+        window.dispatchEvent(new CustomEvent('pz-avatar-coins-change', { detail: { id: toId, coins: to.coins } }));
+      } catch (e2) {}
+      return { fromBalance: from.coins, toBalance: to.coins };
+    } catch (e) { return null; }
+  };
+
   // ── Score saver ───────────────────────────────────────────────────────────
 
   window.__avatarSave = function (scoreKey, value, lowerIsBetter) {
