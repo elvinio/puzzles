@@ -197,6 +197,7 @@ body {
 }
 .chip-btn.on { color: #ffffff; background: rgba(109, 40, 217, 0.6); border-color: #8b5cf6; }
 .chip-btn:active { transform: scale(0.96); }
+.chip-btn:disabled { opacity: 0.4; cursor: default; }
 
 /* ── time bar ─────────────────────────────────────────────────────────── */
 .bar {
