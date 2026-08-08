@@ -1,10 +1,14 @@
 /* ============================================================================
-   solar-system-textures.js — every surface, painted in code.
+   solar-system-textures.js — every surface, painted in code (Earth excepted).
 
-   No image files: each world's map is generated once at start-up on a 2D
-   canvas from tileable value noise, then handed to three.js as a texture.
-   That keeps the page offline-friendly and lets each planet keep its own
-   character — banded gas giants, cratered rock, cracked ice.
+   Every world but Earth is generated once at start-up on a 2D canvas from
+   tileable value noise, then handed to three.js as a texture — offline-
+   friendly, and lets each planet keep its own character: banded gas giants,
+   cratered rock, cracked ice.
+
+   Earth uses real photographic maps instead (see earthMaps() below) — day,
+   night, clouds, normal and specular JPG/PNG files in textures/earth/,
+   sourced from solarsystemscope.com/textures (CC BY 4.0, NASA-derived).
 
    Maps are equirectangular: x wraps around the equator, y runs pole to pole.
    ========================================================================== */
@@ -201,80 +205,6 @@ function banded(w, h, seed, stops, opts = {}) {
     const k = 1 + fine * 0.5;
     return [col[0] * k, col[1] * k, col[2] * k];
   }).c;
-}
-
-// ── Earth: day map and night map, painted from the same coastline ──────────
-/** >0 on land, <0 under the ocean — shared by the day and night maps so their
- *  coastlines line up exactly. */
-function earthLand(u, v) {
-  return fbm(u, v, 5, { octaves: 6, base: 4, sx: 1.6 }) - 0.5;
-}
-
-function paintEarthDay(w, h) {
-  const ocean = stopsOf([[0.0, 0x0a1e3f], [0.6, 0x104b7d], [1.0, 0x1f7ea8]]);
-  const land = stopsOf([
-    [0.00, 0x2f5d33], [0.30, 0x3f7a3a], [0.55, 0x7d8a45], [0.75, 0xb09257], [1.0, 0x8a7355]
-  ]);
-  const { c, ctx } = paint(w, h, (u, v) => {
-    const lat = Math.abs(v - 0.5) * 2;                            // 0 equator → 1 pole
-    const shore = earthLand(u, v);
-    if (shore < 0) {
-      const depth = Math.min(1, (-shore) * 4);
-      return ramp(ocean, 1 - depth);
-    }
-    const detail = fbm(u, v, 61, { octaves: 5, base: 14 });
-    // Green near the equator and mid-latitudes, sandy in the desert bands.
-    const desert = Math.exp(-Math.pow((lat - 0.28) / 0.11, 2));
-    let t = 0.15 + detail * 0.5 + desert * 0.45;
-    if (lat > 0.72) t = 0.9;                                      // tundra fringe
-    const col = ramp(land, Math.min(1, t));
-    const coast = Math.min(1, shore * 12);
-    return mix(ramp(ocean, 1), col, coast);
-  });
-  // Ice caps, thicker over Antarctica than the Arctic.
-  const cap = ctx.createLinearGradient(0, 0, 0, h);
-  cap.addColorStop(0.000, 'rgba(255,255,255,1)');
-  cap.addColorStop(0.075, 'rgba(255,255,255,0.55)');
-  cap.addColorStop(0.130, 'rgba(255,255,255,0)');
-  cap.addColorStop(0.870, 'rgba(255,255,255,0)');
-  cap.addColorStop(0.930, 'rgba(255,255,255,0.85)');
-  cap.addColorStop(1.000, 'rgba(255,255,255,1)');
-  ctx.fillStyle = cap;
-  ctx.fillRect(0, 0, w, h);
-  return c;
-}
-
-/**
- * City lights (RGB) plus an ocean mask (alpha) for the water-only specular
- * glint. Lights favour temperate land, the way real light-pollution maps do
- * — sparse over deep desert, rainforest and tundra, dense in between.
- */
-function paintEarthNight(w, h) {
-  const c = canvas(w, h);
-  const ctx = c.getContext('2d');
-  const img = ctx.createImageData(w, h);
-  const d = img.data;
-  for (let y = 0; y < h; y++) {
-    const v = (y + 0.5) / h;
-    const lat = Math.abs(v - 0.5) * 2;
-    const temperate = Math.exp(-Math.pow((lat - 0.32) / 0.30, 2));
-    for (let x = 0; x < w; x++) {
-      const u = (x + 0.5) / w;
-      const shore = earthLand(u, v);
-      const i = (y * w + x) * 4;
-      if (shore < 0.01) {
-        d[i] = d[i + 1] = d[i + 2] = 0;
-        d[i + 3] = 255;                                             // ocean → glint mask on
-        continue;
-      }
-      const pop = fbm(u, v, 131, { octaves: 4, base: 34, sx: 2.4 });
-      const k = Math.min(1, Math.max(0, pop - 0.56) * 2.6 * temperate);
-      d[i] = 255 * k; d[i + 1] = 205 * k; d[i + 2] = 120 * k;
-      d[i + 3] = 0;                                                 // land → glint mask off
-    }
-  }
-  ctx.putImageData(img, 0, 0);
-  return c;
 }
 
 // ── The painters, one per `texture` name in solar-system-data.js ───────────
@@ -503,53 +433,46 @@ export function surfaceTexture(name) {
   return cache.get(name);
 }
 
+// ── Earth: real photographic maps, loaded rather than painted ──────────────
+const EARTH_TEX_DIR = new URL('./textures/earth/', import.meta.url);
+const earthLoader = new THREE.TextureLoader();
+
 /**
- * Earth's day and night maps, painted once and cached together. Unlike
- * surfaceTexture()'s maps these carry no sRGB flag — Earth's own shader
- * (solar-system-earth.js) samples them as raw values, the same convention
- * the Sun's shader uses for its noise textures.
+ * Load one of Earth's texture files. Unlike surfaceTexture()'s canvases
+ * these carry no sRGB flag — Earth's shader (solar-system-earth.js) samples
+ * them as raw values and writes gl_FragColor directly, the same convention
+ * the Sun's shader uses, so the JPG/PNG bytes pass straight through instead
+ * of being decoded and re-encoded by the renderer's color pipeline.
+ */
+function loadEarthTexture(file) {
+  const tex = earthLoader.load(new URL(file, EARTH_TEX_DIR).href);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.anisotropy = 4;
+  return tex;
+}
+
+/**
+ * Earth's day, night, normal and specular maps, loaded once and cached
+ * together. Sourced from solarsystemscope.com/textures (CC BY 4.0,
+ * NASA-derived imagery).
  */
 export function earthMaps() {
   if (!cache.has('earth')) {
-    const day = new THREE.CanvasTexture(paintEarthDay(W * 2, H * 2));
-    day.wrapS = THREE.RepeatWrapping;
-    day.anisotropy = 4;
-    const night = new THREE.CanvasTexture(paintEarthNight(W * 2, H * 2));
-    night.wrapS = THREE.RepeatWrapping;
-    night.anisotropy = 4;
-    cache.set('earth', { day, night });
+    cache.set('earth', {
+      day: loadEarthTexture('2k_earth_daymap.jpg'),
+      night: loadEarthTexture('2k_earth_nightmap.jpg'),
+      normal: loadEarthTexture('2k_earth_normal_map.png'),
+      specular: loadEarthTexture('2k_earth_specular_map.png')
+    });
   }
   return cache.get('earth');
 }
 
-/** Earth's weather layer: white cloud shapes on transparent black. */
+/** Earth's weather layer: a real cloud map, white on black — used as an
+ *  alphaMap (see solar-system.js) so the black background reads as clear. */
 export function cloudTexture() {
-  if (cache.has('clouds')) return cache.get('clouds');
-  const w = 512, h = 256;
-  const c = canvas(w, h);
-  const ctx = c.getContext('2d');
-  const img = ctx.createImageData(w, h);
-  const d = img.data;
-  for (let y = 0; y < h; y++) {
-    const v = (y + 0.5) / h;
-    const lat = Math.abs(v - 0.5) * 2;
-    // Cloud belts: heavy at the equator and mid-latitudes, clear over deserts.
-    const belt = 0.55 + 0.45 * Math.cos((lat - 0.05) * Math.PI * 3.1);
-    for (let x = 0; x < w; x++) {
-      const u = (x + 0.5) / w;
-      const n = fbm(u, v, 101, { octaves: 6, base: 5, sx: 2.2 });
-      const a = Math.max(0, n * belt - 0.34) * 3.2;
-      const i = (y * w + x) * 4;
-      d[i] = d[i + 1] = d[i + 2] = 255;
-      d[i + 3] = Math.min(255, a * 255);
-    }
-  }
-  ctx.putImageData(img, 0, 0);
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.wrapS = THREE.RepeatWrapping;
-  cache.set('clouds', tex);
-  return tex;
+  if (!cache.has('clouds')) cache.set('clouds', loadEarthTexture('2k_earth_clouds.jpg'));
+  return cache.get('clouds');
 }
 
 /** Saturn/Uranus ring band: a 1-D strip read across the ring's radius. */
