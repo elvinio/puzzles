@@ -20,11 +20,12 @@ import {
 } from './solar-system-ephem.js';
 import { SUN, PLANETS, BY_ID } from './solar-system-data.js';
 import {
-  surfaceTexture, cloudTexture, ringTexture,
+  surfaceTexture, earthMaps, cloudTexture, ringTexture,
   dotTexture, glowTexture, skyTexture
 } from './solar-system-textures.js';
 import { initRocket } from './solar-system-rocket.js';
 import { initSun } from './solar-system-sun.js';
+import { buildEarth } from './solar-system-earth.js';
 
 // ── Scale ──────────────────────────────────────────────────────────────────
 const AU_UNITS   = 10;      // scene units for 1 au once compression is undone
@@ -261,13 +262,23 @@ function buildPlanet(planet) {
   const spin = new THREE.Group();
   axis.add(spin);
 
-  const mesh = new THREE.Mesh(
-    new THREE.SphereGeometry(radius, 44, 30),
-    new THREE.MeshStandardMaterial({
-      map: surfaceTexture(planet.texture), roughness: 1, metalness: 0
-    })
-  );
-  spin.add(mesh);
+  // Earth gets its own self-lit day/night/atmosphere shader (see
+  // solar-system-earth.js); every other body is a plain lit sphere.
+  let mesh, earth = null;
+  if (planet.id === 'earth') {
+    earth = buildEarth(radius, earthMaps());
+    mesh = earth.surface;
+    spin.add(mesh);
+    spin.add(earth.atmosphere);
+  } else {
+    mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(radius, 44, 30),
+      new THREE.MeshStandardMaterial({
+        map: surfaceTexture(planet.texture), roughness: 1, metalness: 0
+      })
+    );
+    spin.add(mesh);
+  }
   group.add(makeHitSphere(Math.max(radius * 2.4, 0.34), planet.id));
 
   let clouds = null;
@@ -311,7 +322,7 @@ function buildPlanet(planet) {
 
   const rec = {
     id: planet.id, data: planet, kind: 'planet',
-    group, axis, spin, mesh, clouds, marker, radius, moons,
+    group, axis, spin, mesh, clouds, marker, radius, moons, earth,
     path: buildPlanetOrbit(planet),
     systemRadius: moons.reduce((m, x) => Math.max(m, x.dist), radius * 3)
   };
@@ -654,6 +665,7 @@ function updateBodies(dtDays) {
     const p = positionAt(ELEMENTS[rec.id], jd);
     eclip.x = p.x; eclip.y = p.y; eclip.z = p.z;
     toScene(eclip, rec.group.position);
+    if (rec.earth) rec.earth.update(rec.group.position);
 
     // Self-rotation. At high time speeds a true spin would just strobe, so the
     // visible rate is eased off — the clock stays honest, the picture readable.

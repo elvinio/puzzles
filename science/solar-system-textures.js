@@ -203,6 +203,80 @@ function banded(w, h, seed, stops, opts = {}) {
   }).c;
 }
 
+// ── Earth: day map and night map, painted from the same coastline ──────────
+/** >0 on land, <0 under the ocean — shared by the day and night maps so their
+ *  coastlines line up exactly. */
+function earthLand(u, v) {
+  return fbm(u, v, 5, { octaves: 6, base: 4, sx: 1.6 }) - 0.5;
+}
+
+function paintEarthDay(w, h) {
+  const ocean = stopsOf([[0.0, 0x0a1e3f], [0.6, 0x104b7d], [1.0, 0x1f7ea8]]);
+  const land = stopsOf([
+    [0.00, 0x2f5d33], [0.30, 0x3f7a3a], [0.55, 0x7d8a45], [0.75, 0xb09257], [1.0, 0x8a7355]
+  ]);
+  const { c, ctx } = paint(w, h, (u, v) => {
+    const lat = Math.abs(v - 0.5) * 2;                            // 0 equator → 1 pole
+    const shore = earthLand(u, v);
+    if (shore < 0) {
+      const depth = Math.min(1, (-shore) * 4);
+      return ramp(ocean, 1 - depth);
+    }
+    const detail = fbm(u, v, 61, { octaves: 5, base: 14 });
+    // Green near the equator and mid-latitudes, sandy in the desert bands.
+    const desert = Math.exp(-Math.pow((lat - 0.28) / 0.11, 2));
+    let t = 0.15 + detail * 0.5 + desert * 0.45;
+    if (lat > 0.72) t = 0.9;                                      // tundra fringe
+    const col = ramp(land, Math.min(1, t));
+    const coast = Math.min(1, shore * 12);
+    return mix(ramp(ocean, 1), col, coast);
+  });
+  // Ice caps, thicker over Antarctica than the Arctic.
+  const cap = ctx.createLinearGradient(0, 0, 0, h);
+  cap.addColorStop(0.000, 'rgba(255,255,255,1)');
+  cap.addColorStop(0.075, 'rgba(255,255,255,0.55)');
+  cap.addColorStop(0.130, 'rgba(255,255,255,0)');
+  cap.addColorStop(0.870, 'rgba(255,255,255,0)');
+  cap.addColorStop(0.930, 'rgba(255,255,255,0.85)');
+  cap.addColorStop(1.000, 'rgba(255,255,255,1)');
+  ctx.fillStyle = cap;
+  ctx.fillRect(0, 0, w, h);
+  return c;
+}
+
+/**
+ * City lights (RGB) plus an ocean mask (alpha) for the water-only specular
+ * glint. Lights favour temperate land, the way real light-pollution maps do
+ * — sparse over deep desert, rainforest and tundra, dense in between.
+ */
+function paintEarthNight(w, h) {
+  const c = canvas(w, h);
+  const ctx = c.getContext('2d');
+  const img = ctx.createImageData(w, h);
+  const d = img.data;
+  for (let y = 0; y < h; y++) {
+    const v = (y + 0.5) / h;
+    const lat = Math.abs(v - 0.5) * 2;
+    const temperate = Math.exp(-Math.pow((lat - 0.32) / 0.30, 2));
+    for (let x = 0; x < w; x++) {
+      const u = (x + 0.5) / w;
+      const shore = earthLand(u, v);
+      const i = (y * w + x) * 4;
+      if (shore < 0.01) {
+        d[i] = d[i + 1] = d[i + 2] = 0;
+        d[i + 3] = 255;                                             // ocean → glint mask on
+        continue;
+      }
+      const pop = fbm(u, v, 131, { octaves: 4, base: 34, sx: 2.4 });
+      const k = Math.min(1, Math.max(0, pop - 0.56) * 2.6 * temperate);
+      d[i] = 255 * k; d[i + 1] = 205 * k; d[i + 2] = 120 * k;
+      d[i + 3] = 0;                                                 // land → glint mask off
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  return c;
+}
+
 // ── The painters, one per `texture` name in solar-system-data.js ───────────
 const W = 512, H = 256;
 
@@ -225,41 +299,6 @@ const PAINTERS = {
     ctx.globalAlpha = 0.25;                                        // hazy overall wash
     ctx.fillStyle = '#f7e6bd';
     ctx.fillRect(0, 0, W, H);
-    return c;
-  },
-
-  earth: () => {
-    const ocean = stopsOf([[0.0, 0x0a1e3f], [0.6, 0x104b7d], [1.0, 0x1f7ea8]]);
-    const land = stopsOf([
-      [0.00, 0x2f5d33], [0.30, 0x3f7a3a], [0.55, 0x7d8a45], [0.75, 0xb09257], [1.0, 0x8a7355]
-    ]);
-    const { c, ctx } = paint(W * 2, H * 2, (u, v) => {
-      const lat = Math.abs(v - 0.5) * 2;                            // 0 equator → 1 pole
-      const cont = fbm(u, v, 5, { octaves: 6, base: 4, sx: 1.6 });
-      const shore = cont - 0.5;
-      if (shore < 0) {
-        const depth = Math.min(1, (-shore) * 4);
-        return ramp(ocean, 1 - depth);
-      }
-      const detail = fbm(u, v, 61, { octaves: 5, base: 14 });
-      // Green near the equator and mid-latitudes, sandy in the desert bands.
-      const desert = Math.exp(-Math.pow((lat - 0.28) / 0.11, 2));
-      let t = 0.15 + detail * 0.5 + desert * 0.45;
-      if (lat > 0.72) t = 0.9;                                      // tundra fringe
-      const col = ramp(land, Math.min(1, t));
-      const coast = Math.min(1, shore * 12);
-      return mix(ramp(ocean, 1), col, coast);
-    });
-    // Ice caps, thicker over Antarctica than the Arctic.
-    const cap = ctx.createLinearGradient(0, 0, 0, H * 2);
-    cap.addColorStop(0.000, 'rgba(255,255,255,1)');
-    cap.addColorStop(0.075, 'rgba(255,255,255,0.55)');
-    cap.addColorStop(0.130, 'rgba(255,255,255,0)');
-    cap.addColorStop(0.870, 'rgba(255,255,255,0)');
-    cap.addColorStop(0.930, 'rgba(255,255,255,0.85)');
-    cap.addColorStop(1.000, 'rgba(255,255,255,1)');
-    ctx.fillStyle = cap;
-    ctx.fillRect(0, 0, W * 2, H * 2);
     return c;
   },
 
@@ -462,6 +501,25 @@ export function surfaceTexture(name) {
     cache.set(name, toTexture(painter()));
   }
   return cache.get(name);
+}
+
+/**
+ * Earth's day and night maps, painted once and cached together. Unlike
+ * surfaceTexture()'s maps these carry no sRGB flag — Earth's own shader
+ * (solar-system-earth.js) samples them as raw values, the same convention
+ * the Sun's shader uses for its noise textures.
+ */
+export function earthMaps() {
+  if (!cache.has('earth')) {
+    const day = new THREE.CanvasTexture(paintEarthDay(W * 2, H * 2));
+    day.wrapS = THREE.RepeatWrapping;
+    day.anisotropy = 4;
+    const night = new THREE.CanvasTexture(paintEarthNight(W * 2, H * 2));
+    night.wrapS = THREE.RepeatWrapping;
+    night.anisotropy = 4;
+    cache.set('earth', { day, night });
+  }
+  return cache.get('earth');
 }
 
 /** Earth's weather layer: white cloud shapes on transparent black. */
