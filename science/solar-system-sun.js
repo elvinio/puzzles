@@ -347,6 +347,22 @@ void main(void){
 }
 `;
 
+/* The Sun does not spin as one piece: the equator laps the poles every few
+   weeks. ω(lat) = ω_eq · (1 − 0.19·sin²lat − 0.02·sin⁴lat) is the standard
+   fit to the real profile. Applied to a ray or loop footpoint's object-space
+   position before it is carried out into a ribbon, so the tufts visibly
+   shear instead of the whole star turning as a rigid ball. Shared by rays
+   and loops. */
+const DIFF_SPIN = `
+vec3 diffSpin(vec3 p, float equatorPhase){
+  float sinLat = p.y / length(p);
+  float s2 = sinLat * sinLat;
+  float angle = equatorPhase * (1.0 - 0.19 * s2 - 0.02 * s2 * s2);
+  float c = cos(angle), s = sin(angle);
+  return vec3(p.x * c + p.z * s, p.y, p.z * c - p.x * s);
+}
+`;
+
 /* Four octaves of sine noise, each one warping the coordinates of the next.
    Cheap, and it curls in a way plain fbm does not. Shared by rays and loops. */
 const TWISTED_SINE = `
@@ -392,13 +408,16 @@ uniform float uNoiseAmplitude;
 uniform float uScale;
 uniform vec3  uCamPos;
 uniform float uOpacity;
+uniform float uSpinPhase;
 
+${DIFF_SPIN}
 ${TWISTED_SINE}
 
 vec3 getPos(float phase){
     float size = aWireRandom.z + 0.2;
+    vec3 root = diffSpin(aPos0, uSpinPhase);
     float d = phase * uLength * size;
-    vec3 p = aPos0 + aPos0 * d;
+    vec3 p = root + root * d;
     p += twistedSineNoise(vec4(p * uNoiseFrequency, uTime), 0.707).xyz * (d * uNoiseAmplitude);
     return p;
 }
@@ -487,16 +506,22 @@ uniform vec3  uCamPos;
 uniform float uOpacity;
 uniform float uHueSpread;
 uniform float uHue;
+uniform float uSpinPhase;
 
+${DIFF_SPIN}
 ${TWISTED_SINE}
 
 /* An arc between two footpoints, bulged out by a half sine so it leaves and
-   returns to the surface cleanly, then shaken about by the noise. */
+   returns to the surface cleanly, then shaken about by the noise. Each
+   footpoint is carried by diffSpin independently, so a loop whose feet
+   straddle different latitudes will visibly lean as it ages. */
 vec3 getPosOBJ(float phase, float animPhase){
-  float size = distance(aPos0, aPos1);
-  vec3  n    = normalize((aPos0 + aPos1) * 0.5);
+  vec3 aPos0s = diffSpin(aPos0, uSpinPhase);
+  vec3 aPos1s = diffSpin(aPos1, uSpinPhase);
+  float size = distance(aPos0s, aPos1s);
+  vec3  n    = normalize((aPos0s + aPos1s) * 0.5);
 
-  vec3 p = mix(aPos0, aPos1, phase);
+  vec3 p = mix(aPos0s, aPos1s, phase);
 
   float amp = sin(phase * 3.14159265) * size * uAmp;
   amp *= animPhase;
@@ -815,6 +840,7 @@ export function initSun({ renderer, radius, lowres = false }) {
   let rays = null, loops = null;
   let detail = false;
   let reveal = 0;                        // 0 hidden, 1 fully out
+  let spinPhase = 0;                     // accumulated equatorial rotation, radians
 
   function buildDetail() {
     const raysMat = new THREE.ShaderMaterial({
@@ -836,6 +862,7 @@ export function initSun({ renderer, radius, lowres = false }) {
         uNoiseAmplitude: { value: 0.4 },
         uHueSpread: { value: 0.2 },
         uHue: { value: 0.2 },
+        uSpinPhase: { value: spinPhase },
         uVisibility: { value: 0 },
         uDirection: { value: 1 },
         uLightView: { value: lightDir }
@@ -868,6 +895,7 @@ export function initSun({ renderer, radius, lowres = false }) {
         uNoiseAmplitude: { value: 0.2 },
         uHueSpread: { value: 0.16 },
         uHue: { value: 0 },
+        uSpinPhase: { value: spinPhase },
         uVisibility: { value: 0 },
         uDirection: { value: 1 },
         uLightView: { value: lightDir }
@@ -931,11 +959,24 @@ export function initSun({ renderer, radius, lowres = false }) {
     }
   }
 
+  /** Advance the equatorial spin phase (radians) that drives differential
+   *  rotation. Rays and loops each carry their footpoints at a latitude-
+   *  dependent fraction of this, so the star shears rather than turning as
+   *  one rigid body — see DIFF_SPIN above. */
+  function addSpin(deltaEquatorRadians) {
+    spinPhase += deltaEquatorRadians;
+    if (rays) {
+      rays.material.uniforms.uSpinPhase.value = spinPhase;
+      loops.material.uniforms.uSpinPhase.value = spinPhase;
+    }
+  }
+
   return {
     group,
     spin,
     mesh: sphere,
     update,
+    addSpin,
     setDetail(on) { detail = !!on; },
     get detail() { return detail; }
   };

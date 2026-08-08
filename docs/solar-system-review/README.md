@@ -43,7 +43,7 @@ Items are independent unless a **Depends on** line says otherwise. Anything mark
 | SS-S6 | Sun: "99.86% of everything" should be "of the mass" | S | [x] |
 | SS-S7 | DKIST fact — tighten the numbers, name the mechanism, plan for ageing | S | [x] |
 | SS-S8 | Olympus Mons "as wide as France" works by area, not by width | S | [x] |
-| SS-S9 | Sun's differential rotation is described but rendered rigidly | M | [ ] |
+| SS-S9 | Sun's differential rotation is described but rendered rigidly | M | [x] |
 
 ### UI & UX — [03-ui-ux.md](03-ui-ux.md)
 

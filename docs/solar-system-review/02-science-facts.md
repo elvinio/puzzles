@@ -305,5 +305,15 @@ pole. The equatorial one should visibly pull ahead over a few simulated months.
 
 ### Done
 
-_(record the fix here)_
+Went with the ray/loop footpoints rather than a UV lookup — the photosphere's
+granulation is sampled in object space and never was tied to the mesh's own
+rotation, so rotating the mesh rigidly never actually made it visible either
+way (churn is driven separately by the noise cube's own time-based rotation).
+The rays and prominences are the surface features a viewer can actually
+track, so `solar-system-sun.js` now carries an accumulated equatorial
+`spinPhase` and applies `ω(lat) = ω_eq · (1 − 0.19·sin²lat − 0.02·sin⁴lat)` to
+each footpoint in the vertex shader (new `diffSpin()`, shared by rays and
+loops) instead of rotating `spin.rotation.y` in `solar-system.js`. Verified
+in a browser at `1 month/s` with no console/shader errors and no visual
+regressions to the reveal-on-approach animation.
 </content>
