@@ -726,7 +726,7 @@ function updateBodies(dtDays) {
     for (const m of rec.moons) {
       const ang = m.phase + m.dir * (days / m.data.periodDays) * Math.PI * 2;
       m.pivot.position.set(Math.cos(ang) * m.dist, 0, Math.sin(ang) * m.dist);
-      m.mesh.rotation.y = -ang;          // moons keep one face towards home
+      m.mesh.rotation.y = Math.PI - ang; // moons keep one face towards home
       m.path.visible = showOrbits && eye < rec.systemRadius * 12;
     }
   }
