@@ -431,7 +431,23 @@ frame should drop noticeably on a mid-range tablet.
 
 ### Done
 
-_(record the fix here)_
+`updateClockUI` now tracks the last rendered calendar day (via `Math.floor(jd -
+0.5)`, which ticks over exactly at UTC midnight) and returns immediately when it
+hasn't moved, so the four text-node writes only happen once per simulated day
+instead of 60x/second.
+
+`placeLabel` keeps a per-label `{ shown, transform }` cache and only touches
+`el.style.display` / `el.style.transform` when the new value differs from what's
+already on the element; the moon-vs-planet `near` check was already ordered ahead
+of the projection call, so out-of-range moons were already skipping that work.
+Positions are still recomputed every frame (the camera can move), but the DOM is
+now untouched on frames where nothing actually changed on screen.
+
+Verified in a headless browser: labels correctly re-project and their `on`/style
+state still updates when the camera is dragged, the clock readout still advances
+correctly across day boundaries, and — measured via a `MutationObserver` on the
+label layer — zero `style` mutations occur per frame while paused and idle
+(previously every frame rewrote all ~30 labels regardless).
 
 ---
 
