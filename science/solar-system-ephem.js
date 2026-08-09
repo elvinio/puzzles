@@ -73,6 +73,14 @@ export const ELEMENTS = {
 export function jdFromDate(date) { return date.getTime() / 86400000 + 2440587.5; }
 export function dateFromJd(jd)   { return new Date((jd - 2440587.5) * 86400000); }
 
+/* The Standish elements above are documented valid 1800–2050 AD. Exported
+   here so anything that lets the clock jump (the date picker, the eclipse
+   finder) can clamp to the same honest range instead of hardcoding dates. */
+export const MIN_DATE = new Date(Date.UTC(1800, 0, 1));
+export const MAX_DATE = new Date(Date.UTC(2050, 11, 31));
+export const MIN_JD = jdFromDate(MIN_DATE);
+export const MAX_JD = jdFromDate(MAX_DATE);
+
 /** Day-of-year (1-based) and the calendar year for a Julian date. */
 export function dayOfYear(jd) {
   const d = dateFromJd(jd);
@@ -154,4 +162,117 @@ export function orbitPath(el, jd, samples) {
     out.push(positionFrom(cur, (i / samples) * Math.PI * 2));
   }
   return out;
+}
+
+// ── The Moon ─────────────────────────────────────────────────────────────
+/* A truncated version of Meeus' lunar theory ("Astronomical Algorithms",
+   ch. 47 — itself a fit to ELP-2000/82): the mean elements plus the dozen or
+   so largest periodic terms, good to a few arcminutes. That is plenty to put
+   the Moon at its real phase and to place eclipses on the right day, which is
+   all this page needs it for. */
+function moonElements(jd) {
+  const T = (jd - J2000) / CENTURY;
+  return {
+    Lp: 218.3164477 + 481267.88123421 * T,   // mean longitude
+    D:  297.8501921 + 445267.1114034  * T,   // mean elongation from the Sun
+    M:  357.5291092 + 35999.0502909   * T,   // Sun's mean anomaly
+    Mp: 134.9633964 + 477198.8675055  * T,   // Moon's mean anomaly
+    F:  93.2720950  + 483202.0175233  * T    // argument of latitude
+  };
+}
+
+/** Geocentric ecliptic position of the Moon: longitude/latitude in degrees,
+    distance in km. */
+export function moonPosition(jd) {
+  const { Lp, D, M, Mp, F } = moonElements(jd);
+  const d = D * DEG, m = M * DEG, mp = Mp * DEG, f = F * DEG;
+
+  const dLon =
+      6.289 * Math.sin(mp)          + 1.274 * Math.sin(2 * d - mp)
+    + 0.658 * Math.sin(2 * d)       + 0.214 * Math.sin(2 * mp)
+    - 0.186 * Math.sin(m)           - 0.114 * Math.sin(2 * f)
+    + 0.059 * Math.sin(2 * d - 2 * mp) + 0.057 * Math.sin(2 * d - mp - m)
+    + 0.053 * Math.sin(2 * d + mp);
+
+  const dLat =
+      5.128 * Math.sin(f) + 0.281 * Math.sin(mp + f)
+    + 0.278 * Math.sin(mp - f) + 0.173 * Math.sin(2 * d - f);
+
+  const dist = 385000 - 20954 * Math.cos(mp) - 3699 * Math.cos(2 * d - mp)
+    - 2956 * Math.cos(2 * d);
+
+  return { lonDeg: Lp + dLon, latDeg: dLat, distKm: dist };
+}
+
+/** The Sun's true geocentric ecliptic longitude (deg) — Earth's heliocentric
+    longitude plus 180°, from the same Kepler solution as the planets. */
+function sunLongitudeDeg(jd) {
+  const p = positionAt(ELEMENTS.earth, jd);
+  return Math.atan2(-p.y, -p.x) / DEG;
+}
+
+function wrapPM180(deg) {
+  let d = deg % 360;
+  if (d > 180) d -= 360;
+  if (d < -180) d += 360;
+  return d;
+}
+
+/** Signed angle (deg) from "Moon − Sun elongation" to `target` (0 = new moon,
+    the solar-eclipse alignment; 180 = full moon, the lunar-eclipse one),
+    wrapped to ±180° so a genuine crossing near `target` is the only place
+    the sign flips close to zero. */
+function elongationError(jd, target) {
+  return wrapPM180(moonPosition(jd).lonDeg - sunLongitudeDeg(jd) - target);
+}
+
+/** True only right at a crossing of `target` itself — not at the unrelated
+    wrap-around discontinuity on the far side of the cycle, where the error
+    also flips sign but jumps between +180° and −180°. */
+function isCrossing(prevErr, err) {
+  return (err < 0) !== (prevErr < 0) && Math.abs(err) < 90 && Math.abs(prevErr) < 90;
+}
+
+/** Bisect for the jd where the elongation error crosses zero, given a
+    bracket already known to contain the crossing. */
+function bisectSyzygy(jdLo, jdHi, target) {
+  let lo = jdLo, hi = jdHi;
+  const signLo = elongationError(lo, target) < 0;
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo + hi) / 2;
+    const sign = elongationError(mid, target) < 0;
+    if (sign === signLo) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+/* How far the Moon's ecliptic latitude can be from zero at syzygy and still
+   cause an eclipse — generous enough to catch partial eclipses, not just
+   total/annular ones. Lunar eclipses reach a little further because Earth's
+   shadow is much bigger than the Moon's disc. */
+const ECLIPSE_LAT_LIMIT = { solar: 1.55, lunar: 1.0 };
+
+/**
+ * The next solar (`kind: 'solar'`, new moon) or lunar (`'lunar'`, full moon)
+ * eclipse after `fromJd`: steps forward a day at a time, and at every
+ * new/full moon checks whether the Moon was close enough to a node.
+ * Returns `{ jd, latDeg }` for the first match, or `null` if none turns up
+ * within `maxYears` (or before the ephemeris' valid range runs out).
+ */
+export function nextEclipse(fromJd, kind, maxYears = 6) {
+  const target = kind === 'solar' ? 0 : 180;
+  const limit = ECLIPSE_LAT_LIMIT[kind];
+  const endJd = Math.min(fromJd + maxYears * 365.25, MAX_JD);
+
+  let prevJd = fromJd, prevErr = elongationError(prevJd, target);
+  for (let jd = fromJd + 1; jd < endJd; jd += 1) {
+    const err = elongationError(jd, target);
+    if (isCrossing(prevErr, err)) {
+      const syzygyJd = bisectSyzygy(prevJd, jd, target);
+      const latDeg = moonPosition(syzygyJd).latDeg;
+      if (Math.abs(latDeg) <= limit) return { jd: syzygyJd, latDeg };
+    }
+    prevJd = jd; prevErr = err;
+  }
+  return null;
 }
