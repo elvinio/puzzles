@@ -47,7 +47,9 @@ have moved again.
 
 ### Done
 
-_(record the fix here)_
+Bumped Jupiter to 115, Saturn to 292, Uranus to 29; Neptune's 16 was already
+right. All four "Moons" stat rows now read "confirmed as of 2026" (option 1),
+and a header comment on the data file flags them for periodic re-checking.
 
 ---
 
@@ -74,7 +76,7 @@ even though Neptune is further out"), so only the stat row needs the edit.
 
 ### Done
 
-_(record the fix here)_
+Stat row now reads "−224 °C — the coldest of any planet".
 
 ---
 
@@ -103,7 +105,8 @@ Then the flying fact follows naturally from the sentence before it.
 
 ### Done
 
-_(record the fix here)_
+Rewritten close to the suggested text, separating the pressure (1.5x) from
+the density (~4x) that the flying fact actually depends on.
 
 ---
 
@@ -132,7 +135,7 @@ Suggested rewrite:
 
 ### Done
 
-_(record the fix here)_
+Applied the suggested rewrite verbatim.
 
 ---
 
@@ -165,7 +168,10 @@ Mercury's clarity, and adding a second row for the solar day.
 
 ### Done
 
-_(record the fix here)_
+Rewrote the fact close to the suggested text, and added a
+`'Day (sunrise to sunrise)' → '117 Earth days'` stat row right under the
+existing spin row, keeping both labelled distinctly instead of relabelling
+one away.
 
 ---
 
@@ -187,7 +193,10 @@ sky-colour intuition kids already have.
 
 ### Done
 
-_(record the fix here)_
+Blurb now says "99.86% of the solar system's mass". Also took the bonus:
+added a fact noting the Sun is actually white and only looks yellow because
+the atmosphere scatters away the blue light — the sky-blue tie-in the doc
+suggested.
 
 ---
 
@@ -221,7 +230,11 @@ change to `select()` in `solar-system.js:669-686` and the `.p-facts` styles.
 
 ### Done
 
-_(record the fix here)_
+Numbers updated to "20 km across, spaced 50–65 km apart", and a sentence
+naming the Kelvin–Helmholtz mechanism (plasma layers sliding past each other
+and curling at the boundary) inserted before the braiding consequence. Left
+the `since`-field/date-badge idea alone — it is a `select()` + CSS feature,
+not a fact correction, and better picked up as its own item.
 
 ---
 
@@ -247,7 +260,8 @@ cover most of France — and two and a half times the height of Everest.'`
 
 ### Done
 
-_(record the fix here)_
+Applied the suggested rewrite verbatim (width comparison, "two and a half
+times").
 
 ---
 
@@ -291,5 +305,15 @@ pole. The equatorial one should visibly pull ahead over a few simulated months.
 
 ### Done
 
-_(record the fix here)_
+Went with the ray/loop footpoints rather than a UV lookup — the photosphere's
+granulation is sampled in object space and never was tied to the mesh's own
+rotation, so rotating the mesh rigidly never actually made it visible either
+way (churn is driven separately by the noise cube's own time-based rotation).
+The rays and prominences are the surface features a viewer can actually
+track, so `solar-system-sun.js` now carries an accumulated equatorial
+`spinPhase` and applies `ω(lat) = ω_eq · (1 − 0.19·sin²lat − 0.02·sin⁴lat)` to
+each footpoint in the vertex shader (new `diffSpin()`, shared by rays and
+loops) instead of rotating `spin.rotation.y` in `solar-system.js`. Verified
+in a browser at `1 month/s` with no console/shader errors and no visual
+regressions to the reveal-on-approach animation.
 </content>

@@ -6,6 +6,12 @@
    number means the body spins backwards compared with its orbit.
 
    `texture` names a painter in solar-system-textures.js.
+
+   Moon counts (`moonsKnown`, and the "Moons" stat rows for the giant planets)
+   churn constantly as the IAU Minor Planet Center confirms new batches —
+   Saturn alone gained 128 in one 2025 announcement. Both are dated "as of"
+   a year in the copy; re-check against https://science.nasa.gov/ periodically
+   and bump the year when you do.
    ========================================================================== */
 
 export const SUN = {
@@ -16,7 +22,7 @@ export const SUN = {
   radiusKm: 695700,
   rotationHours: 609.12,          // ~25.4 days at the equator
   tilt: 7.25,
-  blurb: 'An ordinary yellow dwarf star — and 99.86% of everything in the solar system.',
+  blurb: 'An ordinary yellow dwarf star — and 99.86% of the solar system\'s mass.',
   stats: [
     ['Diameter', '1,391,400 km — 109 Earths side by side'],
     ['Surface temperature', '5,500 °C (core: 15 million °C)'],
@@ -28,9 +34,10 @@ export const SUN = {
     'Every second the Sun turns about 600 million tonnes of hydrogen into helium, and converts roughly 4 million tonnes of that into pure energy.',
     'Sunlight takes 8 minutes 20 seconds to reach Earth — so you always see the Sun as it was eight minutes ago.',
     'The Sun is not solid, so it does not spin as one piece: its equator laps its poles every few weeks. That twisting is what makes sunspots and solar flares.',
-    'In August 2026 the Inouye telescope in Hawaii took the sharpest pictures of the Sun ever made, and found tiny whirlpools — mostly about 65 km apart, the smallest only 25 km across — swirling along the edge of every magnetic patch. Nobody expected any stirring to be happening there at all.',
+    'In August 2026 the Inouye telescope in Hawaii took the sharpest pictures of the Sun ever made, and found tiny whirlpools — each about 20 km across, spaced 50–65 km apart — swirling along the edge of every magnetic patch. They form where layers of plasma slide past each other at different speeds and curl up at the boundary, the same way wind curls the surface of water. Nobody expected any stirring to be happening there at all.',
     'Those whirlpools keep twisting the Sun’s magnetic field lines until they braid like plaited hair. Every so often a braid snaps and dumps its energy as heat, and that may be the answer to a decades-old puzzle: why the Sun’s outer atmosphere is a million °C while the surface below it is a mere 5,500 °C.',
-    'It is so massive that its gravity holds Neptune in place from 4.5 billion km away.'
+    'It is so massive that its gravity holds Neptune in place from 4.5 billion km away.',
+    'The Sun is actually white. It only looks yellow from the ground because Earth\'s atmosphere scatters away the blue light on the way down — the same scattering that makes the sky blue.'
   ]
 };
 
@@ -57,7 +64,7 @@ export const PLANETS = [
     facts: [
       'Mercury spins three times for every two orbits, so a single day-to-night cycle lasts two of its years.',
       'It has the biggest temperature swing of any planet: over 600 °C between day and night, because there is almost no atmosphere to hold the heat.',
-      'About 60% of Mercury is a solid iron core — proportionally the largest core in the solar system.',
+      'Its iron core fills about 85% of Mercury\'s radius — proportionally the biggest of any planet — and the outer part of it is still molten, which is why tiny Mercury has a magnetic field when Mars and Venus do not.',
       'Radar shows water ice hiding in crater floors near the poles that sunlight has never touched.'
     ],
     moons: []
@@ -77,12 +84,13 @@ export const PLANETS = [
       ['Distance from Sun', '108.2 million km (0.72 AU)'],
       ['Year', '225 Earth days'],
       ['Day (one spin)', '243 Earth days — backwards'],
+      ['Day (sunrise to sunrise)', '117 Earth days'],
       ['Diameter', '12,104 km (95% of Earth)'],
       ['Temperature', '464 °C, day and night, everywhere'],
       ['Moons', 'none']
     ],
     facts: [
-      'Venus spins so slowly, and the wrong way round, that its day is longer than its year — and the Sun rises in the west.',
+      'Venus takes 243 Earth days to turn once — longer than its 225-day year. But it turns backwards, and that backwards spin means the Sun still crawls across the sky roughly every 117 days, rising in the west.',
       'Its thick carbon-dioxide air presses down as hard as being 900 m deep in the ocean, and traps heat so well that Venus is hotter than Mercury.',
       'The clouds are droplets of sulfuric acid, blown around the whole planet in just four days by winds far faster than the planet turns.',
       'Under the clouds it is startlingly flat and young — lava seems to have repaved almost the entire surface a few hundred million years ago.'
@@ -150,7 +158,7 @@ export const PLANETS = [
       ['Moons', '2']
     ],
     facts: [
-      'Olympus Mons is a volcano 22 km high and as wide as France — nearly three times the height of Everest.',
+      'Olympus Mons is a volcano 22 km high and 600 km across — it would cover most of France — and two and a half times the height of Everest.',
       'Valles Marineris is a canyon system 4,000 km long; it would stretch across the whole of the United States.',
       'Mars is red because its dust is full of iron oxide — literally rust.',
       'Rovers have found dried-up river beds, lake sediments and clays: Mars had flowing water billions of years ago.'
@@ -185,7 +193,7 @@ export const PLANETS = [
     radiusKm: 69911,
     rotationHours: 9.9250,
     tilt: 3.13,
-    moonsKnown: 95,
+    moonsKnown: 115,
     blurb: 'The giant: more than twice the mass of all the other planets put together.',
     stats: [
       ['Distance from Sun', '778.5 million km (5.20 AU)'],
@@ -193,7 +201,7 @@ export const PLANETS = [
       ['Day (one spin)', '9 h 56 m — the fastest of any planet'],
       ['Diameter', '139,820 km — 11 Earths across'],
       ['Cloud-top temperature', '−145 °C'],
-      ['Moons', '95 confirmed']
+      ['Moons', '115 confirmed as of 2026']
     ],
     facts: [
       'Jupiter spins so fast that it bulges: it is about 7% wider across the equator than pole to pole.',
@@ -253,7 +261,7 @@ export const PLANETS = [
     radiusKm: 58232,
     rotationHours: 10.656,
     tilt: 26.73,
-    moonsKnown: 274,
+    moonsKnown: 292,
     ring: { inner: 1.24, outer: 2.27 },
     blurb: 'The ringed jewel — a planet so light it would float in a big enough bath.',
     stats: [
@@ -262,7 +270,7 @@ export const PLANETS = [
       ['Day (one spin)', '10 h 39 m'],
       ['Diameter', '116,460 km — 9 Earths across'],
       ['Cloud-top temperature', '−178 °C'],
-      ['Moons', '274 confirmed — the most of any planet']
+      ['Moons', '292 confirmed as of 2026 — the most of any planet']
     ],
     facts: [
       'Saturn\'s average density is less than water\'s, so it really would float — if you could find an ocean big enough.',
@@ -322,7 +330,7 @@ export const PLANETS = [
         radiusKm: 2574.7, aKm: 1221870, periodDays: 15.945421,
         blurb: 'The only moon with a thick atmosphere — and rivers, rain and seas of liquid methane.',
         facts: [
-          'Titan\'s air is 1.5 times denser than Earth\'s at sea level, and mostly nitrogen, like ours.',
+          'Titan\'s air presses down half again as hard as ours — but it is so cold that it is about four times as dense, and it is mostly nitrogen, like ours.',
           'It rains methane, which carves river valleys and fills lakes near the poles — the only other place with liquid on its surface.',
           'In 2005 the Huygens probe landed here, the most distant landing ever made.',
           'Gravity is so low and the air so thick that a human with strapped-on wings could fly.'
@@ -348,7 +356,7 @@ export const PLANETS = [
     radiusKm: 25362,
     rotationHours: -17.24,
     tilt: 97.77,
-    moonsKnown: 28,
+    moonsKnown: 29,
     ring: { inner: 1.64, outer: 2.00, faint: true },
     blurb: 'The ice giant that orbits lying on its side.',
     stats: [
@@ -356,8 +364,8 @@ export const PLANETS = [
       ['Year', '84 Earth years'],
       ['Day (one spin)', '17 h 14 m — backwards'],
       ['Diameter', '50,724 km — 4 Earths across'],
-      ['Cloud-top temperature', '−224 °C, the coldest measured anywhere'],
-      ['Moons', '28 confirmed']
+      ['Cloud-top temperature', '−224 °C — the coldest of any planet'],
+      ['Moons', '29 confirmed as of 2026']
     ],
     facts: [
       'Uranus is tipped 98°, so it rolls around the Sun on its side — probably knocked over by a huge collision.',
@@ -431,7 +439,7 @@ export const PLANETS = [
       ['Day (one spin)', '16 h 7 m'],
       ['Diameter', '49,244 km'],
       ['Cloud-top temperature', '−214 °C'],
-      ['Moons', '16 confirmed']
+      ['Moons', '16 confirmed as of 2026']
     ],
     facts: [
       'Winds reach 2,100 km/h — faster than the speed of sound on Earth and the fastest in the solar system.',
