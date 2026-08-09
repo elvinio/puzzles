@@ -35,15 +35,15 @@ Items are independent unless a **Depends on** line says otherwise. Anything mark
 
 | ID | Item | Size | Done |
 |----|------|------|------|
-| SS-S1 | Moon counts are stale (Jupiter, Saturn, Uranus) | S | [ ] |
-| SS-S2 | Uranus "coldest measured anywhere" contradicts Triton in the same dataset | S | [ ] |
-| SS-S3 | Titan: "1.5 times denser" is the pressure, not the density (~4x) | S | [ ] |
-| SS-S4 | Mercury's core is not solid, and 60% is a mass fraction | S | [ ] |
-| SS-S5 | Venus "day longer than its year" conflates spin with solar day | S | [ ] |
-| SS-S6 | Sun: "99.86% of everything" should be "of the mass" | S | [ ] |
-| SS-S7 | DKIST fact — tighten the numbers, name the mechanism, plan for ageing | S | [ ] |
-| SS-S8 | Olympus Mons "as wide as France" works by area, not by width | S | [ ] |
-| SS-S9 | Sun's differential rotation is described but rendered rigidly | M | [ ] |
+| SS-S1 | Moon counts are stale (Jupiter, Saturn, Uranus) | S | [x] |
+| SS-S2 | Uranus "coldest measured anywhere" contradicts Triton in the same dataset | S | [x] |
+| SS-S3 | Titan: "1.5 times denser" is the pressure, not the density (~4x) | S | [x] |
+| SS-S4 | Mercury's core is not solid, and 60% is a mass fraction | S | [x] |
+| SS-S5 | Venus "day longer than its year" conflates spin with solar day | S | [x] |
+| SS-S6 | Sun: "99.86% of everything" should be "of the mass" | S | [x] |
+| SS-S7 | DKIST fact — tighten the numbers, name the mechanism, plan for ageing | S | [x] |
+| SS-S8 | Olympus Mons "as wide as France" works by area, not by width | S | [x] |
+| SS-S9 | Sun's differential rotation is described but rendered rigidly | M | [x] |
 
 ### UI & UX — [03-ui-ux.md](03-ui-ux.md)
 

@@ -759,7 +759,9 @@ function updateBodies(dtDays) {
     }
   }
 
-  sun.spin.rotation.y += (dtDays * Math.min(1, 12 / SPEEDS[speedIdx].v)) / 25.4 * Math.PI * 2;
+  // Equatorial rate; addSpin fans it out per-latitude so the star shears
+  // instead of turning as one rigid body (real differential rotation).
+  sun.addSpin((dtDays * Math.min(1, 12 / SPEEDS[speedIdx].v)) / 25.4 * Math.PI * 2);
   updateAsteroids(days);
 
   const beltAng = (days / (365.25 * Math.pow(BELT_A, 1.5))) * Math.PI * 2;
