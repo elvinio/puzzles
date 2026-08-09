@@ -597,6 +597,9 @@ function pickAt(clientX, clientY) {
 // ── Labels (HTML, so the text stays crisp on a retina screen) ──────────────
 const labelLayer = document.getElementById('labels');
 const labels = new Map();
+// Last display/transform actually written per label, so a frame where a body
+// hasn't moved on screen (paused, or the camera has settled) touches no DOM.
+const labelState = new Map();
 let showLabels = true;
 
 for (const rec of bodies) {
@@ -607,6 +610,7 @@ for (const rec of bodies) {
   el.addEventListener('click', ev => { ev.stopPropagation(); select(rec.id); });
   labelLayer.appendChild(el);
   labels.set(rec.id, el);
+  labelState.set(rec.id, { shown: null, transform: '' });
 }
 
 const _wp = new THREE.Vector3();
@@ -615,20 +619,22 @@ const placed = [];                          // screen slots already taken this f
 /** Draw one label, unless it would land on top of one already drawn. */
 function placeLabel(rec, w, h) {
   const el = labels.get(rec.id);
+  const st = labelState.get(rec.id);
+  const hide = () => { if (st.shown !== false) { el.style.display = 'none'; st.shown = false; } };
+
   const host = rec.kind === 'moon' ? recById[rec.parent] : rec;
   // Moon labels only make sense once you have flown in close to their planet.
+  // Checked (and short-circuited) before the projection below, so a moon whose
+  // planet is far away skips the projection work entirely, not just the write.
   const near = rec.kind !== 'moon' ||
     (host && camera.position.distanceTo(host.group.position) < host.systemRadius * 7);
   // Riding the ship, floating name tags would sit between you and the view.
   const riding = rocket && rocket.ownsCamera();
-  if (!showLabels || !near || riding) { el.style.display = 'none'; return; }
+  if (!showLabels || !near || riding) return hide();
 
   (rec.mesh || rec.group).getWorldPosition(_wp);
   _wp.project(camera);
-  if (_wp.z > 1 || Math.abs(_wp.x) > 1.2 || Math.abs(_wp.y) > 1.2) {
-    el.style.display = 'none';
-    return;
-  }
+  if (_wp.z > 1 || Math.abs(_wp.x) > 1.2 || Math.abs(_wp.y) > 1.2) return hide();
 
   const x = (_wp.x * 0.5 + 0.5) * w, y = (-_wp.y * 0.5 + 0.5) * h;
 
@@ -644,11 +650,12 @@ function placeLabel(rec, w, h) {
     }
     if (!free) continue;
     placed.push(x, y + dy);
-    el.style.display = '';
-    el.style.transform = `translate(${x}px, ${y}px) translate(-50%, calc(-50% + ${dy}px))`;
+    const transform = `translate(${x}px, ${y}px) translate(-50%, calc(-50% + ${dy}px))`;
+    if (st.shown !== true) { el.style.display = ''; st.shown = true; }
+    if (st.transform !== transform) { el.style.transform = transform; st.transform = transform; }
     return;
   }
-  el.style.display = 'none';
+  hide();
 }
 
 function updateLabels() {
@@ -783,7 +790,17 @@ const dateFmt = new Intl.DateTimeFormat('en-GB', {
   day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'
 });
 
+// The readout changes at most once per simulated calendar day; everything
+// below is skipped while jd sits inside the day already on screen.
+let lastClockDay = null;
+
 function updateClockUI() {
+  // jdFromDate lands exactly on N + 0.5 at UTC midnight, so this integer
+  // ticks over once per calendar day no matter how fast the clock is running.
+  const dayMark = Math.floor(jd - 0.5);
+  if (dayMark === lastClockDay) return;
+  lastClockDay = dayMark;
+
   const { year, day } = dayOfYear(jd);
   elDay.textContent = day;
   elYear.textContent = year;
