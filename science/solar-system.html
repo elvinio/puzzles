@@ -31,7 +31,13 @@
         <div class="sep"></div>
         <div class="unit"><span class="k">Day</span><span class="v" id="dayNum">1</span></div>
       </div>
-      <div class="clock-sub" id="dateText">1 January 2026</div>
+      <div class="clock-date-row">
+        <div class="clock-date">
+          <div class="clock-sub" id="dateText">1 January 2026</div>
+          <input type="date" id="dateInput" class="date-input" aria-label="Jump to a date">
+        </div>
+        <button class="clock-today" id="btnToday" type="button" aria-label="Jump to today">Today</button>
+      </div>
       <div class="clock-lap" id="lapText"></div>
     </div>
 

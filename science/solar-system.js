@@ -11,12 +11,15 @@
    drawn far larger than reality. Sizes stay in the right *order*, and every
    number quoted in the fact panel is the true one.
 
-   Clock starts at 1 January 2026, 00:00 UTC.
+   The clock starts on today's date. The lap counter ("Earth has completed N
+   laps of the Sun since 1 Jan 2026") stays anchored to that fixed date
+   regardless, since it would not mean much against a moving start point.
    ========================================================================== */
 import * as THREE from 'three';
 import {
   ELEMENTS, positionAt, orbitPath, jdFromDate, dateFromJd,
-  dayOfYear, daysInYear, J2000, DEG
+  dayOfYear, daysInYear, J2000, DEG, MIN_JD, MAX_JD,
+  moonPosition, nextEclipse
 } from './solar-system-ephem.js';
 import { SUN, PLANETS, DWARF_PLANETS, COMET, ASTEROID_BELT, BY_ID } from './solar-system-data.js';
 import {
@@ -61,7 +64,12 @@ const bodyRadius = km => EARTH_SIZE * Math.pow(km / 6371, SIZE_POW);
 const trueRadiusKm = km => km * AU_UNITS / AU_KM;
 
 // ── Time ───────────────────────────────────────────────────────────────────
-const START_JD = jdFromDate(new Date(Date.UTC(2026, 0, 1)));
+const clampJd = v => Math.min(MAX_JD, Math.max(MIN_JD, v));
+
+// Fixed reference point for the "laps of the Sun" counter — see the header
+// comment above for why this stays put even though the clock itself starts
+// on today's date.
+const LAP_EPOCH_JD = jdFromDate(new Date(Date.UTC(2026, 0, 1)));
 const SPEEDS = [
   { v: 1 / 24, label: '1 hour/s' },
   { v: 3 / 24, label: '3 hours/s' },
@@ -75,7 +83,7 @@ const SPEEDS = [
   { v: 1825, label: '5 years/s' }
 ];
 const DEFAULT_SPEED_IDX = 3;    // 1 day/s
-let jd = START_JD;
+let jd = clampJd(jdFromDate(new Date()));
 let speedIdx = DEFAULT_SPEED_IDX;
 let playing = true;
 
@@ -362,7 +370,12 @@ function buildPlanet(planet) {
   const aMax = list.reduce((m, x) => Math.max(m, x.aKm), 1);
   for (const m of list) {
     const rec = buildMoon(planet, m, radius, aMax, planet.ring ? planet.ring.outer : 0);
-    moonPlane.add(rec.pivot);
+    // The Moon alone is placed from a real ephemeris (see updateBodies()),
+    // giving its true instantaneous latitude — so it rides directly under
+    // the untilted sizeGroup rather than the fixed-5.14°-tilt moonPlane
+    // every other moon uses. The decorative orbit ring stays on moonPlane.
+    if (rec.id === 'moon') sizeGroup.add(rec.pivot);
+    else moonPlane.add(rec.pivot);
     moonPlane.add(rec.path);
     moons.push(rec);
   }
@@ -624,6 +637,9 @@ function pickAt(clientX, clientY) {
 // ── Labels (HTML, so the text stays crisp on a retina screen) ──────────────
 const labelLayer = document.getElementById('labels');
 const labels = new Map();
+// Last display/transform actually written per label, so a frame where a body
+// hasn't moved on screen (paused, or the camera has settled) touches no DOM.
+const labelState = new Map();
 let showLabels = true;
 
 for (const rec of bodies) {
@@ -634,6 +650,7 @@ for (const rec of bodies) {
   el.addEventListener('click', ev => { ev.stopPropagation(); select(rec.id); });
   labelLayer.appendChild(el);
   labels.set(rec.id, el);
+  labelState.set(rec.id, { shown: null, transform: '' });
 }
 
 const _wp = new THREE.Vector3();
@@ -642,20 +659,22 @@ const placed = [];                          // screen slots already taken this f
 /** Draw one label, unless it would land on top of one already drawn. */
 function placeLabel(rec, w, h) {
   const el = labels.get(rec.id);
+  const st = labelState.get(rec.id);
+  const hide = () => { if (st.shown !== false) { el.style.display = 'none'; st.shown = false; } };
+
   const host = rec.kind === 'moon' ? recById[rec.parent] : rec;
   // Moon labels only make sense once you have flown in close to their planet.
+  // Checked (and short-circuited) before the projection below, so a moon whose
+  // planet is far away skips the projection work entirely, not just the write.
   const near = rec.kind !== 'moon' ||
     (host && camera.position.distanceTo(host.group.position) < host.systemRadius * 7);
   // Riding the ship, floating name tags would sit between you and the view.
   const riding = rocket && rocket.ownsCamera();
-  if (!showLabels || !near || riding) { el.style.display = 'none'; return; }
+  if (!showLabels || !near || riding) return hide();
 
   (rec.mesh || rec.group).getWorldPosition(_wp);
   _wp.project(camera);
-  if (_wp.z > 1 || Math.abs(_wp.x) > 1.2 || Math.abs(_wp.y) > 1.2) {
-    el.style.display = 'none';
-    return;
-  }
+  if (_wp.z > 1 || Math.abs(_wp.x) > 1.2 || Math.abs(_wp.y) > 1.2) return hide();
 
   const x = (_wp.x * 0.5 + 0.5) * w, y = (-_wp.y * 0.5 + 0.5) * h;
 
@@ -671,11 +690,12 @@ function placeLabel(rec, w, h) {
     }
     if (!free) continue;
     placed.push(x, y + dy);
-    el.style.display = '';
-    el.style.transform = `translate(${x}px, ${y}px) translate(-50%, calc(-50% + ${dy}px))`;
+    const transform = `translate(${x}px, ${y}px) translate(-50%, calc(-50% + ${dy}px))`;
+    if (st.shown !== true) { el.style.display = ''; st.shown = true; }
+    if (st.transform !== transform) { el.style.transform = transform; st.transform = transform; }
     return;
   }
-  el.style.display = 'none';
+  hide();
 }
 
 function updateLabels() {
@@ -732,6 +752,14 @@ function select(id) {
     </dl>
     <h3>Did you know?</h3>
     <ul class="p-facts">${d.facts.map(f => `<li>${f}</li>`).join('')}</ul>
+    ${id === 'moon' ? `
+      <h3>Watch it happen</h3>
+      <div class="p-eclipse-btns">
+        <button class="chip" id="btnNextSolar" type="button">☀️ Next solar eclipse</button>
+        <button class="chip" id="btnNextLunar" type="button">🌕 Next lunar eclipse</button>
+      </div>
+      <p class="p-eclipse-result" id="eclipseResult"></p>
+    ` : ''}
     ${moons.length ? `<h3>Major moons</h3><div class="p-moons">${
       moons.map(m => `<button class="chip" data-id="${m.id}">
         <span class="p-dot sm" style="background:${m.color}"></span>${m.name}</button>`).join('')
@@ -740,11 +768,37 @@ function select(id) {
       ↑ Back to ${BY_ID[rec.parent].name}</button></div>` : ''}
   `;
   for (const chip of panelBody.querySelectorAll('.chip')) {
-    chip.addEventListener('click', () => select(chip.dataset.id));
+    // Only the moon/back chips carry a data-id — the eclipse buttons below
+    // share the same `.chip` styling but wire up their own click handlers.
+    if (chip.dataset.id) chip.addEventListener('click', () => select(chip.dataset.id));
   }
+  if (id === 'moon') wireEclipseButtons();
   panel.classList.add('open');
   panel.scrollTop = 0;
   focusOn(rec);
+}
+
+/** The Moon's fact panel gets two buttons that search forward from the
+    current date for the next solar or lunar eclipse, jump the clock there
+    and pull the camera back to frame Earth so the alignment is visible. */
+function wireEclipseButtons() {
+  const result = document.getElementById('eclipseResult');
+  function jumpToNext(kind) {
+    const found = nextEclipse(jd, kind, 8);
+    if (!found) {
+      result.textContent = 'No eclipse turned up in the next few years from here — try a different date.';
+      return;
+    }
+    jd = clampJd(found.jd);
+    updateBodies(0);
+    updateClockUI();
+    focusOn(recById.earth);
+    result.textContent = kind === 'solar'
+      ? `${dateFmt.format(dateFromJd(jd))} — the Moon lines up directly between Earth and the Sun.`
+      : `${dateFmt.format(dateFromJd(jd))} — Earth lines up directly between the Sun and the Moon.`;
+  }
+  document.getElementById('btnNextSolar').addEventListener('click', () => jumpToNext('solar'));
+  document.getElementById('btnNextLunar').addEventListener('click', () => jumpToNext('lunar'));
 }
 
 document.getElementById('panelClose').addEventListener('click', () => select(null));
@@ -780,14 +834,27 @@ function updateBodies(dtDays) {
     rec.axisLine.visible = showOrbits && selected === rec.id;
 
     for (const m of rec.moons) {
-      const ang = m.phase + m.dir * (days / m.data.periodDays) * Math.PI * 2;
-      m.pivot.position.set(Math.cos(ang) * m.dist, 0, Math.sin(ang) * m.dist);
-      m.mesh.rotation.y = Math.PI - ang; // moons keep one face towards home
+      if (m.id === 'moon') {
+        // Real geocentric ecliptic longitude/latitude (see solar-system-ephem.js),
+        // converted with the same ecliptic→scene basis as toScene() above —
+        // this pivot sits straight under sizeGroup, not the tilted moonPlane.
+        const { lonDeg, latDeg } = moonPosition(jd);
+        const lon = lonDeg * DEG, lat = latDeg * DEG;
+        const cb = Math.cos(lat), sb = Math.sin(lat), cl = Math.cos(lon), sl = Math.sin(lon);
+        m.pivot.position.set(cb * cl * m.dist, sb * m.dist, -cb * sl * m.dist);
+        m.mesh.rotation.y = Math.PI - lon; // keeps (roughly) one face towards home
+      } else {
+        const ang = m.phase + m.dir * (days / m.data.periodDays) * Math.PI * 2;
+        m.pivot.position.set(Math.cos(ang) * m.dist, 0, Math.sin(ang) * m.dist);
+        m.mesh.rotation.y = Math.PI - ang; // moons keep one face towards home
+      }
       m.path.visible = showOrbits && eye < rec.systemRadius * 12;
     }
   }
 
-  sun.spin.rotation.y += (dtDays * Math.min(1, 12 / SPEEDS[speedIdx].v)) / 25.4 * Math.PI * 2;
+  // Equatorial rate; addSpin fans it out per-latitude so the star shears
+  // instead of turning as one rigid body (real differential rotation).
+  sun.addSpin((dtDays * Math.min(1, 12 / SPEEDS[speedIdx].v)) / 25.4 * Math.PI * 2);
   updateAsteroids(days);
 
   const beltAng = (days / (365.25 * Math.pow(BELT_A, 1.5))) * Math.PI * 2;
@@ -805,16 +872,50 @@ const elDay = document.getElementById('dayNum');
 const elYear = document.getElementById('yearNum');
 const elDate = document.getElementById('dateText');
 const elLaps = document.getElementById('lapText');
+const dateInput = document.getElementById('dateInput');
 const dateFmt = new Intl.DateTimeFormat('en-GB', {
   day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'
 });
 
+const isoDate = d => d.toISOString().slice(0, 10);
+dateInput.min = isoDate(dateFromJd(MIN_JD));
+dateInput.max = isoDate(dateFromJd(MAX_JD));
+dateInput.addEventListener('click', () => {
+  if (dateInput.showPicker) { try { dateInput.showPicker(); } catch { /* ignored */ } }
+});
+dateInput.addEventListener('change', () => {
+  if (!dateInput.value) return;
+  const [y, m, d] = dateInput.value.split('-').map(Number);
+  jd = clampJd(jdFromDate(new Date(Date.UTC(y, m - 1, d))));
+  updateBodies(0);
+  updateClockUI();
+});
+
+document.getElementById('btnToday').addEventListener('click', () => {
+  jd = clampJd(jdFromDate(new Date()));
+  updateBodies(0);
+  updateClockUI();
+});
+
+// The readout changes at most once per simulated calendar day; everything
+// below is skipped while jd sits inside the day already on screen.
+let lastClockDay = null;
+
 function updateClockUI() {
+  // jdFromDate lands exactly on N + 0.5 at UTC midnight, so this integer
+  // ticks over once per calendar day no matter how fast the clock is running.
+  const dayMark = Math.floor(jd - 0.5);
+  if (dayMark === lastClockDay) return;
+  lastClockDay = dayMark;
+
   const { year, day } = dayOfYear(jd);
   elDay.textContent = day;
   elYear.textContent = year;
   elDate.textContent = dateFmt.format(dateFromJd(jd));
-  const laps = (jd - START_JD) / 365.256898;
+  // Left alone while the native picker has it open, so it doesn't jump
+  // around under the user's thumb while the clock keeps playing behind it.
+  if (document.activeElement !== dateInput) dateInput.value = isoDate(dateFromJd(jd));
+  const laps = (jd - LAP_EPOCH_JD) / 365.256898;
   const n = Math.floor(Math.abs(laps));
   elLaps.textContent = `Day ${day} of ${daysInYear(year)} · Earth has completed ` +
     `${n} ${n === 1 ? 'lap' : 'laps'} of the Sun since 1 Jan 2026`;
@@ -843,7 +944,7 @@ btnPlay.addEventListener('click', () => setPlaying(!playing));
 document.getElementById('btnFaster').addEventListener('click', () => setSpeed(speedIdx + 1));
 document.getElementById('btnSlower').addEventListener('click', () => setSpeed(speedIdx - 1));
 document.getElementById('btnTimeReset').addEventListener('click', () => {
-  jd = START_JD;
+  jd = LAP_EPOCH_JD;
   setSpeed(DEFAULT_SPEED_IDX);
   updateBodies(0);
   updateClockUI();
