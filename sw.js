@@ -34,6 +34,7 @@ const PRECACHE = [
   'science/solar-system-ephem.js', 'science/solar-system-textures.js',
   'science/solar-system-flight.js', 'science/solar-system-rocket.js',
   'science/solar-system-sun.js', 'science/solar-system-earth.js',
+  'science/solar-system-comet.js',
   // ...and its real photo textures, one folder per body (CC BY 4.0, solarsystemscope.com)
   'science/textures/earth/2k_earth_daymap.jpg', 'science/textures/earth/2k_earth_nightmap.jpg',
   'science/textures/earth/2k_earth_clouds.jpg', 'science/textures/earth/2k_earth_normal_map.png',
