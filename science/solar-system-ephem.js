@@ -7,6 +7,11 @@
    per Julian century, solve Kepler's equation for the eccentric anomaly, and
    read off heliocentric ecliptic coordinates in astronomical units.
 
+   Pluto and the dwarf planets/comet further down reuse every bit of that
+   machinery — the only difference is where their element sets come from and
+   how confidently their drift rates are known; see the comment above the
+   small-body section for the details.
+
    Everything here is plain maths on numbers — no three.js, no DOM.
    ========================================================================== */
 
@@ -66,8 +71,79 @@ export const ELEMENTS = {
     L: -55.12002969, w: 44.96476227, O: 131.78422574,
     da: 0.00026291, de: 0.00005105, dI: 0.00035372,
     dL: 218.45945325, dw: -0.32241464, dO: -0.00508664
+  },
+
+  /* Pluto is the ninth row of the same Standish/JPL table as the eight
+     planets above — same 1800–2050 validity window, same real secular
+     rates, so it needs nothing else special: elementsAt()/positionAt()
+     already handle it exactly like a planet. */
+  pluto: {
+    a: 39.48211675, e: 0.24882730, I: 17.14001206,
+    L: 238.92903833, w: 224.06891629, O: 110.30393684,
+    da: -0.00031596, de: 0.00005170, dI: 0.00004818,
+    dL: 145.20780515, dw: -0.04062942, dO: -0.01183482
   }
 };
+
+/* ── Small bodies: dwarf planets and Halley's comet ─────────────────────────
+   No published secular-rate model exists for these the way it does for the
+   planets above, so each is instead a real osculating element set (JPL
+   Small-Body Database / MPC) at its own epoch, propagated forward as a
+   plain unperturbed Kepler ellipse: `epoch` overrides J2000 as the zero
+   point for T (see elementsAt()), every rate but dL defaults to zero (the
+   ellipse's shape and orientation are held fixed), and dL comes from
+   Kepler's third law via meanMotion() rather than a fitted number. That is
+   noticeably less accurate over centuries than the planets' fitted rates,
+   but the shape, tilt and eccentricity — the point of showing these bodies
+   at all — are the real measured ones, and the mean motion is exact for an
+   unperturbed two-body orbit. Halley is anchored at its well-documented
+   1986 perihelion (M = 0 there by definition) rather than an arbitrary
+   epoch's mean anomaly, since perihelion dates for comets are the figure
+   everyone actually publishes and agrees on. */
+const SIDEREAL_YEAR = 365.25636;   // days, for Kepler's third law below
+
+/** Mean motion (deg/Julian century) of an unperturbed heliocentric orbit of
+ *  semi-major axis a (au) — Kepler's third law, period(years) = a^1.5. */
+function meanMotion(a) {
+  return (360 / (SIDEREAL_YEAR * Math.pow(a, 1.5))) * CENTURY;
+}
+
+const HALLEY_PERIHELION_1986 = jdFromDate(new Date(Date.UTC(1986, 1, 9)));
+
+/** a: semi-major axis (au), e: eccentricity, I: inclination (deg), O: longitude
+ *  of ascending node Ω (deg), peri: argument of perihelion ω (deg), M: mean
+ *  anomaly at epoch (deg, JD) — the same quantities JPL/MPC publish for a
+ *  small body, kept as-sourced rather than pre-combined into w/L by hand. */
+function smallBody({ a, e, I, O, peri, M = 0, epoch }) {
+  const w = O + peri;              // ϖ = Ω + ω, this file's convention for w
+  return { a, e, I, O, w, L: M + w, epoch, dL: meanMotion(a) };
+}
+
+Object.assign(ELEMENTS, {
+  ceres: smallBody({
+    a: 2.7675, e: 0.0758, I: 10.59, O: 80.28, peri: 73.5,
+    M: 291.4, epoch: 2459600.5                   // 21 Jan 2022
+  }),
+  eris: smallBody({
+    a: 67.668, e: 0.441, I: 44.187, O: 36.02, peri: 151.66,
+    M: 205.11, epoch: 2461000.5                  // 21 Nov 2025
+  }),
+  haumea: smallBody({
+    a: 43.166, e: 0.192457, I: 28.1913, O: 122.167, peri: 239.041,
+    M: 218.205, epoch: 2459200.5                 // 17 Dec 2020
+  }),
+  makemake: smallBody({
+    a: 45.499, e: 0.1604, I: 29.002, O: 79.441, peri: 296.065,
+    M: 170.497, epoch: 2461000.5                 // 21 Nov 2025
+  }),
+  // Perihelion 0.587 au, aphelion 35.14 au — inside Venus's orbit to beyond
+  // Neptune's. M defaults to 0: mean anomaly is zero at perihelion, so
+  // anchoring epoch there needs no separately-sourced mean anomaly at all.
+  halley: smallBody({
+    a: 17.8635, e: 0.9671, I: 161.96, O: 58.42, peri: 111.87,
+    epoch: HALLEY_PERIHELION_1986
+  })
+});
 
 // ── Julian date ⇄ JavaScript Date (both UTC) ───────────────────────────────
 export function jdFromDate(date) { return date.getTime() / 86400000 + 2440587.5; }
@@ -114,16 +190,18 @@ function eccentricAnomaly(M, e) {
   return E;
 }
 
-/** Elements drifted to a given Julian date. */
+/** Elements drifted to a given Julian date. `epoch` and the rates other than
+ *  dL are optional, defaulting to J2000 and zero — see the small bodies
+ *  above, whose shape is held fixed and only ever advances in mean anomaly. */
 export function elementsAt(el, jd) {
-  const T = (jd - J2000) / CENTURY;
+  const T = (jd - (el.epoch ?? J2000)) / CENTURY;
   return {
-    a: el.a + el.da * T,
-    e: el.e + el.de * T,
-    I: (el.I + el.dI * T) * DEG,
+    a: el.a + (el.da ?? 0) * T,
+    e: el.e + (el.de ?? 0) * T,
+    I: (el.I + (el.dI ?? 0) * T) * DEG,
     L: (el.L + el.dL * T),
-    w: (el.w + el.dw * T),
-    O: (el.O + el.dO * T) * DEG
+    w: (el.w + (el.dw ?? 0) * T),
+    O: (el.O + (el.dO ?? 0) * T) * DEG
   };
 }
 

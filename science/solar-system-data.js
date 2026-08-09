@@ -496,10 +496,176 @@ export const ASTEROID_BELT = {
   ]
 };
 
+export const DWARF_PLANETS = [
+  {
+    id: 'pluto',
+    name: 'Pluto',
+    symbol: '♇',
+    color: '#c9a888',
+    texture: 'pluto',
+    radiusKm: 1188.3,
+    // Retrograde: obliquity past 90° already flips the visible spin, so this
+    // stays positive (unlike Venus/Uranus's rotationHours — see SS-B2).
+    rotationHours: 153.3,
+    tilt: 122.5,
+    blurb: 'The most famous dwarf planet — a small, icy, tilted world that spent 76 years classified as the ninth planet.',
+    stats: [
+      ['Type', 'Dwarf planet'],
+      ['Distance from Sun', '5.9 billion km (39.5 AU) on average — 29.7 to 49.3 AU'],
+      ['Year', '247.9 Earth years'],
+      ['Day (one spin)', '6 days 9 hours — backwards'],
+      ['Diameter', '2,377 km — smaller than our Moon'],
+      ['Temperature', 'about −225 °C'],
+      ['Moons', '5 — Charon, Styx, Nix, Kerberos, Hydra']
+    ],
+    facts: [
+      'Pluto\'s orbit is tilted 17° from the plane the planets travel in, and stretched enough that it sometimes swings closer to the Sun than Neptune — it last did, between 1979 and 1999. That tilt and stretch are exactly why astronomers eventually decided it isn\'t a planet like the other eight.',
+      'Charon, its largest moon, is so big — over half Pluto\'s width — that the two don\'t really orbit like a planet and its moon. They swing around a point in the empty space between them, more like a double world.',
+      'NASA\'s New Horizons spacecraft flew past in July 2015 after a nine-year journey and found a heart-shaped glacier of nitrogen ice bigger than Texas, plus mountains of water ice as tall as the Rockies.',
+      'It was discovered in 1930 by 24-year-old Clyde Tombaugh, comparing photographic plates by hand. A small pinch of his ashes now rides aboard New Horizons, heading out of the solar system.'
+    ],
+    moons: []
+  },
+  {
+    id: 'ceres',
+    name: 'Ceres',
+    symbol: '⚳',
+    color: '#a89e8f',
+    texture: 'ceres',
+    radiusKm: 469.7,
+    rotationHours: 9.074,
+    tilt: 4,
+    blurb: 'The largest asteroid, and the only dwarf planet in the inner solar system — an icy rock hiding an ocean\'s worth of water.',
+    stats: [
+      ['Type', 'Dwarf planet'],
+      ['Distance from Sun', '414 million km (2.77 AU) on average'],
+      ['Year', '4.6 Earth years'],
+      ['Day (one spin)', '9 h 4 m — one of the fastest of any round world'],
+      ['Diameter', '940 km — about the size of Texas'],
+      ['Temperature', 'about −105 °C'],
+      ['Moons', 'none']
+    ],
+    facts: [
+      'Ceres was the very first asteroid ever found, in 1801 — and for a few decades afterwards astronomers actually called it a planet.',
+      'Almost a quarter of Ceres by mass may be water, some scientists think — more fresh water than exists on Earth, mostly frozen or trapped as briny sludge underground.',
+      'The bright patches inside Occator crater are salt left behind after briny water bubbled up through cracks and evaporated into space — a sign Ceres may still be geologically active today.',
+      'NASA\'s Dawn spacecraft settled into orbit around Ceres in 2015 — the first time a spacecraft had ever orbited a dwarf planet.'
+    ],
+    moons: []
+  },
+  {
+    id: 'eris',
+    name: 'Eris',
+    color: '#e6e4de',
+    texture: 'eris',
+    radiusKm: 1163,
+    rotationHours: 378.9,
+    tilt: 0,          // pole direction isn't well constrained — left upright rather than guessed
+    blurb: 'A distant, brilliant-white world out past Pluto whose discovery rewrote the definition of a planet.',
+    stats: [
+      ['Type', 'Dwarf planet'],
+      ['Distance from Sun', '10.1 billion km (67.7 AU) on average — currently near its farthest point, about 95 AU out'],
+      ['Year', '557 Earth years'],
+      ['Day (one spin)', '15.8 Earth days'],
+      ['Diameter', '2,326 km — almost exactly Pluto\'s size, but noticeably heavier'],
+      ['Temperature', 'about −231 to −243 °C'],
+      ['Moons', '1 — Dysnomia']
+    ],
+    facts: [
+      'Eris is slightly smaller across than Pluto but about 27% heavier. Finding a world that rivalled Pluto out past Neptune is what forced astronomers to finally sit down and define what "planet" means — and Pluto lost.',
+      'It\'s one of the most reflective large worlds known: its icy surface bounces back almost all the sunlight that reaches it, kept fresh by a paper-thin atmosphere of frozen methane and nitrogen that refreezes onto the ground each time Eris drifts further from the Sun.',
+      'Its one moon, Dysnomia, is named for the Greek spirit of lawlessness — a nod to Eris, goddess of strife and discord, and to the "planet wars" this discovery touched off in 2005.',
+      'Sunlight takes about 8 minutes to reach Earth. Out at Eris, right now, it takes more than 13 hours.'
+    ],
+    moons: []
+  },
+  {
+    id: 'haumea',
+    name: 'Haumea',
+    color: '#dce6ea',
+    texture: 'haumea',
+    radiusKm: 780,
+    rotationHours: 3.915,
+    tilt: 0,          // pole direction isn't well constrained — left upright rather than guessed
+    blurb: 'An egg-shaped dwarf planet spinning so fast it stretched itself out of shape — and grew a ring.',
+    stats: [
+      ['Type', 'Dwarf planet'],
+      ['Distance from Sun', '6.5 billion km (43.2 AU) on average — 35 to 52 AU'],
+      ['Year', '284 Earth years'],
+      ['Day (one spin)', '3 h 55 m — the fastest spin of any large body in the solar system'],
+      ['True shape', 'a stretched ellipsoid, roughly 2,100 × 1,680 × 1,070 km — drawn here as a sphere for scale'],
+      ['Temperature', 'about −241 °C'],
+      ['Moons', '2 — Hiʻiaka and Namaka — plus a ring']
+    ],
+    facts: [
+      'Haumea spins once every 3 hours 55 minutes — faster than any other large body in the solar system — and that speed has stretched it into an elongated, egg-like shape, wider than it is tall.',
+      'In 2017 astronomers watched Haumea pass in front of a distant star and, from the brief shadow it cast, discovered it has its own ring — only the second ring system ever found around anything smaller than a gas giant.',
+      'Haumea and its two moons, Hiʻiaka and Namaka, are all named after a Hawaiian goddess of childbirth and her daughters, since the telescope that found them sits atop Mauna Kea.',
+      'Its surface is coated in crystalline water ice, almost like fresh, glittering snow — usually a sign of ice that formed or was disturbed recently, since radiation slowly wrecks ice crystals over millions of years out in the Kuiper Belt.'
+    ],
+    moons: []
+  },
+  {
+    id: 'makemake',
+    name: 'Makemake',
+    color: '#b8654a',
+    texture: 'makemake',
+    radiusKm: 715,
+    rotationHours: 22.5,
+    tilt: 0,          // pole direction isn't well constrained — left upright rather than guessed
+    blurb: 'A reddish, frozen world named for a creation god, discovered just days after Easter.',
+    stats: [
+      ['Type', 'Dwarf planet'],
+      ['Distance from Sun', '6.8 billion km (45.5 AU) on average — 38 to 53 AU'],
+      ['Year', '306.7 Earth years'],
+      ['Day (one spin)', '22.5 hours — close to Earth\'s'],
+      ['Diameter', 'about 1,430 km'],
+      ['Temperature', 'about −239 °C'],
+      ['Moons', '1 — a small, dark moon nicknamed MK 2']
+    ],
+    facts: [
+      'Makemake is coated in frozen methane and ethane, tinted reddish-brown by decades of sunlight cooking those ices into complex organic molecules called tholins — the same reddish "space tar" seen on Pluto and Neptune\'s moon Triton.',
+      'It was discovered in March 2005, just days after Easter, and named after the creator of humanity in the mythology of Easter Island\'s Rapa Nui people.',
+      'Unlike Pluto, Makemake seems to have essentially no atmosphere most of the time — any nitrogen or methane that briefly escapes when it\'s nearest the Sun quickly freezes back onto the surface as frost.',
+      'Its one known moon is small, dark and hard to see — a 2015 Hubble image caught it almost lost in Makemake\'s glare, and it\'s still only nicknamed MK 2.'
+    ],
+    moons: []
+  }
+];
+
+export const COMET = {
+  id: 'halley',
+  name: 'Halley\'s Comet',
+  kind: 'comet',
+  color: '#cfe3f5',
+  texture: 'halley',
+  radiusKm: 5,
+  rotationHours: 52.8,      // real rotation is a slow, complex tumble — not quoted in the facts below
+  tilt: 0,
+  blurb: 'The most famous comet of all — a 15 km dirty snowball that swings past the Sun once in most human lifetimes.',
+  stats: [
+    ['Type', 'Comet (short-period, retrograde)'],
+    ['Closest to Sun (perihelion)', '0.59 AU — inside Venus\'s orbit'],
+    ['Farthest from Sun (aphelion)', '35.1 AU — beyond Neptune'],
+    ['Orbital period', 'about 76 years'],
+    ['Nucleus', 'roughly 15 × 8 × 8 km — a loosely packed "dirty snowball" of ice and dust'],
+    ['Next visible from Earth', '28 July 2061']
+  ],
+  facts: [
+    'Edmond Halley didn\'t discover the comet that bears his name. In 1705 he used Newton\'s brand-new laws of gravity to work out that comets seen in 1531, 1607 and 1682 were the same object, returning again and again, and predicted it would come back in 1758. He died 16 years before it did — he never found out he was right.',
+    'It has been watched and recorded for over 2,000 years, including a famous appearance in the Bayeux Tapestry in 1066, stitched in as a bad omen right before the Battle of Hastings.',
+    'In 1986, five spacecraft from four countries flew out to meet it — nicknamed the "Halley Armada" — and Europe\'s Giotto probe passed within 600 km of the nucleus, taking the first close-up photos ever of a comet\'s icy heart.',
+    'Halley\'s comet orbits backwards compared with the planets, and its orbit is tilted 162° — tipped over so far it is nearly upside down.',
+    'A comet\'s tail always points straight away from the Sun, not backwards along the way it came — pushed out by sunlight and the solar wind. That\'s why the tail swings around to lead the way as Halley rounds the Sun and heads back out again.',
+    'It won\'t return until 28 July 2061 — anyone hoping to see it needs to be patient.'
+  ],
+  moons: []
+};
+
 /** Flat lookup: id → body record (planets and moons alike). */
 export const BY_ID = (() => {
-  const map = { sun: SUN, 'asteroid-belt': ASTEROID_BELT };
-  for (const p of PLANETS) {
+  const map = { sun: SUN, 'asteroid-belt': ASTEROID_BELT, halley: COMET };
+  for (const p of [...PLANETS, ...DWARF_PLANETS]) {
     map[p.id] = p;
     for (const m of p.moons || []) { m.parent = p; map[m.id] = m; }
   }

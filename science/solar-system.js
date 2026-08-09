@@ -21,7 +21,7 @@ import {
   dayOfYear, daysInYear, J2000, DEG, MIN_JD, MAX_JD,
   moonPosition, nextEclipse
 } from './solar-system-ephem.js';
-import { SUN, PLANETS, ASTEROID_BELT, BY_ID } from './solar-system-data.js';
+import { SUN, PLANETS, DWARF_PLANETS, COMET, ASTEROID_BELT, BY_ID } from './solar-system-data.js';
 import {
   surfaceTexture, earthMaps, cloudTexture, ringTexture,
   dotTexture, glowTexture, skyTexture
@@ -29,6 +29,7 @@ import {
 import { initRocket } from './solar-system-rocket.js';
 import { initSun } from './solar-system-sun.js';
 import { buildEarth } from './solar-system-earth.js';
+import { buildCometTail } from './solar-system-comet.js';
 
 // ── Scale ──────────────────────────────────────────────────────────────────
 const AU_UNITS   = 10;      // scene units for 1 au once compression is undone
@@ -36,6 +37,13 @@ const AU_KM      = 149_597_870.7;   // 1 au in km, for a literal (uncompressed) 
 const COMPRESS   = 0.48;    // r^0.48 keeps Neptune on screen beside Mercury
 const EARTH_SIZE = 0.30;    // scene units for Earth's radius
 const SIZE_POW   = 0.42;    // how much big planets are allowed to dwarf small
+
+// The "whole system" framing distance used to reset/boot the view. Wide
+// enough for Pluto, Haumea, Makemake and Halley's aphelion to land on screen
+// alongside the eight planets without asking for it; Eris, further out than
+// all of them for its entire 557-year orbit, still just needs an extra
+// pinch-zoom — a fair trade against shrinking the inner planets to specks.
+const WHOLE_SYSTEM_AU = 45;
 
 let realDistances = false;
 let trueSizes = false;      // draw bodies at their real size relative to an au (mostly invisible)
@@ -383,6 +391,20 @@ function buildPlanet(planet) {
 }
 
 const planetRecs = PLANETS.map(buildPlanet);
+
+// Dwarf planets and the comet reuse buildPlanet() outright — real Keplerian
+// orbit, marker, label, hit sphere and fact panel all come for free the same
+// way they do for the eight planets. Only the comet needs anything extra:
+// its anti-sunward tail, added below once its own record exists.
+const dwarfRecs = DWARF_PLANETS.map(buildPlanet);
+const cometRec = buildPlanet(COMET);
+cometRec.comet = buildCometTail(cometRec.radius);
+cometRec.group.add(cometRec.comet.mesh);   // sibling of the marker/hit sphere, not sizeGroup — see buildPlanet
+
+// Every body with a drawn orbit path, for the per-frame update loop and the
+// squeeze/real-gaps rebuild — planets, dwarf planets and the comet alike.
+const orbitRecs = [...planetRecs, ...dwarfRecs, cometRec];
+
 const recById = {};
 for (const r of bodies) recById[r.id] = r;
 
@@ -450,11 +472,13 @@ const beltRec = {
 bodies.push(beltRec);
 recById[beltRec.id] = beltRec;
 
-// Who wins a crowded patch of screen: the Sun, then planets and the belt, then moons.
+// Who wins a crowded patch of screen: the Sun, then planets and the belt,
+// then the dwarf planets and comet, then moons.
 const marsIdx = planetRecs.findIndex(r => r.id === 'mars');
 const labelOrder = [
   recById.sun,
   ...planetRecs.slice(0, marsIdx + 1), beltRec, ...planetRecs.slice(marsIdx + 1),
+  ...dwarfRecs, cometRec,
   ...bodies.filter(b => b.kind === 'moon')
 ];
 
@@ -464,7 +488,7 @@ const HOME = { theta: 0.95, phi: 0.92 };
 const goalTarget = new THREE.Vector3();
 let goalDist = view.dist;
 let follow = null;                 // body record the camera is riding along with
-let minDist = 1.2, maxDist = 900;
+let minDist = 1.2, maxDist = 1050;   // real-gaps mode needs headroom out to Eris, ~975 units at aphelion
 
 function applyCamera() {
   const sp = Math.sin(view.phi), cp = Math.cos(view.phi);
@@ -563,7 +587,10 @@ for (const ev of ['gesturestart', 'gesturechange', 'gestureend']) {
 function focusOn(rec) {
   if (!rec) return;
   follow = rec;
-  const span = rec.kind === 'planet' ? Math.max(rec.systemRadius * 2.3, rec.radius * 8)
+  // The comet's own radius is minuscule — frame around its tail's reach
+  // instead, or a tap on Halley would just zoom in on an empty point.
+  const span = rec.comet ? Math.max(rec.comet.maxLength * 2.6, rec.radius * 8)
+    : rec.kind === 'planet' ? Math.max(rec.systemRadius * 2.3, rec.radius * 8)
     : rec.kind === 'star' ? rec.radius * 7
     : rec.kind === 'belt' ? orbitRadius(3.4) * 2.2
       : rec.radius * 9;
@@ -584,7 +611,7 @@ function resetView() {
   goalTarget.set(0, 0, 0);
   view.theta = HOME.theta;
   view.phi = HOME.phi;
-  goalDist = Math.min(maxDist, fitDistance(orbitRadius(30.1) * 1.06));
+  goalDist = Math.min(maxDist, fitDistance(orbitRadius(WHOLE_SYSTEM_AU) * 1.06));
   minDist = 1.2;
   select(null);
 }
@@ -702,7 +729,7 @@ function select(id) {
   selected = id;
   for (const [key, el] of labels) el.classList.toggle('on', key === id);
   const lit = id && recById[id] ? (recById[id].parent || id) : null;
-  for (const rec of planetRecs) {
+  for (const rec of orbitRecs) {
     rec.path.material.opacity = !lit || lit === rec.id ? 0.55 : 0.2;
   }
 
@@ -782,11 +809,12 @@ const eclip = { x: 0, y: 0, z: 0 };
 function updateBodies(dtDays) {
   const days = jd - J2000;
 
-  for (const rec of planetRecs) {
+  for (const rec of orbitRecs) {
     const p = positionAt(ELEMENTS[rec.id], jd);
     eclip.x = p.x; eclip.y = p.y; eclip.z = p.z;
     toScene(eclip, rec.group.position);
     if (rec.earth) rec.earth.update(rec.group.position);
+    if (rec.comet) rec.comet.update(rec.group.position, Math.hypot(p.x, p.y, p.z));
 
     // Self-rotation. At high time speeds a true spin would just strobe, so the
     // visible rate is eased off — the clock stays honest, the picture readable.
@@ -943,7 +971,7 @@ function setRealDistances(on) {
   realDistances = on;
   btnScale.classList.toggle('on', on);
   btnScale.querySelector('span').textContent = on ? 'Real gaps' : 'Squeezed';
-  for (const rec of planetRecs) rec.path.userData.rebuild();
+  for (const rec of orbitRecs) rec.path.userData.rebuild();
   updateKuiper(jd - J2000);
   updateBodies(0);
 }
@@ -958,7 +986,7 @@ let scaleBeforeTrueSize = false;
 
 function applyTrueSizes() {
   sunSizeGroup.scale.setScalar(trueSizes ? sunTrueScale : 1);
-  for (const rec of planetRecs) rec.sizeGroup.scale.setScalar(trueSizes ? rec.trueScale : 1);
+  for (const rec of orbitRecs) rec.sizeGroup.scale.setScalar(trueSizes ? rec.trueScale : 1);
 }
 
 function setTrueSizes(on) {
@@ -1102,7 +1130,7 @@ setPlaying(true);
 updateKuiper(0);
 updateBodies(0);
 goalTarget.copy(view.target);
-view.dist = goalDist = Math.min(maxDist, fitDistance(orbitRadius(30.1) * 1.06));
+view.dist = goalDist = Math.min(maxDist, fitDistance(orbitRadius(WHOLE_SYSTEM_AU) * 1.06));
 applyCamera();
 updateClockUI();
 document.getElementById('loading').classList.add('gone');

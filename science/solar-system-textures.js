@@ -8,11 +8,12 @@
    all NASA-derived imagery from solarsystemscope.com/textures, CC BY 4.0,
    one folder per body under textures/.
 
-   Bodies with no public map of their own — the smaller moons, plus Uranus's
-   faint rings — fall back to a painter: a 2D canvas filled at start-up from
-   tileable value noise and handed to three.js as a texture. That keeps those
-   worlds offline-friendly and lets each keep its own character: cratered
-   rock, cracked ice, banded haze.
+   Bodies with no public map of their own — the smaller moons, Uranus's
+   faint rings, the dwarf planets and Halley's comet — fall back to a
+   painter: a 2D canvas filled at start-up from tileable value noise and
+   handed to three.js as a texture. That keeps those worlds offline-friendly
+   and lets each keep its own character: cratered rock, cracked ice, banded
+   haze.
 
    Maps are equirectangular: x wraps around the equator, y runs pole to pole.
    ========================================================================== */
@@ -307,7 +308,64 @@ const PAINTERS = {
 
   rock: () => rocky(128, 64, 89, [
     [0.0, 0x40382f], [0.4, 0x66594b], [0.7, 0x877664], [1.0, 0xa2907c]
-  ], { craters: 90, maxR: 7, dark: 0.4, rim: 0.3 })
+  ], { craters: 90, maxR: 7, dark: 0.4, rim: 0.3 }),
+
+  // ── Dwarf planets and the comet (SS-F8) — no public photo map, so painted
+  //    like the smaller moons above. ─────────────────────────────────────
+  pluto: () => {
+    const c = rocky(256, 128, 97, [
+      [0.0, 0x6b4a34], [0.35, 0x9c6f4c], [0.6, 0xc9a888], [0.85, 0xe6d3b8], [1.0, 0xf3e9d8]
+    ], { craters: 40, maxR: 8, dark: 0.3, rim: 0.25 });
+    const ctx = c.getContext('2d');
+    // A bright, soft patch nodding at Tombaugh Regio ("the heart") without
+    // literally tracing its outline — a fresh, pale nitrogen-ice basin
+    // standing out against the older, redder terrain around it.
+    const g = ctx.createRadialGradient(168, 82, 4, 168, 82, 46);
+    g.addColorStop(0, 'rgba(250,242,228,0.9)');
+    g.addColorStop(0.7, 'rgba(250,242,228,0.35)');
+    g.addColorStop(1, 'rgba(250,242,228,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.ellipse(168, 82, 46, 30, -0.2, 0, Math.PI * 2);
+    ctx.fill();
+    return c;
+  },
+
+  ceres: () => {
+    const c = rocky(256, 128, 101, [
+      [0.0, 0x5c554b], [0.4, 0x827a6c], [0.7, 0xa89e8f], [1.0, 0xc3bbad]
+    ], { craters: 140, maxR: 8, dark: 0.35, rim: 0.3 });
+    const ctx = c.getContext('2d');
+    // Occator crater's bright salt deposits — the one unmissable landmark.
+    const g = ctx.createRadialGradient(70, 58, 0, 70, 58, 7);
+    g.addColorStop(0, 'rgba(255,255,250,0.95)');
+    g.addColorStop(1, 'rgba(255,255,250,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(70, 58, 7, 0, Math.PI * 2);
+    ctx.fill();
+    return c;
+  },
+
+  eris: () => rocky(256, 128, 103, [
+    [0.0, 0xc6c3bc], [0.4, 0xdedad2], [0.7, 0xeeece6], [1.0, 0xf8f7f4]
+  ], { craters: 8, maxR: 5, dark: 0.12, rim: 0.12, ice: 0.35 }),
+
+  haumea: () => rocky(256, 128, 107, [
+    [0.0, 0xb9c6ca], [0.4, 0xd6e0e2], [0.7, 0xe9eff0], [1.0, 0xf7fbfb]
+  ], { craters: 14, maxR: 6, dark: 0.14, rim: 0.16, sx: 2.4 }),
+
+  makemake: () => rocky(256, 128, 109, [
+    [0.0, 0x6e3322], [0.35, 0x9a4c30], [0.65, 0xb8654a], [1.0, 0xd6906c]
+  ], { craters: 50, maxR: 7, dark: 0.28, rim: 0.22 }),
+
+  // The nucleus itself is barely a pixel on screen even up close — the tail
+  // (solar-system-comet.js) does the real work — but a real comet nucleus is
+  // also one of the darkest things in the solar system, so it's painted that
+  // way rather than defaulting to the generic rock texture.
+  halley: () => rocky(128, 64, 113, [
+    [0.0, 0x050403], [0.5, 0x0e0b08], [1.0, 0x1a140f]
+  ], { craters: 30, maxR: 6, dark: 0.5, rim: 0.2 })
 };
 
 // ── Public API ─────────────────────────────────────────────────────────────
