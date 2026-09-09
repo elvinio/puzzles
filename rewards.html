@@ -385,7 +385,7 @@
     { name: 'purple', hex: '#a855f7' },
     { name: 'orange', hex: '#f97316' }
   ];
-  var CORRECT_COLORS = ['blue', 'red'];
+  var CORRECT_COLORS = ['red', 'green', 'blue'];
 
   var openExchangeId = null;
   var openEarnAmount = null;
@@ -427,7 +427,7 @@
   }
 
   function renderColorGate(gateKey) {
-    var html = '<div class="gate-hint">Tap the 2 correct color circles</div><div class="color-gate">';
+    var html = '<div class="gate-hint">Tap the ' + CORRECT_COLORS.length + ' correct color circles</div><div class="color-gate">';
     shuffledColors().forEach(function (c) {
       html += '<button type="button" class="color-dot" data-gate="' + gateKey + '" data-color="' + c.name + '" style="background:' + c.hex + '" aria-label="color circle"></button>';
     });
@@ -760,12 +760,12 @@
       dot.classList.remove('selected');
       return;
     }
-    if (sel.length >= 2) return;
+    if (sel.length >= CORRECT_COLORS.length) return;
 
     sel.push(color);
     dot.classList.add('selected');
 
-    if (sel.length === 2) {
+    if (sel.length === CORRECT_COLORS.length) {
       var picked = sel.slice().sort();
       var correct = CORRECT_COLORS.slice().sort();
       var isCorrect = picked.length === correct.length && picked.every(function (c, i) { return c === correct[i]; });
