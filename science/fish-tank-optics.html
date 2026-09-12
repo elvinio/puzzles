@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fish Tank Optics – How It Works</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0e1a;
+    color: #e8eaf0;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 16px 64px;
+  }
+
+  /* ── top bar ───────────────────────────────────────────────── */
+  .topbar {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .back {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: #64748b;
+    text-decoration: none;
+    border: 1px solid #1e293b;
+    background: #111827;
+    border-radius: 8px;
+    padding: 6px 10px;
+    white-space: nowrap;
+  }
+  .back:hover { color: #7dd3fc; border-color: #334155; }
+
+  h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(1rem, 4vw, 1.4rem);
+    letter-spacing: 0.08em;
+    color: #7dd3fc;
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    width: 100%;
+    max-width: 640px;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 20px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .intro {
+    width: 100%;
+    max-width: 640px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #94a3b8;
+    margin-bottom: 18px;
+  }
+  .intro strong { color: #e2e8f0; font-weight: 500; }
+
+  /* ── colour key (used by every diagram on the page) ────────── */
+  .legend {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 11px 14px;
+    margin-bottom: 26px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+  .legend i {
+    display: inline-block;
+    width: 11px; height: 11px;
+    border-radius: 3px;
+    margin-right: 7px;
+    vertical-align: -1px;
+  }
+  .legend .k-ray   { background: #fbbf24; }
+  .legend .k-fake  { background: #a78bfa; }
+  .legend .k-true  { background: #4ade80; }
+  .legend .k-water { background: #38bdf8; }
+
+  /* ── contents chips ────────────────────────────────────────── */
+  .toc {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 30px;
+  }
+  .toc a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    color: #7dd3fc;
+    background: #0f1a2e;
+    border: 1px solid #1e3a5f;
+    border-radius: 999px;
+    padding: 5px 10px;
+    text-decoration: none;
+  }
+  .toc a:hover { background: #16263f; }
+
+  /* ── part divider ──────────────────────────────────────────── */
+  .part {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 34px 0 18px;
+  }
+  .part span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7dd3fc;
+  }
+  .part::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, #1e3a5f, transparent);
+  }
+
+  /* ── section heading ───────────────────────────────────────── */
+  .panel-label {
+    width: 100%;
+    max-width: 640px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    text-transform: uppercase;
+    margin: 22px 0 10px;
+    scroll-margin-top: 12px;
+  }
+  .panel-label b { color: #cbd5e1; font-weight: 700; }
+
+  /* ── diagram panel ─────────────────────────────────────────── */
+  .diagram-wrap {
+    width: 100%;
+    max-width: 640px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 16px 12px 12px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  /* flex items must be allowed to shrink below the diagrams' intrinsic
+     width, or a wide SVG drags the whole page sideways on a phone */
+  body > * { min-width: 0; }
+  svg { width: 100%; max-width: 100%; height: auto; display: block; }
+  .label { font-family: 'Space Mono', monospace; }
+  /* labels that have to sit across a ray get a background-coloured outline */
+  .halo { paint-order: stroke; stroke: #0f1a29; stroke-width: 3.6px; stroke-linejoin: round; }
+  .cap {
+    width: 100%;
+    max-width: 640px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: #475569;
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+
+  /* ── numbered step blocks ──────────────────────────────────── */
+  .steps {
+    width: 100%;
+    max-width: 640px;
+    display: grid;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 13px 15px;
+  }
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: #0ea5e9;
+    background: #0c2036;
+    border: 1px solid #0ea5e944;
+    border-radius: 6px;
+    padding: 3px 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-text { font-size: 1.02rem; line-height: 1.6; color: #94a3b8; }
+  .step-text strong { color: #e2e8f0; font-weight: 500; }
+  .step-text em { color: #cbd5e1; font-style: normal; font-weight: 500; }
+
+  /* colour-coded step numbers, matching the diagram key */
+  .step-num.ray  { color: #fbbf24; background: #2a2210; border-color: #fbbf2444; }
+  .step-num.fak  { color: #a78bfa; background: #1a1330; border-color: #a78bfa44; }
+  .step-num.tru  { color: #4ade80; background: #10241a; border-color: #4ade8044; }
+  .step-num.wat  { color: #38bdf8; background: #0c2036; border-color: #38bdf844; }
+
+  /* ── callouts ──────────────────────────────────────────────── */
+  .callout {
+    width: 100%;
+    max-width: 640px;
+    background: #1a1330;
+    border: 1px solid #4c1d9566;
+    border-left: 3px solid #a78bfa;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0 6px;
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: #c4b5fd;
+  }
+  .callout strong { color: #e9d5ff; font-weight: 700; }
+  .callout em { color: #e9d5ff; font-style: normal; font-weight: 500; }
+  .callout.tip {
+    background: #0f2018; border-color: #14532d99; border-left-color: #4ade80; color: #86efac;
+  }
+  .callout.tip strong, .callout.tip em { color: #bbf7d0; }
+  .callout.key {
+    background: #0c2036; border-color: #0ea5e955; border-left-color: #38bdf8; color: #7dd3fc;
+  }
+  .callout.key strong, .callout.key em { color: #bae6fd; }
+  .callout.myth {
+    background: #24131a; border-color: #7f1d1d99; border-left-color: #f87171; color: #fca5a5;
+  }
+  .callout.myth strong, .callout.myth em { color: #fecaca; }
+
+  /* ── formula strip ─────────────────────────────────────────── */
+  .formula {
+    width: 100%;
+    max-width: 640px;
+    background: #0e1626;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 8px 0 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.95rem;
+    color: #7dd3fc;
+    text-align: center;
+    line-height: 1.9;
+    overflow-x: auto;
+  }
+  .formula small {
+    display: block;
+    font-size: 0.68rem;
+    color: #475569;
+    margin-top: 6px;
+    letter-spacing: 0.03em;
+    line-height: 1.5;
+  }
+  .formula .up { color: #4ade80; }
+  .formula .dn { color: #f87171; }
+  .formula .gh { color: #a78bfa; }
+
+  /* ── simple tables ─────────────────────────────────────────── */
+  .tbl {
+    width: 100%;
+    max-width: 640px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 8px 0 18px;
+  }
+  .tbl .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px 14px;
+    border-top: 1px solid #1e293b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #94a3b8;
+  }
+  .tbl .row:first-child { border-top: none; }
+  .tbl .row.head {
+    background: #0e1626;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+  .tbl .row b { color: #e2e8f0; font-weight: 500; }
+  .tbl .row .v { font-family: 'Space Mono', monospace; font-size: 0.88rem; color: #7dd3fc; }
+  .tbl .row .v.good { color: #4ade80; }
+  .tbl .row .v.bad  { color: #f87171; }
+  .tbl .row .v.gh   { color: #a78bfa; }
+  .tbl .row.three { grid-template-columns: 1fr 1fr 1fr; }
+
+  @media (max-width: 540px) {
+    .tbl .row.three { grid-template-columns: 1fr 1fr; gap: 4px 10px; }
+    .tbl .row.three div:nth-child(3) { grid-column: 1 / -1; }
+    .tbl .row.three.head div:nth-child(3) { display: none; }
+    /* the wrapped third column loses its heading, so it names itself */
+    .tbl .row.three:not(.head) div:nth-child(3)::before {
+      content: 'wall appears at ';
+      color: #475569;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  /* ── "try this" cards ──────────────────────────────────────── */
+  .spotgrid {
+    width: 100%;
+    max-width: 640px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+    margin: 8px 0 16px;
+  }
+  .spot {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 12px 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .spot svg { height: 62px; width: auto; margin: 0 auto; }
+  .spot .n {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: #7dd3fc;
+    font-weight: 700;
+  }
+  .spot .d { font-size: 0.9rem; line-height: 1.5; color: #94a3b8; }
+
+  /* ── shared animation helpers for the SVG diagrams ─────────── */
+
+  /* light travelling along a ray: dashes crawling forwards */
+  .travel { stroke-dasharray: 7 11; animation: travel 1.5s linear infinite; }
+  @keyframes travel { to { stroke-dashoffset: -36; } }
+
+  /* three pulses of light racing for exactly one nanosecond, then
+     holding still so you can read off how far each one got */
+  .race-air { animation: race-air 3.6s linear infinite; }
+  @keyframes race-air {
+    0%   { transform: translateX(0);     opacity: 0; }
+    4%   { opacity: 1; }
+    60%  { transform: translateX(330px); opacity: 1; }
+    100% { transform: translateX(330px); opacity: 1; }
+  }
+  .race-wat { animation: race-wat 3.6s linear infinite; }
+  @keyframes race-wat {
+    0%   { transform: translateX(0);       opacity: 0; }
+    4%   { opacity: 1; }
+    60%  { transform: translateX(247.5px); opacity: 1; }
+    100% { transform: translateX(247.5px); opacity: 1; }
+  }
+  .race-gls { animation: race-gls 3.6s linear infinite; }
+  @keyframes race-gls {
+    0%   { transform: translateX(0);     opacity: 0; }
+    4%   { opacity: 1; }
+    60%  { transform: translateX(217px); opacity: 1; }
+    100% { transform: translateX(217px); opacity: 1; }
+  }
+
+  /* a wavefront crossing the boundary and swinging round */
+  .swing { animation: swing 4s ease-in-out infinite; }
+  @keyframes swing { 0%,100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+  .blink { animation: blink 2.6s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.32; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .travel, .race-air, .race-wat, .race-gls, .swing, .blink { animation: none; }
+    .race-air { transform: translateX(330px); }
+    .race-wat { transform: translateX(247.5px); }
+    .race-gls { transform: translateX(217px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="../science.html">← Science</a>
+  <h1>Fish Tank Optics</h1>
+</div>
+<p class="subtitle">// why the back wall sits closer than the ruler says</p>
+
+<p class="intro">
+  Put a ruler along the side of the tank and it reads 30 cm front to back. Then look through the
+  front glass — and the back wall is plainly <em>not</em> 30 cm away. It looks about 22 cm away, and
+  everything resting against it looks a size too big. Nothing has moved.
+  <strong>Light took a bent path to reach you, and your eye refuses to believe it.</strong>
+  This page takes that apart: why water slows light down, why slowing it makes it turn a corner,
+  and why the one assumption your eye makes about light is right everywhere except here.
+</p>
+
+<div class="legend">
+  <span><i class="k-ray"></i>the real path the light takes</span>
+  <span><i class="k-fake"></i>the straight line your eye assumes</span>
+  <span><i class="k-true"></i>where things really are</span>
+  <span><i class="k-water"></i>water</span>
+</div>
+
+<div class="toc">
+  <a href="#s01">01 the missing 7 cm</a>
+  <a href="#s02">02 you've seen this</a>
+  <a href="#s03">03 light drives slower</a>
+  <a href="#s04">04 slower means it turns</a>
+  <a href="#s05">05 Snell's law</a>
+  <a href="#s06">06 your eye's one rule</a>
+  <a href="#s07">07 the ¾ rule</a>
+  <a href="#s08">08 bigger, too</a>
+  <a href="#s09">09 not an illusion</a>
+  <a href="#s10">10 the glass is a slab</a>
+  <a href="#s11">11 layer cake</a>
+  <a href="#s12">12 from the side</a>
+  <a href="#s13">13 the mirror at 48.6°</a>
+  <a href="#s14">14 what the fish sees</a>
+  <a href="#s15">15 curved glass</a>
+  <a href="#s16">16 try it tonight</a>
+  <a href="#s17">17 cheat sheet</a>
+</div>
+
+<div class="part"><span>Part A · the thing you can actually see</span></div>
+
+<p class="panel-label" id="s01">01 · <b>the missing 7 centimetres</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Looking down on a fish tank from above. A ruler along the tank measures 30 centimetres from the front glass to the back wall, but a sticker on the back wall appears to sit only about 22.5 centimetres away, and larger.">
+
+  <text x="12" y="14" class="label" fill="#475569" font-size="10">SEEN FROM ABOVE · A 30 cm TANK</text>
+
+  <!-- ── the tank, in plan view ── -->
+  <rect x="130" y="54" width="296" height="180" rx="5" fill="#0e1626" stroke="#64748b" stroke-width="1.6"/>
+  <rect x="138" y="62" width="280" height="164" fill="#0c2036"/>
+  <rect x="138" y="62" width="280" height="164" fill="#38bdf8" opacity="0.16"/>
+  <!-- glass walls -->
+  <rect x="130" y="54" width="8"   height="180" fill="#475569"/>
+  <rect x="418" y="54" width="8"   height="180" fill="#475569"/>
+  <rect x="130" y="54" width="296" height="8"   fill="#475569"/>
+  <rect x="130" y="226" width="296" height="8"  fill="#475569"/>
+
+  <!-- ── the real sticker on the back wall ── -->
+  <circle cx="411" cy="144" r="7" fill="#4ade80"/>
+  <circle cx="411" cy="144" r="2.6" fill="#0a0e1a"/>
+
+  <!-- ── where it looks like it is: nearer, and bigger ── -->
+  <line x1="348" y1="66" x2="348" y2="222" stroke="#a78bfa" stroke-width="1.6" stroke-dasharray="6 6" opacity="0.75"/>
+  <circle cx="348" cy="144" r="9.3" fill="#a78bfa" opacity="0.3"/>
+  <circle cx="348" cy="144" r="9.3" fill="none" stroke="#a78bfa" stroke-width="1.6" stroke-dasharray="4 4"/>
+  <circle cx="348" cy="144" r="3.4" fill="#a78bfa" opacity="0.8"/>
+
+  <!-- ── the eye ── -->
+  <g transform="translate(44,144)">
+    <path d="M-20,0 Q0,-14 20,0 Q0,14 -20,0 Z" fill="#0e1626" stroke="#94a3b8" stroke-width="1.6"/>
+    <circle cx="0" cy="0" r="6" fill="#94a3b8"/>
+    <circle cx="0" cy="0" r="2.5" fill="#0a0e1a"/>
+  </g>
+  <line class="travel" x1="404" y1="144" x2="68" y2="144" stroke="#fbbf24" stroke-width="2" opacity="0.9"/>
+
+  <!-- ── dimension: what the ruler says ── -->
+  <line x1="138" y1="264" x2="418" y2="264" stroke="#4ade80" stroke-width="1.4"/>
+  <line x1="138" y1="257" x2="138" y2="271" stroke="#4ade80" stroke-width="1.4"/>
+  <line x1="418" y1="257" x2="418" y2="271" stroke="#4ade80" stroke-width="1.4"/>
+  <text x="278" y="284" text-anchor="middle" class="label" fill="#4ade80" font-size="11">the ruler says 30 cm</text>
+
+  <!-- ── dimension: what your eyes say ── -->
+  <line x1="138" y1="42" x2="348" y2="42" stroke="#a78bfa" stroke-width="1.4"/>
+  <line x1="138" y1="35" x2="138" y2="49" stroke="#a78bfa" stroke-width="1.4"/>
+  <line x1="348" y1="35" x2="348" y2="49" stroke="#a78bfa" stroke-width="1.4"/>
+  <text x="243" y="30" text-anchor="middle" class="label" fill="#a78bfa" font-size="11">your eyes say ≈ 22.5 cm</text>
+
+  <!-- ── the gap ── -->
+  <line x1="348" y1="42" x2="418" y2="42" stroke="#f87171" stroke-width="1.4" stroke-dasharray="3 3"/>
+  <text x="383" y="30" text-anchor="middle" class="label" fill="#f87171" font-size="10">−7.5 cm</text>
+
+  <text x="240" y="106" text-anchor="middle" class="label" fill="#64748b" font-size="10">water</text>
+</svg>
+</div>
+<p class="cap">A sticker on the inside of the back glass, seen straight on. It has not moved — but the light leaving the front glass is heading in a direction that points back to a spot 7.5 cm nearer.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num tru">01</span>
+    <p class="step-text">Measure the tank with a ruler along the outside and you get the honest answer: <strong>30 cm from the front glass to the back wall</strong>. A ruler does not care about light — it is touching both ends.</p>
+  </div>
+  <div class="step">
+    <span class="step-num fak">02</span>
+    <p class="step-text">Look through the water instead and the back wall reports in at about <strong>22.5 cm</strong> — three-quarters of the distance. Everything against it is about a size bigger than it should be at that range.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">03</span>
+    <p class="step-text">Tip the water out and the illusion goes with it. An empty tank measures right by eye. <strong>It is the water doing this, not the glass</strong> — and section 10 shows just how little the glass contributes.</p>
+  </div>
+  <div class="step">
+    <span class="step-num ray">04</span>
+    <p class="step-text">The rule is simple and it applies to <em>everything</em> behind the front glass: a tank full of water <strong>steals a quarter of every distance</strong> measured through it. In a 30 cm tank that is 7.5 cm, gone.</p>
+  </div>
+</div>
+
+<div class="callout key">
+  <strong>The whole page in one line:</strong> light travels slower in water than in air, so it changes direction on the way out —
+  and your eye, which has spent your whole life correctly assuming light comes in straight lines, traces it back along a straight line to the wrong place.
+</div>
+
+<p class="panel-label" id="s02">02 · <b>you have already seen this three times</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three familiar versions of the same effect: a straw looks bent at the waterline, a coin at the bottom of a cup looks raised, and a swimming pool looks shallower than it is.">
+
+  <!-- ═══════ 1 · the straw ═══════ -->
+  <text x="78" y="16" text-anchor="middle" class="label" fill="#64748b" font-size="10">A STRAW</text>
+  <path d="M40,44 L120,44 L112,186 L48,186 Z" fill="#0e1626" stroke="#64748b" stroke-width="1.4"/>
+  <path d="M43,80 L117,80 L112,184 L48,184 Z" fill="#38bdf8" opacity="0.22"/>
+  <line x1="43" y1="80" x2="117" y2="80" stroke="#7dd3fc" stroke-width="1.6"/>
+  <!-- the straw as it really is, below the surface -->
+  <line x1="88" y1="80" x2="50" y2="160" stroke="#4ade80" stroke-width="3" stroke-dasharray="5 5" opacity="0.8" stroke-linecap="round"/>
+  <!-- the straw as you see it: above water, then raised below -->
+  <line x1="110" y1="34" x2="88" y2="80" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"/>
+  <line x1="88" y1="80" x2="50" y2="140" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"/>
+  <line x1="50" y1="159" x2="50" y2="143" stroke="#f87171" stroke-width="1.6"/>
+  <path d="M50,140 L46.5,147 L53.5,147 Z" fill="#f87171"/>
+  <text x="14" y="200" class="label" fill="#64748b" font-size="9">kinks at the surface</text>
+
+  <!-- ═══════ 2 · the coin ═══════ -->
+  <text x="235" y="16" text-anchor="middle" class="label" fill="#64748b" font-size="10">A COIN</text>
+  <path d="M195,70 L305,70 L295,175 L205,175 Z" fill="#0e1626" stroke="#64748b" stroke-width="1.4"/>
+  <path d="M198,95 L302,95 L295,173 L205,173 Z" fill="#38bdf8" opacity="0.22"/>
+  <line x1="198" y1="95" x2="302" y2="95" stroke="#7dd3fc" stroke-width="1.6"/>
+  <!-- the real coin -->
+  <ellipse cx="280" cy="170" rx="12" ry="4" fill="#4ade80"/>
+  <!-- the ray that gets to your eye -->
+  <path class="travel" d="M280,170 L226.25,95 L160,42" fill="none" stroke="#fbbf24" stroke-width="2"/>
+  <!-- back-projection to the ghost coin -->
+  <line x1="226.25" y1="95" x2="280" y2="138" stroke="#a78bfa" stroke-width="1.6" stroke-dasharray="5 5"/>
+  <ellipse cx="280" cy="138" rx="13" ry="4.4" fill="#a78bfa" opacity="0.35"/>
+  <ellipse cx="280" cy="138" rx="13" ry="4.4" fill="none" stroke="#a78bfa" stroke-width="1.4" stroke-dasharray="4 4"/>
+  <g transform="translate(160,42) rotate(-38)">
+    <path d="M-15,0 Q0,-10 15,0 Q0,10 -15,0 Z" fill="#0e1626" stroke="#94a3b8" stroke-width="1.3"/>
+    <circle cx="0" cy="0" r="4.4" fill="#94a3b8"/>
+  </g>
+  <text x="190" y="200" class="label" fill="#64748b" font-size="9">floats up off the bottom</text>
+
+  <!-- ═══════ 3 · the pool ═══════ -->
+  <text x="383" y="16" text-anchor="middle" class="label" fill="#64748b" font-size="10">A POOL</text>
+  <rect x="320" y="70" width="126" height="105" fill="#0c2036" stroke="#64748b" stroke-width="1.4"/>
+  <rect x="320" y="70" width="126" height="105" fill="#38bdf8" opacity="0.16"/>
+  <line x1="320" y1="70" x2="446" y2="70" stroke="#7dd3fc" stroke-width="1.8"/>
+  <line x1="320" y1="175" x2="446" y2="175" stroke="#4ade80" stroke-width="3"/>
+  <text x="383" y="190" text-anchor="middle" class="label" fill="#4ade80" font-size="9.5">real floor · 1.4 m</text>
+  <line x1="320" y1="149" x2="446" y2="149" stroke="#a78bfa" stroke-width="2.4" stroke-dasharray="7 5"/>
+  <text x="383" y="143" text-anchor="middle" class="label" fill="#a78bfa" font-size="9.5">looks like 1.05 m</text>
+  <text x="383" y="206" text-anchor="middle" class="label" fill="#64748b" font-size="9">every pool lies to you</text>
+</svg>
+</div>
+<p class="cap">Same physics, three costumes. The straw, the coin and the pool floor all sit deeper than they look, by the same quarter.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text"><strong>A straw in a glass of water looks broken.</strong> The part under the water is not bent at all — it is just being shown to you raised up, closer to the surface than it really hangs.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">02</span>
+    <p class="step-text"><strong>A coin at the bottom of a cup floats up.</strong> Hide a coin behind the rim so you cannot see it, then pour water in without moving anything. The coin rises into view — light from it now leaves the surface on a new heading that clears the rim.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">03</span>
+    <p class="step-text"><strong>Every swimming pool looks shallower than it is.</strong> A 1.4 m pool reads about 1.05 m from the side. People who cannot swim step in expecting the shallow one, and find the deep one.</p>
+  </div>
+  <div class="step">
+    <span class="step-num tru">04</span>
+    <p class="step-text">The fish tank is the same trick turned <strong>sideways</strong>. In a pool the water is between you and the floor; in a tank the water is between you and the back wall. Physics does not know which way is up — it only counts how much water the light had to cross.</p>
+  </div>
+</div>
+
+<div class="part"><span>Part B · what the light is doing</span></div>
+
+<p class="panel-label" id="s03">03 · <b>light drives slower in water</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three light pulses race for one nanosecond. In air the pulse covers 30 centimetres, in water 22.5 centimetres, in glass 19.7 centimetres.">
+
+  <text x="12" y="16" class="label" fill="#475569" font-size="10">HOW FAR ONE FLASH OF LIGHT GETS IN ONE NANOSECOND</text>
+
+  <!-- ── air ── -->
+  <text x="54" y="66" text-anchor="end" class="label" fill="#4ade80" font-size="11">air</text>
+  <text x="54" y="79" text-anchor="end" class="label" fill="#475569" font-size="9">n = 1.00</text>
+  <rect x="62" y="54" width="330" height="26" rx="6" fill="#0e1626" stroke="#1e293b"/>
+  <rect x="62" y="54" width="330" height="26" rx="6" fill="#4ade80" opacity="0.22"/>
+  <line x1="392" y1="48" x2="392" y2="86" stroke="#4ade80" stroke-width="2"/>
+  <text x="392" y="42" text-anchor="middle" class="label" fill="#4ade80" font-size="11">30.0 cm</text>
+  <g class="race-air"><circle cx="62" cy="67" r="6.5" fill="#fbbf24"/></g>
+
+  <!-- ── water ── -->
+  <text x="54" y="120" text-anchor="end" class="label" fill="#38bdf8" font-size="11">water</text>
+  <text x="54" y="133" text-anchor="end" class="label" fill="#475569" font-size="9">n = 1.33</text>
+  <rect x="62" y="108" width="330" height="26" rx="6" fill="#0e1626" stroke="#1e293b"/>
+  <rect x="62" y="108" width="247.5" height="26" rx="6" fill="#38bdf8" opacity="0.26"/>
+  <line x1="309.5" y1="102" x2="309.5" y2="140" stroke="#38bdf8" stroke-width="2"/>
+  <text x="309.5" y="98" text-anchor="middle" class="label" fill="#7dd3fc" font-size="11">22.5 cm</text>
+  <line x1="309.5" y1="121" x2="390" y2="121" stroke="#f87171" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <g class="race-wat"><circle cx="62" cy="121" r="6.5" fill="#fbbf24"/></g>
+
+  <!-- ── glass ── -->
+  <text x="54" y="174" text-anchor="end" class="label" fill="#94a3b8" font-size="11">glass</text>
+  <text x="54" y="187" text-anchor="end" class="label" fill="#475569" font-size="9">n = 1.52</text>
+  <rect x="62" y="162" width="330" height="26" rx="6" fill="#0e1626" stroke="#1e293b"/>
+  <rect x="62" y="162" width="217" height="26" rx="6" fill="#94a3b8" opacity="0.22"/>
+  <line x1="279" y1="156" x2="279" y2="194" stroke="#94a3b8" stroke-width="2"/>
+  <text x="279" y="152" text-anchor="middle" class="label" fill="#cbd5e1" font-size="11">19.7 cm</text>
+  <line x1="279" y1="175" x2="390" y2="175" stroke="#f87171" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <g class="race-gls"><circle cx="62" cy="175" r="6.5" fill="#fbbf24"/></g>
+
+  <text x="12" y="216" class="label" fill="#475569" font-size="9.5">a nanosecond is a billionth of a second · all three run for the same one</text>
+</svg>
+</div>
+<p class="cap">The number written on each lane is its refractive index, n — and it is nothing more exciting than "how many times slower than in a vacuum". Water's 1.33 is where the missing quarter comes from: 1 ÷ 1.33 = 0.75.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text">In empty space light does <strong>300,000 kilometres every second</strong> — the cosmic speed limit, and nothing beats it. Air is so thin it barely slows light at all, so air counts as 300,000 too.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">02</span>
+    <p class="step-text">Push light through water and it manages only about <strong>225,000 km/s</strong>. Through the glass of the tank, about 197,000. It has not lost energy — the wave is simply being passed along by atom after atom, and each handover takes time.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">03</span>
+    <p class="step-text">We give that slowdown a name: the <strong>refractive index, n</strong>. It is just the speed in a vacuum divided by the speed in the stuff. <em>n = 1.33 for water</em> means light crawls along at 1 ÷ 1.33 = three-quarters speed.</p>
+  </div>
+  <div class="step">
+    <span class="step-num ray">04</span>
+    <p class="step-text">The instant light leaves the water it is back to full speed. Nothing is damaged, nothing is used up — but <strong>a speed change at a boundary is exactly what makes a wave turn a corner</strong>, and that is the next section.</p>
+  </div>
+</div>
+
+<div class="tbl">
+  <div class="row head"><div>Material</div><div>Refractive index n</div></div>
+  <div class="row"><div><b>Vacuum</b></div><div class="v">1.0000 — exactly, by definition</div></div>
+  <div class="row"><div><b>Air</b></div><div class="v">1.0003 — near enough to 1</div></div>
+  <div class="row"><div><b>Water (fresh, 20 °C)</b></div><div class="v good">1.333</div></div>
+  <div class="row"><div><b>Seawater</b></div><div class="v">1.339 — a shade more, from the salt</div></div>
+  <div class="row"><div><b>Acrylic tank</b></div><div class="v">1.49</div></div>
+  <div class="row"><div><b>Tank glass</b></div><div class="v">1.52</div></div>
+  <div class="row"><div><b>Diamond</b></div><div class="v">2.42 — the show-off</div></div>
+</div>
+
+<p class="panel-label" id="s04">04 · <b>slower on one side means it turns</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Left: a cart crossing a boundary at an angle swings round because one wheel reaches the fast side first. Right: wave crests are packed close in water and spread out in air, and the ray turns at the boundary.">
+  <defs>
+    <marker id="o4-am" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 Z" fill="#fbbf24"/>
+    </marker>
+    <marker id="o4-sl" markerUnits="userSpaceOnUse" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- ══════════ LEFT · the cart ══════════ -->
+  <text x="14" y="16" class="label" fill="#475569" font-size="10">WHY IT TURNS</text>
+  <rect x="14"  y="28" width="96" height="228" fill="#0e1626"/>
+  <rect x="110" y="28" width="100" height="228" fill="#38bdf8" opacity="0.16"/>
+  <line x1="110" y1="28" x2="110" y2="256" stroke="#94a3b8" stroke-width="2.5"/>
+  <text x="104" y="44" text-anchor="end" class="label" fill="#94a3b8" font-size="10">FAST</text>
+  <text x="116" y="44" class="label" fill="#7dd3fc" font-size="10">SLOW</text>
+
+  <!-- snapshot 1: fully in the slow side -->
+  <line x1="164" y1="214.1" x2="186" y2="175.9" stroke="#fbbf24" stroke-width="3.2" opacity="0.45"/>
+  <circle cx="164" cy="214.1" r="4.6" fill="#fbbf24" opacity="0.45"/>
+  <circle cx="186" cy="175.9" r="4.6" fill="#fbbf24" opacity="0.45"/>
+
+  <!-- snapshot 2: one wheel across -->
+  <line x1="109" y1="182.4" x2="131" y2="144.2" stroke="#fbbf24" stroke-width="3.2" opacity="0.75"/>
+  <circle cx="109" cy="182.4" r="4.6" fill="#4ade80"/>
+  <circle cx="131" cy="144.2" r="4.6" fill="#fbbf24" opacity="0.75"/>
+
+  <!-- snapshot 3: fully across, swung round -->
+  <line x1="45.3" y1="126.4" x2="74.7" y2="93.6" stroke="#fbbf24" stroke-width="3.2"/>
+  <circle cx="45.3" cy="126.4" r="4.6" fill="#fbbf24"/>
+  <circle cx="74.7" cy="93.6" r="4.6" fill="#fbbf24"/>
+
+  <!-- direction arrows -->
+  <line x1="176" y1="197" x2="151" y2="182.6" stroke="#64748b" stroke-width="1.2" marker-end="url(#o4-sl)"/>
+  <line x1="98"  y1="133" x2="75"  y2="112.4" stroke="#64748b" stroke-width="1.2" marker-end="url(#o4-sl)"/>
+
+  <text x="14" y="76" class="label" fill="#64748b" font-size="9.5">…so it swings</text>
+  <text x="103" y="202" text-anchor="end" class="label" fill="#4ade80" font-size="9.5">first across</text>
+
+  <!-- ══════════ RIGHT · the wave ══════════ -->
+  <text x="240" y="16" class="label" fill="#475569" font-size="10">WHAT THE WAVE DOES</text>
+  <rect x="240" y="28" width="90"  height="228" fill="#0e1626"/>
+  <rect x="330" y="28" width="122" height="228" fill="#38bdf8" opacity="0.16"/>
+  <line x1="330" y1="28" x2="330" y2="256" stroke="#94a3b8" stroke-width="2.5"/>
+  <text x="324" y="44" text-anchor="end" class="label" fill="#94a3b8" font-size="10">AIR</text>
+  <text x="336" y="44" class="label" fill="#7dd3fc" font-size="10">WATER</text>
+
+  <!-- the ray itself -->
+  <path class="travel" d="M445,250 L330,183.6 L250,112.1" fill="none" stroke="#fbbf24" stroke-width="2.4" marker-end="url(#o4-am)"/>
+
+  <!-- crests in the water: close together -->
+  <g stroke="#7dd3fc" stroke-width="2" opacity="0.85" class="swing">
+    <line x1="346.5" y1="185.0" x2="339.5" y2="197.2"/>
+    <line x1="359.5" y1="192.5" x2="352.5" y2="204.7"/>
+    <line x1="372.5" y1="200.0" x2="365.5" y2="212.2"/>
+    <line x1="385.5" y1="207.5" x2="378.5" y2="219.7"/>
+    <line x1="398.5" y1="215.0" x2="391.5" y2="227.2"/>
+    <line x1="411.4" y1="222.5" x2="404.4" y2="234.7"/>
+    <line x1="424.4" y1="230.0" x2="417.4" y2="242.2"/>
+  </g>
+
+  <!-- crests in the air: further apart -->
+  <g stroke="#cbd5e1" stroke-width="2" opacity="0.85" class="swing">
+    <line x1="319.8" y1="165.1" x2="310.4" y2="175.5"/>
+    <line x1="304.9" y1="151.7" x2="295.5" y2="162.2"/>
+    <line x1="289.9" y1="138.4" x2="280.6" y2="148.8"/>
+    <line x1="275.0" y1="125.1" x2="265.7" y2="135.5"/>
+    <line x1="260.1" y1="111.7" x2="250.8" y2="122.2"/>
+  </g>
+
+  <text x="336" y="262" class="label" fill="#7dd3fc" font-size="9.5">crests crowd up</text>
+  <text x="246" y="82" class="label" fill="#cbd5e1" font-size="9.5">and open out again</text>
+</svg>
+</div>
+<p class="cap">Left, the everyday version: one end of the axle hits the fast surface first, outruns the other end, and the whole cart slews round. Right, the same thing happening to a light wave at the glass.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text">Roll a trolley off sand onto smooth tarmac <em>at an angle</em>. One wheel reaches the tarmac a moment before the other, speeds up while its twin is still dragging — and the trolley <strong>swings round to a new heading</strong>. Nobody steered it.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">02</span>
+    <p class="step-text">A light wave arrives at the glass as a long straight crest, not a dot. Hit the boundary square-on and every part of that crest crosses at the same instant — no swing, <strong>no bending at all</strong>. That is why a wall directly in front of you is displaced but not distorted.</p>
+  </div>
+  <div class="step">
+    <span class="step-num ray">03</span>
+    <p class="step-text">Arrive at an angle, and one end of the crest gets out into the air first. It is now doing 300,000 km/s while the other end is still doing 225,000. <strong>The crest pivots</strong>, and the beam leaves on a new line.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">04</span>
+    <p class="step-text">Notice what does <em>not</em> change: the number of crests arriving per second. The colour of the light is fixed by that. So when the wave slows, the crests must <strong>bunch up</strong> — the wavelength shrinks by the same 1.33 — and when it speeds up again they spread back out.</p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Water to air bends light <em>away</em> from the straight-through line.</strong> Going the other way — air into water — it bends toward it.
+  A useful way to remember which: light always swings so that it spends <em>less time</em> in the slow stuff. It is lazy, and it is very good at it.
+</div>
+
+<p class="panel-label" id="s05">05 · <b>Snell's law puts a number on the turn</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A light ray inside the water hits the front glass at 30 degrees to the normal and leaves into the air at 41.8 degrees.">
+  <defs>
+    <marker id="o5-am" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 Z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <rect x="10"  y="20" width="240" height="260" fill="#0e1626"/>
+  <rect x="250" y="20" width="200" height="260" fill="#38bdf8" opacity="0.16"/>
+  <line x1="250" y1="20" x2="250" y2="280" stroke="#94a3b8" stroke-width="3.5"/>
+
+  <text x="22"  y="40" class="label" fill="#94a3b8" font-size="11">AIR · n = 1.00</text>
+  <text x="448" y="40" text-anchor="end" class="label" fill="#7dd3fc" font-size="11">WATER · n = 1.33</text>
+  <text x="256" y="62" class="label" fill="#64748b" font-size="9.5">front glass</text>
+
+  <!-- the normal -->
+  <line x1="110" y1="180" x2="400" y2="180" stroke="#64748b" stroke-width="1.3" stroke-dasharray="6 6"/>
+  <text x="114" y="196" class="label" fill="#64748b" font-size="9.5">the normal</text>
+
+  <!-- the ray -->
+  <path class="travel" d="M388.6,260 L250,180 L123.3,66.7" fill="none" stroke="#fbbf24" stroke-width="2.6" marker-end="url(#o5-am)"/>
+  <circle cx="250" cy="180" r="3.6" fill="#fbbf24"/>
+
+  <!-- angle arcs -->
+  <path d="M296,180 A46,46 0 0,1 289.84,203.0" fill="none" stroke="#7dd3fc" stroke-width="1.6"/>
+  <text x="326" y="212" class="label" fill="#7dd3fc" font-size="11.5">30°</text>
+  <path d="M192,180 A58,58 0 0,1 206.76,141.34" fill="none" stroke="#cbd5e1" stroke-width="1.6"/>
+  <text x="168" y="156" text-anchor="middle" class="label" fill="#cbd5e1" font-size="11.5">41.8°</text>
+
+  <text x="384" y="278" text-anchor="end" class="label" fill="#64748b" font-size="9.5">light from a fish</text>
+  <text x="18"  y="110" class="label" fill="#cbd5e1" font-size="9.5">…leaves at a wider angle</text>
+</svg>
+</div>
+<p class="cap">The bend always happens at the boundary, never inside the water. In between, light goes dead straight.</p>
+
+<div class="formula">
+  1.33 × sin(angle in the water)  =  1.00 × sin(angle in the air)
+  <small>Snell's law · angles are measured from the normal, the line square-on through the glass</small>
+</div>
+
+<div class="tbl">
+  <div class="row head"><div>Leaves the fish at…</div><div>…reaches you at</div></div>
+  <div class="row"><div><b>0° — straight on</b></div><div class="v">0° — no bend at all</div></div>
+  <div class="row"><div><b>10°</b></div><div class="v">13.4°</div></div>
+  <div class="row"><div><b>20°</b></div><div class="v">27.1°</div></div>
+  <div class="row"><div><b>30°</b></div><div class="v">41.8°</div></div>
+  <div class="row"><div><b>40°</b></div><div class="v">59.0°</div></div>
+  <div class="row"><div><b>45°</b></div><div class="v">70.5° — nearly flat along the glass</div></div>
+  <div class="row"><div><b>48.6° or more</b></div><div class="v bad">it never gets out — see section 13</div></div>
+</div>
+
+<div class="callout key">
+  <strong>Read that table again and the whole page falls out of it.</strong> Every angle gets stretched wider on the way out,
+  and the steeper you started, the more it is stretched. A fan of light leaving one spot in the tank arrives at your eye
+  <em>spread wider than it left</em> — and a wider fan is exactly what a nearer object would have sent you.
+</div>
+
+<div class="part"><span>Part C · what your eye does with it</span></div>
+
+<p class="panel-label" id="s06">06 · <b>your eye only knows one rule, and it is wrong here</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two light rays leave a spot on the back wall, bend outwards as they leave the front glass, and spread wider than they started. Traced back in straight lines they meet at a point about three-quarters of the way, which is where the eye puts the spot.">
+  <defs>
+    <marker id="o6-am" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 Z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <text x="12" y="16" class="label" fill="#475569" font-size="10">TOP VIEW · THE BEND IS EXAGGERATED SO YOU CAN SEE IT</text>
+
+  <!-- water + glass -->
+  <rect x="232" y="34" width="150" height="256" fill="#38bdf8" opacity="0.14"/>
+  <rect x="224" y="34" width="8"  height="256" fill="#64748b"/>
+  <rect x="382" y="34" width="10" height="256" fill="#64748b"/>
+  <text x="238" y="52" class="label" fill="#7dd3fc" font-size="10">water</text>
+  <text x="378" y="52" text-anchor="end" class="label" fill="#94a3b8" font-size="10">back wall</text>
+
+  <!-- the fan of light, in the water and after it gets out -->
+  <polygon points="382,250 232,250 232,201.3" fill="#fbbf24" opacity="0.11"/>
+  <polygon points="232,250 60,250 60,123.5 232,201.3" fill="#fbbf24" opacity="0.11"/>
+
+  <!-- ray 1: straight through, no bend -->
+  <path class="travel" d="M382,250 L60,250" fill="none" stroke="#fbbf24" stroke-width="2.4" marker-end="url(#o6-am)"/>
+  <!-- ray 2: bends outwards on the way out -->
+  <path class="travel" d="M382,250 L232,201.3 L60,123.5" fill="none" stroke="#fbbf24" stroke-width="2.4" marker-end="url(#o6-am)"/>
+
+  <!-- your eye traces ray 2 back in a straight line -->
+  <line x1="232" y1="201.3" x2="339.7" y2="250" stroke="#a78bfa" stroke-width="2" stroke-dasharray="6 5"/>
+
+  <!-- the real spot -->
+  <circle cx="382" cy="250" r="6.5" fill="#4ade80"/>
+  <line x1="368" y1="198" x2="380" y2="242" stroke="#4ade80" stroke-width="1" opacity="0.7"/>
+  <text x="378" y="192" text-anchor="end" class="label" fill="#4ade80" font-size="10.5">the real spot</text>
+
+  <!-- the apparent spot -->
+  <line x1="339.7" y1="160" x2="339.7" y2="262" stroke="#a78bfa" stroke-width="1.4" stroke-dasharray="5 5" opacity="0.7"/>
+  <circle cx="339.7" cy="250" r="8.6" fill="#a78bfa" opacity="0.32"/>
+  <circle cx="339.7" cy="250" r="8.6" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <line x1="334" y1="140" x2="339.7" y2="158" stroke="#a78bfa" stroke-width="1" opacity="0.7"/>
+  <text x="330" y="122" text-anchor="end" class="label" fill="#a78bfa" font-size="10">where your</text>
+  <text x="330" y="135" text-anchor="end" class="label" fill="#a78bfa" font-size="10">eye puts it</text>
+
+  <!-- the eye -->
+  <g transform="translate(50,188) rotate(20)">
+    <path d="M-22,0 Q0,-15 22,0 Q0,15 -22,0 Z" fill="#0e1626" stroke="#94a3b8" stroke-width="1.6"/>
+    <circle cx="0" cy="0" r="6.4" fill="#94a3b8"/>
+    <circle cx="0" cy="0" r="2.6" fill="#0a0e1a"/>
+  </g>
+  <text x="14" y="224" class="label" fill="#94a3b8" font-size="10">your eye</text>
+  <text x="14" y="237" class="label" fill="#64748b" font-size="9.5">sits in the fan</text>
+
+  <!-- dimensions -->
+  <line x1="232" y1="278" x2="339.7" y2="278" stroke="#a78bfa" stroke-width="1.4"/>
+  <line x1="232" y1="272" x2="232" y2="284" stroke="#a78bfa" stroke-width="1.4"/>
+  <line x1="339.7" y1="272" x2="339.7" y2="284" stroke="#a78bfa" stroke-width="1.4"/>
+  <text x="286" y="270" text-anchor="middle" class="label" fill="#a78bfa" font-size="10.5">about ¾ of it</text>
+
+  <line x1="232" y1="302" x2="382" y2="302" stroke="#4ade80" stroke-width="1.4"/>
+  <line x1="232" y1="296" x2="232" y2="308" stroke="#4ade80" stroke-width="1.4"/>
+  <line x1="382" y1="296" x2="382" y2="308" stroke="#4ade80" stroke-width="1.4"/>
+  <text x="307" y="322" text-anchor="middle" class="label" fill="#4ade80" font-size="10.5">the real distance</text>
+</svg>
+</div>
+<p class="cap">Two rays leave the same spot. Out in the air they are spreading faster than they were in the water — so traced backwards they cross early, short of the wall. Angles here are exaggerated roughly tenfold; the fan that really enters your pupil is about a degree wide, but every ray in it points back to the same near place.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num ray">01</span>
+    <p class="step-text">A spot on the back wall throws light in <strong>every direction</strong>. Only a narrow fan of it happens to be aimed at your pupil, and that fan is what your eye has to work with.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">02</span>
+    <p class="step-text">The ray that leaves square-on does not bend at all. Its neighbours, arriving at the glass at a slight angle, <strong>get swung outwards</strong> — and the more off-square they were, the more they swing. The fan comes out wider than it went in.</p>
+  </div>
+  <div class="step">
+    <span class="step-num fak">03</span>
+    <p class="step-text">Your eye now measures how fast that fan is spreading. That is genuinely all it has: <strong>a wide fan means near, a narrow fan means far.</strong> It is a good rule. You use it every second of every day.</p>
+  </div>
+  <div class="step">
+    <span class="step-num fak">04</span>
+    <p class="step-text">So it runs the fan backwards <em>in straight lines</em> — because light has never once bent for you before — and finds where those lines cross. They cross <strong>short of the wall</strong>, and that is where the wall appears. Your eye is not malfunctioning. It is applying a correct rule to a situation the rule was never built for.</p>
+  </div>
+</div>
+
+<div class="callout myth">
+  <strong>"So the fish is really somewhere else?"</strong> No — the fish is exactly where the ruler says. What is somewhere else is the <em>image</em>:
+  a real, measurable place in space where the light behaves as though it started. Point a camera at it and the camera will focus there, not on the fish.
+</div>
+
+<p class="panel-label" id="s07">07 · <b>the three-quarters rule</b></p>
+
+<div class="formula">
+  apparent distance = real distance ÷ 1.33 = <span class="up">real distance × 0.75</span>
+  <small>looking straight on · 1.33 is water's refractive index · works for any distance behind the front glass</small>
+</div>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart comparing the measured front-to-back distance of four tanks with the distance they appear to have: 20 becomes 15, 30 becomes 22.5, 45 becomes 33.8 and 60 becomes 45 centimetres.">
+  <text x="12" y="16" class="label" fill="#475569" font-size="10">FRONT GLASS TO BACK WALL · RULER vs EYES</text>
+
+  <!-- 20 cm -->
+  <text x="98" y="65" text-anchor="end" class="label" fill="#94a3b8" font-size="11">20 cm</text>
+  <rect x="104" y="44" width="100" height="13" rx="3" fill="#4ade80" opacity="0.6"/>
+  <rect x="104" y="59" width="75"  height="13" rx="3" fill="#a78bfa" opacity="0.6"/>
+  <line x1="179" y1="65.5" x2="204" y2="65.5" stroke="#f87171" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="211" y="55" class="label" fill="#4ade80" font-size="10">20.0</text>
+  <text x="173" y="69" text-anchor="end" class="label" fill="#ddd6fe" font-size="10">15.0</text>
+
+  <!-- 30 cm -->
+  <text x="98" y="111" text-anchor="end" class="label" fill="#94a3b8" font-size="11">30 cm</text>
+  <rect x="104" y="90"  width="150"   height="13" rx="3" fill="#4ade80" opacity="0.6"/>
+  <rect x="104" y="105" width="112.5" height="13" rx="3" fill="#a78bfa" opacity="0.6"/>
+  <line x1="216.5" y1="111.5" x2="254" y2="111.5" stroke="#f87171" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="261" y="101" class="label" fill="#4ade80" font-size="10">30.0</text>
+  <text x="210.5" y="115" text-anchor="end" class="label" fill="#ddd6fe" font-size="10">22.5</text>
+
+  <!-- 45 cm -->
+  <text x="98" y="157" text-anchor="end" class="label" fill="#94a3b8" font-size="11">45 cm</text>
+  <rect x="104" y="136" width="225"    height="13" rx="3" fill="#4ade80" opacity="0.6"/>
+  <rect x="104" y="151" width="168.75" height="13" rx="3" fill="#a78bfa" opacity="0.6"/>
+  <line x1="272.75" y1="157.5" x2="329" y2="157.5" stroke="#f87171" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="336" y="147" class="label" fill="#4ade80" font-size="10">45.0</text>
+  <text x="266.75" y="161" text-anchor="end" class="label" fill="#ddd6fe" font-size="10">33.8</text>
+
+  <!-- 60 cm -->
+  <text x="98" y="203" text-anchor="end" class="label" fill="#94a3b8" font-size="11">60 cm</text>
+  <rect x="104" y="182" width="300" height="13" rx="3" fill="#4ade80" opacity="0.6"/>
+  <rect x="104" y="197" width="225" height="13" rx="3" fill="#a78bfa" opacity="0.6"/>
+  <line x1="329" y1="203.5" x2="404" y2="203.5" stroke="#f87171" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="411" y="193" class="label" fill="#4ade80" font-size="10">60.0</text>
+  <text x="323" y="207" text-anchor="end" class="label" fill="#ddd6fe" font-size="10">45.0</text>
+
+  <text x="12" y="224" class="label" fill="#475569" font-size="9.5">green = the ruler · violet = your eyes · red = the quarter the water eats</text>
+</svg>
+</div>
+<p class="cap">The fraction never changes — only the amount. A tall tank loses as much depth as a long one, because it is the same water doing it.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text">The rule is <strong>divide by 1.33</strong>, which is the same as multiplying by 0.75. That is it. No lens, no focal length, no sweet spot — a flat pane of water treats every distance behind it identically.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">02</span>
+    <p class="step-text">It applies to the <em>water path only</em>. A poster on the wall behind the tank, seen through the tank, also jumps 7.5 cm closer — the water crossed is still 30 cm. But it is 7.5 cm out of two metres, so nobody notices.</p>
+  </div>
+  <div class="step">
+    <span class="step-num tru">03</span>
+    <p class="step-text">The quarter you lose is <strong>fixed in centimetres, not in feel</strong>. Kneel with your nose on the glass and 7.5 cm is a third of everything you can see. Stand across the room and 7.5 cm is nothing. Same physics, wildly different impression.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">04</span>
+    <p class="step-text">Seawater is a touch denser in optical terms — n = 1.339 — so a reef tank steals about <strong>25.3%</strong> instead of 25.0%. You will not spot the difference, but it is there.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s08">08 · <b>and it looks bigger, too</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A fish 30 centimetres behind the glass produces an image the same physical size but only 22.5 centimetres away, so it fills a wider angle and looks about a quarter bigger.">
+
+  <text x="12" y="16" class="label" fill="#475569" font-size="10">EYE 10 cm FROM THE GLASS · FISH 30 cm BEHIND IT</text>
+
+  <!-- water -->
+  <rect x="82" y="34" width="180" height="112" fill="#38bdf8" opacity="0.14"/>
+  <rect x="76" y="34" width="6" height="112" fill="#64748b"/>
+
+  <!-- the eye -->
+  <g transform="translate(34,90)">
+    <path d="M-20,0 Q0,-14 20,0 Q0,14 -20,0 Z" fill="#0e1626" stroke="#94a3b8" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="6" fill="#94a3b8"/>
+    <circle cx="0" cy="0" r="2.5" fill="#0a0e1a"/>
+  </g>
+
+  <!-- the real fish -->
+  <g transform="translate(215.5,90) scale(0.45)" fill="#4ade80">
+    <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+    <path d="M38,0 L50,-9 L50,9 Z"/>
+    <circle cx="10" cy="-2.5" r="2.4" fill="#0a0e1a"/>
+  </g>
+  <!-- the image: same size, nearer -->
+  <g transform="translate(181,90) scale(0.45)" fill="#a78bfa" opacity="0.6">
+    <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+    <path d="M38,0 L50,-9 L50,9 Z"/>
+  </g>
+  <line x1="220" y1="101" x2="220" y2="158" stroke="#4ade80" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
+  <line x1="185.5" y1="101" x2="185.5" y2="192" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
+
+  <!-- dimension lines -->
+  <line x1="82" y1="162" x2="220" y2="162" stroke="#4ade80" stroke-width="1.3"/>
+  <line x1="82" y1="157" x2="82" y2="167" stroke="#4ade80" stroke-width="1.3"/>
+  <line x1="220" y1="157" x2="220" y2="167" stroke="#4ade80" stroke-width="1.3"/>
+  <text x="151" y="176" text-anchor="middle" class="label" fill="#4ade80" font-size="10">30 cm — really</text>
+
+  <line x1="82" y1="196" x2="185.5" y2="196" stroke="#a78bfa" stroke-width="1.3"/>
+  <line x1="82" y1="191" x2="82" y2="201" stroke="#a78bfa" stroke-width="1.3"/>
+  <line x1="185.5" y1="191" x2="185.5" y2="201" stroke="#a78bfa" stroke-width="1.3"/>
+  <text x="134" y="210" text-anchor="middle" class="label" fill="#a78bfa" font-size="10">22.5 cm — as seen</text>
+
+  <!-- head-on comparison -->
+  <line x1="290" y1="30" x2="290" y2="212" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="310" y="46" class="label" fill="#64748b" font-size="10">the same fish, head on</text>
+
+  <g transform="translate(300,100) scale(0.72)" fill="#4ade80" opacity="0.9">
+    <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+    <path d="M38,0 L50,-9 L50,9 Z"/>
+    <circle cx="10" cy="-2.5" r="2.2" fill="#0a0e1a"/>
+  </g>
+  <text x="318" y="136" text-anchor="middle" class="label" fill="#64748b" font-size="9.5">through air</text>
+  <text x="318" y="149" text-anchor="middle" class="label" fill="#4ade80" font-size="9.5">30 cm away</text>
+
+  <g transform="translate(382,100) scale(0.886)" fill="#a78bfa">
+    <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+    <path d="M38,0 L50,-9 L50,9 Z"/>
+    <circle cx="10" cy="-2.5" r="2.2" fill="#0a0e1a"/>
+  </g>
+  <text x="404" y="136" text-anchor="middle" class="label" fill="#64748b" font-size="9.5">through water</text>
+  <text x="404" y="149" text-anchor="middle" class="label" fill="#a78bfa" font-size="9.5">30 cm away</text>
+  <text x="404" y="174" text-anchor="middle" class="label" fill="#ddd6fe" font-size="12">+23%</text>
+</svg>
+</div>
+<p class="cap">The image is not stretched — it is the same size the fish has always been. It is simply standing closer, and anything closer fills more of your view.</p>
+
+<div class="formula">
+  how much bigger = <span class="up">(eye→glass + real depth)</span> ÷ <span class="gh">(eye→glass + real depth × 0.75)</span>
+  <small>the closer your eye is to the glass, the bigger the effect · the most you can ever get is ×1.33</small>
+</div>
+
+<div class="tbl">
+  <div class="row head"><div>Your eye is…</div><div>A fish 30 cm in looks</div></div>
+  <div class="row"><div><b>Nose on the glass</b></div><div class="v gh">33% bigger — the maximum</div></div>
+  <div class="row"><div><b>A hand span away · 10 cm</b></div><div class="v gh">23% bigger</div></div>
+  <div class="row"><div><b>Sitting close · 20 cm</b></div><div class="v gh">18% bigger</div></div>
+  <div class="row"><div><b>On the sofa · 50 cm</b></div><div class="v gh">10% bigger</div></div>
+  <div class="row"><div><b>Across the room · 2 m</b></div><div class="v">3% bigger — gone</div></div>
+</div>
+
+<div class="callout tip">
+  <strong>Test it in ten seconds.</strong> Pick a fish, put your nose on the glass, then walk slowly backwards without taking your eyes off it.
+  It shrinks faster than it should — because you are losing the magnification at the same time as you are losing the angle.
+  Divers know the pair by heart: through a flat mask, everything is <em>a third bigger and a quarter closer</em>.
+</div>
+
+<p class="panel-label" id="s09">09 · <b>this is not "your brain being fooled"</b></p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text"><strong>Your two eyes agree.</strong> They converge — cross their aim — at 22.5 cm, not 30. That is a muscle movement, measurable with a ruler and a mirror. Nothing imaginary about it.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">02</span>
+    <p class="step-text"><strong>Parallax agrees.</strong> Slide your head sideways and watch the spot drift against the tank frame. It drifts by exactly the amount something 22.5 cm away would, not 30.</p>
+  </div>
+  <div class="step">
+    <span class="step-num tru">03</span>
+    <p class="step-text"><strong>A camera agrees</strong>, and a camera has no imagination. Point one at the back wall and it racks its lens to 22.5 cm — and finds the wall perfectly sharp there. Underwater photographers plan around this — behind a flat port, the whole world is at three-quarters distance.</p>
+  </div>
+  <div class="step">
+    <span class="step-num fak">04</span>
+    <p class="step-text">So the image is <strong>a genuine physical thing</strong>, not a misreading. The only thing that is wrong is the assumption "light came here in a straight line" — an assumption so reliable everywhere else that it is built into your eyes, your cameras and most of your intuition.</p>
+  </div>
+</div>
+
+<div class="callout key">
+  <strong>The honest summary:</strong> nothing lies to you. The water quietly changes where the light appears to start,
+  and every instrument you own — eyes included — reports that new place correctly.
+</div>
+
+<div class="part"><span>Part D · the glass, and what it does not do</span></div>
+
+<p class="panel-label" id="s10">10 · <b>the glass is a slab, and a slab barely counts</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A light ray entering a flat glass slab at 40 degrees bends to 25 degrees inside, then leaves at 40 degrees again. The outgoing ray is exactly parallel to the incoming one, just slid sideways.">
+  <defs>
+    <marker id="o10-am" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 Z" fill="#fbbf24"/>
+    </marker>
+    <marker id="o10-rd" markerUnits="userSpaceOnUse" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#f87171"/>
+    </marker>
+  </defs>
+
+  <rect x="210" y="14" width="60" height="238" fill="#94a3b8" opacity="0.2"/>
+  <line x1="210" y1="14" x2="210" y2="252" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="270" y1="14" x2="270" y2="252" stroke="#94a3b8" stroke-width="2"/>
+  <text x="240" y="30" text-anchor="middle" class="label" fill="#cbd5e1" font-size="10">GLASS</text>
+  <text x="240" y="43" text-anchor="middle" class="label" fill="#64748b" font-size="9">n = 1.52</text>
+  <text x="300" y="30" class="label" fill="#64748b" font-size="10">air</text>
+  <text x="180" y="30" text-anchor="end" class="label" fill="#64748b" font-size="10">air</text>
+
+  <!-- normals -->
+  <line x1="248" y1="210" x2="300" y2="210" stroke="#64748b" stroke-width="1.1" stroke-dasharray="5 5"/>
+  <line x1="182" y1="182" x2="232" y2="182" stroke="#64748b" stroke-width="1.1" stroke-dasharray="5 5"/>
+
+  <!-- the straight-through line it would have taken with no glass -->
+  <line x1="323.6" y1="255" x2="100" y2="67.3" stroke="#64748b" stroke-width="1.4" stroke-dasharray="6 6"/>
+  <text x="104" y="54" class="label" fill="#64748b" font-size="9.5">where it would have gone</text>
+
+  <!-- the real path -->
+  <path class="travel" d="M323.6,255 L270,210 L210,182 L100,89.7" fill="none" stroke="#fbbf24" stroke-width="2.6" marker-end="url(#o10-am)"/>
+  <circle cx="270" cy="210" r="3.2" fill="#fbbf24"/>
+  <circle cx="210" cy="182" r="3.2" fill="#fbbf24"/>
+
+  <line x1="298" y1="198" x2="287" y2="222" stroke="#fbbf24" stroke-width="1" opacity="0.7"/>
+  <text x="300" y="194" class="label" fill="#fbbf24" font-size="10.5">in at 40°</text>
+  <text x="228" y="168" class="label" fill="#cbd5e1" font-size="10.5">25° inside</text>
+  <text x="120" y="80" class="label" fill="#fbbf24" font-size="10.5">out at 40° again</text>
+
+  <!-- the sideways slide -->
+  <line x1="100" y1="67.3" x2="100" y2="89.7" stroke="#f87171" stroke-width="1.6" marker-end="url(#o10-rd)"/>
+  <line x1="103" y1="136" x2="100" y2="95" stroke="#f87171" stroke-width="1" opacity="0.7"/>
+  <text x="16" y="146" class="label" fill="#f87171" font-size="10">a small slide,</text>
+  <text x="16" y="159" class="label" fill="#f87171" font-size="10">and nothing else</text>
+</svg>
+</div>
+<p class="cap">Whatever the glass does on the way in, it undoes on the way out — because the two faces are parallel. The ray leaves on exactly the heading it arrived with.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text">The front pane has <strong>two parallel faces</strong>. Light bends toward the normal going in and by the identical amount away from it coming out. The turns cancel exactly. A parallel slab <em>cannot</em> change a ray's direction, no matter how thick it is or what it is made of.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">02</span>
+    <p class="step-text">What it can do is <strong>slide the ray sideways</strong> — and a sideways slide does move the image a little nearer. For typical 5 mm tank glass, that is about <em>1.7 mm</em>. You will not see 1.7 mm.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">03</span>
+    <p class="step-text">There is a neater way to say it. For water → glass → air, the maths collapses: 1.33 × sin(water angle) = 1.52 × sin(glass angle) = 1.00 × sin(air angle). <strong>The glass term cancels out of both ends.</strong> The angle you finally see depends only on the water and the air.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">04</span>
+    <p class="step-text">Which is why <strong>acrylic tanks look exactly the same as glass ones</strong> (n = 1.49 against 1.52), and why a thick pane on a big aquarium does not distort more than a thin one on a nano tank.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s11">11 · <b>the layer-cake rule</b></p>
+
+<div class="formula">
+  apparent thickness = <span class="up">layer 1 ÷ n₁</span> + <span class="up">layer 2 ÷ n₂</span> + …
+  <small>a straight-on view stacks up, layer by layer — each one shrunk by its own n</small>
+</div>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart: 30 centimetres of water pulls the image 75 millimetres nearer, while 5 millimetres of glass pulls it only 1.7 millimetres nearer.">
+  <text x="12" y="16" class="label" fill="#475569" font-size="10">HOW FAR EACH LAYER PULLS THE IMAGE TOWARDS YOU</text>
+
+  <text x="112" y="60" text-anchor="end" class="label" fill="#7dd3fc" font-size="10.5">30 cm of water</text>
+  <rect x="118" y="44" width="290" height="24" rx="4" fill="#38bdf8" opacity="0.55"/>
+  <text x="414" y="60" class="label" fill="#7dd3fc" font-size="11">75 mm</text>
+
+  <text x="112" y="108" text-anchor="end" class="label" fill="#cbd5e1" font-size="10.5">5 mm of glass</text>
+  <rect x="118" y="92" width="6.6" height="24" rx="2" fill="#94a3b8" opacity="0.75"/>
+  <text x="132" y="108" class="label" fill="#cbd5e1" font-size="11">1.7 mm</text>
+
+  <text x="12" y="138" class="label" fill="#475569" font-size="9.5">the glass sliver is real — about 44 times smaller than the water's share</text>
+</svg>
+</div>
+
+<div class="formula">
+  5 mm glass ÷ 1.52 = 3.3 mm &nbsp;·&nbsp; 300 mm water ÷ 1.33 = 225 mm<br>
+  <span class="up">305 mm really</span> &nbsp;→&nbsp; <span class="gh">228 mm as seen</span> &nbsp;=&nbsp; <span class="dn">76.7 mm nearer</span>
+  <small>a 30 cm tank with 5 mm front glass · the glass contributes 1.7 of those 76.7 mm</small>
+</div>
+
+<div class="callout">
+  <strong>This is why the empty-tank test is so convincing.</strong> Drain the tank and the back wall retreats by 7.5 cm — right back to where the ruler said it was,
+  give or take the glass's 1.7 mm. The glass never moved. The water was doing all of it.
+</div>
+
+<div class="part"><span>Part E · where it gets strange</span></div>
+
+<p class="panel-label" id="s12">12 · <b>step to the side and it gets much worse</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 355" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="One spot on the back wall seen from three angles. Straight on it appears at 74 percent of its real distance, from 30 degrees at 65 percent, and from a steep angle at only 35 percent.">
+  <defs>
+    <marker id="o12-am" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <text x="12" y="16" class="label" fill="#475569" font-size="10">ONE SPOT ON THE BACK WALL · THREE PLACES TO STAND</text>
+
+  <!-- tank -->
+  <rect x="250" y="40" width="180" height="272" fill="#38bdf8" opacity="0.14"/>
+  <rect x="242" y="40" width="8"  height="272" fill="#64748b"/>
+  <rect x="430" y="40" width="10" height="272" fill="#64748b"/>
+  <text x="258" y="58" class="label" fill="#7dd3fc" font-size="10">water</text>
+
+  <!-- the real spot -->
+  <circle cx="430" cy="300" r="6.5" fill="#4ade80"/>
+  <line x1="434" y1="36" x2="434" y2="292" stroke="#4ade80" stroke-width="1.2" opacity="0.75"/>
+  <text x="444" y="30" text-anchor="end" class="label" fill="#4ade80" font-size="10">the real spot</text>
+
+  <!-- ray 1 · straight on -->
+  <path class="travel" d="M430,300 L60,300" fill="none" stroke="#fbbf24" stroke-width="2.2" marker-end="url(#o12-am)"/>
+  <circle cx="383.4" cy="300" r="6" fill="#a78bfa" opacity="0.8"/>
+
+  <!-- ray 2 · 30 degrees inside -->
+  <path class="travel" d="M430,300 L250,196.1 L100,62" fill="none" stroke="#fbbf24" stroke-width="2.2" marker-end="url(#o12-am)"/>
+  <line x1="250" y1="196.1" x2="366.3" y2="300" stroke="#a78bfa" stroke-width="1.7" stroke-dasharray="6 5"/>
+  <circle cx="366.3" cy="300" r="6" fill="#a78bfa" opacity="0.8"/>
+
+  <!-- ray 3 · steep -->
+  <path class="travel" d="M430,300 L250,120 L218,30" fill="none" stroke="#fbbf24" stroke-width="2.2" marker-end="url(#o12-am)"/>
+  <line x1="250" y1="120" x2="313.7" y2="300" stroke="#a78bfa" stroke-width="1.7" stroke-dasharray="6 5"/>
+  <circle cx="313.7" cy="300" r="6" fill="#a78bfa" opacity="0.8"/>
+
+  <!-- eyes -->
+  <g transform="translate(48,300)">
+    <path d="M-18,0 Q0,-12 18,0 Q0,12 -18,0 Z" fill="#0e1626" stroke="#94a3b8" stroke-width="1.4"/>
+    <circle cx="0" cy="0" r="5.2" fill="#94a3b8"/>
+  </g>
+  <text x="30" y="326" class="label" fill="#94a3b8" font-size="9.5">straight on</text>
+
+  <g transform="translate(96,58) rotate(41.8)">
+    <path d="M-18,0 Q0,-12 18,0 Q0,12 -18,0 Z" fill="#0e1626" stroke="#94a3b8" stroke-width="1.4"/>
+    <circle cx="0" cy="0" r="5.2" fill="#94a3b8"/>
+  </g>
+  <text x="78" y="34" class="label" fill="#94a3b8" font-size="9.5">30° off</text>
+
+  <g transform="translate(220,40) rotate(70.5)">
+    <path d="M-18,0 Q0,-12 18,0 Q0,12 -18,0 Z" fill="#0e1626" stroke="#94a3b8" stroke-width="1.4"/>
+    <circle cx="0" cy="0" r="5.2" fill="#94a3b8"/>
+  </g>
+  <text x="238" y="34" class="label" fill="#94a3b8" font-size="9.5">45° off</text>
+
+  <!-- the ruler along the bottom -->
+  <line x1="250" y1="326" x2="430" y2="326" stroke="#475569" stroke-width="1.4"/>
+  <line x1="313.7" y1="320" x2="313.7" y2="332" stroke="#a78bfa" stroke-width="1.6"/>
+  <line x1="366.3" y1="320" x2="366.3" y2="332" stroke="#a78bfa" stroke-width="1.6"/>
+  <line x1="383.4" y1="320" x2="383.4" y2="332" stroke="#a78bfa" stroke-width="1.6"/>
+  <line x1="430" y1="320" x2="430" y2="332" stroke="#4ade80" stroke-width="1.6"/>
+  <text x="313.7" y="346" text-anchor="middle" class="label" fill="#a78bfa" font-size="9.5">35%</text>
+  <text x="360" y="346" text-anchor="middle" class="label" fill="#a78bfa" font-size="9.5">65%</text>
+  <text x="391" y="346" text-anchor="middle" class="label" fill="#a78bfa" font-size="9.5">74%</text>
+  <text x="428" y="346" text-anchor="end" class="label" fill="#4ade80" font-size="9.5">100%</text>
+</svg>
+</div>
+<p class="cap">Three sight lines to the same green dot. The steeper the light had to leave, the harder it was bent, and the nearer the dot ends up.</p>
+
+<div class="tbl">
+  <div class="row head three"><div>Light leaves at</div><div>Arrives at</div><div>Wall appears at</div></div>
+  <div class="row three"><div><b>0° · straight on</b></div><div class="v">0°</div><div class="v gh">75% of the real distance</div></div>
+  <div class="row three"><div><b>10°</b></div><div class="v">13.4°</div><div class="v gh">74%</div></div>
+  <div class="row three"><div><b>20°</b></div><div class="v">27.1°</div><div class="v gh">71%</div></div>
+  <div class="row three"><div><b>30°</b></div><div class="v">41.8°</div><div class="v gh">65%</div></div>
+  <div class="row three"><div><b>40°</b></div><div class="v">59.0°</div><div class="v gh">50%</div></div>
+  <div class="row three"><div><b>45°</b></div><div class="v">70.5°</div><div class="v bad">35% — barely a third</div></div>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text">The three-quarters rule is a <strong>straight-on rule</strong>. Walk round to look along the tank instead of into it, and the far corner comes flying towards you — at a steep enough angle it sits at a third of its true distance.</p>
+  </div>
+  <div class="step">
+    <span class="step-num fak">02</span>
+    <p class="step-text">Because the squeeze depends on the angle, and the angle is different for each part of the wall, <strong>a flat back wall stops looking flat</strong>. It bows gently towards you at the edges. Photographers shooting through a flat port fight this constantly — the corners of the frame are effectively closer than the middle.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">03</span>
+    <p class="step-text">Worse, at a steep angle there is <strong>no single sharp image left</strong>. The up-down squeeze and the left-right squeeze stop agreeing, so the image smears out. That is why a tank looks soft and greasy when you view it from the end, and crisp from the front.</p>
+  </div>
+  <div class="step">
+    <span class="step-num ray">04</span>
+    <p class="step-text">Look through a <strong>corner</strong>, where two panes meet, and you can catch the same fish twice — once through the front glass and once through the side, at two different apparent distances. One fish, two ghosts, neither where the fish is.</p>
+  </div>
+</div>
+
+<div class="callout tip">
+  <strong>The aquascaper's version of this section:</strong> a tank always shows less depth than it has, and the effect is worst where people actually stand.
+  It is why layouts are built with strong foreground-to-background steps — the water has already flattened a quarter of the depth before anyone looks.
+</div>
+
+<p class="panel-label" id="s13">13 · <b>past 48.6° the water turns into a mirror</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rays leaving a fish at 20 and 40 degrees escape into the air, bent ever wider. At 48.6 degrees the ray skims flat along the surface. At 60 degrees nothing escapes and the ray is reflected back down into the water.">
+  <defs>
+    <marker id="o13-am" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#fbbf24"/>
+    </marker>
+    <marker id="o13-rd" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#f87171"/>
+    </marker>
+  </defs>
+
+  <rect x="8" y="20" width="444" height="80"  fill="#0e1626"/>
+  <rect x="8" y="100" width="444" height="170" fill="#38bdf8" opacity="0.15"/>
+  <text x="18" y="40" class="label" fill="#94a3b8" font-size="11">AIR</text>
+  <text x="18" y="122" class="label" fill="#7dd3fc" font-size="11">WATER</text>
+
+  <!-- the surface: window on the left, mirror on the right -->
+  <line x1="8" y1="100" x2="267.4" y2="100" stroke="#7dd3fc" stroke-width="2.4"/>
+  <line x1="267.4" y1="100" x2="452" y2="100" stroke="#e2e8f0" stroke-width="4"/>
+  <text x="140" y="93" text-anchor="middle" class="label halo" fill="#7dd3fc" font-size="10">light can get out here</text>
+  <text x="360" y="93" text-anchor="middle" class="label halo" fill="#e2e8f0" font-size="10">MIRROR — nothing gets out</text>
+
+  <!-- the fish -->
+  <g transform="translate(96,230)" fill="#fbbf24">
+    <path d="M0,0 C7,-9 25,-9 32,0 C25,9 7,9 0,0 Z"/>
+    <path d="M0,0 L-10,-7 L-10,7 Z"/>
+    <circle cx="24" cy="-2.4" r="1.9" fill="#0a0e1a"/>
+  </g>
+
+  <!-- ray A · 20 degrees -->
+  <path class="travel" d="M120,230 L167.3,100 L205.2,26" fill="none" stroke="#fbbf24" stroke-width="2.2" marker-end="url(#o13-am)"/>
+  <text x="140" y="176" class="label halo" fill="#fbbf24" font-size="10">20°</text>
+  <text x="190" y="44" class="label halo" fill="#cbd5e1" font-size="9.5">out at 27°</text>
+
+  <!-- ray B · 40 degrees -->
+  <path class="travel" d="M120,230 L229.1,100 L329,40" fill="none" stroke="#fbbf24" stroke-width="2.2" marker-end="url(#o13-am)"/>
+  <text x="186" y="176" class="label halo" fill="#fbbf24" font-size="10">40°</text>
+  <text x="300" y="58" class="label halo" fill="#cbd5e1" font-size="9.5">out at 59°</text>
+
+  <!-- ray C · exactly the critical angle -->
+  <path class="travel" d="M120,230 L267.4,100 L395,98" fill="none" stroke="#fbbf24" stroke-width="2.2" marker-end="url(#o13-am)"/>
+  <line x1="267.4" y1="100" x2="267.4" y2="152" stroke="#64748b" stroke-width="1.1" stroke-dasharray="4 4"/>
+  <path d="M267.4,140 A40,40 0 0,1 237.4,126.4" fill="none" stroke="#f87171" stroke-width="1.6"/>
+  <text x="232" y="150" text-anchor="end" class="label halo" fill="#f87171" font-size="11">48.6°</text>
+  <text x="300" y="116" class="label halo" fill="#fbbf24" font-size="9.5">skims along the surface</text>
+
+  <!-- ray D · past the critical angle: reflected -->
+  <path class="travel" d="M120,230 L345.2,100 L445,149.9" fill="none" stroke="#f87171" stroke-width="2.2" marker-end="url(#o13-rd)"/>
+  <text x="250" y="196" class="label halo" fill="#f87171" font-size="10">60° — bounces straight back down</text>
+</svg>
+</div>
+<p class="cap">Every angle gets stretched wider on the way out. At 48.6° the stretched angle reaches 90° — flat along the surface — and there is nowhere wider left to go.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num ray">01</span>
+    <p class="step-text">Run the table from section 05 to its end: 30° becomes 41.8°, 40° becomes 59°, 45° becomes 70.5°. The escape angle is <strong>running out of room</strong>, and it hits the wall at 48.6°.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">02</span>
+    <p class="step-text">Beyond 48.6° — the <strong>critical angle</strong> for water and air — the sums ask for a sine bigger than 1, which does not exist. So none of the light escapes. All of it reflects, and it does so <em>perfectly</em>: no silver, no coating, better than any mirror you can buy.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">03</span>
+    <p class="step-text">You have seen this in your own tank. Look along the length of it and <strong>the front glass turns into a mirror</strong> with a second set of fish swimming in it. Look up at the underside of the water surface and there is another set, swimming upside down.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">04</span>
+    <p class="step-text">The glass makes no difference here either. Water → glass → air only escapes if 1.33 × sin(water angle) stays under 1 — the glass cancels again. <strong>48.6° is a water-and-air number</strong>, and it is the same for a glass tank, an acrylic tank or a pond with no wall at all.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s14">14 · <b>and what does the fish see of you?</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="From under the water the entire sky is compressed into a 97-degree circle overhead called Snell's window. Outside that circle the surface acts as a mirror showing the bottom.">
+  <defs>
+    <marker id="o14-am" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <rect x="8" y="10" width="444" height="50"  fill="#0e1626"/>
+  <rect x="8" y="60" width="444" height="170" fill="#38bdf8" opacity="0.15"/>
+
+  <!-- the window cone -->
+  <polygon points="230,200 71.2,60 388.8,60" fill="#7dd3fc" opacity="0.14"/>
+  <line x1="230" y1="200" x2="71.2"  y2="60" stroke="#7dd3fc" stroke-width="1.5" stroke-dasharray="5 5"/>
+  <line x1="230" y1="200" x2="388.8" y2="60" stroke="#7dd3fc" stroke-width="1.5" stroke-dasharray="5 5"/>
+
+  <!-- the surface -->
+  <line x1="8"     y1="60" x2="71.2" y2="60" stroke="#e2e8f0" stroke-width="4"/>
+  <line x1="71.2"  y1="60" x2="388.8" y2="60" stroke="#7dd3fc" stroke-width="2.4"/>
+  <line x1="388.8" y1="60" x2="452"  y2="60" stroke="#e2e8f0" stroke-width="4"/>
+
+  <!-- grazing light from the horizon, bending in at exactly 48.6 degrees -->
+  <path class="travel" d="M12,54 L71.2,60 L230,200" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#o14-am)"/>
+  <path class="travel" d="M448,54 L388.8,60 L230,200" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#o14-am)"/>
+  <!-- straight down from overhead -->
+  <path class="travel" d="M230,14 L230,200" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#o14-am)"/>
+
+  <!-- sun and bird, both near the horizon -->
+  <circle cx="44" cy="32" r="10" fill="#fbbf24" opacity="0.9"/>
+  <path d="M406,30 q8,-7 15,0 q7,-7 15,0" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+
+  <!-- the fish -->
+  <g transform="translate(206,200)" fill="#4ade80">
+    <path d="M0,0 C7,-9 25,-9 32,0 C25,9 7,9 0,0 Z"/>
+    <path d="M0,0 L-10,-7 L-10,7 Z"/>
+    <circle cx="24" cy="-2.4" r="1.9" fill="#0a0e1a"/>
+  </g>
+
+  <text x="230" y="86" text-anchor="middle" class="label halo" fill="#7dd3fc" font-size="11">SNELL'S WINDOW · 97° across</text>
+  <text x="230" y="100" text-anchor="middle" class="label halo" fill="#64748b" font-size="9.5">the entire sky, horizon to horizon, crammed in here</text>
+  <text x="14"  y="80" class="label" fill="#e2e8f0" font-size="9.5">mirror</text>
+  <text x="446" y="80" text-anchor="end" class="label" fill="#e2e8f0" font-size="9.5">mirror</text>
+  <text x="76"  y="46" class="label" fill="#64748b" font-size="9.5">horizon</text>
+  <text x="384" y="46" text-anchor="end" class="label" fill="#64748b" font-size="9.5">horizon</text>
+  <text x="230" y="228" text-anchor="middle" class="label" fill="#4ade80" font-size="9.5">everything outside the circle is a reflection of the gravel</text>
+</svg>
+</div>
+<p class="cap">The same 48.6° that traps light inside the water also decides how much of the outside world gets in. Divers and fly fishers both know this circle well.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num wat">01</span>
+    <p class="step-text">Flip the rule around and it flips its answer. For an observer <em>in</em> the water looking <em>out</em>, apparent distance = real distance <strong>× 1.33</strong>. You look further away to the fish than you really are, and correspondingly smaller.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">02</span>
+    <p class="step-text">So the courtesy is not mutual: <strong>you see the fish closer and bigger; the fish sees you further and smaller.</strong> Both of you are reading the light exactly right.</p>
+  </div>
+  <div class="step">
+    <span class="step-num ray">03</span>
+    <p class="step-text">Looking up, the fish sees the whole sky squashed into a bright circle <strong>97° wide</strong> — twice the critical angle. Everything from the horizon on one side to the horizon on the other is inside it, so the edges are badly crowded and the horizon is a smeared ring.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">04</span>
+    <p class="step-text">Outside that circle the surface is a perfect mirror showing the gravel and the fish's own tankmates. A fish in a lit room sees a bright porthole overhead and <strong>a silvered ceiling everywhere else</strong>.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s15">15 · <b>curved glass is a different animal</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A flat-sided tank shifts the fish's image modestly closer. A round bowl acts as a real lens and magnifies the fish far more, and the image swings about when you move.">
+
+  <!-- ── flat tank ── -->
+  <text x="24" y="18" class="label" fill="#475569" font-size="10">FLAT SIDES · A FIXED ¾ SHIFT</text>
+  <rect x="60" y="40" width="150" height="120" fill="#38bdf8" opacity="0.15"/>
+  <rect x="54" y="40" width="6" height="120" fill="#64748b"/>
+  <rect x="210" y="40" width="6" height="120" fill="#64748b"/>
+  <g transform="translate(150,100) scale(0.7)" fill="#4ade80">
+    <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+    <path d="M38,0 L50,-9 L50,9 Z"/>
+    <circle cx="10" cy="-2.5" r="2.2" fill="#0a0e1a"/>
+  </g>
+  <g transform="translate(96,100) scale(0.7)" fill="#a78bfa" opacity="0.6">
+    <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+    <path d="M38,0 L50,-9 L50,9 Z"/>
+  </g>
+  <text x="30" y="182" class="label" fill="#94a3b8" font-size="9.5">same size, a quarter nearer,</text>
+  <text x="30" y="194" class="label" fill="#94a3b8" font-size="9.5">and it stays put when you move</text>
+
+  <!-- ── round bowl ── -->
+  <text x="264" y="18" class="label" fill="#475569" font-size="10">CURVED · AN ACTUAL LENS</text>
+  <circle cx="360" cy="104" r="62" fill="#38bdf8" opacity="0.15" stroke="#64748b" stroke-width="2.5"/>
+  <g transform="translate(354,104) scale(0.5)" fill="#4ade80">
+    <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+    <path d="M38,0 L50,-9 L50,9 Z"/>
+    <circle cx="10" cy="-2.5" r="2.2" fill="#0a0e1a"/>
+  </g>
+  <g transform="translate(304,104) scale(1.15)" fill="#a78bfa" opacity="0.55">
+    <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+    <path d="M38,0 L50,-9 L50,9 Z"/>
+  </g>
+  <text x="264" y="182" class="label" fill="#94a3b8" font-size="9.5">hugely magnified, stretched</text>
+  <text x="264" y="194" class="label" fill="#94a3b8" font-size="9.5">unevenly, and it lurches</text>
+</svg>
+</div>
+<p class="cap">Schematic, not to scale — but the direction is right. Flat panes shift; curved panes focus.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text">Everything on this page so far assumed <strong>flat glass</strong>. A flat surface has no focal length — it cannot bring light to a point, so it can only slide images about by a fixed fraction.</p>
+  </div>
+  <div class="step">
+    <span class="step-num fak">02</span>
+    <p class="step-text">Curve the glass and you have built a <strong>lens</strong>. A round goldfish bowl is a fat cylindrical lens full of water: it magnifies far more than 1.33×, it magnifies sideways more than up-and-down, and the fish visibly stretches and lurches as it swims across.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">03</span>
+    <p class="step-text">Bowfront and corner-curved tanks do a milder version of the same thing. The flat middle behaves; the curved ends bulge, and things appear to speed up as a fish crosses them.</p>
+  </div>
+  <div class="step">
+    <span class="step-num ray">04</span>
+    <p class="step-text">One practical consequence: a round vase or bowl of water on a sunny windowsill is <strong>a burning glass</strong>. It really can focus enough sunlight to scorch a curtain or a windowsill. Flat-sided tanks cannot.</p>
+  </div>
+</div>
+
+<div class="part"><span>Part F · prove it yourself</span></div>
+
+<p class="panel-label" id="s16">16 · <b>six things to try tonight</b></p>
+
+<div class="spotgrid">
+
+  <div class="spot">
+    <svg viewBox="0 0 90 62" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A half-filled tank whose back corner seam takes a visible step at the waterline.">
+      <rect x="8" y="6" width="74" height="46" fill="#0e1626" stroke="#64748b" stroke-width="1.4"/>
+      <rect x="9" y="28" width="72" height="23" fill="#38bdf8" opacity="0.22"/>
+      <line x1="9" y1="28" x2="81" y2="28" stroke="#7dd3fc" stroke-width="1.4"/>
+      <line x1="58" y1="7" x2="58" y2="28" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="64" y1="28" x2="64" y2="51" stroke="#a78bfa" stroke-width="2"/>
+      <line x1="58" y1="28" x2="64" y2="28" stroke="#f87171" stroke-width="1.6"/>
+    </svg>
+    <div class="n">01 · half-fill it</div>
+    <div class="d">Fill the tank only halfway and look at the back corner seam. Where it crosses the waterline it takes a visible step sideways — the submerged half is being shown to you nearer and wider.</div>
+  </div>
+
+  <div class="spot">
+    <svg viewBox="0 0 90 62" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two identical stickers on the back glass, one outside and one inside; the inside one appears nearer and larger.">
+      <rect x="8" y="6" width="74" height="46" fill="#0e1626" stroke="#64748b" stroke-width="1.4"/>
+      <rect x="9" y="7" width="63" height="44" fill="#38bdf8" opacity="0.18"/>
+      <line x1="72" y1="6" x2="72" y2="52" stroke="#64748b" stroke-width="3"/>
+      <circle cx="77" cy="18" r="4" fill="#4ade80"/>
+      <circle cx="67" cy="40" r="4" fill="#4ade80"/>
+      <circle cx="46" cy="40" r="5.2" fill="#a78bfa" opacity="0.4"/>
+      <circle cx="46" cy="40" r="5.2" fill="none" stroke="#a78bfa" stroke-width="1.3" stroke-dasharray="3 3"/>
+      <line x1="63" y1="40" x2="53" y2="40" stroke="#a78bfa" stroke-width="1.2" stroke-dasharray="3 3"/>
+    </svg>
+    <div class="n">02 · two stickers</div>
+    <div class="d">Stick identical dots on the inside and the outside of the back glass, 5 mm apart. Through the water they look centimetres apart in depth, and the inner one looks bigger.</div>
+  </div>
+
+  <div class="spot">
+    <svg viewBox="0 0 90 62" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="An eye pressed against the tank glass sees a noticeably enlarged fish.">
+      <line x1="28" y1="6" x2="28" y2="56" stroke="#64748b" stroke-width="3"/>
+      <rect x="29" y="6" width="57" height="50" fill="#38bdf8" opacity="0.16"/>
+      <g transform="translate(12,31)">
+        <path d="M-10,0 Q0,-8 10,0 Q0,8 -10,0 Z" fill="#0e1626" stroke="#94a3b8" stroke-width="1.2"/>
+        <circle cx="0" cy="0" r="3.2" fill="#94a3b8"/>
+      </g>
+      <g transform="translate(38,31) scale(0.62)" fill="#a78bfa">
+        <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+        <path d="M38,0 L50,-9 L50,9 Z"/>
+        <circle cx="10" cy="-2.5" r="2.2" fill="#0a0e1a"/>
+      </g>
+    </svg>
+    <div class="n">03 · nose on the glass</div>
+    <div class="d">Press your face to the glass, pick one fish, then walk backwards slowly. It deflates as you go — you are giving up the magnification, which is biggest when your eye is closest.</div>
+  </div>
+
+  <div class="spot">
+    <svg viewBox="0 0 90 62" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A ruler leaning in a glass of water appears kinked at the waterline; the true position is deeper.">
+      <path d="M26,8 L64,8 L60,56 L30,56 Z" fill="#0e1626" stroke="#64748b" stroke-width="1.3"/>
+      <path d="M27,26 L63,26 L60,55 L30,55 Z" fill="#38bdf8" opacity="0.22"/>
+      <line x1="27" y1="26" x2="63" y2="26" stroke="#7dd3fc" stroke-width="1.3"/>
+      <line x1="60" y1="4" x2="46" y2="26" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+      <line x1="46" y1="26" x2="31" y2="45" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+      <line x1="46" y1="26" x2="27" y2="52" stroke="#4ade80" stroke-width="2" stroke-dasharray="4 3"/>
+    </svg>
+    <div class="n">04 · lean a ruler in</div>
+    <div class="d">Stand a ruler diagonally in the tank. It looks snapped at the waterline. Nothing is bent — the underwater half is simply being displayed closer to the surface than it hangs.</div>
+  </div>
+
+  <div class="spot">
+    <svg viewBox="0 0 90 62" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Viewed along the length of the tank, the front glass reflects the fish like a mirror.">
+      <rect x="8" y="8" width="74" height="46" fill="#38bdf8" opacity="0.16" stroke="#64748b" stroke-width="1.3"/>
+      <g transform="translate(24,22) scale(0.5)" fill="#fbbf24">
+        <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+        <path d="M38,0 L50,-9 L50,9 Z"/>
+      </g>
+      <line x1="9" y1="33" x2="81" y2="33" stroke="#e2e8f0" stroke-width="2.4"/>
+      <g transform="translate(24,44) scale(0.5,-0.5)" fill="#fbbf24" opacity="0.45">
+        <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+        <path d="M38,0 L50,-9 L50,9 Z"/>
+      </g>
+    </svg>
+    <div class="n">05 · look along it</div>
+    <div class="d">Put your eye near one end and sight down the length of the tank. The far glass silvers over and a full set of reflected fish appears — total internal reflection, free of charge.</div>
+  </div>
+
+  <div class="spot">
+    <svg viewBox="0 0 90 62" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A net aimed at where a fish appears to be falls short of where the fish really is.">
+      <rect x="8" y="8" width="74" height="46" fill="#38bdf8" opacity="0.16" stroke="#64748b" stroke-width="1.3"/>
+      <g transform="translate(58,32) scale(0.5)" fill="#4ade80">
+        <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+        <path d="M38,0 L50,-9 L50,9 Z"/>
+        <circle cx="10" cy="-2.5" r="2.2" fill="#0a0e1a"/>
+      </g>
+      <g transform="translate(30,32) scale(0.5)" fill="#a78bfa" opacity="0.55">
+        <path d="M0,0 C8,-11 30,-11 38,0 C30,11 8,11 0,0 Z"/>
+        <path d="M38,0 L50,-9 L50,9 Z"/>
+      </g>
+      <path d="M22,20 A13,13 0 0,0 22,44" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="22" y1="20" x2="14" y2="12" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="44" y1="32" x2="54" y2="32" stroke="#f87171" stroke-width="1.6" stroke-dasharray="3 3"/>
+    </svg>
+    <div class="n">06 · try to net a fish</div>
+    <div class="d">You swipe short, every time. You are aiming at the image, and the fish is a quarter of the tank further back. Spear fishers have known this for thousands of years: aim beyond it.</div>
+  </div>
+
+</div>
+
+<div class="callout tip">
+  <strong>The cheapest experiment of the lot:</strong> drop a coin in an empty mug, back off until the rim just hides it, hold still, and have someone pour water in.
+  The coin climbs into view on its own. That is the fish tank's back wall doing exactly the same thing, lying on its side.
+</div>
+
+<p class="panel-label" id="s17">17 · <b>cheat sheet</b></p>
+
+<div class="tbl">
+  <div class="row head"><div>What you see</div><div>What is actually happening</div></div>
+  <div class="row"><div><b>The back wall sits ¼ too close</b></div><div>Light slows in water, turns as it leaves the glass, and your eye traces it back along a straight line to the wrong place.</div></div>
+  <div class="row"><div><b>Fish look up to a third bigger</b></div><div>The image is the same size as the fish, but standing nearer — so it fills more of your view. Strongest with your eye at the glass.</div></div>
+  <div class="row"><div><b>The tank looks like a shallow box</b></div><div>Only the front-to-back direction is squeezed. Side to side is untouched, so a cube of water looks wider than it is deep.</div></div>
+  <div class="row"><div><b>It gets worse from the end</b></div><div>Steeper rays bend harder. At 45° the wall reports in at about a third of its real distance, and the image starts to smear.</div></div>
+  <div class="row"><div><b>The front glass turns into a mirror</b></div><div>Total internal reflection. Past 48.6° from square-on, no light escapes the water at all.</div></div>
+  <div class="row"><div><b>An empty tank measures right</b></div><div>No water, no bending. The glass alone shifts things by under 2 mm.</div></div>
+  <div class="row"><div><b>You always swipe short with the net</b></div><div>You aim at the image. The fish is further back by a quarter of the water you are looking through.</div></div>
+  <div class="row"><div><b>A round bowl distorts wildly</b></div><div>Curved glass is a real lens with a real focus, so it magnifies far more than 1.33× and unevenly.</div></div>
+</div>
+
+<div class="tbl">
+  <div class="row head"><div>Number to remember</div><div>Value</div></div>
+  <div class="row"><div><b>Speed of light — vacuum or air</b></div><div class="v">≈ 300,000 km/s</div></div>
+  <div class="row"><div><b>Speed of light — in water</b></div><div class="v">≈ 225,000 km/s</div></div>
+  <div class="row"><div><b>Refractive index of water</b></div><div class="v good">n = 1.33</div></div>
+  <div class="row"><div><b>Refractive index of tank glass</b></div><div class="v">n = 1.52 (acrylic 1.49)</div></div>
+  <div class="row"><div><b>Apparent distance, straight on</b></div><div class="v gh">real × 0.75</div></div>
+  <div class="row"><div><b>Apparent size, eye at the glass</b></div><div class="v gh">real × 1.33</div></div>
+  <div class="row"><div><b>Depth a 30 cm tank loses</b></div><div class="v bad">7.5 cm</div></div>
+  <div class="row"><div><b>Shift from 5 mm of glass</b></div><div class="v">1.7 mm — ignore it</div></div>
+  <div class="row"><div><b>Critical angle, water to air</b></div><div class="v bad">48.6°</div></div>
+  <div class="row"><div><b>Snell's window</b></div><div class="v">97° wide</div></div>
+  <div class="row"><div><b>What the fish sees of you</b></div><div class="v">real × 1.33 — further and smaller</div></div>
+</div>
+
+<div class="callout key">
+  <strong>The one-sentence version:</strong> water hands light to your eye pointing in a slightly wrong direction,
+  and your eye — which has never in its life needed to doubt that light comes straight — believes it.
+</div>
+
+<p class="cap" style="margin-top:18px;">
+  Numbers here are for fresh water at room temperature and are rounded for learning. The refractive index of water drifts a little
+  with temperature, salt and the colour of the light — blue bends slightly more than red, which is why the edges of things
+  underwater carry a faint colour fringe when you look at them from a steep angle.
+</p>
+
+</body>
+</html>
