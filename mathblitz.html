@@ -280,6 +280,12 @@
       color: #facc15;
       animation: pop-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
     }
+    .coins-earned {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #f0c040;
+    }
+    .coins-earned:empty { display: none; }
     .primary-btn {
       background: var(--p);
       border: none;
@@ -416,6 +422,7 @@
       <h2>🧮 Round Complete!</h2>
       <div class="big-score" id="end-score">0</div>
       <div id="new-best-label"></div>
+      <div class="coins-earned" id="coins-earned-label"></div>
       <div class="stats-grid">
         <div class="stat-box">
           <div class="s-label">Questions</div>
@@ -565,6 +572,7 @@
     const TOTAL_QUESTIONS = 20;
     let answered        = 0;
     let correct         = 0;
+    let coinsEarned     = 0;
     let qStartTime      = 0;
     let currentAns      = 0;
     let difficulty      = 'easy';
@@ -578,6 +586,17 @@
     const bestKey = () => `mathblitz-best-${difficulty}`;
     function getBest() { return parseInt(localStorage.getItem(bestKey()) || '0', 10); }
     function saveBest(s) { if (s > getBest()) localStorage.setItem(bestKey(), String(s)); }
+
+    // 1 coin per correct answer, credited to the active avatar as the round is
+    // played (like the chinese test) so a round abandoned half-way still keeps
+    // what was earned. endGame() logs the round's total as one history row.
+    // With no avatar there's nowhere to bank them, so nothing is counted.
+    function awardCoin() {
+      const id = window.__avatarGetActiveId && window.__avatarGetActiveId();
+      if (!id || !window.__avatarAddCoins) return;
+      window.__avatarAddCoins(id, 1);
+      coinsEarned++;
+    }
 
     function snap5(n) { return Math.round(n / 5) * 5; }
 
@@ -1263,6 +1282,7 @@
           void badge.offsetWidth;
           badge.classList.add('pulse');
         }
+        awardCoin();
         showScoreFloat(pts);
         updateHUD();
         setTimeout(() => { answered >= TOTAL_QUESTIONS ? endGame() : showQuestion(); }, 320);
@@ -1293,6 +1313,7 @@
       bestStreak      = 0;
       answered        = 0;
       correct         = 0;
+      coinsEarned     = 0;
       gameState       = 'playing';
       lastQuestionKey = null;
 
@@ -1324,6 +1345,17 @@
       $('stat-accuracy').textContent  = acc + '%';
       $('stat-streak').textContent    = bestStreak;
       $('stat-best').textContent      = best > 0 ? best : '—';
+
+      const coinsEl = $('coins-earned-label');
+      if (coinsEarned > 0) {
+        coinsEl.textContent = `🪙 +${coinsEarned} coin${coinsEarned === 1 ? '' : 's'} earned`;
+        const avatarId = window.__avatarGetActiveId && window.__avatarGetActiveId();
+        if (avatarId && window.__avatarLogCoinGain) {
+          window.__avatarLogCoinGain(avatarId, 'Math Blitz', coinsEarned);
+        }
+      } else {
+        coinsEl.textContent = '';
+      }
 
       const newBestEl = $('new-best-label');
       if (isNewBest && score > 0) {
