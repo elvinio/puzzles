@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liquid Motion Bubbler – How It Works</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0e1a;
+    color: #e8eaf0;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 16px 64px;
+  }
+
+  /* ── top bar ───────────────────────────────────────────────── */
+  .topbar {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .back {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: #64748b;
+    text-decoration: none;
+    border: 1px solid #1e293b;
+    background: #111827;
+    border-radius: 8px;
+    padding: 6px 10px;
+    white-space: nowrap;
+  }
+  .back:hover { color: #7dd3fc; border-color: #334155; }
+
+  h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(1rem, 4vw, 1.4rem);
+    letter-spacing: 0.08em;
+    color: #7dd3fc;
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    width: 100%;
+    max-width: 640px;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 20px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .intro {
+    width: 100%;
+    max-width: 640px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #94a3b8;
+    margin-bottom: 18px;
+  }
+  .intro strong { color: #e2e8f0; font-weight: 500; }
+
+  /* ── colour key (used by every diagram on the page) ────────── */
+  .legend {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 11px 14px;
+    margin-bottom: 26px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+  .legend i {
+    display: inline-block;
+    width: 11px; height: 11px;
+    border-radius: 3px;
+    margin-right: 7px;
+    vertical-align: -1px;
+  }
+  .legend .k-water { background: #38bdf8; }
+  .legend .k-oil   { background: #fbbf24; }
+  .legend .k-skin  { background: #a78bfa; }
+
+  /* ── contents chips ────────────────────────────────────────── */
+  .toc {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 30px;
+  }
+  .toc a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    color: #7dd3fc;
+    background: #0f1a2e;
+    border: 1px solid #1e3a5f;
+    border-radius: 999px;
+    padding: 5px 10px;
+    text-decoration: none;
+  }
+  .toc a:hover { background: #16263f; }
+
+  /* ── part divider ──────────────────────────────────────────── */
+  .part {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 34px 0 18px;
+  }
+  .part span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7dd3fc;
+  }
+  .part::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, #1e3a5f, transparent);
+  }
+
+  /* ── section heading ───────────────────────────────────────── */
+  .panel-label {
+    width: 100%;
+    max-width: 640px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    text-transform: uppercase;
+    margin: 22px 0 10px;
+    scroll-margin-top: 12px;
+  }
+  .panel-label b { color: #cbd5e1; font-weight: 700; }
+
+  /* ── diagram panel ─────────────────────────────────────────── */
+  .diagram-wrap {
+    width: 100%;
+    max-width: 640px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 16px 12px 12px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  /* flex items must be allowed to shrink below the diagrams' intrinsic
+     width, or a wide SVG drags the whole page sideways on a phone */
+  body > * { min-width: 0; }
+  svg { width: 100%; max-width: 100%; height: auto; display: block; }
+  .label { font-family: 'Space Mono', monospace; }
+  .cap {
+    width: 100%;
+    max-width: 640px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: #475569;
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+
+  /* ── numbered step blocks ──────────────────────────────────── */
+  .steps {
+    width: 100%;
+    max-width: 640px;
+    display: grid;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 13px 15px;
+  }
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: #0ea5e9;
+    background: #0c2036;
+    border: 1px solid #0ea5e944;
+    border-radius: 6px;
+    padding: 3px 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-text { font-size: 1.02rem; line-height: 1.6; color: #94a3b8; }
+  .step-text strong { color: #e2e8f0; font-weight: 500; }
+  .step-text em { color: #cbd5e1; font-style: normal; font-weight: 500; }
+
+  /* colour-coded step numbers, matching the diagram key */
+  .step-num.wat { color: #38bdf8; background: #0c2036; border-color: #38bdf844; }
+  .step-num.oil { color: #fbbf24; background: #2a2210; border-color: #fbbf2444; }
+  .step-num.skn { color: #a78bfa; background: #1a1330; border-color: #a78bfa44; }
+  .step-num.frc { color: #f87171; background: #2a1414; border-color: #f8717144; }
+
+  /* ── callouts ──────────────────────────────────────────────── */
+  .callout {
+    width: 100%;
+    max-width: 640px;
+    background: #1a1330;
+    border: 1px solid #4c1d9566;
+    border-left: 3px solid #a78bfa;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0 6px;
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: #c4b5fd;
+  }
+  .callout strong { color: #e9d5ff; font-weight: 700; }
+  .callout em { color: #e9d5ff; font-style: normal; font-weight: 500; }
+  .callout.tip {
+    background: #0f2018; border-color: #14532d99; border-left-color: #4ade80; color: #86efac;
+  }
+  .callout.tip strong, .callout.tip em { color: #bbf7d0; }
+  .callout.key {
+    background: #0c2036; border-color: #0ea5e955; border-left-color: #38bdf8; color: #7dd3fc;
+  }
+  .callout.key strong, .callout.key em { color: #bae6fd; }
+  .callout.myth {
+    background: #24131a; border-color: #7f1d1d99; border-left-color: #f87171; color: #fca5a5;
+  }
+  .callout.myth strong, .callout.myth em { color: #fecaca; }
+
+  /* ── formula strip ─────────────────────────────────────────── */
+  .formula {
+    width: 100%;
+    max-width: 640px;
+    background: #0e1626;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 8px 0 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.95rem;
+    color: #7dd3fc;
+    text-align: center;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .formula small {
+    display: block;
+    font-size: 0.68rem;
+    color: #475569;
+    margin-top: 6px;
+    letter-spacing: 0.03em;
+  }
+  .formula .up { color: #4ade80; }
+  .formula .dn { color: #f87171; }
+
+  /* ── simple tables ─────────────────────────────────────────── */
+  .tbl {
+    width: 100%;
+    max-width: 640px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 8px 0 18px;
+  }
+  .tbl .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px 14px;
+    border-top: 1px solid #1e293b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #94a3b8;
+  }
+  .tbl .row:first-child { border-top: none; }
+  .tbl .row.head {
+    background: #0e1626;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+  .tbl .row b { color: #e2e8f0; font-weight: 500; }
+  .tbl .row .v { font-family: 'Space Mono', monospace; font-size: 0.88rem; color: #7dd3fc; }
+  .tbl .row .v.good { color: #4ade80; }
+  .tbl .row .v.bad  { color: #f87171; }
+  .tbl .row.three { grid-template-columns: 1.1fr 0.9fr 1fr; }
+
+  @media (max-width: 540px) {
+    .tbl .row.three { grid-template-columns: 1fr; gap: 4px; }
+    .tbl .row.three.head { grid-template-columns: 1fr 1fr; }
+    .tbl .row.three.head div:nth-child(3) { display: none; }
+  }
+
+  /* ── "spot this" cards ─────────────────────────────────────── */
+  .spotgrid {
+    width: 100%;
+    max-width: 640px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+    margin: 8px 0 16px;
+  }
+  .spot {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 12px 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .spot svg { height: 62px; width: auto; margin: 0 auto; }
+  .spot .n {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: #7dd3fc;
+    font-weight: 700;
+  }
+  .spot .d { font-size: 0.9rem; line-height: 1.5; color: #94a3b8; }
+
+  /* ── shared animation helpers for the SVG diagrams ─────────── */
+
+  /* a heavy drop sinking the length of a tube */
+  .sink { animation: sink 4.4s linear infinite; }
+  @keyframes sink {
+    0%   { transform: translateY(0);     opacity: 0; }
+    6%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { transform: translateY(190px); opacity: 0; }
+  }
+  /* a light bubble climbing the other way */
+  .climb { animation: climb 5.6s linear infinite; }
+  @keyframes climb {
+    0%   { transform: translateY(0);      opacity: 0; }
+    8%   { opacity: 0.95; }
+    90%  { opacity: 0.95; }
+    100% { transform: translateY(-190px); opacity: 0; }
+  }
+  .d2 { animation-delay: 1.1s; }
+  .d3 { animation-delay: 2.2s; }
+  .d4 { animation-delay: 3.3s; }
+
+  /* dashed line that "flows" — used for currents and streamlines */
+  .flow { stroke-dasharray: 7 9; animation: flow-dash 1.6s linear infinite; }
+  .flow-slow { stroke-dasharray: 6 10; animation: flow-dash 3.4s linear infinite; }
+  @keyframes flow-dash { to { stroke-dashoffset: -32; } }
+
+  .blink { animation: blink 2.4s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* molecules trembling with heat */
+  .jiggle { animation: jiggle 2.6s ease-in-out infinite; }
+  @keyframes jiggle {
+    0%,100% { transform: translate(0,0); }
+    25%     { transform: translate(1.5px,-1.5px); }
+    50%     { transform: translate(-1px,1.5px); }
+    75%     { transform: translate(1px,1px); }
+  }
+  .j2 { animation-delay: 0.5s; }
+  .j3 { animation-delay: 1.1s; }
+  .j4 { animation-delay: 1.7s; }
+
+  /* surface-tension arrows squeezing inward */
+  .squeeze { animation: squeeze 2.8s ease-in-out infinite; }
+  @keyframes squeeze {
+    0%,100% { opacity: 0.25; }
+    50%     { opacity: 1; }
+  }
+
+  /* a short fall — the three racing tubes override the duration inline
+     so the very same drop can be shown at three different speeds */
+  .fall-s { animation: fall-s 3s linear infinite; }
+  @keyframes fall-s {
+    0%   { transform: translateY(0);     opacity: 0; }
+    8%   { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(126px); opacity: 0; }
+  }
+
+  /* a drop hanging from a hole: it swells, necks in, then snaps off.
+     .grow, .neck and .drip share one cycle and hand over at 70%. */
+  .grow { animation: grow 4.5s ease-in infinite; }
+  @keyframes grow {
+    0%    { r: 4;  cy: 62; opacity: 1; }
+    62%   { r: 17; cy: 76; opacity: 1; }
+    70%   { r: 19; cy: 84; opacity: 1; }
+    70.5% { opacity: 0; }
+    100%  { opacity: 0; }
+  }
+  .neck { animation: neck 4.5s ease-in infinite; }
+  @keyframes neck {
+    0%    { rx: 5;   ry: 6;  opacity: 1; }
+    62%   { rx: 5.5; ry: 8;  opacity: 1; }
+    69%   { rx: 1.5; ry: 10; opacity: 1; }
+    70.5% { rx: 0.5; ry: 4;  opacity: 0; }
+    100%  { rx: 4;   ry: 5;  opacity: 0; }
+  }
+  .drip { animation: drip 4.5s linear infinite; }
+  @keyframes drip {
+    0%   { transform: translateY(0);     opacity: 0; }
+    69%  { transform: translateY(0);     opacity: 0; }
+    70%  { transform: translateY(0);     opacity: 1; }
+    100% { transform: translateY(100px); opacity: 1; }
+  }
+
+  /* bulges on a beading thread, swelling as the wobble runs away with itself */
+  .beadwob { animation: beadwob 2.8s ease-in-out infinite; }
+  @keyframes beadwob {
+    0%,100% { r: 7;  opacity: 0.5; }
+    50%     { r: 12; opacity: 1; }
+  }
+
+  /* playhead sweeping the drip timeline */
+  .sweep { animation: sweep 9s linear infinite; }
+  @keyframes sweep {
+    0%   { transform: translateX(0);     opacity: 1; }
+    96%  { transform: translateX(380px); opacity: 1; }
+    100% { transform: translateX(380px); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sink, .climb, .flow, .flow-slow, .blink, .jiggle, .squeeze,
+    .grow, .drip, .neck, .sweep, .beadwob { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="../science.html">← Science</a>
+  <h1>Liquid Motion Bubbler</h1>
+</div>
+<p class="subtitle">// two liquids that refuse to mix, falling through each other in slow motion</p>
+
+<p class="intro">
+  Turn one over and it starts: fat coloured drops peel off a little shelf, sink through the clear
+  liquid as if they were falling through honey, and puddle at the bottom — while blobs of the other
+  liquid climb quietly the other way. Nothing is powered. Nothing is pumping.
+  <strong>It is just two liquids swapping places, very slowly, and never blending.</strong>
+  Three ideas explain everything you can see: <strong>polarity</strong> (why they never mix),
+  <strong>density</strong> (who ends up on top) and <strong>surface tension</strong> (why the falling
+  liquid travels as round drops instead of a smear).
+</p>
+
+<div class="legend">
+  <span><i class="k-water"></i>the heavy, watery liquid</span>
+  <span><i class="k-oil"></i>the light, oily liquid</span>
+  <span><i class="k-skin"></i>the surface between them</span>
+</div>
+
+<div class="toc">
+  <a href="#s01">01 inside the tube</a>
+  <a href="#s02">02 the flip</a>
+  <a href="#s03">03 water is lopsided</a>
+  <a href="#s04">04 oil is even</a>
+  <a href="#s05">05 like sticks to like</a>
+  <a href="#s06">06 the colour proves it</a>
+  <a href="#s07">07 density</a>
+  <a href="#s08">08 the tug-of-war</a>
+  <a href="#s09">09 the tiny gap</a>
+  <a href="#s10">10 why drops are round</a>
+  <a href="#s11">11 how big a drop gets</a>
+  <a href="#s12">12 threads bead up</a>
+  <a href="#s13">13 the oily wall</a>
+  <a href="#s14">14 three dials</a>
+  <a href="#s15">15 no turbulence</a>
+  <a href="#s16">16 the rhythm</a>
+  <a href="#s17">17 things to spot</a>
+  <a href="#s18">18 cheat sheet</a>
+</div>
+
+<div class="part"><span>Part A · what you're looking at</span></div>
+
+<p class="panel-label" id="s01">01 · <b>inside the tube</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A sealed tube filled with a light oily liquid. A cup of heavy coloured liquid at the top drips through a small hole; the drops sink to a pool at the bottom while blobs of oil rise the other way.">
+  <defs>
+    <marker id="lead" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <path d="M0,0 L6,2.5 L0,5 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- ════════ the tube ════════ -->
+  <rect x="118" y="26" width="124" height="380" rx="16" fill="#0e1626" stroke="#475569" stroke-width="2.5"/>
+  <rect x="122" y="30" width="116" height="372" rx="13" fill="#2a2210" opacity="0.55"/>
+  <rect x="128" y="18" width="104" height="13" rx="6" fill="#334155"/>
+  <rect x="128" y="401" width="104" height="13" rx="6" fill="#334155"/>
+
+  <!-- ════════ upper cup of the heavy liquid ════════ -->
+  <path d="M130,46 L230,46 L190,114 L190,134 L170,134 L170,114 Z" fill="#0c2036" stroke="#38bdf8" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M139,62 L221,62 L187,114 L187,131 L173,131 L173,114 Z" fill="#38bdf8" opacity="0.42"/>
+  <line x1="139" y1="62" x2="221" y2="62" stroke="#7dd3fc" stroke-width="1.6"/>
+
+  <!-- drop forming at the hole -->
+  <ellipse cx="180" cy="141" rx="6.5" ry="7.5" fill="#38bdf8" opacity="0.9"/>
+
+  <!-- ════════ sinking drops ════════ -->
+  <g transform="translate(180,158)"><g class="sink">
+    <ellipse cx="0" cy="0" rx="8.5" ry="9.5" fill="#38bdf8"/>
+    <ellipse cx="-2.6" cy="-3" rx="2.4" ry="2" fill="#bae6fd" opacity="0.75"/>
+  </g></g>
+  <g transform="translate(180,158)"><g class="sink d2">
+    <ellipse cx="0" cy="0" rx="8" ry="9" fill="#38bdf8"/>
+    <ellipse cx="-2.4" cy="-3" rx="2.2" ry="1.9" fill="#bae6fd" opacity="0.75"/>
+  </g></g>
+  <g transform="translate(180,158)"><g class="sink d3">
+    <ellipse cx="0" cy="0" rx="8.8" ry="9.8" fill="#38bdf8"/>
+    <ellipse cx="-2.7" cy="-3" rx="2.4" ry="2" fill="#bae6fd" opacity="0.75"/>
+  </g></g>
+  <g transform="translate(180,158)"><g class="sink d4">
+    <ellipse cx="0" cy="0" rx="7.6" ry="8.6" fill="#38bdf8"/>
+    <ellipse cx="-2.3" cy="-2.8" rx="2.1" ry="1.8" fill="#bae6fd" opacity="0.75"/>
+  </g></g>
+
+  <!-- ════════ rising blobs of oil ════════ -->
+  <g transform="translate(144,326)"><g class="climb">
+    <ellipse cx="0" cy="0" rx="7.5" ry="8.5" fill="#fbbf24" opacity="0.85"/>
+  </g></g>
+  <g transform="translate(216,326)"><g class="climb d3">
+    <ellipse cx="0" cy="0" rx="6.5" ry="7.5" fill="#fbbf24" opacity="0.85"/>
+  </g></g>
+  <g transform="translate(150,326)"><g class="climb d2">
+    <ellipse cx="0" cy="0" rx="5" ry="6" fill="#f59e0b" opacity="0.8"/>
+  </g></g>
+
+  <!-- ════════ the pool ════════ -->
+  <path d="M122,335 L238,335 L238,389 Q238,402 225,402 L135,402 Q122,402 122,389 Z" fill="#0c2036"/>
+  <path d="M122,335 L238,335 L238,389 Q238,402 225,402 L135,402 Q122,402 122,389 Z" fill="#38bdf8" opacity="0.35"/>
+  <line x1="122" y1="335" x2="238" y2="335" stroke="#7dd3fc" stroke-width="2"/>
+
+  <!-- ════════ labels ════════ -->
+  <line x1="286" y1="24" x2="240" y2="24" stroke="#475569" stroke-width="1" marker-end="url(#lead)"/>
+  <text x="292" y="21" class="label" fill="#94a3b8" font-size="11">sealed at the factory —</text>
+  <text x="292" y="35" class="label" fill="#64748b" font-size="11">nothing in, nothing out</text>
+
+  <line x1="286" y1="76" x2="234" y2="62" stroke="#475569" stroke-width="1" marker-end="url(#lead)"/>
+  <text x="292" y="66" class="label" fill="#7dd3fc" font-size="11">a cup of the HEAVY</text>
+  <text x="292" y="80" class="label" fill="#64748b" font-size="11">liquid, waiting its turn</text>
+
+  <line x1="286" y1="134" x2="196" y2="134" stroke="#475569" stroke-width="1" marker-end="url(#lead)"/>
+  <text x="292" y="124" class="label" fill="#7dd3fc" font-size="11">a small hole lets it out</text>
+  <text x="292" y="138" class="label" fill="#64748b" font-size="11">one drop at a time</text>
+
+  <line x1="286" y1="214" x2="196" y2="214" stroke="#475569" stroke-width="1" marker-end="url(#lead)"/>
+  <text x="292" y="204" class="label" fill="#7dd3fc" font-size="11">drops sink…</text>
+  <text x="292" y="218" class="label" fill="#64748b" font-size="11">slowly, and stay round</text>
+
+  <line x1="112" y1="250" x2="134" y2="250" stroke="#475569" stroke-width="1" marker-end="url(#lead)"/>
+  <text x="106" y="233" text-anchor="end" class="label" fill="#fbbf24" font-size="11">the LIGHT oily</text>
+  <text x="106" y="247" text-anchor="end" class="label" fill="#64748b" font-size="11">liquid fills</text>
+  <text x="106" y="261" text-anchor="end" class="label" fill="#64748b" font-size="11">the rest —</text>
+  <text x="106" y="275" text-anchor="end" class="label" fill="#64748b" font-size="11">and climbs past</text>
+
+  <line x1="286" y1="334" x2="244" y2="334" stroke="#475569" stroke-width="1" marker-end="url(#lead)"/>
+  <text x="292" y="330" class="label" fill="#a78bfa" font-size="11">a sharp boundary:</text>
+  <text x="292" y="344" class="label" fill="#64748b" font-size="11">they never blend</text>
+
+  <line x1="286" y1="382" x2="244" y2="382" stroke="#475569" stroke-width="1" marker-end="url(#lead)"/>
+  <text x="292" y="378" class="label" fill="#7dd3fc" font-size="11">the heavy liquid piles</text>
+  <text x="292" y="392" class="label" fill="#64748b" font-size="11">up at the bottom</text>
+</svg>
+</div>
+<p class="cap">A real bubbler may have several shelves and cups instead of one — but this is the whole machine: two liquids, gravity, and a small hole.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text">There are <strong>exactly two liquids</strong> in there, and nothing else. One is oily and light. One is watery and heavy. There is no motor, no battery, no pump — the only thing that ever happens to a bubbler is that somebody turns it upside down.</p>
+  </div>
+  <div class="step">
+    <span class="step-num oil">02</span>
+    <p class="step-text">They will <strong>not mix</strong>, no matter how long you wait or how hard you shake it. Shake it and you get a cloudy mess of tiny droplets — then, minute by minute, the droplets find each other and the two clean layers come back. That's <em>polarity</em>, and it's Part B.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">03</span>
+    <p class="step-text">One of them is <strong>heavier for its size</strong> than the other, so it always ends up underneath. That's <em>density</em>, and it's Part C.</p>
+  </div>
+  <div class="step">
+    <span class="step-num skn">04</span>
+    <p class="step-text">The heavy liquid travels as <strong>round drops with a crisp edge</strong> instead of a spreading smear. That's <em>surface tension</em>, and it's Part D.</p>
+  </div>
+</div>
+
+<div class="callout key">
+  <strong>The whole toy in one line:</strong> you lift the heavy liquid to the top with your arm, and gravity spends the next few minutes
+  putting it back down — drop by drop, through a liquid it cannot dissolve into.
+</div>
+
+<p class="panel-label" id="s02">02 · <b>the flip — an upside-down stack</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three stages: at rest the heavy liquid sits at the bottom; flipped, it sits on top and is unstable; then it swaps back down while the light liquid rises.">
+  <defs>
+    <marker id="ar-wh" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#e2e8f0"/>
+    </marker>
+    <marker id="ar-bl" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#38bdf8"/>
+    </marker>
+    <marker id="ar-am" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <!-- ── stage 1 : settled ── -->
+  <rect x="20" y="40" width="90" height="170" rx="12" fill="#0e1626" stroke="#475569" stroke-width="2"/>
+  <rect x="24" y="44" width="82" height="100" rx="9" fill="#2a2210" opacity="0.7"/>
+  <rect x="24" y="144" width="82" height="62" rx="9" fill="#0c2036"/>
+  <rect x="24" y="144" width="82" height="62" rx="9" fill="#38bdf8" opacity="0.4"/>
+  <line x1="24" y1="144" x2="106" y2="144" stroke="#7dd3fc" stroke-width="2"/>
+  <text x="65" y="28" text-anchor="middle" class="label" fill="#4ade80" font-size="12" font-weight="700">SETTLED</text>
+  <text x="65" y="230" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">heavy at the bottom</text>
+  <text x="65" y="243" text-anchor="middle" class="label" fill="#4ade80" font-size="10.5">nothing moves</text>
+
+  <!-- ── arrow : you flip it ── -->
+  <path d="M122,120 L158,120" stroke="#e2e8f0" stroke-width="1.6" marker-end="url(#ar-wh)"/>
+  <text x="140" y="110" text-anchor="middle" class="label" fill="#e2e8f0" font-size="10">flip</text>
+
+  <!-- ── stage 2 : just flipped ── -->
+  <rect x="172" y="40" width="90" height="170" rx="12" fill="#0e1626" stroke="#475569" stroke-width="2"/>
+  <rect x="176" y="44" width="82" height="62" rx="9" fill="#0c2036"/>
+  <rect x="176" y="44" width="82" height="62" rx="9" fill="#38bdf8" opacity="0.4"/>
+  <rect x="176" y="106" width="82" height="100" rx="9" fill="#2a2210" opacity="0.7"/>
+  <line x1="176" y1="106" x2="258" y2="106" stroke="#a78bfa" stroke-width="2" class="blink"/>
+  <text x="217" y="28" text-anchor="middle" class="label" fill="#f87171" font-size="12" font-weight="700">FLIPPED</text>
+  <text x="217" y="230" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">heavy on top of light</text>
+  <text x="217" y="243" text-anchor="middle" class="label" fill="#f87171" font-size="10.5">unstable — it must swap</text>
+
+  <!-- ── arrow : gravity sorts it ── -->
+  <path d="M274,120 L310,120" stroke="#e2e8f0" stroke-width="1.6" marker-end="url(#ar-wh)"/>
+  <text x="292" y="110" text-anchor="middle" class="label" fill="#e2e8f0" font-size="10">wait</text>
+
+  <!-- ── stage 3 : swapping ── -->
+  <rect x="324" y="40" width="90" height="170" rx="12" fill="#0e1626" stroke="#475569" stroke-width="2"/>
+  <rect x="328" y="44" width="82" height="158" rx="9" fill="#2a2210" opacity="0.55"/>
+  <rect x="328" y="44" width="82" height="26" rx="9" fill="#38bdf8" opacity="0.4"/>
+  <rect x="328" y="176" width="82" height="26" rx="9" fill="#38bdf8" opacity="0.4"/>
+  <ellipse cx="362" cy="96"  rx="7" ry="8" fill="#38bdf8"/>
+  <ellipse cx="362" cy="134" rx="7" ry="8" fill="#38bdf8"/>
+  <ellipse cx="362" cy="166" rx="6" ry="7" fill="#38bdf8"/>
+  <ellipse cx="392" cy="150" rx="6" ry="7" fill="#fbbf24" opacity="0.9"/>
+  <ellipse cx="392" cy="112" rx="5" ry="6" fill="#fbbf24" opacity="0.9"/>
+  <path d="M362,80 L362,186" stroke="#38bdf8" stroke-width="1" stroke-dasharray="2 5" opacity="0.5" marker-end="url(#ar-bl)"/>
+  <path d="M392,166 L392,96" stroke="#fbbf24" stroke-width="1" stroke-dasharray="2 5" opacity="0.5" marker-end="url(#ar-am)"/>
+  <text x="369" y="28" text-anchor="middle" class="label" fill="#7dd3fc" font-size="12" font-weight="700">SWAPPING</text>
+  <text x="369" y="230" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">down one way,</text>
+  <text x="369" y="243" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">up the other</text>
+</svg>
+</div>
+<p class="cap">Flipping it doesn't start a machine. It stacks the liquids the wrong way round, and everything after that is gravity undoing your work.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text"><strong>Heavy-on-the-bottom is the restful arrangement.</strong> Left alone, any two liquids that won't mix will settle heavy-under-light and stay there forever. Nothing is pushing them; it is simply the arrangement with the least energy in it.</p>
+  </div>
+  <div class="step">
+    <span class="step-num frc">02</span>
+    <p class="step-text"><strong>Turning it over is you doing work.</strong> Your arm lifts the heavy liquid to the top of the tube. That takes real energy, and the tube now stores it, exactly like a wound-up spring or a lifted weight.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">03</span>
+    <p class="step-text"><strong>A heavy layer sitting on a light one is unstable.</strong> In an empty pipe it would collapse in a chaotic, sloshing rush. The cups, holes and shelves inside a bubbler are there to <em>slow that collapse down</em> and turn it into a tidy queue of drops.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">04</span>
+    <p class="step-text"><strong>Nothing is lost, so it stops.</strong> When the last drop has landed, the stack is restful again and the tube goes still — until somebody lifts it back up. The energy you put in came out as a tiny amount of heat in the liquid, warming it by roughly a <em>thousandth of a degree</em>.</p>
+  </div>
+</div>
+
+<div class="part"><span>Part B · polarity</span></div>
+
+<p class="panel-label" id="s03">03 · <b>water is a lopsided molecule</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A water molecule has oxygen pulling the shared electrons, giving it a slightly negative end and two slightly positive hydrogen ends, so water molecules grip each other.">
+  <defs>
+    <marker id="pull" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#f87171"/>
+    </marker>
+  </defs>
+
+  <!-- ════════ PANEL A · one molecule ════════ -->
+  <text x="14" y="16" class="label" fill="#7dd3fc" font-size="12" font-weight="700">ONE WATER MOLECULE</text>
+  <rect x="8" y="26" width="214" height="222" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <!-- bonds -->
+  <line x1="115" y1="126" x2="70" y2="86" stroke="#475569" stroke-width="7" stroke-linecap="round"/>
+  <line x1="115" y1="126" x2="160" y2="86" stroke="#475569" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- electrons being dragged toward the oxygen -->
+  <path d="M84,98 L104,116" stroke="#f87171" stroke-width="2" marker-end="url(#pull)" class="blink"/>
+  <path d="M146,98 L126,116" stroke="#f87171" stroke-width="2" marker-end="url(#pull)" class="blink"/>
+
+  <!-- atoms -->
+  <circle cx="115" cy="126" r="31" fill="#0ea5e9"/>
+  <text x="115" y="133" text-anchor="middle" class="label" fill="#052030" font-size="20" font-weight="700">O</text>
+  <circle cx="70" cy="86" r="17" fill="#cbd5e1"/>
+  <text x="70" y="92" text-anchor="middle" class="label" fill="#0a0e1a" font-size="13" font-weight="700">H</text>
+  <circle cx="160" cy="86" r="17" fill="#cbd5e1"/>
+  <text x="160" y="92" text-anchor="middle" class="label" fill="#0a0e1a" font-size="13" font-weight="700">H</text>
+
+  <!-- charges -->
+  <text x="46" y="62" text-anchor="middle" class="label" fill="#f87171" font-size="14" font-weight="700">δ+</text>
+  <text x="184" y="62" text-anchor="middle" class="label" fill="#f87171" font-size="14" font-weight="700">δ+</text>
+  <text x="115" y="186" text-anchor="middle" class="label" fill="#38bdf8" font-size="14" font-weight="700">δ−</text>
+
+  <text x="115" y="210" text-anchor="middle" class="label" fill="#94a3b8" font-size="11">oxygen hogs the shared electrons,</text>
+  <text x="115" y="224" text-anchor="middle" class="label" fill="#94a3b8" font-size="11">so one end goes slightly negative</text>
+  <text x="115" y="240" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">bent, so the ends don't cancel</text>
+
+  <!-- ════════ PANEL B · molecules gripping each other ════════ -->
+  <text x="238" y="16" class="label" fill="#7dd3fc" font-size="12" font-weight="700">…SO THEY GRIP EACH OTHER</text>
+  <rect x="232" y="26" width="220" height="222" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <!-- hydrogen bonds, behind the molecules: each joins a δ+ hydrogen of one
+       molecule to the δ− oxygen of another. The middle molecule shows the
+       usual arrangement: its oxygen accepts two, its hydrogens donate two. -->
+  <g stroke="#a78bfa" stroke-width="2" stroke-dasharray="3 4" opacity="0.9">
+    <line x1="319" y1="84"  x2="336" y2="126"/>
+    <line x1="375" y1="94"  x2="336" y2="126"/>
+    <line x1="317" y1="140" x2="292" y2="180"/>
+    <line x1="355" y1="140" x2="396" y2="176"/>
+  </g>
+
+  <!-- two molecules reaching down into the middle one -->
+  <g class="jiggle"><g transform="translate(300,70)">
+    <line x1="0" y1="0" x2="-19" y2="14" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="0" y1="0" x2="19" y2="14" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="13" fill="#0ea5e9"/>
+    <circle cx="-19" cy="14" r="7" fill="#cbd5e1"/>
+    <circle cx="19" cy="14" r="7" fill="#cbd5e1"/>
+  </g></g>
+  <g class="jiggle j2"><g transform="translate(394,80)">
+    <line x1="0" y1="0" x2="-19" y2="14" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="0" y1="0" x2="19" y2="14" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="13" fill="#0ea5e9"/>
+    <circle cx="-19" cy="14" r="7" fill="#cbd5e1"/>
+    <circle cx="19" cy="14" r="7" fill="#cbd5e1"/>
+  </g></g>
+
+  <!-- the middle one: takes two, gives two -->
+  <g class="jiggle j3"><g transform="translate(336,126)">
+    <line x1="0" y1="0" x2="-19" y2="14" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="0" y1="0" x2="19" y2="14" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="13" fill="#0ea5e9"/>
+    <circle cx="-19" cy="14" r="7" fill="#cbd5e1"/>
+    <circle cx="19" cy="14" r="7" fill="#cbd5e1"/>
+  </g></g>
+
+  <!-- and two more below, receiving -->
+  <g class="jiggle j4"><g transform="translate(292,180)">
+    <line x1="0" y1="0" x2="-19" y2="-14" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="0" y1="0" x2="19" y2="-14" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="13" fill="#0ea5e9"/>
+    <circle cx="-19" cy="-14" r="7" fill="#cbd5e1"/>
+    <circle cx="19" cy="-14" r="7" fill="#cbd5e1"/>
+  </g></g>
+  <g class="jiggle j2"><g transform="translate(396,176)">
+    <line x1="0" y1="0" x2="-19" y2="-14" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="0" y1="0" x2="19" y2="-14" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="13" fill="#0ea5e9"/>
+    <circle cx="-19" cy="-14" r="7" fill="#cbd5e1"/>
+    <circle cx="19" cy="-14" r="7" fill="#cbd5e1"/>
+  </g></g>
+
+  <text x="342" y="224" text-anchor="middle" class="label" fill="#a78bfa" font-size="11">δ+ hydrogens reach for δ− oxygens</text>
+  <text x="342" y="240" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">these grips are hydrogen bonds</text>
+</svg>
+</div>
+<p class="cap">Polar means "has a positive end and a negative end". Water is the classic example — and that one fact runs the whole toy.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num wat">01</span>
+    <p class="step-text"><strong>Atoms share electrons unfairly.</strong> In a water molecule the oxygen atom pulls the shared electrons much harder than the two hydrogens do. The electrons spend more time near the oxygen, so that end is left <em>slightly negative</em> and the hydrogen ends are left <em>slightly positive</em>. "Slightly" is what the little δ means.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">02</span>
+    <p class="step-text"><strong>The shape matters too.</strong> Water is bent, like a boomerang, not straight. If it were straight the two pulls would point opposite ways and cancel out. Bent, they add up — so the whole molecule behaves like a minuscule magnet with a plus end and a minus end.</p>
+  </div>
+  <div class="step">
+    <span class="step-num skn">03</span>
+    <p class="step-text"><strong>So water molecules cling to each other.</strong> The plus end of one reaches for the minus end of the next, over and over, in every direction. Water isn't a crowd of loose molecules — it's a wobbling net, re-linking itself trillions of times a second.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">04</span>
+    <p class="step-text">Each grip is weak — about <strong>one twentieth</strong> the strength of the bonds holding a molecule together — but there are an unimaginable number of them. That's why water is a liquid at all at room temperature, why it beads on a car bonnet, and why it will shortly refuse to let any oil in.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s04">04 · <b>oil is smooth and even</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 246" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="An oil molecule is a long chain of carbon and hydrogen with charge spread evenly, so it has no positive or negative end, unlike water which behaves like a tiny magnet.">
+  <!-- ════════ the chain ════════ -->
+  <text x="14" y="16" class="label" fill="#fbbf24" font-size="12" font-weight="700">ONE OIL MOLECULE — A CHAIN OF C AND H</text>
+  <rect x="8" y="26" width="444" height="112" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <!-- even, featureless charge cloud -->
+  <path d="M34,82 Q34,46 62,46 L400,46 Q428,46 428,82 Q428,118 400,118 L62,118 Q34,118 34,82 Z"
+        fill="#fbbf24" opacity="0.1"/>
+
+  <!-- zig-zag backbone -->
+  <polyline points="56,96 90,68 124,96 158,68 192,96 226,68 260,96 294,68 328,96 362,68 396,96"
+            fill="none" stroke="#64748b" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+  <g fill="#475569">
+    <circle cx="56" cy="96" r="9"/><circle cx="90" cy="68" r="9"/><circle cx="124" cy="96" r="9"/>
+    <circle cx="158" cy="68" r="9"/><circle cx="192" cy="96" r="9"/><circle cx="226" cy="68" r="9"/>
+    <circle cx="260" cy="96" r="9"/><circle cx="294" cy="68" r="9"/><circle cx="328" cy="96" r="9"/>
+    <circle cx="362" cy="68" r="9"/><circle cx="396" cy="96" r="9"/>
+  </g>
+  <!-- a few hydrogens, to show the chain is wrapped in them -->
+  <g fill="#cbd5e1">
+    <circle cx="90" cy="52" r="5"/><circle cx="158" cy="52" r="5"/><circle cx="226" cy="52" r="5"/>
+    <circle cx="294" cy="52" r="5"/><circle cx="362" cy="52" r="5"/>
+    <circle cx="56" cy="112" r="5"/><circle cx="124" cy="112" r="5"/><circle cx="192" cy="112" r="5"/>
+    <circle cx="260" cy="112" r="5"/><circle cx="328" cy="112" r="5"/><circle cx="396" cy="112" r="5"/>
+  </g>
+  <text x="418" y="72" class="label" fill="#64748b" font-size="11">C</text>
+  <text x="418" y="112" class="label" fill="#94a3b8" font-size="11">H</text>
+  <text x="230" y="134" text-anchor="middle" class="label" fill="#fbbf24" font-size="11">charge spread evenly all the way along — no + end, no − end</text>
+
+  <!-- ════════ the magnet test ════════ -->
+  <text x="14" y="166" class="label" fill="#7dd3fc" font-size="12" font-weight="700">THE MAGNET TEST</text>
+  <rect x="8" y="176" width="218" height="62" rx="10" fill="#0c2036" stroke="#38bdf855"/>
+  <rect x="26" y="196" width="52" height="24" rx="5" fill="#f87171"/>
+  <rect x="78" y="196" width="52" height="24" rx="5" fill="#38bdf8"/>
+  <text x="52" y="213" text-anchor="middle" class="label" fill="#2a1414" font-size="14" font-weight="700">+</text>
+  <text x="104" y="213" text-anchor="middle" class="label" fill="#052030" font-size="14" font-weight="700">−</text>
+  <text x="142" y="203" class="label" fill="#7dd3fc" font-size="11">water:</text>
+  <text x="142" y="218" class="label" fill="#64748b" font-size="11">has poles</text>
+
+  <rect x="234" y="176" width="218" height="62" rx="10" fill="#2a2210" stroke="#fbbf2455"/>
+  <rect x="252" y="196" width="104" height="24" rx="5" fill="#64748b"/>
+  <text x="304" y="213" text-anchor="middle" class="label" fill="#0a0e1a" font-size="11" font-weight="700">no poles</text>
+  <text x="368" y="203" class="label" fill="#fbbf24" font-size="11">oil:</text>
+  <text x="368" y="218" class="label" fill="#64748b" font-size="11">plain stick</text>
+</svg>
+</div>
+<p class="cap">Non-polar means "no ends". An oil molecule is carbon and hydrogen all the way along, sharing electrons fairly, with nothing sticking out for water to grab.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num oil">01</span>
+    <p class="step-text"><strong>Carbon and hydrogen pull almost equally.</strong> Neither one wins the tug-of-war for the electrons, so there's no lopsided end anywhere on the molecule. Oil isn't a magnet; it's a plain grey stick.</p>
+  </div>
+  <div class="step">
+    <span class="step-num oil">02</span>
+    <p class="step-text"><strong>Oil molecules do still stick together — faintly.</strong> Electrons jiggle about, so for a split second one part of a molecule is a hair more negative than another, and its neighbour feels it. These flickering grips are real, but they're far weaker than water's.</p>
+  </div>
+  <div class="step">
+    <span class="step-num oil">03</span>
+    <p class="step-text"><strong>That weakness is why oil feels slippery and runny</strong> compared to a sticky syrup, and it's also why it will lose the coming argument with water — and end up pushed out of the way.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s05">05 · <b>like sticks to like — so oil gets squeezed out</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 214" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Shaken, oil breaks into scattered droplets among the water. Water molecules pull back together and squeeze the droplets into each other until one oil layer floats on top.">
+  <defs>
+    <marker id="ar-wt" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+
+  <!-- ── stage 1 ── -->
+  <text x="14" y="16" class="label" fill="#94a3b8" font-size="11" font-weight="700">1 · SHAKEN</text>
+  <rect x="8" y="24" width="134" height="150" rx="10" fill="#0c2036" stroke="#38bdf855"/>
+  <g fill="#fbbf24" opacity="0.9">
+    <circle cx="40" cy="56" r="9"/><circle cx="96" cy="48" r="7"/><circle cx="72" cy="84" r="11"/>
+    <circle cx="118" cy="86" r="8"/><circle cx="36" cy="116" r="7"/><circle cx="86" cy="130" r="10"/>
+    <circle cx="118" cy="148" r="6"/><circle cx="52" cy="152" r="8"/>
+  </g>
+  <text x="75" y="192" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">oil in scattered</text>
+  <text x="75" y="205" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">droplets · cloudy</text>
+
+  <!-- ── stage 2 ── -->
+  <text x="166" y="16" class="label" fill="#94a3b8" font-size="11" font-weight="700">2 · WATER CLOSES IN</text>
+  <rect x="160" y="24" width="134" height="150" rx="10" fill="#0c2036" stroke="#38bdf855"/>
+  <!-- squeezing arrows -->
+  <g stroke="#38bdf8" stroke-width="2" stroke-linecap="round" class="squeeze" marker-end="url(#ar-wt)">
+    <line x1="176" y1="60" x2="196" y2="72"/>
+    <line x1="278" y1="60" x2="258" y2="72"/>
+    <line x1="176" y1="140" x2="196" y2="128"/>
+    <line x1="278" y1="140" x2="258" y2="128"/>
+    <line x1="227" y1="36" x2="227" y2="56"/>
+    <line x1="227" y1="164" x2="227" y2="144"/>
+  </g>
+  <g fill="#fbbf24" opacity="0.9">
+    <circle cx="212" cy="88" r="14"/><circle cx="240" cy="96" r="13"/><circle cx="226" cy="116" r="12"/>
+    <circle cx="246" cy="72" r="8"/>
+  </g>
+  <text x="227" y="192" text-anchor="middle" class="label" fill="#38bdf8" font-size="10.5">water grips water and</text>
+  <text x="227" y="205" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">shoulders the oil together</text>
+
+  <!-- ── stage 3 ── -->
+  <text x="318" y="16" class="label" fill="#94a3b8" font-size="11" font-weight="700">3 · SETTLED</text>
+  <rect x="312" y="24" width="140" height="150" rx="10" fill="#0c2036" stroke="#38bdf855"/>
+  <path d="M312,34 h140 v44 h-140 z" fill="#fbbf24" opacity="0.85"/>
+  <rect x="312" y="24" width="140" height="12" rx="10" fill="#fbbf24" opacity="0.85"/>
+  <line x1="312" y1="78" x2="452" y2="78" stroke="#a78bfa" stroke-width="2.5"/>
+  <text x="382" y="58" text-anchor="middle" class="label" fill="#2a2210" font-size="11" font-weight="700">ALL THE OIL</text>
+  <text x="382" y="130" text-anchor="middle" class="label" fill="#7dd3fc" font-size="11" font-weight="700">ALL THE WATER</text>
+  <text x="382" y="192" text-anchor="middle" class="label" fill="#a78bfa" font-size="10.5">one flat boundary —</text>
+  <text x="382" y="205" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">the smallest possible</text>
+
+</svg>
+</div>
+<p class="cap">Shake a bubbler and you run this film from left to right — it always ends the same way.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num skn">01</span>
+    <p class="step-text"><strong>To mix, water would have to let go of water.</strong> Slipping an oil molecule into the water means prising apart a patch of that hydrogen-bonded net — and the oil gives nothing back, because it has no ends to grip with. The swap is a bad deal, so it doesn't happen.</p>
+  </div>
+  <div class="step">
+    <span class="step-num skn">02</span>
+    <p class="step-text"><strong>So the water shuts the oil out</strong> and the oil, having nowhere else to go, gathers with its own kind. Chemists put it in four words: <em>like dissolves like</em>. Polar dissolves polar, non-polar dissolves non-polar, and across that line, almost nothing.</p>
+  </div>
+  <div class="step">
+    <span class="step-num skn">03</span>
+    <p class="step-text"><strong>Small droplets merge into bigger ones</strong> because every merge shrinks the amount of unwanted oil-and-water contact. The end point is one single flat boundary — the least contact the two can possibly have. That flat line in your bubbler is the finish line.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">04</span>
+    <p class="step-text"><strong>Soap breaks the rule</strong> — and shows how strong it is. A soap molecule is a cheat: a water-loving head on an oil-loving tail. It wraps each oil droplet in a coat of water-friendly heads, and suddenly the grease on a plate can leave with the water. Your bubbler contains no soap, which is exactly why it still works years later.</p>
+  </div>
+</div>
+
+<div class="callout myth">
+  <strong>The myth:</strong> "oil and water repel each other." They don't. Two oil molecules and a water molecule attract each other perfectly politely — just feebly.
+  <em>Water simply prefers its own company so much more</em> that the oil gets crowded out. Being left out is not the same as being pushed away.
+</div>
+
+<p class="panel-label" id="s06">06 · <b>the colour proves it</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A water-loving dye colours only the watery layer; an oil-loving dye colours only the oily layer. Each dye picks one side and never crosses.">
+  <!-- jar 1 -->
+  <text x="14" y="16" class="label" fill="#7dd3fc" font-size="11.5" font-weight="700">DROP IN A WATER-LOVING DYE</text>
+  <rect x="26" y="28" width="86" height="130" rx="8" fill="#0e1626" stroke="#475569" stroke-width="2"/>
+  <rect x="30" y="32" width="78" height="54" rx="6" fill="#2a2210" opacity="0.8"/>
+  <rect x="30" y="86" width="78" height="68" rx="6" fill="#38bdf8" opacity="0.75"/>
+  <line x1="30" y1="86" x2="108" y2="86" stroke="#a78bfa" stroke-width="2"/>
+  <text x="69" y="64" text-anchor="middle" class="label" fill="#fbbf24" font-size="10.5">still clear</text>
+  <text x="69" y="126" text-anchor="middle" class="label" fill="#052030" font-size="11" font-weight="700">BLUE</text>
+  <text x="69" y="176" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">the dye is polar,</text>
+  <text x="69" y="189" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">so it stays in water</text>
+
+  <!-- jar 2 -->
+  <text x="150" y="16" class="label" fill="#fbbf24" font-size="11.5" font-weight="700">DROP IN AN OIL-LOVING DYE</text>
+  <rect x="162" y="28" width="86" height="130" rx="8" fill="#0e1626" stroke="#475569" stroke-width="2"/>
+  <rect x="166" y="32" width="78" height="54" rx="6" fill="#f43f5e" opacity="0.7"/>
+  <rect x="166" y="86" width="78" height="68" rx="6" fill="#0c2036"/>
+  <line x1="166" y1="86" x2="244" y2="86" stroke="#a78bfa" stroke-width="2"/>
+  <text x="205" y="64" text-anchor="middle" class="label" fill="#2a1414" font-size="11" font-weight="700">RED</text>
+  <text x="205" y="126" text-anchor="middle" class="label" fill="#7dd3fc" font-size="10.5">still clear</text>
+  <text x="205" y="176" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">this dye is non-polar,</text>
+  <text x="205" y="189" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">so it stays in the oil</text>
+
+  <!-- verdict -->
+  <rect x="286" y="28" width="166" height="130" rx="10" fill="#1a1330" stroke="#4c1d9566"/>
+  <text x="369" y="56" text-anchor="middle" class="label" fill="#c4b5fd" font-size="12" font-weight="700">THE GIVEAWAY</text>
+  <text x="369" y="82" text-anchor="middle" class="label" fill="#a78bfa" font-size="10.5">the colour never leaks</text>
+  <text x="369" y="97" text-anchor="middle" class="label" fill="#a78bfa" font-size="10.5">across the boundary</text>
+  <text x="369" y="120" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">after months on a shelf,</text>
+  <text x="369" y="135" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">the clear one is still clear</text>
+</svg>
+</div>
+<p class="cap">You can check polarity with your eyes: a dye dissolves in the layer it matches, and only that one.</p>
+
+<div class="callout">
+  <strong>Why your bubbler is coloured at all:</strong> a drop of clear liquid falling through another clear liquid is nearly invisible —
+  the two bend light almost the same way. Dye one of them and every drop, every rising blob and the boundary itself
+  suddenly has an edge you can follow. <em>The colour isn't decoration; it's what makes the physics visible.</em>
+</div>
+
+<div class="part"><span>Part C · density</span></div>
+
+<p class="panel-label" id="s07">07 · <b>density is "how much stuff is packed in"</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 244" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two identical cubes: one of water holds more matter and weighs one gram, the oil cube weighs about 0.85 grams. Liquids that do not mix stack themselves in order of density.">
+  <!-- ════════ same box, different contents ════════ -->
+  <text x="14" y="16" class="label" fill="#94a3b8" font-size="11.5" font-weight="700">SAME BOX · DIFFERENT WEIGHT</text>
+  <rect x="8" y="26" width="250" height="204" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <!-- water cube -->
+  <rect x="30" y="50" width="82" height="82" rx="6" fill="#0c2036" stroke="#38bdf8" stroke-width="2"/>
+  <g fill="#38bdf8">
+    <circle cx="44" cy="64" r="5"/><circle cx="60" cy="62" r="5"/><circle cx="76" cy="65" r="5"/><circle cx="92" cy="62" r="5"/>
+    <circle cx="42" cy="80" r="5"/><circle cx="58" cy="79" r="5"/><circle cx="75" cy="81" r="5"/><circle cx="93" cy="78" r="5"/>
+    <circle cx="45" cy="96" r="5"/><circle cx="61" cy="95" r="5"/><circle cx="77" cy="97" r="5"/><circle cx="94" cy="95" r="5"/>
+    <circle cx="43" cy="114" r="5"/><circle cx="59" cy="113" r="5"/><circle cx="76" cy="115" r="5"/><circle cx="92" cy="112" r="5"/>
+  </g>
+  <text x="71" y="150" text-anchor="middle" class="label" fill="#7dd3fc" font-size="11" font-weight="700">1 cm³ WATER</text>
+  <text x="71" y="168" text-anchor="middle" class="label" fill="#e2e8f0" font-size="13" font-weight="700">1.00 g</text>
+  <text x="71" y="186" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">16 bits of stuff</text>
+
+  <!-- oil cube -->
+  <rect x="152" y="50" width="82" height="82" rx="6" fill="#2a2210" stroke="#fbbf24" stroke-width="2"/>
+  <g fill="#fbbf24">
+    <circle cx="168" cy="66" r="5"/><circle cx="192" cy="62" r="5"/><circle cx="216" cy="68" r="5"/>
+    <circle cx="166" cy="90" r="5"/><circle cx="194" cy="88" r="5"/><circle cx="218" cy="92" r="5"/>
+    <circle cx="170" cy="114" r="5"/><circle cx="196" cy="112" r="5"/><circle cx="220" cy="116" r="5"/>
+    <circle cx="182" cy="76" r="5"/><circle cx="206" cy="102" r="5"/><circle cx="180" cy="102" r="5"/>
+    <circle cx="204" cy="76" r="5"/>
+  </g>
+  <text x="193" y="150" text-anchor="middle" class="label" fill="#fbbf24" font-size="11" font-weight="700">1 cm³ OIL</text>
+  <text x="193" y="168" text-anchor="middle" class="label" fill="#e2e8f0" font-size="13" font-weight="700">≈ 0.85 g</text>
+  <text x="193" y="186" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">13 bits of stuff</text>
+
+  <text x="133" y="214" text-anchor="middle" class="label" fill="#475569" font-size="10.5">the boxes are the same size —</text>
+  <text x="133" y="226" text-anchor="middle" class="label" fill="#475569" font-size="10.5">the oil just fits less matter into it</text>
+
+  <!-- ════════ the density tower ════════ -->
+  <text x="272" y="16" class="label" fill="#94a3b8" font-size="11.5" font-weight="700">THEY SORT THEMSELVES</text>
+  <rect x="266" y="26" width="186" height="204" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <rect x="292" y="44" width="86" height="36" rx="5" fill="#a78bfa" opacity="0.55"/>
+  <text x="335" y="66" text-anchor="middle" class="label" fill="#1a1330" font-size="10.5" font-weight="700">alcohol 0.79</text>
+
+  <rect x="292" y="80" width="86" height="36" fill="#fbbf24" opacity="0.8"/>
+  <text x="335" y="102" text-anchor="middle" class="label" fill="#2a2210" font-size="10.5" font-weight="700">oil 0.85</text>
+
+  <rect x="292" y="116" width="86" height="36" fill="#38bdf8" opacity="0.75"/>
+  <text x="335" y="138" text-anchor="middle" class="label" fill="#052030" font-size="10.5" font-weight="700">water 1.00</text>
+
+  <rect x="292" y="152" width="86" height="38" rx="5" fill="#f59e0b"/>
+  <text x="335" y="176" text-anchor="middle" class="label" fill="#2a1414" font-size="10.5" font-weight="700">honey 1.42</text>
+
+  <line x1="398" y1="48" x2="398" y2="186" stroke="#475569" stroke-width="1.5"/>
+  <path d="M398,186 L394,178 L402,178 Z" fill="#475569"/>
+  <text x="410" y="110" class="label" fill="#64748b" font-size="10.5">heavier</text>
+  <text x="410" y="124" class="label" fill="#64748b" font-size="10.5">↓</text>
+
+  <text x="335" y="212" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">pour them in any order —</text>
+  <text x="335" y="225" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">they end up like this</text>
+</svg>
+</div>
+<p class="cap">Density = weight ÷ size. Numbers here are grams per cubic centimetre, rounded; real oils run from about 0.8 to 0.96.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num wat">01</span>
+    <p class="step-text"><strong>Heavy and light are the wrong words</strong> — a bathtub of oil outweighs a spoonful of water. What matters is weight <em>for a given size</em>. That's density, and comparing densities tells you exactly which liquid ends up on top.</p>
+  </div>
+  <div class="step">
+    <span class="step-num oil">02</span>
+    <p class="step-text"><strong>Oil is less dense than water</strong> for two reasons: its molecules are mostly light carbon and hydrogen, and their long tangled chains can't pack as neatly as water's tight little net of hydrogen bonds. Less stuff per box.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">03</span>
+    <p class="step-text"><strong>Stacking is automatic.</strong> Because the two liquids won't blend (Part B), gravity is free to sort them, and it always reaches the same answer: densest at the bottom. Pour them in backwards and they'll simply trade places while you watch.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s08">08 · <b>the tug-of-war on every drop</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 214" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bars drawn to scale: the drop's weight, the upthrust pushing back, and the small difference left over that is all that actually makes it sink.">
+  <rect x="8" y="26" width="444" height="180" rx="12" fill="#2a2210" opacity="0.4"/>
+  <rect x="8" y="26" width="444" height="180" rx="12" fill="none" stroke="#fbbf2444"/>
+  <text x="20" y="44" class="label" fill="#fbbf24" font-size="11">surrounded by the light oily liquid…</text>
+
+  <!-- the drop itself -->
+  <circle cx="78" cy="118" r="32" fill="#38bdf8"/>
+  <circle cx="68" cy="107" r="8" fill="#bae6fd" opacity="0.6"/>
+  <text x="78" y="176" text-anchor="middle" class="label" fill="#7dd3fc" font-size="11">one heavy drop</text>
+
+  <!-- bars share a baseline so their heights can be compared directly -->
+  <line x1="150" y1="168" x2="440" y2="168" stroke="#334155" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <rect x="176" y="64" width="36" height="104" fill="#f87171"/>
+  <text x="194" y="56" text-anchor="middle" class="label" fill="#f87171" font-size="11" font-weight="700">WEIGHT</text>
+  <text x="194" y="186" text-anchor="middle" class="label" fill="#94a3b8" font-size="10">gravity</text>
+
+  <rect x="252" y="80" width="36" height="88" fill="#4ade80"/>
+  <text x="270" y="72" text-anchor="middle" class="label" fill="#4ade80" font-size="11" font-weight="700">UPTHRUST</text>
+  <text x="270" y="186" text-anchor="middle" class="label" fill="#94a3b8" font-size="10">the oil</text>
+
+  <rect x="328" y="152" width="36" height="16" fill="#a78bfa"/>
+  <text x="346" y="144" text-anchor="middle" class="label" fill="#a78bfa" font-size="11" font-weight="700">LEFT OVER</text>
+  <text x="346" y="186" text-anchor="middle" class="label" fill="#94a3b8" font-size="10">what moves it</text>
+
+  <!-- the subtraction, drawn out: the gap between the two bar tops -->
+  <line x1="214" y1="64" x2="402" y2="64" stroke="#64748b" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="290" y1="80" x2="402" y2="80" stroke="#64748b" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+  <line x1="404" y1="64" x2="404" y2="80" stroke="#a78bfa" stroke-width="2.5"/>
+  <text x="412" y="76" class="label" fill="#a78bfa" font-size="10">gap</text>
+</svg>
+</div>
+<p class="cap">Arrows drawn to scale for a drop of density 1.00 sinking through an oil of 0.85. Flip the two densities over and the leftover arrow points upward instead — that's a rising bubble.</p>
+
+<div class="formula">
+  what's left to move the drop&nbsp; = &nbsp;( <span class="up">heavy density</span> − <span class="dn">light density</span> ) × size of drop × gravity
+  <small>this is Archimedes' principle, written as a subtraction</small>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num frc">01</span>
+    <p class="step-text"><strong>Gravity pulls on the drop</strong> — no surprise. That's the weight arrow, and it depends on how dense the drop's liquid is.</p>
+  </div>
+  <div class="step">
+    <span class="step-num frc">02</span>
+    <p class="step-text"><strong>But the drop is not falling through nothing.</strong> To move down it has to shove oil out of the way, and the oil pushes back, upward, with exactly the weight of the oil that got displaced. That's upthrust — the same reason a beach ball is hard to hold under water.</p>
+  </div>
+  <div class="step">
+    <span class="step-num skn">03</span>
+    <p class="step-text"><strong>The two nearly cancel.</strong> What's left — the <em>difference</em> in the two densities — is all that actually drives the drop downward. Not its weight. The difference.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">04</span>
+    <p class="step-text"><strong>And that's the design secret of the whole toy.</strong> Choose two liquids whose densities are close, and the leftover push becomes tiny. The drop still falls — it just takes its time about it.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s09">09 · <b>the tiny gap is the whole trick</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 252" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The same drop falls quickly through air where the density gap is large, slowly through oil where the gap is small, and not at all when the gap is zero.">
+  <!-- tube 1 : air -->
+  <text x="16" y="16" class="label" fill="#94a3b8" font-size="11" font-weight="700">THROUGH AIR</text>
+  <rect x="14" y="26" width="118" height="164" rx="10" fill="#0e1626" stroke="#334155" stroke-width="1.5"/>
+  <g transform="translate(73,46)"><g class="fall-s" style="animation-duration:1.1s">
+    <ellipse cx="0" cy="0" rx="10" ry="12" fill="#38bdf8"/>
+  </g></g>
+  <g transform="translate(73,46)"><g class="fall-s" style="animation-duration:1.1s;animation-delay:0.55s">
+    <ellipse cx="0" cy="0" rx="10" ry="12" fill="#38bdf8"/>
+  </g></g>
+  <text x="73" y="208" text-anchor="middle" class="label" fill="#e2e8f0" font-size="11" font-weight="700">gap ≈ 1.00</text>
+  <text x="73" y="224" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">keeps all its weight</text>
+  <text x="73" y="240" text-anchor="middle" class="label" fill="#f87171" font-size="10.5">metres per second</text>
+
+  <!-- tube 2 : oil -->
+  <text x="172" y="16" class="label" fill="#fbbf24" font-size="11" font-weight="700">THROUGH OIL</text>
+  <rect x="170" y="26" width="118" height="164" rx="10" fill="#2a2210" opacity="0.55"/>
+  <rect x="170" y="26" width="118" height="164" rx="10" fill="none" stroke="#fbbf2455" stroke-width="1.5"/>
+  <g transform="translate(229,46)"><g class="fall-s" style="animation-duration:5.4s">
+    <ellipse cx="0" cy="0" rx="10" ry="12" fill="#38bdf8"/>
+  </g></g>
+  <g transform="translate(229,46)"><g class="fall-s" style="animation-duration:5.4s;animation-delay:2.7s">
+    <ellipse cx="0" cy="0" rx="10" ry="12" fill="#38bdf8"/>
+  </g></g>
+  <text x="229" y="208" text-anchor="middle" class="label" fill="#e2e8f0" font-size="11" font-weight="700">gap ≈ 0.15</text>
+  <text x="229" y="224" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">keeps a seventh of it</text>
+  <text x="229" y="240" text-anchor="middle" class="label" fill="#4ade80" font-size="10.5">centimetres per second</text>
+
+  <!-- tube 3 : no gap -->
+  <text x="328" y="16" class="label" fill="#a78bfa" font-size="11" font-weight="700">IF THE GAP WERE 0</text>
+  <rect x="326" y="26" width="118" height="164" rx="10" fill="#1a1330" stroke="#4c1d9566" stroke-width="1.5"/>
+  <ellipse cx="385" cy="108" rx="10" ry="12" fill="#38bdf8" class="blink"/>
+  <line x1="350" y1="130" x2="420" y2="130" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3 4"/>
+  <text x="385" y="208" text-anchor="middle" class="label" fill="#e2e8f0" font-size="11" font-weight="700">gap = 0.00</text>
+  <text x="385" y="224" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">weightless in the oil</text>
+  <text x="385" y="240" text-anchor="middle" class="label" fill="#a78bfa" font-size="10.5">hangs there forever</text>
+</svg>
+</div>
+<p class="cap">Same drop, same gravity, three different surroundings. Only the size of the density gap has changed.</p>
+
+<div class="callout key">
+  <strong>Why slow motion is a design choice, not a coincidence:</strong> a maker who picks two liquids with densities of 1.00 and 0.85
+  has thrown away <em>85% of the drop's weight</em> before it even starts. Push the two numbers closer still and the drops crawl;
+  push them apart and the toy is over in seconds. Manufacturers tune that gap on purpose.
+</div>
+
+<div class="callout tip">
+  <strong>Try it:</strong> hold the tube in your warm hands for a minute and it usually speeds up. Heat makes the oil runnier,
+  and it also swells the two liquids by <em>different</em> amounts, which nudges the density gap. Put it somewhere cold and it slows to a crawl.
+  Same toy, same gravity — different numbers.
+</div>
+
+<div class="part"><span>Part D · surface tension</span></div>
+
+<p class="panel-label" id="s10">10 · <b>why a drop is a ball</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 228" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The same amount of liquid has less boundary as a ball than as a cube, and the boundary pulls itself tight from every direction, so drops become round.">
+  <defs>
+    <marker id="ar-pu" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#a78bfa"/>
+    </marker>
+    <marker id="ar-gy" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- ════════ PANEL A · less boundary ════════ -->
+  <text x="14" y="16" class="label" fill="#a78bfa" font-size="11.5" font-weight="700">SAME LIQUID · LESS BOUNDARY</text>
+  <rect x="8" y="26" width="214" height="186" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <rect x="32" y="62" width="70" height="70" fill="#0c2036" stroke="#a78bfa" stroke-width="2.5"/>
+  <text x="67" y="152" text-anchor="middle" class="label" fill="#e2e8f0" font-size="12" font-weight="700">6.0 cm²</text>
+  <text x="67" y="168" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">of boundary</text>
+
+  <line x1="112" y1="97" x2="138" y2="97" stroke="#64748b" stroke-width="1.5" marker-end="url(#ar-gy)"/>
+
+  <circle cx="184" cy="97" r="39.5" fill="#0c2036" stroke="#a78bfa" stroke-width="2.5"/>
+  <text x="184" y="152" text-anchor="middle" class="label" fill="#4ade80" font-size="12" font-weight="700">4.8 cm²</text>
+  <text x="184" y="168" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">of boundary</text>
+
+  <text x="115" y="192" text-anchor="middle" class="label" fill="#94a3b8" font-size="11">both hold exactly 1 cm³ of liquid</text>
+  <text x="115" y="206" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">a ball is the cheapest shape</text>
+
+  <!-- ════════ PANEL B · the squeeze ════════ -->
+  <text x="238" y="16" class="label" fill="#a78bfa" font-size="11.5" font-weight="700">PULLED TIGHT FROM ALL SIDES</text>
+  <rect x="232" y="26" width="220" height="186" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <g class="squeeze" stroke="#a78bfa" stroke-width="2" marker-end="url(#ar-pu)">
+    <line x1="414" y1="104"   x2="392" y2="104"/>
+    <line x1="404.6" y1="139" x2="385.6" y2="128"/>
+    <line x1="379" y1="164.6" x2="368" y2="145.6"/>
+    <line x1="344" y1="174"   x2="344" y2="152"/>
+    <line x1="309" y1="164.6" x2="320" y2="145.6"/>
+    <line x1="283.4" y1="139" x2="302.4" y2="128"/>
+    <line x1="274" y1="104"   x2="296" y2="104"/>
+    <line x1="283.4" y1="69"  x2="302.4" y2="80"/>
+    <line x1="309" y1="43.4"  x2="320" y2="62.4"/>
+    <line x1="344" y1="34"    x2="344" y2="56"/>
+    <line x1="379" y1="43.4"  x2="368" y2="62.4"/>
+    <line x1="404.6" y1="69"  x2="385.6" y2="80"/>
+  </g>
+  <circle cx="344" cy="104" r="42" fill="#38bdf8"/>
+  <circle cx="330" cy="90" r="10" fill="#bae6fd" opacity="0.55"/>
+
+  <text x="342" y="192" text-anchor="middle" class="label" fill="#94a3b8" font-size="11">every bit of boundary costs energy</text>
+  <text x="342" y="206" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">so a drop shrinks it to the limit</text>
+</svg>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num skn">01</span>
+    <p class="step-text"><strong>A molecule in the middle is happy; a molecule on the edge is not.</strong> In the middle it's gripped from every direction. At the boundary with the oil, half its neighbours are strangers it can't grip properly. Edge molecules are, in a sense, short-changed.</p>
+  </div>
+  <div class="step">
+    <span class="step-num skn">02</span>
+    <p class="step-text"><strong>So the boundary behaves like a stretched sheet of elastic.</strong> That pull is surface tension. It isn't a skin made of anything — there's no extra material there — it's just the natural tightening of a surface that would rather be smaller.</p>
+  </div>
+  <div class="step">
+    <span class="step-num skn">03</span>
+    <p class="step-text"><strong>Fewer strangers means a smaller boundary,</strong> and the shape with the least boundary for a given amount of liquid is a sphere. So a free-floating drop is a ball. Gravity can squash a big drop a little, but in a bubbler even that is gentle — the drops stay startlingly round.</p>
+  </div>
+  <div class="step">
+    <span class="step-num oil">04</span>
+    <p class="step-text"><strong>It's the boundary <em>between the two liquids</em> that counts here</strong> — not water meeting air. Chemists call it interfacial tension. It's usually weaker than a water-and-air surface, because oil at least half-heartedly grips the water. Weaker pull, gentler drops, softer wobbles.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s11">11 · <b>how big a drop gets before it lets go</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A drop hangs from a hole and grows. Surface tension round the rim holds a fixed amount; the drop's weight grows as it fills. Where the climbing weight crosses the fixed grip, the neck pinches and the drop falls.">
+  <defs>
+    <marker id="ar-dn2" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <path d="M0,0 L10,4.5 L0,9 Z" fill="#f87171"/>
+    </marker>
+    <marker id="ar-up2" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 Z" fill="#a78bfa"/>
+    </marker>
+  </defs>
+
+  <!-- ════════ PANEL A · the hanging drop ════════ -->
+  <text x="14" y="16" class="label" fill="#7dd3fc" font-size="11.5" font-weight="700">THE DRIP</text>
+  <rect x="8" y="26" width="214" height="222" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <!-- the floor of the cup, with a hole in the middle of it -->
+  <rect x="24" y="34" width="112" height="16" fill="#38bdf8" opacity="0.4"/>
+  <text x="30" y="46" class="label" fill="#7dd3fc" font-size="10">liquid above</text>
+  <rect x="24" y="50" width="46" height="8" fill="#334155"/>
+  <rect x="90" y="50" width="46" height="8" fill="#334155"/>
+
+  <!-- surface tension pulling up and out along the rim -->
+  <line x1="72" y1="64" x2="64" y2="52" stroke="#a78bfa" stroke-width="2.5" marker-end="url(#ar-up2)"/>
+  <line x1="88" y1="64" x2="96" y2="52" stroke="#a78bfa" stroke-width="2.5" marker-end="url(#ar-up2)"/>
+
+  <!-- the neck, and the drop swelling beneath the hole -->
+  <ellipse class="neck" cx="80" cy="64" rx="5" ry="6" fill="#38bdf8"/>
+  <circle class="grow" cx="80" cy="62" r="4" fill="#38bdf8"/>
+
+  <!-- …and away it goes -->
+  <g transform="translate(80,84)"><g class="drip">
+    <circle cx="0" cy="0" r="19" fill="#38bdf8"/>
+    <circle cx="-6" cy="-6" r="5" fill="#bae6fd" opacity="0.6"/>
+  </g></g>
+
+  <line x1="34" y1="98" x2="34" y2="134" stroke="#f87171" stroke-width="3.5" marker-end="url(#ar-dn2)"/>
+  <text x="34" y="90" text-anchor="middle" class="label" fill="#f87171" font-size="10.5">weight</text>
+  <text x="34" y="152" text-anchor="middle" class="label" fill="#64748b" font-size="10">climbs</text>
+  <text x="34" y="165" text-anchor="middle" class="label" fill="#64748b" font-size="10">steadily</text>
+
+  <text x="140" y="84" class="label" fill="#a78bfa" font-size="10.5">the rim</text>
+  <text x="140" y="97" class="label" fill="#a78bfa" font-size="10.5">holds on —</text>
+  <text x="140" y="111" class="label" fill="#64748b" font-size="10">but only</text>
+  <text x="140" y="124" class="label" fill="#64748b" font-size="10">so hard</text>
+
+  <text x="115" y="226" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">it grows until the rim lets go,</text>
+  <text x="115" y="239" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">necks in, snaps off, starts again</text>
+
+  <!-- ════════ PANEL B · where the two lines cross ════════ -->
+  <text x="238" y="16" class="label" fill="#7dd3fc" font-size="11.5" font-weight="700">WHY IT LETS GO WHEN IT DOES</text>
+  <rect x="232" y="26" width="220" height="222" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <line x1="266" y1="186" x2="432" y2="186" stroke="#334155" stroke-width="1.5"/>
+  <line x1="266" y1="52" x2="266" y2="186" stroke="#334155" stroke-width="1.5"/>
+  <text x="432" y="202" text-anchor="end" class="label" fill="#475569" font-size="10">drop size →</text>
+  <text x="258" y="120" text-anchor="middle" class="label" fill="#475569" font-size="10" transform="rotate(-90 258 120)">force</text>
+
+  <!-- the rim's grip: the same whatever the drop is doing -->
+  <line x1="266" y1="106" x2="432" y2="106" stroke="#a78bfa" stroke-width="2.5"/>
+  <text x="272" y="88" class="label" fill="#a78bfa" font-size="10.5">the rim's grip</text>
+  <text x="272" y="101" class="label" fill="#64748b" font-size="10">— never changes</text>
+
+  <!-- the drop's weight: climbing all the while -->
+  <path d="M300,182 L432,66" stroke="#f87171" stroke-width="2.5" fill="none"/>
+  <text x="400" y="60" text-anchor="end" class="label" fill="#f87171" font-size="10.5">weight — climbing</text>
+
+  <!-- where they cross is where it drips -->
+  <circle cx="386" cy="106" r="6" fill="#fbbf24" class="blink"/>
+  <line x1="386" y1="114" x2="386" y2="158" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="3 4"/>
+  <text x="386" y="176" text-anchor="middle" class="label" fill="#fbbf24" font-size="11" font-weight="700">DRIP!</text>
+
+  <text x="342" y="226" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">the crossing point fixes</text>
+  <text x="342" y="239" text-anchor="middle" class="label" fill="#64748b" font-size="10.5">the size of every drop</text>
+</svg>
+</div>
+<p class="cap">The rim can only hold so much. Everything about a drop's size follows from where those two lines cross.</p>
+
+<div class="formula">
+  drop weight when it falls&nbsp; ≈ &nbsp;<span class="up">surface tension</span> × distance around the hole
+  <small>bigger hole → bigger drops · stronger surface tension → bigger drops · bigger density gap → smaller drops</small>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num skn">01</span>
+    <p class="step-text"><strong>A drop hanging from a hole is held up by its own rim.</strong> Surface tension pulls upward all the way around the circle where the liquid meets the lip. That grip is a fixed size — it depends on the tension and on how far it is around the hole, and on nothing else.</p>
+  </div>
+  <div class="step">
+    <span class="step-num frc">02</span>
+    <p class="step-text"><strong>Meanwhile the drop is filling up</strong> and its weight climbs steadily. Sooner or later weight passes the grip — and that moment is not a matter of opinion. It happens at the same size every single time.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">03</span>
+    <p class="step-text"><strong>Then the neck pinches shut.</strong> The thin waist between the drop and the hole is the most expensive shape in the whole arrangement, so the boundary snaps it closed and the drop leaves — often with a tiny satellite droplet trailing behind it, a straggler pinched off from the neck itself.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">04</span>
+    <p class="step-text"><strong>That's why every drop in a bubbler looks the same size.</strong> It isn't careful manufacturing — it's the same sum being solved over and over. Scientists once measured surface tension exactly this way: count the drops from a known nozzle, weigh them, work backwards.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s12">12 · <b>why a stream turns into beads</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 192" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A liquid thread develops a wobble; the fat parts get fatter and the thin parts pinch off, so the thread becomes a row of beads.">
+  <rect x="8" y="26" width="444" height="140" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <!-- stage 1 -->
+  <text x="26" y="48" class="label" fill="#94a3b8" font-size="10.5" font-weight="700">1 · a smooth thread</text>
+  <rect x="26" y="56" width="404" height="14" rx="7" fill="#38bdf8" opacity="0.9"/>
+
+  <!-- stage 2 -->
+  <text x="26" y="94" class="label" fill="#94a3b8" font-size="10.5" font-weight="700">2 · a wobble creeps in — and the fat bits get fatter</text>
+  <path d="M26,104 Q66,94 106,104 Q146,112 186,104 Q226,94 266,104 Q306,112 346,104 Q386,94 426,104
+           L426,114 Q386,124 346,114 Q306,106 266,114 Q226,124 186,114 Q146,106 106,114 Q66,124 26,114 Z"
+        fill="#38bdf8" opacity="0.9"/>
+  <circle class="beadwob" cx="66" cy="109" r="7" fill="#38bdf8"/>
+  <circle class="beadwob j3" cx="226" cy="109" r="7" fill="#38bdf8"/>
+  <circle class="beadwob j2" cx="386" cy="109" r="7" fill="#38bdf8"/>
+
+  <!-- stage 3 -->
+  <text x="26" y="134" class="label" fill="#94a3b8" font-size="10.5" font-weight="700">3 · the thin bits pinch through — beads</text>
+  <g fill="#38bdf8">
+    <circle cx="46" cy="146" r="11"/><circle cx="86" cy="146" r="11"/><circle cx="126" cy="146" r="11"/>
+    <circle cx="166" cy="146" r="11"/><circle cx="206" cy="146" r="11"/><circle cx="246" cy="146" r="11"/>
+    <circle cx="286" cy="146" r="11"/><circle cx="326" cy="146" r="11"/><circle cx="366" cy="146" r="11"/>
+    <circle cx="406" cy="146" r="11"/>
+  </g>
+  <g fill="#7dd3fc" opacity="0.5">
+    <circle cx="66" cy="146" r="2.6"/><circle cx="106" cy="146" r="2.6"/><circle cx="146" cy="146" r="2.6"/>
+    <circle cx="186" cy="146" r="2.6"/><circle cx="226" cy="146" r="2.6"/><circle cx="266" cy="146" r="2.6"/>
+    <circle cx="306" cy="146" r="2.6"/><circle cx="346" cy="146" r="2.6"/><circle cx="386" cy="146" r="2.6"/>
+  </g>
+
+  <text x="230" y="184" text-anchor="middle" class="label" fill="#a78bfa" font-size="11">a row of balls has less boundary than a long tube</text>
+</svg>
+</div>
+<p class="cap">Once a wobble starts it only ever gets bigger — and the beads end up roughly twice as wide as the thread they came from.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num skn">01</span>
+    <p class="step-text"><strong>A long thin thread is expensive.</strong> Stretch liquid into a tube and you've made an enormous amount of boundary for a very small amount of liquid. The same liquid balled up into beads has much less. The thread is sitting on a hill, waiting to roll off it.</p>
+  </div>
+  <div class="step">
+    <span class="step-num skn">02</span>
+    <p class="step-text"><strong>Any tiny wobble grows.</strong> A spot that happens to be a hair narrower gets squeezed harder, so liquid drains out of it into the fatter parts either side — which makes it narrower still. There is no way back. The wobble runs away with itself until the thin spots close completely.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">03</span>
+    <p class="step-text">This is the <strong>Plateau–Rayleigh instability</strong>, and it is everywhere once you notice it: a tap left barely running breaks into drops, a spider's silk turns into a necklace of dew beads, and a bubbler refuses to let the heavy liquid run down as a stream. <em>It always chooses drops.</em></p>
+  </div>
+</div>
+
+<p class="panel-label" id="s13">13 · <b>the wall is oily, so nothing sticks</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 214" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Because the oil wets the plastic wall, a thin oil film keeps the drops from touching it and they slide cleanly. If water wet the wall instead, drops would smear and stick.">
+  <!-- ── what actually happens ── -->
+  <text x="14" y="16" class="label" fill="#4ade80" font-size="11.5" font-weight="700">WHAT ACTUALLY HAPPENS</text>
+  <rect x="8" y="26" width="214" height="150" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <rect x="30" y="50" width="18" height="114" fill="#334155"/>
+  <rect x="48" y="50" width="11" height="114" fill="#fbbf24" opacity="0.75"/>
+  <text x="30" y="44" class="label" fill="#64748b" font-size="9.5">wall</text>
+  <text x="58" y="44" class="label" fill="#fbbf24" font-size="9.5">oil film</text>
+
+  <line x1="104" y1="50" x2="104" y2="174" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3 5" opacity="0.5"/>
+  <circle cx="104" cy="74" r="20" fill="#38bdf8"/>
+  <circle cx="104" cy="118" r="20" fill="#38bdf8"/>
+  <circle cx="104" cy="158" r="14" fill="#38bdf8" opacity="0.6"/>
+
+  <text x="132" y="84" class="label" fill="#94a3b8" font-size="10.5">drops glide</text>
+  <text x="132" y="98" class="label" fill="#94a3b8" font-size="10.5">past, never</text>
+  <text x="132" y="112" class="label" fill="#94a3b8" font-size="10.5">touching</text>
+  <text x="115" y="190" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">a film of oil keeps them apart</text>
+  <text x="115" y="204" text-anchor="middle" class="label" fill="#4ade80" font-size="10.5">clean glass, crisp drops</text>
+
+  <!-- ── the alternative ── -->
+  <text x="238" y="16" class="label" fill="#f87171" font-size="11.5" font-weight="700">IF IT WERE THE OTHER WAY</text>
+  <rect x="232" y="26" width="220" height="150" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <rect x="254" y="50" width="18" height="114" fill="#334155"/>
+  <path d="M272,52 q26,10 0,22 q26,12 0,26 q26,10 0,24 q26,12 0,26 L272,52 Z" fill="#38bdf8" opacity="0.8"/>
+  <circle cx="330" cy="80" r="16" fill="#38bdf8" opacity="0.55"/>
+  <path d="M330,96 q-14,14 -28,10" fill="none" stroke="#38bdf8" stroke-width="4" opacity="0.5"/>
+  <circle cx="346" cy="134" r="13" fill="#38bdf8" opacity="0.55"/>
+
+  <text x="342" y="190" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">the liquid wets the wall and drags</text>
+  <text x="342" y="204" text-anchor="middle" class="label" fill="#f87171" font-size="10.5">smeared glass, mushy drops</text>
+</svg>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num oil">01</span>
+    <p class="step-text"><strong>Wetting is a three-way contest.</strong> At the wall, the oil and the heavy liquid are competing for the plastic. Whichever grips it better spreads out and coats it; the loser has to bead up and keep its distance.</p>
+  </div>
+  <div class="step">
+    <span class="step-num oil">02</span>
+    <p class="step-text"><strong>In a bubbler the oil wins,</strong> because the plastic the tube is made of is mostly carbon-and-hydrogen chains too — much closer to the oil’s family than to water’s. Like sticks to like all over again, this time between a liquid and a solid.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">03</span>
+    <p class="step-text"><strong>So a permanent film of oil lines the wall</strong> and the drops ride down on it without ever touching plastic. That's why the tube stays clear, why drops keep their shape all the way down, and why a bubbler looks as sharp on its thousandth flip as on its first.</p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>The same idea, in a frying pan:</strong> water beads and skitters on a well-oiled pan because the oil got to the metal first.
+  <em>Wetting is just polarity, applied to a surface.</em>
+</div>
+
+<div class="part"><span>Part E · why it's so slow</span></div>
+
+<p class="panel-label" id="s14">14 · <b>three dials set the speed</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 214" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three things set how fast a drop sinks: how big it is, how thick the surrounding liquid is, and how large the density gap is.">
+  <defs>
+    <marker id="sp" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="10" refX="11" refY="5" orient="auto">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#4ade80"/>
+    </marker>
+    <marker id="sp-s" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="10" refX="11" refY="5" orient="auto">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#f87171"/>
+    </marker>
+  </defs>
+
+  <!-- dial 1 : size -->
+  <rect x="8" y="26" width="142" height="170" rx="12" fill="#0e1626" stroke="#1e293b"/>
+  <text x="79" y="46" text-anchor="middle" class="label" fill="#7dd3fc" font-size="11.5" font-weight="700">DROP SIZE</text>
+  <circle cx="42" cy="82" r="9" fill="#38bdf8"/>
+  <line x1="60" y1="82" x2="84" y2="82" stroke="#f87171" stroke-width="3" marker-end="url(#sp-s)"/>
+  <circle cx="42" cy="126" r="18" fill="#38bdf8"/>
+  <line x1="66" y1="126" x2="140" y2="126" stroke="#4ade80" stroke-width="3" marker-end="url(#sp)"/>
+  <text x="79" y="164" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">twice as wide,</text>
+  <text x="79" y="178" text-anchor="middle" class="label" fill="#4ade80" font-size="11" font-weight="700">four times as fast</text>
+
+  <!-- dial 2 : thickness -->
+  <rect x="158" y="26" width="142" height="170" rx="12" fill="#0e1626" stroke="#1e293b"/>
+  <text x="229" y="46" text-anchor="middle" class="label" fill="#fbbf24" font-size="11.5" font-weight="700">OIL THICKNESS</text>
+  <text x="188" y="86" text-anchor="middle" class="label" fill="#64748b" font-size="10">runny</text>
+  <line x1="212" y1="82" x2="288" y2="82" stroke="#4ade80" stroke-width="3" marker-end="url(#sp)"/>
+  <text x="188" y="130" text-anchor="middle" class="label" fill="#64748b" font-size="10">syrupy</text>
+  <line x1="212" y1="126" x2="236" y2="126" stroke="#f87171" stroke-width="3" marker-end="url(#sp-s)"/>
+  <text x="229" y="164" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">thicker liquid,</text>
+  <text x="229" y="178" text-anchor="middle" class="label" fill="#f87171" font-size="11" font-weight="700">slower drop</text>
+
+  <!-- dial 3 : gap -->
+  <rect x="308" y="26" width="144" height="170" rx="12" fill="#0e1626" stroke="#1e293b"/>
+  <text x="380" y="46" text-anchor="middle" class="label" fill="#a78bfa" font-size="11.5" font-weight="700">DENSITY GAP</text>
+  <text x="338" y="86" text-anchor="middle" class="label" fill="#64748b" font-size="10">wide</text>
+  <line x1="362" y1="82" x2="440" y2="82" stroke="#4ade80" stroke-width="3" marker-end="url(#sp)"/>
+  <text x="338" y="130" text-anchor="middle" class="label" fill="#64748b" font-size="10">narrow</text>
+  <line x1="362" y1="126" x2="386" y2="126" stroke="#f87171" stroke-width="3" marker-end="url(#sp-s)"/>
+  <text x="380" y="164" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">closer densities,</text>
+  <text x="380" y="178" text-anchor="middle" class="label" fill="#f87171" font-size="11" font-weight="700">slower drop</text>
+</svg>
+</div>
+
+<div class="formula">
+  sinking speed&nbsp; ∝ &nbsp;( <span class="up">drop width</span> × <span class="up">drop width</span> × <span class="up">density gap</span> ) ÷ <span class="dn">thickness of the oil</span>
+  <small>Stokes' law — it holds whenever things move slowly and smoothly, which is exactly what a bubbler does</small>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text"><strong>A falling drop doesn't keep speeding up.</strong> The faster it goes, the harder the oil drags on it — and within a blink the drag exactly balances the leftover push from Part C. From then on the drop travels at a steady crawl the whole way down. That steadiness is a big part of why it's so soothing to watch: no acceleration, no drama.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">02</span>
+    <p class="step-text"><strong>Size is the strongest dial</strong> — its effect is squared. A drop twice as wide sinks four times as fast. Watch a bubbler closely and you'll see the small stragglers left far behind by the fat drops, all falling through the very same liquid.</p>
+  </div>
+  <div class="step">
+    <span class="step-num oil">03</span>
+    <p class="step-text"><strong>Thickness — viscosity — is the brake,</strong> and it's the one most sensitive to temperature. Warm oil can be several times runnier than cold oil, which is why the same bubbler runs briskly in a sunny window and sluggishly on a cold shelf.</p>
+  </div>
+  <div class="step">
+    <span class="step-num skn">04</span>
+    <p class="step-text"><strong>The maker turns all three dials at once:</strong> a small hole to make small drops, a thickish oil, and two densities chosen to sit close together. Three separate brakes, multiplied — and a drop that takes a whole leisurely breath to cross the tube.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s15">15 · <b>no splashing, no swirls, no mixing</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 222" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A raindrop in air leaves a turbulent, swirling wake. A drop in a bubbler moves so slowly through such thick liquid that the flow parts and closes smoothly with no swirls at all.">
+  <!-- ── raindrop ── -->
+  <text x="14" y="16" class="label" fill="#f87171" font-size="11.5" font-weight="700">A RAINDROP IN AIR</text>
+  <rect x="8" y="26" width="214" height="158" rx="12" fill="#0e1626" stroke="#1e293b"/>
+  <circle cx="115" cy="74" r="17" fill="#38bdf8"/>
+  <!-- messy wake -->
+  <g fill="none" stroke="#f87171" stroke-width="1.8" opacity="0.85">
+    <path d="M100,92 C92,106 106,110 100,122 C94,134 108,140 102,152"/>
+    <path d="M130,92 C138,106 124,110 130,122 C136,134 122,140 128,152"/>
+    <path d="M115,94 C115,110 104,116 112,128 C120,140 110,146 116,158"/>
+    <path d="M86,100 a9,9 0 1,1 0.1,0"/>
+    <path d="M146,112 a8,8 0 1,0 -0.1,0"/>
+    <path d="M94,140 a7,7 0 1,0 0.1,0"/>
+  </g>
+  <text x="115" y="176" text-anchor="middle" class="label" fill="#f87171" font-size="11" font-weight="700">tumbling, swirling wake</text>
+  <text x="115" y="206" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">fast + thin air = chaos</text>
+  <text x="115" y="218" text-anchor="middle" class="label" fill="#64748b" font-size="10">"Reynolds number" in the thousands</text>
+
+  <!-- ── bubbler drop ── -->
+  <text x="238" y="16" class="label" fill="#4ade80" font-size="11.5" font-weight="700">A DROP IN A BUBBLER</text>
+  <rect x="232" y="26" width="220" height="158" rx="12" fill="#2a2210" opacity="0.45"/>
+  <rect x="232" y="26" width="220" height="158" rx="12" fill="none" stroke="#1e293b"/>
+  <!-- smooth streamlines parting and closing -->
+  <g fill="none" stroke="#fbbf24" stroke-width="1.8" opacity="0.8" class="flow-slow">
+    <path d="M260,36 C260,72 284,76 284,106 C284,136 260,140 260,174"/>
+    <path d="M286,36 C286,74 306,80 306,106 C306,132 286,138 286,174"/>
+    <path d="M424,36 C424,72 400,76 400,106 C400,136 424,140 424,174"/>
+    <path d="M398,36 C398,74 378,80 378,106 C378,132 398,138 398,174"/>
+  </g>
+  <circle cx="342" cy="106" r="27" fill="#38bdf8"/>
+  <circle cx="332" cy="96" r="7" fill="#bae6fd" opacity="0.55"/>
+  <text x="342" y="206" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">slow + thick oil = perfectly smooth</text>
+  <text x="342" y="218" text-anchor="middle" class="label" fill="#64748b" font-size="10">Reynolds number around 1</text>
+</svg>
+</div>
+<p class="cap">The Reynolds number compares how much a flow wants to keep barrelling along against how much the liquid's thickness damps it out. Small number, no swirls.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text"><strong>Fast things in thin fluids make a mess.</strong> A raindrop rips a churning wake of eddies behind it. It wobbles, it tumbles, and the air behind it is disturbed long after it's gone.</p>
+  </div>
+  <div class="step">
+    <span class="step-num oil">02</span>
+    <p class="step-text"><strong>Slow things in thick fluids glide.</strong> In a bubbler the oil's thickness damps out every swirl before it can form. The oil parts in front of the drop and closes up behind it as if nothing had happened. Physicists call this creeping flow — it is nearly the gentlest kind of motion there is.</p>
+  </div>
+  <div class="step">
+    <span class="step-num skn">03</span>
+    <p class="step-text"><strong>And because there are no swirls, there is no stirring.</strong> Without turbulence to churn them together, and with the two liquids refusing to dissolve into each other anyway, the drop's edge stays razor sharp for its entire journey. That crisp blue line is polarity and smooth flow, working together.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">04</span>
+    <p class="step-text"><strong>Bonus:</strong> a liquid drop is not a solid bead. The oil dragging past its outside sets the liquid <em>inside</em> rolling, like the tread of a tank turning over. That internal roll lets the drop slip through a little faster than a solid ball of the same size and weight would manage.</p>
+  </div>
+</div>
+
+<p class="panel-label" id="s16">16 · <b>the rhythm — regular, but never quite</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 254" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A full cup pushes liquid through its hole quickly and drips fast; as the cup empties the push weakens and the drips spread further apart over time.">
+  <!-- ── full cup ── -->
+  <rect x="8" y="26" width="214" height="130" rx="12" fill="#0e1626" stroke="#1e293b"/>
+  <text x="115" y="46" text-anchor="middle" class="label" fill="#7dd3fc" font-size="11" font-weight="700">CUP FULL</text>
+  <path d="M42,56 L188,56 L124,116 L124,132 L106,132 L106,116 Z" fill="#0c2036" stroke="#38bdf8" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M48,62 L182,62 L122,116 L122,130 L108,130 L108,116 Z" fill="#38bdf8" opacity="0.45"/>
+  <line x1="196" y1="62" x2="196" y2="118" stroke="#f87171" stroke-width="2"/>
+  <text x="204" y="94" class="label" fill="#f87171" font-size="10">tall</text>
+  <text x="204" y="106" class="label" fill="#f87171" font-size="10">push</text>
+  <circle cx="115" cy="141" r="5" fill="#38bdf8"/>
+  <circle cx="115" cy="152" r="4" fill="#38bdf8" opacity="0.6"/>
+  <text x="60" y="148" text-anchor="middle" class="label" fill="#4ade80" font-size="10.5">drip·drip·drip</text>
+
+  <!-- ── nearly empty cup ── -->
+  <rect x="232" y="26" width="220" height="130" rx="12" fill="#0e1626" stroke="#1e293b"/>
+  <text x="342" y="46" text-anchor="middle" class="label" fill="#7dd3fc" font-size="11" font-weight="700">CUP NEARLY EMPTY</text>
+  <path d="M268,56 L416,56 L351,116 L351,132 L333,132 L333,116 Z" fill="#0c2036" stroke="#38bdf8" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M322,100 L362,100 L349,116 L349,130 L335,130 L335,116 Z" fill="#38bdf8" opacity="0.45"/>
+  <line x1="424" y1="100" x2="424" y2="118" stroke="#64748b" stroke-width="2"/>
+  <text x="432" y="108" class="label" fill="#64748b" font-size="10">low</text>
+  <text x="432" y="120" class="label" fill="#64748b" font-size="10">push</text>
+  <circle cx="342" cy="145" r="5" fill="#38bdf8"/>
+  <text x="288" y="148" text-anchor="middle" class="label" fill="#fbbf24" font-size="10.5">drip … … drip</text>
+
+  <!-- ── the timeline ── -->
+  <text x="14" y="182" class="label" fill="#94a3b8" font-size="11" font-weight="700">ONE RUN, FROM FLIP TO LAST DROP</text>
+  <line x1="30" y1="212" x2="436" y2="212" stroke="#1e293b" stroke-width="1.5"/>
+  <g stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round">
+    <line x1="40"  y1="198" x2="40"  y2="226"/>
+    <line x1="72"  y1="198" x2="72"  y2="226"/>
+    <line x1="106" y1="198" x2="106" y2="226"/>
+    <line x1="142" y1="199" x2="142" y2="225"/>
+    <line x1="182" y1="200" x2="182" y2="224"/>
+    <line x1="226" y1="201" x2="226" y2="223"/>
+    <line x1="274" y1="202" x2="274" y2="222"/>
+    <line x1="326" y1="203" x2="326" y2="221"/>
+    <line x1="382" y1="204" x2="382" y2="220"/>
+  </g>
+  <g class="sweep">
+    <line x1="36" y1="192" x2="36" y2="232" stroke="#e9d5ff" stroke-width="2"/>
+  </g>
+  <text x="40" y="246" text-anchor="middle" class="label" fill="#4ade80" font-size="10">busy</text>
+  <text x="382" y="246" text-anchor="middle" class="label" fill="#fbbf24" font-size="10">lazy</text>
+  <text x="436" y="192" text-anchor="end" class="label" fill="#475569" font-size="10">time →</text>
+</svg>
+</div>
+<p class="cap">Each tick is one drop. The gaps stretch as the run goes on — the bubbler winds down instead of stopping dead.</p>
+
+<div class="steps">
+  <div class="step">
+    <span class="step-num">01</span>
+    <p class="step-text"><strong>The cup is the metronome.</strong> Liquid can only leave through the hole, and the hole only lets go one drop at a time, at the size fixed back in section 11. That turns a would-be rush into a beat.</p>
+  </div>
+  <div class="step">
+    <span class="step-num wat">02</span>
+    <p class="step-text"><strong>The beat slows as the cup drains.</strong> A deep pool of liquid presses harder on the hole than a shallow one, so drops form quickly at first. As the level falls the push weakens, the drops take longer to build, and the gaps stretch out. The last few take ages.</p>
+  </div>
+  <div class="step">
+    <span class="step-num">03</span>
+    <p class="step-text"><strong>And no two runs are identical.</strong> A drop that catches another on the way down arrives as one fat drop travelling faster. A stray bubble nudges a drop off course. The order is set by physics, but the details are set by chance — which is precisely why watching it never gets dull.</p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Why your eyes like it so much:</strong> the rhythm is <em>almost</em> predictable. Regular enough that your brain relaxes and stops
+  bracing for a surprise, irregular enough that it never quite finishes the job of predicting and wanders off. Fires, rain on a window
+  and waves on a beach all do the same thing.
+</div>
+
+<div class="part"><span>Part F · watch it like a scientist</span></div>
+
+<p class="panel-label" id="s17">17 · <b>six things to spot on the next flip</b></p>
+
+<div class="spotgrid">
+
+  <div class="spot">
+    <svg viewBox="0 0 100 62" role="img" aria-label="A drop resting on the pool surface with a thin film of oil trapped underneath it.">
+      <rect x="0" y="38" width="100" height="24" fill="#38bdf8" opacity="0.35"/>
+      <line x1="0" y1="38" x2="100" y2="38" stroke="#7dd3fc" stroke-width="2"/>
+      <circle cx="50" cy="24" r="13" fill="#38bdf8"/>
+      <path d="M37,36 Q50,42 63,36" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
+      <text x="70" y="22" class="label" fill="#fbbf24" font-size="8">wait…</text>
+    </svg>
+    <div class="n">the hesitating drop</div>
+    <div class="d">It lands on the pool and just sits there — then suddenly vanishes into it. A whisker-thin film of oil is trapped underneath, and it has to squeeze out before the two can touch.</div>
+  </div>
+
+  <div class="spot">
+    <svg viewBox="0 0 100 62" role="img" aria-label="A drop merging in stages, each time leaving a smaller drop behind.">
+      <rect x="0" y="48" width="100" height="14" fill="#38bdf8" opacity="0.35"/>
+      <line x1="0" y1="48" x2="100" y2="48" stroke="#7dd3fc" stroke-width="2"/>
+      <circle cx="22" cy="30" r="14" fill="#38bdf8"/>
+      <circle cx="52" cy="36" r="8" fill="#38bdf8"/>
+      <circle cx="72" cy="42" r="4.5" fill="#38bdf8"/>
+      <circle cx="86" cy="45" r="2.5" fill="#38bdf8"/>
+    </svg>
+    <div class="n">the cascade</div>
+    <div class="d">Sometimes a drop only half-merges, leaving a smaller copy of itself bobbing on the surface — which half-merges again, and again, a shrinking staircase of drops.</div>
+  </div>
+
+  <div class="spot">
+    <svg viewBox="0 0 100 62" role="img" aria-label="A small drop catching up with a larger one and merging into a faster, bigger drop.">
+      <circle cx="26" cy="16" r="7" fill="#38bdf8"/>
+      <circle cx="26" cy="40" r="11" fill="#38bdf8"/>
+      <path d="M26,26 L26,30" stroke="#4ade80" stroke-width="2"/>
+      <path d="M46,30 L62,30" stroke="#4ade80" stroke-width="2"/>
+      <path d="M62,30 L57,26 M62,30 L57,34" stroke="#4ade80" stroke-width="2" fill="none"/>
+      <circle cx="80" cy="30" r="14" fill="#38bdf8"/>
+      <text x="74" y="56" text-anchor="middle" class="label" fill="#4ade80" font-size="8">now faster</text>
+    </svg>
+    <div class="n">the chase</div>
+    <div class="d">A drop following in another's slipstream catches it up and merges. The new fat drop is wider — so it sinks faster than either of its parents, and pulls away.</div>
+  </div>
+
+  <div class="spot">
+    <svg viewBox="0 0 100 62" role="img" aria-label="A large drop falling with a tiny satellite droplet trailing behind it.">
+      <circle cx="50" cy="44" r="14" fill="#38bdf8"/>
+      <circle cx="50" cy="18" r="4" fill="#38bdf8"/>
+      <line x1="50" y1="24" x2="50" y2="28" stroke="#38bdf8" stroke-width="1" stroke-dasharray="2 3" opacity="0.6"/>
+      <text x="72" y="20" class="label" fill="#64748b" font-size="8">tiny</text>
+    </svg>
+    <div class="n">the satellite</div>
+    <div class="d">When the neck snaps, it often pinches twice and leaves a miniature drop behind. Small means slow — it trails the big one all the way down and arrives long after.</div>
+  </div>
+
+  <div class="spot">
+    <svg viewBox="0 0 124 62" role="img" aria-label="A freshly pinched drop wobbling between a squashed and a stretched shape before settling round.">
+      <ellipse cx="26" cy="28" rx="15" ry="9" fill="#38bdf8"/>
+      <circle cx="62" cy="28" r="12" fill="#38bdf8"/>
+      <ellipse cx="98" cy="28" rx="9" ry="15" fill="#38bdf8"/>
+      <text x="62" y="58" text-anchor="middle" class="label" fill="#a78bfa" font-size="8">squash · round · stretch</text>
+    </svg>
+    <div class="n">the wobble</div>
+    <div class="d">A just-released drop pulses between squashed and stretched for a second or two. Surface tension overshoots the round shape, like a struck bell ringing, before it settles.</div>
+  </div>
+
+  <div class="spot">
+    <svg viewBox="0 0 100 62" role="img" aria-label="Blobs of the light oily liquid rising upward past a sinking drop.">
+      <ellipse cx="28" cy="44" rx="9" ry="10" fill="#fbbf24" opacity="0.9"/>
+      <ellipse cx="34" cy="18" rx="6" ry="7" fill="#fbbf24" opacity="0.9"/>
+      <path d="M28,32 L28,24" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="2 3"/>
+      <circle cx="72" cy="24" r="11" fill="#38bdf8"/>
+      <path d="M72,38 L72,48" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2 3"/>
+      <text x="50" y="60" text-anchor="middle" class="label" fill="#64748b" font-size="8">both at once</text>
+    </svg>
+    <div class="n">the climbers</div>
+    <div class="d">The blobs going <em>up</em> are the oil — the same physics with the signs reversed. They're what put the "bubbler" in the name, and almost nobody watches them.</div>
+  </div>
+
+</div>
+
+<div class="callout tip">
+  <strong>Two experiments you can run in ten seconds.</strong> Cup it in your hands for a minute, then set it down and flip:
+  it should run noticeably quicker while it's warm. And <em>tilt</em> it slightly instead of standing it upright — the drops have
+  a longer, shallower slope to travel and a wall to hug, and the whole run stretches out.
+</div>
+
+<p class="panel-label" id="s18">18 · <b>cheat sheet</b></p>
+
+<div class="tbl">
+  <div class="row head"><div>What you see</div><div>What it actually is</div></div>
+  <div class="row"><div><b>Two clean layers that never mix</b></div><div><b>Polarity.</b> Water grips water so tightly that the oil is simply left out — §05</div></div>
+  <div class="row"><div><b>The coloured liquid ends up at the bottom</b></div><div><b>Density.</b> It packs more matter into the same space — §07</div></div>
+  <div class="row"><div><b>Drops, never a stream</b></div><div><b>Surface tension.</b> A long thread has far more boundary than a row of beads — §12</div></div>
+  <div class="row"><div><b>Drops that are almost perfectly round</b></div><div><b>Surface tension.</b> A ball is the shape with the least boundary — §10</div></div>
+  <div class="row"><div><b>Every drop the same size</b></div><div>The rim's grip versus the drop's weight — the same sum, every time — §11</div></div>
+  <div class="row"><div><b>Slow motion</b></div><div>A deliberately tiny density gap, multiplied by thick oil and small drops — §09, §14</div></div>
+  <div class="row"><div><b>Fat drops overtaking small ones</b></div><div>Speed grows with the <i>square</i> of the width — §14</div></div>
+  <div class="row"><div><b>A razor-sharp edge, no smearing</b></div><div>No turbulence to stir with, and nothing dissolves anyway — §15</div></div>
+  <div class="row"><div><b>Drops that pause on the pool</b></div><div>A trapped film of oil draining out from underneath — §17</div></div>
+  <div class="row"><div><b>The drips spreading out over a run</b></div><div>The cup's push fades as its level drops — §16</div></div>
+  <div class="row"><div><b>It stops, and stays stopped</b></div><div>Heavy-under-light is the restful arrangement. Nothing left to release — §02</div></div>
+</div>
+
+<div class="tbl">
+  <div class="row head"><div>Rough number</div><div>Typical value</div></div>
+  <div class="row"><div><b>Density of the watery liquid</b></div><div class="v">about 1.0 g per cm³</div></div>
+  <div class="row"><div><b>Density of the oily liquid</b></div><div class="v">about 0.8–0.96 g per cm³</div></div>
+  <div class="row"><div><b>The gap that does all the work</b></div><div class="v good">roughly 0.05–0.2</div></div>
+  <div class="row"><div><b>Width of a drop</b></div><div class="v">a few millimetres</div></div>
+  <div class="row"><div><b>Sinking speed</b></div><div class="v">a few cm per second</div></div>
+  <div class="row"><div><b>Reynolds number</b></div><div class="v good">around 1 (a raindrop: over 1,000)</div></div>
+  <div class="row"><div><b>Pull across the oil–water boundary</b></div><div class="v">weaker than water meeting air</div></div>
+  <div class="row"><div><b>Energy stored in one flip</b></div><div class="v">about 0.1 J — lifting an apple a hand's width</div></div>
+  <div class="row"><div><b>Where that energy goes</b></div><div class="v">warming the liquid by ~0.001 °C</div></div>
+</div>
+
+<div class="tbl">
+  <div class="row head"><div>The three big ideas</div><div>In one line</div></div>
+  <div class="row"><div><b>Polarity</b></div><div>Water has a plus end and a minus end and grips itself; oil has neither, so it gets crowded out. <i>This is why there are two liquids at all.</i></div></div>
+  <div class="row"><div><b>Density</b></div><div>Only the <i>difference</i> between the two densities pushes a drop — make it small and the drop crawls. <i>This is why it's slow.</i></div></div>
+  <div class="row"><div><b>Surface tension</b></div><div>A boundary costs energy, so the liquid keeps it as small as it can. <i>This is why it's drops, and why they're round.</i></div></div>
+</div>
+
+<div class="callout">
+  <strong>The one-sentence version:</strong> two liquids that can't stand to mix are stacked the wrong way up, and gravity spends
+  the next few minutes putting them right — one drop at a time, each drop rounded by its own boundary, each one falling with
+  only the <em>difference</em> between two densities to pull it down.
+</div>
+
+<p class="cap" style="margin-top:18px;">
+  Numbers on this page are typical values, rounded for learning — the exact liquids inside a bubbler vary from maker to maker,
+  and are usually kept secret. Bubblers are sealed for a reason: the liquids inside are not meant to be drunk, and a cracked
+  one should be thrown away rather than opened.
+</p>
+
+</body>
+</html>
