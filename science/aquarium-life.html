@@ -1,0 +1,2745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aquarium Life – How It Works</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0e1a;
+    color: #e8eaf0;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 16px 64px;
+  }
+
+  /* ── top bar ───────────────────────────────────────────────── */
+  .topbar {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .back {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: #64748b;
+    text-decoration: none;
+    border: 1px solid #1e293b;
+    background: #111827;
+    border-radius: 8px;
+    padding: 6px 10px;
+    white-space: nowrap;
+  }
+  .back:hover { color: #7dd3fc; border-color: #334155; }
+
+  h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(1rem, 4vw, 1.4rem);
+    letter-spacing: 0.08em;
+    color: #7dd3fc;
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    width: 100%;
+    max-width: 640px;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 20px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .intro {
+    width: 100%;
+    max-width: 640px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #94a3b8;
+    margin-bottom: 24px;
+  }
+  .intro strong { color: #e2e8f0; font-weight: 500; }
+
+  /* ── contents chips ────────────────────────────────────────── */
+  .toc {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 30px;
+  }
+  .toc a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    color: #7dd3fc;
+    background: #0f1a2e;
+    border: 1px solid #1e3a5f;
+    border-radius: 999px;
+    padding: 5px 10px;
+    text-decoration: none;
+  }
+  .toc a:hover { background: #16263f; }
+  .toc a.g { color: #fbbf24; background: #221c0d; border-color: #78350f; }
+  .toc a.s { color: #fca5a5; background: #241214; border-color: #7f1d1d; }
+  .toc a.n { color: #c4b5fd; background: #1a1330; border-color: #4c1d95; }
+  .toc a.p { color: #86efac; background: #0f2018; border-color: #14532d; }
+
+  /* ── part divider ──────────────────────────────────────────── */
+  .part {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 34px 0 18px;
+  }
+  .part span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7dd3fc;
+    white-space: nowrap;
+  }
+  .part::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, #1e3a5f, transparent);
+  }
+
+  /* ── section heading ───────────────────────────────────────── */
+  .panel-label {
+    width: 100%;
+    max-width: 640px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    text-transform: uppercase;
+    margin: 22px 0 10px;
+    scroll-margin-top: 12px;
+  }
+  .panel-label b { color: #cbd5e1; font-weight: 700; }
+
+  /* ── body text ─────────────────────────────────────────────── */
+  .para {
+    width: 100%;
+    max-width: 640px;
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: #94a3b8;
+    margin: 0 0 12px;
+  }
+  .para strong { color: #e2e8f0; font-weight: 500; }
+  .para em { color: #cbd5e1; font-style: normal; font-weight: 500; }
+
+  /* ── diagram panel ─────────────────────────────────────────── */
+  .diagram-wrap {
+    width: 100%;
+    max-width: 640px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 16px 12px 12px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  /* flex items must be allowed to shrink below the diagrams' intrinsic
+     width, or a wide SVG drags the whole page sideways on a phone */
+  body > * { min-width: 0; }
+  svg { width: 100%; max-width: 100%; height: auto; display: block; }
+  .label { font-family: 'Space Mono', monospace; }
+  .cap {
+    width: 100%;
+    max-width: 640px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: #475569;
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+
+  /* ── numbered step blocks ──────────────────────────────────── */
+  .steps {
+    width: 100%;
+    max-width: 640px;
+    display: grid;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 13px 15px;
+  }
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: #0ea5e9;
+    background: #0c2036;
+    border: 1px solid #0ea5e944;
+    border-radius: 6px;
+    padding: 3px 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-text { font-size: 1.02rem; line-height: 1.6; color: #94a3b8; }
+  .step-text strong { color: #e2e8f0; font-weight: 500; }
+  .step-text em { color: #cbd5e1; font-style: normal; font-weight: 500; }
+
+  /* colour-coded step numbers — one colour per creature */
+  .step-num.gup { color: #fbbf24; background: #2a2210; border-color: #fbbf2444; }
+  .step-num.shr { color: #f87171; background: #2a1414; border-color: #f8717144; }
+  .step-num.sna { color: #a78bfa; background: #1a1330; border-color: #a78bfa44; }
+  .step-num.pla { color: #4ade80; background: #10241a; border-color: #4ade8044; }
+
+  /* ── callouts ──────────────────────────────────────────────── */
+  .callout {
+    width: 100%;
+    max-width: 640px;
+    background: #1a1330;
+    border: 1px solid #4c1d9566;
+    border-left: 3px solid #a78bfa;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0 6px;
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: #c4b5fd;
+  }
+  .callout strong { color: #e9d5ff; font-weight: 700; }
+  .callout em { color: #ddd6fe; font-style: normal; font-weight: 500; }
+  .callout.warn {
+    background: #24131a; border-color: #7f1d1d99; border-left-color: #f87171; color: #fca5a5;
+  }
+  .callout.warn strong { color: #fecaca; }
+  .callout.warn em { color: #fecaca; }
+  .callout.tip {
+    background: #0f2018; border-color: #14532d99; border-left-color: #4ade80; color: #86efac;
+  }
+  .callout.tip strong { color: #bbf7d0; }
+  .callout.tip em { color: #bbf7d0; }
+  .callout.key {
+    background: #0c2036; border-color: #0ea5e955; border-left-color: #38bdf8; color: #7dd3fc;
+  }
+  .callout.key strong { color: #bae6fd; }
+  .callout.key em { color: #bae6fd; }
+  /* fun facts get their own warm colour so they are easy to spot */
+  .callout.fun {
+    background: #241c0c; border-color: #78350f99; border-left-color: #fbbf24; color: #fcd34d;
+  }
+  .callout.fun strong { color: #fde68a; }
+  .callout.fun em { color: #fde68a; }
+
+  /* ── simple tables ─────────────────────────────────────────── */
+  .tbl {
+    width: 100%;
+    max-width: 640px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 8px 0 18px;
+  }
+  .tbl .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px 14px;
+    border-top: 1px solid #1e293b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #94a3b8;
+  }
+  .tbl .row:first-child { border-top: none; }
+  .tbl .row.head {
+    background: #0e1626;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+  .tbl .row b { color: #e2e8f0; font-weight: 500; }
+  .tbl .row .v { font-family: 'Space Mono', monospace; font-size: 0.88rem; color: #7dd3fc; }
+  .tbl .row .v.good { color: #4ade80; }
+  .tbl .row .v.bad  { color: #f87171; }
+  .tbl .row.three { grid-template-columns: 1fr 1fr 1fr; }
+  .tbl .row.four  { grid-template-columns: 0.9fr 1fr 1fr 1fr; }
+
+  @media (max-width: 560px) {
+    .tbl .row.three, .tbl .row.four { grid-template-columns: 1fr; gap: 4px; }
+    /* on one column each cell has to say what it is, so the header row
+       is dropped and every cell carries its own label instead */
+    .tbl .row.three.head, .tbl .row.four.head { display: none; }
+    .tbl .row.three div::before, .tbl .row.four div::before {
+      content: attr(data-h) ' ';
+      font-family: 'Space Mono', monospace;
+      font-size: 0.64rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #475569;
+    }
+    .tbl .row.three div:first-child::before,
+    .tbl .row.four div:first-child::before { content: none; }
+  }
+
+  /* ── creature / plant cards ────────────────────────────────── */
+  .cardgrid {
+    width: 100%;
+    max-width: 640px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(186px, 1fr));
+    gap: 10px;
+    margin: 8px 0 16px;
+  }
+  .crd {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 12px 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .crd svg { height: 56px; width: auto; margin: 0 auto; }
+  .crd .n {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: #7dd3fc;
+    font-weight: 700;
+  }
+  .crd .q {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.66rem;
+    color: #4ade80;
+    letter-spacing: 0.03em;
+  }
+  .crd .d { font-size: 0.92rem; line-height: 1.5; color: #94a3b8; }
+  .crd.grn .n { color: #86efac; }
+  .crd.grn .q { color: #4ade80; }
+
+  /* ── "try this" cards ──────────────────────────────────────── */
+  .trygrid {
+    width: 100%;
+    max-width: 640px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+    gap: 10px;
+    margin: 8px 0 16px;
+  }
+  .try {
+    background: #0e1626;
+    border: 1px solid #1e3a5f;
+    border-radius: 12px;
+    padding: 12px 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .try .t {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: #7dd3fc;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  .try .t span {
+    color: #475569;
+    font-weight: 400;
+    margin-right: 5px;
+  }
+  .try .d { font-size: 0.92rem; line-height: 1.55; color: #94a3b8; }
+  .try .d b { color: #cbd5e1; font-weight: 500; }
+
+  /* ── shared animation helpers for the SVG diagrams ─────────── */
+
+  /* a creature drifting gently on the spot */
+  .drift { animation: drift 4.5s ease-in-out infinite; }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0); }
+    50%      { transform: translate(7px, -5px); }
+  }
+  .drift2 { animation: drift 5.8s ease-in-out infinite reverse; }
+
+  /* swimmerets fanning under a berried shrimp */
+  .fan { animation: fan 0.55s ease-in-out infinite; transform-box: fill-box; transform-origin: top center; }
+  @keyframes fan {
+    0%, 100% { transform: rotate(-13deg); }
+    50%      { transform: rotate(13deg); }
+  }
+
+  /* bubbles of oxygen lifting off a leaf */
+  .rise  { animation: rise 3s ease-in-out infinite; }
+  .rise2 { animation: rise 3s ease-in-out infinite 1s; }
+  .rise3 { animation: rise 3s ease-in-out infinite 2s; }
+  @keyframes rise {
+    0%   { transform: translateY(6px);   opacity: 0; }
+    20%  { opacity: 1; }
+    100% { transform: translateY(-34px); opacity: 0; }
+  }
+
+  /* dashes crawling along a pipe or an arrow */
+  .flow { stroke-dasharray: 7 9; animation: flow-dash 1.6s linear infinite; }
+  @keyframes flow-dash { to { stroke-dashoffset: -32; } }
+  .flow-slow { stroke-dasharray: 6 10; animation: flow-dash 3.4s linear infinite; }
+
+  /* the radula ribbon feeding new teeth forwards */
+  .scrape { animation: scrape 2.4s ease-in-out infinite; }
+  @keyframes scrape {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(15px); }
+  }
+
+  .blink { animation: blink 2.4s ease-in-out infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+  /* a plant leaf growing taller, then resetting */
+  .sprout { animation: sprout 5s ease-in-out infinite; transform-box: fill-box; transform-origin: bottom center; }
+  @keyframes sprout {
+    0%   { transform: scaleY(0.25); opacity: 0.3; }
+    55%  { transform: scaleY(1);    opacity: 1; }
+    100% { transform: scaleY(1);    opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .drift, .drift2, .fan, .rise, .rise2, .rise3,
+    .flow, .flow-slow, .scrape, .blink, .sprout { animation: none; }
+    .rise, .rise2, .rise3 { opacity: 1; }
+    .sprout { transform: scaleY(1); opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="../science.html">← Science</a>
+  <h1>Aquarium Life</h1>
+</div>
+<p class="subtitle">// four kinds of living things sharing one small box of water</p>
+
+<p class="intro">
+  A planted tank is not an ornament. It is a tiny world with <strong>four crews living in it</strong>:
+  guppies swimming about, cherry shrimp picking at the floor, snails sliding over the glass, and
+  plants quietly turning light into food. Every one of them is born, eats, grows and makes more of
+  itself — and each does it in a completely different way. This page shows you how.
+</p>
+
+<div class="toc">
+  <a href="#s01">01 four neighbours</a>
+  <a href="#s02">02 who lives where</a>
+  <a class="g" href="#s03">03 a guppy up close</a>
+  <a class="g" href="#s04">04 boy or girl?</a>
+  <a class="g" href="#s05">05 guppy life cycle</a>
+  <a class="g" href="#s06">06 guppy babies</a>
+  <a class="g" href="#s07">07 how guppies eat</a>
+  <a class="s" href="#s08">08 a shrimp up close</a>
+  <a class="s" href="#s09">09 shrimp life cycle</a>
+  <a class="s" href="#s10">10 shrimp babies</a>
+  <a class="s" href="#s11">11 changing armour</a>
+  <a class="s" href="#s12">12 how shrimp eat</a>
+  <a class="n" href="#s13">13 a snail up close</a>
+  <a class="n" href="#s14">14 a tongue with teeth</a>
+  <a class="n" href="#s15">15 snail eggs</a>
+  <a class="n" href="#s16">16 how snails eat</a>
+  <a class="p" href="#s17">17 plants are alive</a>
+  <a class="p" href="#s18">18 how plants eat</a>
+  <a class="p" href="#s19">19 plant babies</a>
+  <a class="p" href="#s20">20 easy plants</a>
+  <a href="#s21">21 the team</a>
+  <a href="#s22">22 fun things to try</a>
+  <a href="#s23">23 wow facts</a>
+  <a href="#s24">24 cheat sheet</a>
+</div>
+
+<div class="part"><span>Part A · meet the tank</span></div>
+
+<p class="panel-label" id="s01">01 · <b>four neighbours, four ways of living</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 196" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The four kinds of living things in a planted tank: guppies are fish that swim and give birth to live babies, cherry shrimp are armoured cleaners that carry their eggs, snails glide on one muscular foot and scrape algae, and plants stay put and make their own food from light.">
+  <!-- ══ 1 · guppy ══ -->
+  <rect x="8" y="8" width="105" height="180" rx="12" fill="#0e1626" stroke="#78350f66"/>
+  <g transform="translate(54,64)">
+    <path d="M20,0 C30,-16 42,-22 48,-20 C44,-8 44,8 48,20 C42,22 30,16 20,0 Z" fill="#f59e0b" opacity="0.85"/>
+    <path d="M-32,0 C-24,-11 4,-13 20,0 C4,13 -24,11 -32,0 Z" fill="#fbbf24"/>
+    <path d="M-6,-9 C2,-18 12,-15 15,-5 Z" fill="#f59e0b"/>
+    <path d="M-4,8 C0,16 8,14 11,5 Z" fill="#f59e0b"/>
+    <circle cx="-24" cy="-2" r="2.8" fill="#0a0e1a"/>
+    <circle cx="-24.8" cy="-2.8" r="0.9" fill="#fef3c7"/>
+    <path d="M-33,-1 L-36,-4" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="60" y="126" text-anchor="middle" class="label" fill="#fbbf24" font-size="12" font-weight="700">GUPPY</text>
+  <text x="60" y="150" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">a fish</text>
+  <text x="60" y="170" text-anchor="middle" class="label" fill="#64748b" font-size="9">3–6 cm long</text>
+
+  <!-- ══ 2 · cherry shrimp ══ -->
+  <rect x="120" y="8" width="105" height="180" rx="12" fill="#0e1626" stroke="#7f1d1d66"/>
+  <g transform="translate(186,62) scale(0.85)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#ef4444"/>
+    <path d="M-24,-8 C-12,-13 0,-11 8,-5" fill="none" stroke="#fecaca" stroke-width="2.4" stroke-linecap="round" opacity="0.8"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="2.6" fill="#0a0e1a"/>
+    <path d="M-30,-4 C-40,-10 -48,-8 -54,-2" fill="none" stroke="#fca5a5" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M-30,-2 C-40,0 -46,6 -50,12" fill="none" stroke="#fca5a5" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M-16,6 L-18,14 M-9,8 L-10,16 M-2,8 L-2,16 M5,6 L7,14" stroke="#f87171" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+  <text x="172" y="126" text-anchor="middle" class="label" fill="#f87171" font-size="12" font-weight="700">CHERRY SHRIMP</text>
+  <text x="172" y="150" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">a crustacean</text>
+  <text x="172" y="170" text-anchor="middle" class="label" fill="#64748b" font-size="9">2–3 cm long</text>
+
+  <!-- ══ 3 · snail ══ -->
+  <rect x="232" y="8" width="105" height="180" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+  <g transform="translate(288,60)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <path d="M-25,15 C-31,12 -34,7 -32,3" fill="none" stroke="#ddd6fe" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-21,16 C-29,16 -33,13 -34,9" fill="none" stroke="#ddd6fe" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="-32.5" cy="2.5" r="1.8" fill="#312e81"/>
+    <circle cx="0" cy="-3" r="17" fill="#8b5cf6" stroke="#6d28d9" stroke-width="1.5"/>
+    <path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="2.2"/>
+    <path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2"/>
+    <path d="M-5,-3 A5,5 0 1,1 -1.5,1.7" fill="none" stroke="#c4b5fd" stroke-width="1.6"/>
+  </g>
+  <text x="284" y="126" text-anchor="middle" class="label" fill="#a78bfa" font-size="12" font-weight="700">SNAIL</text>
+  <text x="284" y="150" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">a mollusc</text>
+  <text x="284" y="170" text-anchor="middle" class="label" fill="#64748b" font-size="9">1–3 cm across</text>
+
+  <!-- ══ 4 · plant ══ -->
+  <rect x="344" y="8" width="105" height="180" rx="12" fill="#0e1626" stroke="#14532d66"/>
+  <g transform="translate(396,66)">
+    <path d="M0,30 C-17,16 -25,-4 -20,-24 C-9,-6 -4,12 0,30 Z" fill="#16a34a"/>
+    <path d="M0,30 C11,14 20,-4 17,-22 C8,-4 4,14 0,30 Z" fill="#22c55e"/>
+    <path d="M0,30 C-7,8 -7,-14 -2,-30 C5,-11 7,8 0,30 Z" fill="#4ade80"/>
+    <rect x="-26" y="29" width="52" height="9" rx="2" fill="#2c2a33"/>
+    <path d="M-4,32 C-10,37 -14,38 -18,37 M2,32 C8,37 13,38 17,37" fill="none" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>
+    <circle class="rise"  cx="-12" cy="0"   r="2.4" fill="#7dd3fc" opacity="0.9"/>
+    <circle class="rise2" cx="9"   cy="-4"  r="2"   fill="#7dd3fc" opacity="0.9"/>
+  </g>
+  <text x="396" y="126" text-anchor="middle" class="label" fill="#4ade80" font-size="12" font-weight="700">PLANT</text>
+  <text x="396" y="150" text-anchor="middle" class="label" fill="#94a3b8" font-size="10.5">not an animal</text>
+  <text x="396" y="170" text-anchor="middle" class="label" fill="#64748b" font-size="9">makes its food</text>
+</svg>
+</div>
+<p class="cap">
+  Four crews, four completely different body plans. Only one of them — the plant — can feed itself.
+  The other three all have to go and find breakfast.
+</p>
+
+<p class="para">
+  Here is the first surprising thing: these four are not just "tank animals". They belong to
+  <strong>four different branches of life</strong>, about as far apart from each other as you are
+  from a mushroom. A guppy is closer family to you than it is to a shrimp.
+</p>
+
+<div class="tbl">
+  <div class="row three head"><div>Crew</div><div>What it really is</div><div>Nearest relative you know</div></div>
+  <div class="row three"><div><b>Guppy</b></div><div data-h="is a">A fish — backbone, gills, fins</div><div data-h="like a">A goldfish, a salmon, you (sort of)</div></div>
+  <div class="row three"><div><b>Cherry shrimp</b></div><div data-h="is a">A crustacean — shell outside, no bones inside</div><div data-h="like a">A crab, a lobster, a woodlouse</div></div>
+  <div class="row three"><div><b>Snail</b></div><div data-h="is a">A mollusc — soft body, one big muscly foot</div><div data-h="like a">A garden snail, a slug, an octopus</div></div>
+  <div class="row three"><div><b>Plant</b></div><div data-h="is a">A plant — leaves, roots, no brain, no mouth</div><div data-h="like a">Grass, a fern, a tree</div></div>
+</div>
+
+<div class="callout fun">
+  <strong>Fun fact:</strong> a woodlouse under a flowerpot and a cherry shrimp in your tank are cousins.
+  Both are crustaceans. The woodlouse is basically <em>a shrimp that crawled onto land</em> and never went back.
+</div>
+
+<p class="panel-label" id="s02">02 · <b>who lives where — the tank has floors</b></p>
+
+<p class="para">
+  A tank is not one habitat, it is several stacked on top of each other. Each crew has a favourite
+  floor, which is why they can all fit in 20 litres of water without getting in each other's way.
+</p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 336" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A cross-section of a planted tank divided into floors. Guppies use the top and middle open water, snails graze on the glass at any height, and cherry shrimp work along the bottom among the moss and gravel. Plants are rooted in the gravel or tied to wood, and floating plants trail roots from the surface.">
+  <defs>
+    <marker id="a-dim" markerWidth="7" markerHeight="7" refX="5.4" refY="2.6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L5.4,2.6 L0,5.2 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- ── glass box ── -->
+  <rect x="14" y="26" width="250" height="290" rx="4" fill="#0b1b2e" stroke="#38bdf8" stroke-width="2"/>
+  <rect x="16" y="48" width="246" height="266" fill="#0c2036" opacity="0.85"/>
+  <line x1="16" y1="48" x2="262" y2="48" stroke="#7dd3fc" stroke-width="1.5" opacity="0.85"/>
+
+  <!-- gravel -->
+  <rect x="16" y="288" width="246" height="26" fill="#2c2a33"/>
+  <circle cx="40" cy="293" r="2.8" fill="#3f3d4a"/><circle cx="74" cy="297" r="2.4" fill="#3f3d4a"/>
+  <circle cx="112" cy="292" r="2.9" fill="#3f3d4a"/><circle cx="150" cy="298" r="2.5" fill="#3f3d4a"/>
+  <circle cx="188" cy="293" r="2.7" fill="#3f3d4a"/><circle cx="226" cy="297" r="2.4" fill="#3f3d4a"/>
+
+  <!-- zone divider lines -->
+  <line x1="16" y1="112" x2="262" y2="112" stroke="#334155" stroke-width="1" stroke-dasharray="4 5"/>
+  <line x1="16" y1="224" x2="262" y2="224" stroke="#334155" stroke-width="1" stroke-dasharray="4 5"/>
+
+  <!-- ── floating plants at the surface ── -->
+  <g>
+    <ellipse cx="44" cy="45" rx="7" ry="4" fill="#4ade80"/>
+    <ellipse cx="60" cy="47" rx="6" ry="3.4" fill="#22c55e"/>
+    <ellipse cx="76" cy="44" rx="6.5" ry="3.7" fill="#4ade80"/>
+    <path d="M42,49 C40,56 43,62 41,68 M47,49 C48,56 46,61 48,66
+             M58,50 C57,57 55,62 56,67 M63,50 C64,56 62,61 63,66
+             M74,48 C72,55 75,60 73,65 M79,48 C80,55 78,60 79,65"
+          fill="none" stroke="#86efac" stroke-width="1" opacity="0.6"/>
+  </g>
+  <!-- hornwort, feathery, right side -->
+  <g stroke="#22c55e" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.9">
+    <path d="M238,300 C232,254 240,206 234,160 C231,132 236,104 232,74"/>
+    <path d="M236,270 l-13,-8 M235,250 l13,-9 M238,228 l-13,-9 M234,206 l13,-8
+             M233,184 l-13,-8 M234,162 l13,-9 M233,140 l-13,-8 M234,118 l13,-9 M233,96 l-13,-8"/>
+  </g>
+  <!-- amazon sword, rooted, left-bottom -->
+  <g fill="#16a34a">
+    <path d="M62,292 C46,262 38,226 44,192 C56,226 62,260 62,292 Z"/>
+    <path d="M62,292 C72,262 82,230 78,198 C68,230 64,262 62,292 Z" fill="#22c55e"/>
+    <path d="M62,292 C56,258 56,222 60,190 C68,222 68,258 62,292 Z" fill="#4ade80"/>
+  </g>
+  <!-- anubias tied to a piece of wood, middle -->
+  <g>
+    <path d="M118,292 C130,284 152,282 170,288" stroke="#78350f" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <ellipse cx="128" cy="272" rx="13" ry="8" fill="#15803d" transform="rotate(-24 128 272)"/>
+    <ellipse cx="148" cy="266" rx="14" ry="8.5" fill="#16a34a" transform="rotate(-8 148 266)"/>
+    <ellipse cx="166" cy="272" rx="12" ry="7.5" fill="#15803d" transform="rotate(16 166 272)"/>
+  </g>
+  <!-- java moss clump on the gravel -->
+  <ellipse cx="96" cy="292" rx="24" ry="7" fill="#166534"/>
+  <g stroke="#4ade80" stroke-width="1.5" fill="none" opacity="0.9" stroke-linecap="round">
+    <path d="M78,291 l3,-9 M84,291 l-5,-10 M90,291 l4,-11 M96,290 l-4,-12 M102,291 l6,-9
+             M108,290 l-3,-11 M114,291 l4,-10"/>
+  </g>
+
+  <!-- ── guppies: top and middle ── -->
+  <g transform="translate(120,78)"><g class="drift">
+    <path d="M13,0 C20,-10 27,-14 31,-13 C28,-5 28,5 31,13 C27,14 20,10 13,0 Z" fill="#f59e0b" opacity="0.85"/>
+    <path d="M-21,0 C-16,-7 3,-8 13,0 C3,8 -16,7 -21,0 Z" fill="#fbbf24"/>
+    <circle cx="-16" cy="-1" r="1.8" fill="#0a0e1a"/>
+  </g></g>
+  <g transform="translate(186,92)"><g class="drift2">
+    <path d="M13,0 C20,-10 27,-14 31,-13 C28,-5 28,5 31,13 C27,14 20,10 13,0 Z" fill="#fb923c" opacity="0.85"/>
+    <path d="M-21,0 C-16,-7 3,-8 13,0 C3,8 -16,7 -21,0 Z" fill="#fcd34d"/>
+    <circle cx="-16" cy="-1" r="1.8" fill="#0a0e1a"/>
+  </g></g>
+  <g transform="translate(96,166)"><g class="drift">
+    <path d="M13,0 C20,-10 27,-14 31,-13 C28,-5 28,5 31,13 C27,14 20,10 13,0 Z" fill="#f59e0b" opacity="0.85"/>
+    <path d="M-21,0 C-16,-7 3,-8 13,0 C3,8 -16,7 -21,0 Z" fill="#fbbf24"/>
+    <circle cx="-16" cy="-1" r="1.8" fill="#0a0e1a"/>
+  </g></g>
+  <g transform="translate(178,192)"><g class="drift2">
+    <path d="M13,0 C20,-10 27,-14 31,-13 C28,-5 28,5 31,13 C27,14 20,10 13,0 Z" fill="#fb923c" opacity="0.85"/>
+    <path d="M-21,0 C-16,-7 3,-8 13,0 C3,8 -16,7 -21,0 Z" fill="#fcd34d"/>
+    <circle cx="-16" cy="-1" r="1.8" fill="#0a0e1a"/>
+  </g></g>
+
+  <!-- ── snails: on the glass, at two heights ── -->
+  <g transform="translate(29,150) scale(0.62)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <circle cx="0" cy="-3" r="17" fill="#8b5cf6" stroke="#6d28d9" stroke-width="1.5"/>
+    <path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="2.4"/>
+    <path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2"/>
+  </g>
+  <g transform="translate(249,132) scale(0.62)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <circle cx="0" cy="-3" r="17" fill="#a78bfa" stroke="#6d28d9" stroke-width="1.5"/>
+    <path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#ddd6fe" stroke-width="2.4"/>
+    <path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#ddd6fe" stroke-width="2"/>
+  </g>
+
+  <!-- ── cherry shrimp: on the bottom ── -->
+  <g transform="translate(140,278) scale(0.5)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#ef4444"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+  </g>
+  <g transform="translate(198,282) scale(0.5) scale(-1,1)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#f87171"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+  </g>
+  <g transform="translate(74,272) scale(0.45)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#ef4444"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+  </g>
+
+  <!-- ══ labels on the right ══ -->
+  <line x1="272" y1="76" x2="264" y2="76" stroke="#475569" stroke-width="1.4" marker-end="url(#a-dim)"/>
+  <text x="278" y="66" class="label" fill="#fbbf24" font-size="11" font-weight="700">TOP FLOOR</text>
+  <text x="278" y="80" class="label" fill="#64748b" font-size="9.5">guppies hang here and</text>
+  <text x="278" y="92" class="label" fill="#64748b" font-size="9.5">grab food off the surface</text>
+
+  <line x1="272" y1="140" x2="264" y2="140" stroke="#475569" stroke-width="1.4" marker-end="url(#a-dim)"/>
+  <text x="278" y="130" class="label" fill="#a78bfa" font-size="11" font-weight="700">THE GLASS</text>
+  <text x="278" y="144" class="label" fill="#64748b" font-size="9.5">snails slide up and down</text>
+  <text x="278" y="156" class="label" fill="#64748b" font-size="9.5">scraping the green fuzz</text>
+
+  <line x1="272" y1="198" x2="264" y2="198" stroke="#475569" stroke-width="1.4" marker-end="url(#a-dim)"/>
+  <text x="278" y="188" class="label" fill="#fcd34d" font-size="11" font-weight="700">MIDDLE</text>
+  <text x="278" y="202" class="label" fill="#64748b" font-size="9.5">open water for chasing,</text>
+  <text x="278" y="214" class="label" fill="#64748b" font-size="9.5">showing off and resting</text>
+
+  <line x1="272" y1="278" x2="264" y2="278" stroke="#475569" stroke-width="1.4" marker-end="url(#a-dim)"/>
+  <text x="278" y="256" class="label" fill="#f87171" font-size="11" font-weight="700">THE FLOOR</text>
+  <text x="278" y="270" class="label" fill="#64748b" font-size="9.5">shrimp pick through moss</text>
+  <text x="278" y="282" class="label" fill="#64748b" font-size="9.5">and gravel for crumbs;</text>
+  <text x="278" y="294" class="label" fill="#64748b" font-size="9.5">plants put roots down here</text>
+</svg>
+</div>
+<p class="cap">
+  Guppies own the open water, snails own the surfaces, shrimp own the floor, and plants hold the
+  whole thing together. Nobody is competing for the same spot.
+</p>
+
+<div class="callout key">
+  <strong>The big idea:</strong> a good tank is a <em>team</em>. The fish make mess, the shrimp and snails
+  tidy it into smaller mess, invisible bacteria turn that into plant food, and the plants turn it back
+  into leaves and oxygen. You are the only one who has to remember to feed everybody.
+</div>
+
+<div class="part"><span>Part B · guppies — the swimmers</span></div>
+
+<p class="panel-label" id="s03">03 · <b>a guppy up close</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 252" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A labelled guppy. The mouth points upwards for taking food from the surface, the eye is large, water leaves through the gill cover behind the head, the dorsal fin on top stops it rolling, the anal fin underneath shows whether it is male or female, and the big colourful tail is its flag.">
+  <defs>
+    <marker id="g-tip" markerWidth="7" markerHeight="7" refX="5.4" refY="2.6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L5.4,2.6 L0,5.2 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect x="8" y="8" width="444" height="236" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <!-- ── leader lines (drawn first so the fish sits on top) ── -->
+  <line x1="118" y1="56" x2="190" y2="96"  stroke="#64748b" stroke-width="1.2" marker-end="url(#g-tip)"/>
+  <line x1="344" y1="56" x2="300" y2="96"  stroke="#64748b" stroke-width="1.2" marker-end="url(#g-tip)"/>
+  <line x1="110" y1="168" x2="134" y2="132" stroke="#64748b" stroke-width="1.2" marker-end="url(#g-tip)"/>
+  <line x1="116" y1="204" x2="166" y2="160" stroke="#64748b" stroke-width="1.2" marker-end="url(#g-tip)"/>
+  <line x1="330" y1="204" x2="236" y2="166" stroke="#64748b" stroke-width="1.2" marker-end="url(#g-tip)"/>
+  <line x1="152" y1="90"  x2="155" y2="116" stroke="#64748b" stroke-width="1.2" marker-end="url(#g-tip)"/>
+
+  <!-- ── the guppy ── -->
+  <g transform="translate(210,130) scale(2.3)">
+    <path d="M20,0 C30,-16 42,-22 48,-20 C44,-8 44,8 48,20 C42,22 30,16 20,0 Z" fill="#f59e0b" opacity="0.9"/>
+    <path d="M24,-8 C32,-14 40,-17 45,-16 M24,8 C32,14 40,17 45,16" fill="none" stroke="#fbbf24" stroke-width="0.8" opacity="0.7"/>
+    <path d="M-32,0 C-24,-11 4,-13 20,0 C4,13 -24,11 -32,0 Z" fill="#fbbf24"/>
+    <path d="M-6,-9 C2,-18 12,-15 15,-5 Z" fill="#f59e0b"/>
+    <path d="M-4,8 C0,16 8,14 11,5 Z" fill="#f59e0b"/>
+    <path d="M-14,2 C-10,9 -4,10 -1,6" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M-18,-8 C-18,-2 -18,4 -17,9" fill="none" stroke="#b45309" stroke-width="1" opacity="0.9"/>
+    <circle cx="-24" cy="-2" r="3" fill="#0a0e1a"/>
+    <circle cx="-25" cy="-3" r="1" fill="#fef3c7"/>
+    <path d="M-33,-1 L-36,-4" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="2" cy="-3" r="2.6" fill="#f472b6" opacity="0.8"/>
+    <circle cx="10" cy="3" r="2" fill="#38bdf8" opacity="0.7"/>
+    <circle cx="-8" cy="4" r="1.8" fill="#4ade80" opacity="0.7"/>
+  </g>
+
+  <!-- ── labels ── -->
+  <text x="16" y="38" class="label" fill="#fbbf24" font-size="11" font-weight="700">DORSAL FIN</text>
+  <text x="16" y="52" class="label" fill="#64748b" font-size="9.5">the keel on top — it stops</text>
+  <text x="16" y="64" class="label" fill="#64748b" font-size="9.5">him rolling over sideways</text>
+
+  <text x="444" y="38" text-anchor="end" class="label" fill="#fbbf24" font-size="11" font-weight="700">TAIL FIN</text>
+  <text x="444" y="52" text-anchor="end" class="label" fill="#64748b" font-size="9.5">the engine AND the flag —</text>
+  <text x="444" y="64" text-anchor="end" class="label" fill="#64748b" font-size="9.5">a guppy shows off with it</text>
+
+  <text x="16" y="116" class="label" fill="#fbbf24" font-size="11" font-weight="700">MOUTH</text>
+  <text x="16" y="130" class="label" fill="#64748b" font-size="9.5">tilted UPWARDS. Guppies</text>
+  <text x="16" y="142" class="label" fill="#64748b" font-size="9.5">are built to eat things</text>
+  <text x="16" y="154" class="label" fill="#64748b" font-size="9.5">floating at the top.</text>
+
+  <text x="152" y="80" text-anchor="middle" class="label" fill="#94a3b8" font-size="10">eye</text>
+
+  <text x="16" y="200" class="label" fill="#fbbf24" font-size="11" font-weight="700">GILL COVER</text>
+  <text x="16" y="214" class="label" fill="#64748b" font-size="9.5">water goes IN the mouth</text>
+  <text x="16" y="226" class="label" fill="#64748b" font-size="9.5">and OUT here, past the</text>
+  <text x="16" y="238" class="label" fill="#64748b" font-size="9.5">gills — that is breathing</text>
+
+  <text x="444" y="200" text-anchor="end" class="label" fill="#fbbf24" font-size="11" font-weight="700">ANAL FIN</text>
+  <text x="444" y="214" text-anchor="end" class="label" fill="#64748b" font-size="9.5">the little fin underneath.</text>
+  <text x="444" y="226" text-anchor="end" class="label" fill="#64748b" font-size="9.5">Its shape tells you if the</text>
+  <text x="444" y="238" text-anchor="end" class="label" fill="#64748b" font-size="9.5">guppy is a boy or a girl →</text>
+</svg>
+</div>
+<p class="cap">
+  A guppy is about 3–6 cm long — roughly your thumb. Everything on it has a job: fins to steer,
+  gills to breathe, and colour to impress.
+</p>
+
+<p class="para">
+  Guppies come from warm streams and ditches in South America. They are famously tough, famously
+  busy, and famously good at making more guppies — which is why they are in almost every first tank
+  in the world. Their other name is the <strong>millionfish</strong>, and you will find out why in section 06.
+</p>
+
+<div class="callout fun">
+  <strong>Fun fact:</strong> a fish "drinks" to breathe. Water carries dissolved oxygen. The guppy takes a
+  mouthful, pushes it over the feathery gills inside the gill cover, and the gills grab the oxygen out of
+  it — <em>the same oxygen your lungs grab out of air</em>, just delivered by water instead.
+</div>
+
+<p class="panel-label" id="s04">04 · <b>boy or girl? — the easiest fish to tell apart</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 222" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Male and female guppies side by side. The male is smaller and slimmer with bright colours, a huge flowing tail, and a thin pointed anal fin. The female is larger and plainer with a short rounded tail, a triangular fan-shaped anal fin, and a dark gravid spot on her belly.">
+  <rect x="8" y="8" width="214" height="206" rx="12" fill="#0e1626" stroke="#1e3a5f"/>
+  <rect x="238" y="8" width="214" height="206" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+
+  <text x="115" y="30" text-anchor="middle" class="label" fill="#38bdf8" font-size="12" font-weight="700">♂ MALE</text>
+  <text x="345" y="30" text-anchor="middle" class="label" fill="#f472b6" font-size="12" font-weight="700">♀ FEMALE</text>
+
+  <!-- ── male: small, bright, huge tail, pointed anal fin ── -->
+  <g transform="translate(104,84) scale(1.65)">
+    <path d="M18,0 C32,-22 48,-30 56,-28 C50,-12 50,12 56,28 C48,30 32,22 18,0 Z" fill="#38bdf8" opacity="0.65"/>
+    <path d="M22,-10 C34,-20 46,-25 52,-24 M22,10 C34,20 46,25 52,24" fill="none" stroke="#7dd3fc" stroke-width="0.8"/>
+    <path d="M-26,0 C-20,-8 2,-10 18,0 C2,10 -20,8 -26,0 Z" fill="#fbbf24"/>
+    <path d="M-5,-7 C2,-19 12,-15 14,-4 Z" fill="#38bdf8" opacity="0.8"/>
+    <circle cx="-2" cy="-2" r="2.8" fill="#f472b6"/>
+    <circle cx="7" cy="2" r="2.2" fill="#4ade80"/>
+    <circle cx="-11" cy="3" r="2" fill="#38bdf8"/>
+    <circle cx="-19" cy="-1.5" r="2.4" fill="#0a0e1a"/>
+    <!-- gonopodium: the pointed anal fin -->
+    <path d="M-2,7 L6,17" stroke="#fbbf24" stroke-width="2.6" stroke-linecap="round"/>
+  </g>
+  <circle cx="114" cy="112" r="17" fill="none" stroke="#38bdf8" stroke-width="1.4" stroke-dasharray="3 3"/>
+  <line x1="114" y1="129" x2="114" y2="142" stroke="#38bdf8" stroke-width="1.2"/>
+  <text x="114" y="156" text-anchor="middle" class="label" fill="#7dd3fc" font-size="9.5">thin + pointy</text>
+
+  <text x="115" y="176" text-anchor="middle" class="label" fill="#94a3b8" font-size="10">smaller · slimmer · loud colours</text>
+  <text x="115" y="192" text-anchor="middle" class="label" fill="#64748b" font-size="9">huge flowing tail, always showing off</text>
+  <text x="115" y="206" text-anchor="middle" class="label" fill="#64748b" font-size="9.5">about 3 cm</text>
+
+  <!-- ── female: bigger, plainer, fan anal fin, gravid spot ── -->
+  <g transform="translate(320,84) scale(1.65)">
+    <path d="M22,0 C31,-13 41,-18 46,-17 C42,-8 42,8 46,17 C41,18 31,13 22,0 Z" fill="#c4b5fd" opacity="0.7"/>
+    <path d="M-32,0 C-24,-12 4,-14 22,0 C4,14 -24,12 -32,0 Z" fill="#e9d5ff"/>
+    <path d="M-6,-9 C2,-20 12,-16 15,-5 Z" fill="#c4b5fd" opacity="0.8"/>
+    <circle cx="-24" cy="-2" r="3" fill="#0a0e1a"/>
+    <!-- gravid spot: dark patch above the anal fin -->
+    <ellipse cx="6" cy="6" rx="7" ry="5.5" fill="#4c1d95"/>
+    <!-- fan-shaped anal fin -->
+    <path d="M0,10 L12,10 L7,19 Z" fill="#c4b5fd"/>
+  </g>
+  <circle cx="332" cy="112" r="17" fill="none" stroke="#a78bfa" stroke-width="1.4" stroke-dasharray="3 3"/>
+  <line x1="332" y1="129" x2="332" y2="142" stroke="#a78bfa" stroke-width="1.2"/>
+  <text x="332" y="156" text-anchor="middle" class="label" fill="#c4b5fd" font-size="9.5">wide fan shape</text>
+  <line x1="392" y1="116" x2="342" y2="99" stroke="#a78bfa" stroke-width="1.2"/>
+  <text x="446" y="110" text-anchor="end" class="label" fill="#c4b5fd" font-size="9.5">dark</text>
+  <text x="446" y="122" text-anchor="end" class="label" fill="#c4b5fd" font-size="9.5">"gravid spot"</text>
+
+  <text x="345" y="176" text-anchor="middle" class="label" fill="#94a3b8" font-size="10">bigger · rounder · plain silver</text>
+  <text x="345" y="192" text-anchor="middle" class="label" fill="#64748b" font-size="9">short tail, built for carrying babies</text>
+  <text x="345" y="206" text-anchor="middle" class="label" fill="#64748b" font-size="9.5">about 5–6 cm</text>
+</svg>
+</div>
+<p class="cap">
+  Look underneath, just past the belly. A thin pointed rod = male. A wide triangular fan = female.
+  That one fin is the whole test.
+</p>
+
+<p class="para">
+  In most animals you know, the male and female look fairly similar. In guppies they look like two
+  different species. The male's pointed anal fin even has a name — the <strong>gonopodium</strong> —
+  and it is not really a fin any more, it is a tube he uses to pass sperm to the female.
+</p>
+
+<div class="callout tip">
+  <strong>Why the boys are so bright:</strong> a female guppy chooses who to mate with, and she likes
+  colour — especially orange. So over thousands of generations the flashiest males had the most babies,
+  and their sons inherited the flash. The plain, careful females inherited something else:
+  <em>not getting eaten</em>.
+</div>
+
+<p class="panel-label" id="s05">05 · <b>the guppy life cycle — no egg stage at all</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 358" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The guppy life cycle in four stages: babies are born alive and swimming on day zero, they hide in plants as fry for the first weeks, turn into coloured juveniles at one to two months, and are grown-up parents by about three months, when the cycle starts again.">
+  <defs>
+    <marker id="stg-a" markerWidth="9" markerHeight="9" refX="7" refY="3.4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7,3.4 L0,6.8 Z" fill="#fbbf24"/>
+    </marker>
+    <marker id="stg-b" markerWidth="9" markerHeight="9" refX="7" refY="3.4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7,3.4 L0,6.8 Z" fill="#f59e0b"/>
+    </marker>
+  </defs>
+  <line class="flow" x1="24" y1="24" x2="24" y2="300" stroke="#fbbf24" stroke-width="2.4" marker-end="url(#stg-a)" opacity="0.9"/>
+  <rect x="40" y="8" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="32" class="label" fill="#fbbf24" font-size="11.5" font-weight="700">1 · BORN</text>
+  <text x="440" y="32" text-anchor="end" class="label" fill="#7dd3fc" font-size="10">day 0</text>
+  <text x="152" y="53" class="label" fill="#94a3b8" font-size="10">6 mm long — about the size of a grain of rice,</text>
+  <text x="152" y="69" class="label" fill="#94a3b8" font-size="10">and already swimming, steering and eating.</text>
+  <g transform="translate(96,43)">
+    <path d="M9,0 C14,-7 20,-10 22,-9 C20,-4 20,4 22,9 C20,10 14,7 9,0 Z" fill="#94a3b8" opacity="0.75"/>
+    <path d="M-16,0 C-12,-5 1,-6 9,0 C1,6 -12,5 -16,0 Z" fill="#cbd5e1" opacity="0.9"/>
+    <circle cx="-11" cy="-0.8" r="3" fill="#0a0e1a"/>
+    <circle cx="-11.9" cy="-1.7" r="0.9" fill="#e2e8f0"/>
+  </g>
+  <rect x="40" y="86" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="110" class="label" fill="#fbbf24" font-size="11.5" font-weight="700">2 · FRY</text>
+  <text x="440" y="110" text-anchor="end" class="label" fill="#7dd3fc" font-size="10">week 1 – 4</text>
+  <text x="152" y="131" class="label" fill="#94a3b8" font-size="10">Hides in the moss all day, eating constantly,</text>
+  <text x="152" y="147" class="label" fill="#94a3b8" font-size="10">because everything bigger wants to eat it.</text>
+  <g transform="translate(96,121)">
+    <g stroke="#4ade80" stroke-width="1.5" fill="none" opacity="0.65" stroke-linecap="round">
+      <path d="M-34,20 l4,-12 M-25,20 l-4,-13 M-16,20 l5,-11 M16,20 l-4,-12 M25,20 l4,-13 M34,20 l-5,-11"/>
+    </g>
+    <path d="M11,0 C17,-8 23,-12 26,-11 C23,-5 23,5 26,11 C23,12 17,8 11,0 Z" fill="#a8a29e" opacity="0.8"/>
+    <path d="M-19,0 C-14,-6 1,-7 11,0 C1,7 -14,6 -19,0 Z" fill="#d6d3d1"/>
+    <circle cx="-13" cy="-1" r="3.2" fill="#0a0e1a"/>
+    <circle cx="-3" cy="1" r="1.8" fill="#fbbf24" opacity="0.6"/>
+  </g>
+  <rect x="40" y="164" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="188" class="label" fill="#fbbf24" font-size="11.5" font-weight="700">3 · JUVENILE</text>
+  <text x="440" y="188" text-anchor="end" class="label" fill="#7dd3fc" font-size="10">1 – 2 months</text>
+  <text x="152" y="209" class="label" fill="#94a3b8" font-size="10">Colours start to show, and you can finally</text>
+  <text x="152" y="225" class="label" fill="#94a3b8" font-size="10">tell the boys from the girls by their fins.</text>
+  <g transform="translate(96,199)">
+    <path d="M13,0 C21,-11 30,-16 33,-14 C30,-5 30,5 33,14 C30,16 21,11 13,0 Z" fill="#38bdf8" opacity="0.6"/>
+    <path d="M-22,0 C-16,-7 2,-9 13,0 C2,9 -16,7 -22,0 Z" fill="#e2e8f0"/>
+    <path d="M-4,-6 C1,-13 8,-11 11,-4 Z" fill="#38bdf8" opacity="0.65"/>
+    <circle cx="-16" cy="-1" r="3" fill="#0a0e1a"/>
+    <circle cx="-1" cy="-1" r="2.6" fill="#fbbf24" opacity="0.85"/>
+    <circle cx="6" cy="2" r="2.2" fill="#f472b6" opacity="0.75"/>
+  </g>
+  <rect x="40" y="242" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="266" class="label" fill="#fbbf24" font-size="11.5" font-weight="700">4 · ADULT</text>
+  <text x="440" y="266" text-anchor="end" class="label" fill="#7dd3fc" font-size="10">about 3 months</text>
+  <text x="152" y="287" class="label" fill="#94a3b8" font-size="10">Full size and full colour, and ready to be</text>
+  <text x="152" y="303" class="label" fill="#94a3b8" font-size="10">a parent itself.</text>
+  <g transform="translate(92,277)">
+    <path d="M17,0 C25,-14 36,-20 41,-19 C36,-7 36,7 41,19 C36,20 25,14 17,0 Z" fill="#f59e0b" opacity="0.9"/>
+    <path d="M-27,0 C-20,-9 3,-11 17,0 C3,11 -20,9 -27,0 Z" fill="#fbbf24"/>
+    <path d="M-5,-8 C1,-15 10,-13 13,-4 Z" fill="#f59e0b"/>
+    <path d="M-2,7 L5,15" stroke="#fbbf24" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="-20" cy="-2" r="3" fill="#0a0e1a"/>
+    <circle cx="-3" cy="-2" r="2.6" fill="#f472b6"/>
+    <circle cx="6" cy="2" r="2.2" fill="#4ade80"/>
+  </g>
+  <path class="flow-slow" d="M448,316 C448,336 60,342 28,318" fill="none" stroke="#f59e0b"
+        stroke-width="2.2" marker-end="url(#stg-b)" opacity="0.85"/>
+  <text x="240" y="354" text-anchor="middle" class="label" fill="#b45309" font-size="10">…and she has babies of her own, and round it goes</text>
+</svg>
+</div>
+<p class="cap">
+  Four stages and no egg anywhere. A guppy goes from newborn to parent in about the time it takes you
+  to get through one school term.
+</p>
+
+<div class="callout key">
+  <strong>The whole trick in one line:</strong> guppies are <em>livebearers</em>. The eggs stay inside the
+  mother, hatch inside her, and what comes out is a tiny fish that can already swim, steer and eat.
+  Most fish — goldfish, tetras, angelfish — squirt eggs out and hope. Guppies skip that.
+</div>
+
+<p class="panel-label" id="s06">06 · <b>guppy babies — born swimming</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 226" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Guppy reproduction in three panels. Inside the mother, the babies develop for about four weeks and their eyes show through her belly as a dark gravid spot. At birth the fry drop out one at a time, already swimming. Straight afterwards they must hide in plants, because the adult guppies will eat them.">
+  <!-- ── panel 1 · inside mum ── -->
+  <rect x="8" y="8" width="142" height="212" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+  <g transform="translate(74,62)">
+    <path d="M20,0 C28,-12 37,-16 41,-15 C37,-7 37,7 41,15 C37,16 28,12 20,0 Z" fill="#c4b5fd" opacity="0.65"/>
+    <path d="M-30,0 C-22,-12 4,-16 20,0 C4,17 -22,13 -30,0 Z" fill="#e9d5ff"/>
+    <path d="M-6,-10 C1,-20 11,-17 14,-6 Z" fill="#c4b5fd" opacity="0.8"/>
+    <circle cx="-23" cy="-2" r="2.8" fill="#0a0e1a"/>
+    <!-- the gravid spot, bulging and dark -->
+    <ellipse cx="5" cy="7" rx="11" ry="8" fill="#3b0764"/>
+    <circle cx="1" cy="5" r="1.5" fill="#f0abfc"/><circle cx="6" cy="9" r="1.5" fill="#f0abfc"/>
+    <circle cx="10" cy="4" r="1.5" fill="#f0abfc"/><circle cx="3" cy="10" r="1.3" fill="#f0abfc"/>
+  </g>
+  <!-- zoom bubble on the gravid spot -->
+  <line x1="88" y1="76" x2="104" y2="106" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 3"/>
+  <circle cx="79" cy="132" r="27" fill="#1a1330" stroke="#a78bfa" stroke-width="1.4"/>
+  <g>
+    <path d="M62,128 C66,120 76,120 78,128 C74,134 64,134 62,128 Z" fill="#cbd5e1" opacity="0.9"/>
+    <circle cx="66" cy="127" r="2.6" fill="#0a0e1a"/>
+    <path d="M80,140 C84,132 94,132 96,140 C92,146 82,146 80,140 Z" fill="#cbd5e1" opacity="0.9"/>
+    <circle cx="84" cy="139" r="2.6" fill="#0a0e1a"/>
+    <path d="M70,146 C74,140 82,140 84,146 C80,151 72,151 70,146 Z" fill="#cbd5e1" opacity="0.75"/>
+    <circle cx="73.5" cy="145" r="2.2" fill="#0a0e1a"/>
+  </g>
+  <text x="79" y="174" text-anchor="middle" class="label" fill="#c4b5fd" font-size="10.5" font-weight="700">1 · INSIDE MUM</text>
+  <text x="79" y="190" text-anchor="middle" class="label" fill="#64748b" font-size="9">about 4 weeks. The</text>
+  <text x="79" y="202" text-anchor="middle" class="label" fill="#64748b" font-size="9">dark spot is the</text>
+  <text x="79" y="214" text-anchor="middle" class="label" fill="#64748b" font-size="9">babies' EYES.</text>
+
+  <!-- ── panel 2 · birth ── -->
+  <rect x="158" y="8" width="142" height="212" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+  <g transform="translate(222,54)">
+    <path d="M20,0 C28,-12 37,-16 41,-15 C37,-7 37,7 41,15 C37,16 28,12 20,0 Z" fill="#c4b5fd" opacity="0.65"/>
+    <path d="M-30,0 C-22,-11 4,-13 20,0 C4,13 -22,11 -30,0 Z" fill="#e9d5ff"/>
+    <circle cx="-23" cy="-2" r="2.8" fill="#0a0e1a"/>
+    <ellipse cx="5" cy="5" rx="7" ry="5" fill="#6d28d9" opacity="0.7"/>
+  </g>
+  <!-- fry dropping away, one at a time -->
+  <g>
+    <g transform="translate(212,86)">
+      <path d="M-7,0 C-4,-3.4 3,-3.4 6,0 C3,3.4 -4,3.4 -7,0 Z" fill="#cbd5e1"/>
+      <circle cx="-4" cy="-0.5" r="2" fill="#0a0e1a"/>
+    </g>
+    <g transform="translate(240,104)">
+      <path d="M-7,0 C-4,-3.4 3,-3.4 6,0 C3,3.4 -4,3.4 -7,0 Z" fill="#cbd5e1"/>
+      <circle cx="-4" cy="-0.5" r="2" fill="#0a0e1a"/>
+    </g>
+    <g transform="translate(200,122)">
+      <path d="M-7,0 C-4,-3.4 3,-3.4 6,0 C3,3.4 -4,3.4 -7,0 Z" fill="#cbd5e1"/>
+      <circle cx="-4" cy="-0.5" r="2" fill="#0a0e1a"/>
+    </g>
+    <g transform="translate(256,132)">
+      <path d="M-7,0 C-4,-3.4 3,-3.4 6,0 C3,3.4 -4,3.4 -7,0 Z" fill="#cbd5e1"/>
+      <circle cx="-4" cy="-0.5" r="2" fill="#0a0e1a"/>
+    </g>
+    <g transform="translate(224,146)">
+      <path d="M-7,0 C-4,-3.4 3,-3.4 6,0 C3,3.4 -4,3.4 -7,0 Z" fill="#cbd5e1"/>
+      <circle cx="-4" cy="-0.5" r="2" fill="#0a0e1a"/>
+    </g>
+  </g>
+  <path d="M222,70 C222,96 214,124 220,150" fill="none" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
+  <text x="229" y="174" text-anchor="middle" class="label" fill="#c4b5fd" font-size="10.5" font-weight="700">2 · BORN ALIVE</text>
+  <text x="229" y="190" text-anchor="middle" class="label" fill="#64748b" font-size="9">20–50 fry, dropped</text>
+  <text x="229" y="202" text-anchor="middle" class="label" fill="#64748b" font-size="9">one at a time over a</text>
+  <text x="229" y="214" text-anchor="middle" class="label" fill="#64748b" font-size="9">few hours</text>
+
+  <!-- ── panel 3 · hide ── -->
+  <rect x="308" y="8" width="142" height="212" rx="12" fill="#0e1626" stroke="#7f1d1d66"/>
+  <!-- moss cushion, then stems, then fry tucked down among them -->
+  <ellipse cx="378" cy="153" rx="62" ry="10" fill="#166534"/>
+  <g stroke="#4ade80" stroke-width="1.6" fill="none" opacity="0.75" stroke-linecap="round">
+    <path d="M322,152 l6,-18 M334,153 l-5,-20 M346,152 l7,-17 M358,153 l-6,-19 M370,152 l6,-18
+             M382,153 l-5,-20 M394,152 l7,-17 M406,153 l-6,-19 M418,152 l6,-18 M430,152 l-5,-17"/>
+  </g>
+  <g transform="translate(344,144)">
+    <path d="M-7,0 C-4,-3.4 3,-3.4 6,0 C3,3.4 -4,3.4 -7,0 Z" fill="#cbd5e1"/>
+    <circle cx="-4" cy="-0.5" r="2" fill="#0a0e1a"/>
+  </g>
+  <g transform="translate(388,148)">
+    <path d="M-7,0 C-4,-3.4 3,-3.4 6,0 C3,3.4 -4,3.4 -7,0 Z" fill="#cbd5e1"/>
+    <circle cx="-4" cy="-0.5" r="2" fill="#0a0e1a"/>
+  </g>
+  <g transform="translate(416,142)">
+    <path d="M-7,0 C-4,-3.4 3,-3.4 6,0 C3,3.4 -4,3.4 -7,0 Z" fill="#cbd5e1"/>
+    <circle cx="-4" cy="-0.5" r="2" fill="#0a0e1a"/>
+  </g>
+  <g stroke="#4ade80" stroke-width="1.6" fill="none" opacity="0.95" stroke-linecap="round">
+    <path d="M338,153 l4,-16 M352,153 l-4,-17 M380,153 l5,-16 M396,153 l-4,-15 M412,153 l5,-17 M426,153 l-4,-16"/>
+  </g>
+  <!-- a hungry adult cruising past -->
+  <g transform="translate(370,66)"><g class="drift">
+    <path d="M14,0 C21,-11 29,-15 33,-14 C29,-6 29,6 33,14 C29,15 21,11 14,0 Z" fill="#f59e0b" opacity="0.85"/>
+    <path d="M-22,0 C-17,-8 2,-9 14,0 C2,9 -17,8 -22,0 Z" fill="#fbbf24"/>
+    <circle cx="-17" cy="-1" r="2.6" fill="#0a0e1a"/>
+  </g></g>
+  <path d="M368,84 C368,100 352,112 344,122" fill="none" stroke="#f87171" stroke-width="1.4" stroke-dasharray="4 4"/>
+  <text x="379" y="40" text-anchor="middle" class="label" fill="#fca5a5" font-size="9.5">mum eats fry too!</text>
+  <text x="379" y="174" text-anchor="middle" class="label" fill="#fca5a5" font-size="10.5" font-weight="700">3 · HIDE, FAST</text>
+  <text x="379" y="190" text-anchor="middle" class="label" fill="#64748b" font-size="8.5">a thick clump of moss</text>
+  <text x="379" y="202" text-anchor="middle" class="label" fill="#64748b" font-size="8.5">is the difference between</text>
+  <text x="379" y="214" text-anchor="middle" class="label" fill="#64748b" font-size="8.5">2 survivors and 20</text>
+</svg>
+</div>
+<p class="cap">
+  The whole point of being a livebearer: the babies skip the helpless egg stage and arrive ready to run.
+  They still need somewhere to run <em>to</em>.
+</p>
+
+<div class="steps">
+  <div class="step"><div class="step-num gup">01</div><div class="step-text">
+    A male chases a female and, in about a second, uses his pointed fin to pass her a packet of sperm.
+    Females do most of the choosing; males do most of the chasing.
+  </div></div>
+  <div class="step"><div class="step-num gup">02</div><div class="step-text">
+    The eggs are fertilised <strong>inside her</strong> and stay there. For roughly <em>4 weeks</em> the
+    babies grow in her belly, living off the yolk in their own eggs.
+  </div></div>
+  <div class="step"><div class="step-num gup">03</div><div class="step-text">
+    Her belly goes square and the gravid spot turns almost black. You are literally looking at
+    <strong>dozens of tiny eyes</strong> through her skin. When the spot looks packed and her belly
+    looks boxy, birth is a day or two away.
+  </div></div>
+  <div class="step"><div class="step-num gup">04</div><div class="step-text">
+    She gives birth to <strong>20–50 fry</strong> (sometimes over 100 from a big old female), one at a
+    time, usually in the early morning. Each one sinks for a second, then rights itself and swims off.
+  </div></div>
+  <div class="step"><div class="step-num gup">05</div><div class="step-text">
+    The fry hide instantly. They have to: adult guppies — <em>including their own parents</em> — will eat
+    anything that fits in their mouth. In a bare tank almost none survive. In a mossy, planted tank, lots do.
+  </div></div>
+  <div class="step"><div class="step-num gup">06</div><div class="step-text">
+    About <strong>4 weeks later she does it again</strong> — and she does not need to meet another male
+    to do it.
+  </div></div>
+</div>
+
+<div class="callout fun">
+  <strong>Fun fact — the sperm bank:</strong> a female guppy can <em>store</em> sperm inside her body for
+  months and use it batch after batch. One meeting with one male can produce five or six litters of babies.
+  This is why a "single female" from a pet shop very often turns into thirty guppies at home.
+</div>
+
+<div class="tbl">
+  <div class="row head"><div>Guppy number</div><div>Roughly</div></div>
+  <div class="row"><div><b>Pregnancy</b></div><div class="v">4 weeks (21–30 days)</div></div>
+  <div class="row"><div><b>Babies per batch</b></div><div class="v">20–50</div></div>
+  <div class="row"><div><b>Size at birth</b></div><div class="v">6 mm — a grain of rice</div></div>
+  <div class="row"><div><b>Grown up at</b></div><div class="v">2–3 months</div></div>
+  <div class="row"><div><b>New batch every</b></div><div class="v">about 4 weeks</div></div>
+  <div class="row"><div><b>Lifespan</b></div><div class="v">1–3 years</div></div>
+</div>
+
+<div class="callout warn">
+  <strong>Do the maths before you buy:</strong> one female, 30 babies a month, babies grown up in 3 months.
+  A 20-litre tank fills up fast. Keep <em>only males</em> if you do not want babies, or have a plan
+  (a friend with a tank, or a bigger fish in a different tank) for the extras.
+  <em>Never</em> tip unwanted fish or plants into a drain, a pond or a canal — escaped guppies have become
+  a pest in warm countries all over the world.
+</div>
+
+<p class="panel-label" id="s07">07 · <b>how guppies eat — the two-minute rule</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 236" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="How to feed guppies. Their upturned mouth is made for taking food floating at the surface. The rule is to feed only what is eaten in two minutes: the right amount disappears completely, while too much sinks, rots on the gravel and poisons the water.">
+  <!-- ── left panel · built for the top ── -->
+  <rect x="8" y="8" width="204" height="220" rx="12" fill="#0e1626" stroke="#1e3a5f"/>
+  <text x="110" y="30" text-anchor="middle" class="label" fill="#fbbf24" font-size="11" font-weight="700">BUILT FOR THE TOP</text>
+  <!-- water + surface -->
+  <rect x="18" y="44" width="184" height="128" fill="#0c2036"/>
+  <line x1="18" y1="44" x2="202" y2="44" stroke="#7dd3fc" stroke-width="1.6" opacity="0.9"/>
+  <!-- flakes floating -->
+  <g fill="#d97706">
+    <rect x="46" y="42" width="9" height="4" rx="1.4" transform="rotate(-12 50 44)"/>
+    <rect x="84" y="43" width="8" height="4" rx="1.4" transform="rotate(9 88 45)"/>
+    <rect x="132" y="41" width="10" height="4" rx="1.4" transform="rotate(-6 137 43)"/>
+    <rect x="166" y="44" width="8" height="4" rx="1.4" transform="rotate(14 170 46)"/>
+  </g>
+  <!-- guppy tilted nose-up, grabbing a flake -->
+  <g transform="translate(96,86) rotate(34)">
+    <path d="M17,0 C25,-13 34,-18 38,-17 C34,-7 34,7 38,17 C34,18 25,13 17,0 Z" fill="#f59e0b" opacity="0.85"/>
+    <path d="M-26,0 C-20,-9 2,-11 17,0 C2,11 -20,9 -26,0 Z" fill="#fbbf24"/>
+    <path d="M-5,-8 C1,-16 10,-13 13,-4 Z" fill="#f59e0b"/>
+    <circle cx="-20" cy="-2" r="2.8" fill="#0a0e1a"/>
+    <path d="M-27,-1 L-31,-4" stroke="#fbbf24" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+  <line x1="66" y1="62" x2="56" y2="48" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <!-- gravel -->
+  <rect x="18" y="160" width="184" height="12" fill="#2c2a33"/>
+  <text x="110" y="192" text-anchor="middle" class="label" fill="#94a3b8" font-size="9.5">The mouth tilts UP, so a guppy</text>
+  <text x="110" y="205" text-anchor="middle" class="label" fill="#94a3b8" font-size="9.5">feeds off the ceiling of its world</text>
+  <text x="110" y="220" text-anchor="middle" class="label" fill="#64748b" font-size="9.5">The floor is another crew's job.</text>
+
+  <!-- ── right panel · the 2-minute rule ── -->
+  <rect x="224" y="8" width="228" height="220" rx="12" fill="#0e1626" stroke="#1e3a5f"/>
+  <text x="338" y="30" text-anchor="middle" class="label" fill="#fbbf24" font-size="11" font-weight="700">THE 2-MINUTE RULE</text>
+
+  <!-- good: a pinch, all gone -->
+  <rect x="236" y="42" width="204" height="80" rx="9" fill="#0f2018" stroke="#14532d"/>
+  <g transform="translate(268,72)">
+    <circle cx="0" cy="0" r="17" fill="#10241a" stroke="#4ade80" stroke-width="1.6"/>
+    <path d="M-7,1 L-2,7 L8,-6" fill="none" stroke="#4ade80" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="296" y="62" class="label" fill="#86efac" font-size="10.5" font-weight="700">A PINCH — all gone</text>
+  <text x="296" y="78" class="label" fill="#64748b" font-size="9">Nothing left after two</text>
+  <text x="296" y="90" class="label" fill="#64748b" font-size="9">minutes. Clean gravel,</text>
+  <text x="296" y="102" class="label" fill="#64748b" font-size="9">clear water, happy fish.</text>
+  <text x="296" y="116" class="label" fill="#4ade80" font-size="9">once or twice a day</text>
+
+  <!-- bad: a pile, leftovers -->
+  <rect x="236" y="132" width="204" height="84" rx="9" fill="#24131a" stroke="#7f1d1d"/>
+  <g transform="translate(268,166)">
+    <circle cx="0" cy="0" r="17" fill="#2a1414" stroke="#f87171" stroke-width="1.6"/>
+    <path d="M-6,-6 L6,6 M6,-6 L-6,6" fill="none" stroke="#f87171" stroke-width="2.6" stroke-linecap="round"/>
+  </g>
+  <text x="296" y="152" class="label" fill="#fca5a5" font-size="10.5" font-weight="700">A PILE — leftovers</text>
+  <text x="296" y="168" class="label" fill="#64748b" font-size="9">Sunken flakes rot, feed</text>
+  <text x="296" y="180" class="label" fill="#64748b" font-size="9">bacteria, cloud the water</text>
+  <text x="296" y="192" class="label" fill="#64748b" font-size="9">and make ammonia —</text>
+  <text x="296" y="206" class="label" fill="#f87171" font-size="9">which is poison to fish</text>
+</svg>
+</div>
+<p class="cap">
+  More fish die from too much food than from too little. A guppy that misses a meal is fine.
+  A guppy swimming in rotting leftovers is not.
+</p>
+
+<p class="para">
+  Guppies are <strong>omnivores</strong> — they eat plants <em>and</em> animals. In a stream they nibble
+  algae, pick tiny water-fleas out of the water and hoover up mosquito larvae. In your tank they eat
+  whatever you drop in, and they will always act starving. They are lying.
+</p>
+
+<div class="tbl">
+  <div class="row three head"><div>Food</div><div>How often</div><div>Why</div></div>
+  <div class="row three"><div><b>Flake or micro-pellet</b></div><div data-h="how often">Every day, a pinch</div><div data-h="why">The everyday meal — complete and balanced</div></div>
+  <div class="row three"><div><b>Frozen or live daphnia, bloodworm</b></div><div data-h="how often">Once or twice a week</div><div data-h="why">Real prey. Brings out colour and keeps them keen</div></div>
+  <div class="row three"><div><b>Blanched courgette or spinach</b></div><div data-h="how often">Now and then</div><div data-h="why">Greens. The shrimp and snails will join in</div></div>
+  <div class="row three"><div><b>Nothing at all</b></div><div data-h="how often">One day a week</div><div data-h="why">A fast day lets everyone's gut empty. Totally normal</div></div>
+</div>
+
+<div class="callout fun">
+  <strong>Fun fact:</strong> a guppy's stomach is roughly <em>the size of its own eye</em>. Look at that eye,
+  then look at the amount of food in your hand. That is why the rule is "a pinch", not "a spoon".
+</div>
+
+<div class="part"><span>Part C · cherry shrimp — the cleaners</span></div>
+
+<p class="panel-label" id="s08">08 · <b>a cherry shrimp up close</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A labelled cherry shrimp. Long antennae sweep the water for taste and smell, the eyes sit on short movable stalks, the body is covered by hard armour plates, two small fan-shaped hands pick up food, paddle-like swimmerets under the tail carry the eggs, and a three-bladed tail fan lets it shoot backwards.">
+  <defs>
+    <marker id="s-tip" markerWidth="7" markerHeight="7" refX="5.4" refY="2.6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L5.4,2.6 L0,5.2 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect x="8" y="8" width="444" height="246" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <!-- leader lines first -->
+  <line x1="110" y1="40" x2="148" y2="78"  stroke="#64748b" stroke-width="1.2" marker-end="url(#s-tip)"/>
+  <line x1="258" y1="44" x2="285" y2="84"  stroke="#64748b" stroke-width="1.2" marker-end="url(#s-tip)"/>
+  <line x1="414" y1="46" x2="404" y2="78"  stroke="#64748b" stroke-width="1.2" marker-end="url(#s-tip)"/>
+  <line x1="78"  y1="132" x2="106" y2="134" stroke="#64748b" stroke-width="1.2" marker-end="url(#s-tip)"/>
+  <line x1="100" y1="206" x2="144" y2="172" stroke="#64748b" stroke-width="1.2" marker-end="url(#s-tip)"/>
+  <line x1="370" y1="206" x2="328" y2="154" stroke="#64748b" stroke-width="1.2" marker-end="url(#s-tip)"/>
+
+  <!-- ── the shrimp ── -->
+  <g transform="translate(273,120) scale(1.8)">
+    <!-- antennae -->
+    <path d="M-60,-4 C-80,-10 -100,-20 -118,-30" fill="none" stroke="#fca5a5" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M-60,-2 C-78,2 -96,10 -110,18"    fill="none" stroke="#fca5a5" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M-60,-6 C-72,-12 -84,-15 -94,-14" fill="none" stroke="#fca5a5" stroke-width="0.9" stroke-linecap="round" opacity="0.8"/>
+    <!-- rostrum, the saw-edged nose -->
+    <path d="M-60,-9 L-84,-18 L-60,-13 Z" fill="#ef4444"/>
+    <!-- abdomen, tapering back -->
+    <path d="M-12,-18 C8,-19 30,-15 44,-8 L44,2 C30,7 6,12 -8,12 Z" fill="#ef4444"/>
+    <path d="M0,-18 C2,-5 2,4 -1,12 M12,-16 C14,-4 14,4 11,11 M24,-13 C26,-3 26,4 23,9 M35,-11 C37,-3 37,2 34,6"
+          fill="none" stroke="#b91c1c" stroke-width="1.3" opacity="0.9"/>
+    <!-- tail fan -->
+    <path d="M44,-8 C56,-20 68,-24 73,-22 C67,-14 63,-8 62,-4 Z" fill="#fca5a5"/>
+    <path d="M44,-5 C58,-9 70,-8 76,-4 C70,0 58,1 44,0 Z" fill="#f87171"/>
+    <path d="M44,0 C56,8 64,17 64,21 C58,18 48,9 44,3 Z" fill="#fca5a5"/>
+    <!-- swimmerets -->
+    <path d="M-6,10 C-9,18 -11,22 -14,25 M4,10 C1,18 -1,22 -4,25 M14,8 C12,16 10,20 7,23
+             M24,6 C22,13 20,17 17,20 M33,4 C31,10 29,14 27,17"
+          fill="none" stroke="#f87171" stroke-width="2.6" stroke-linecap="round"/>
+    <!-- carapace -->
+    <path d="M-62,-2 C-60,-14 -48,-20 -34,-19 C-20,-18 -10,-12 -8,-2 C-7,6 -14,12 -28,13 C-46,14 -60,8 -62,-2 Z" fill="#dc2626"/>
+    <path d="M-52,-14 C-38,-18 -22,-14 -12,-6" fill="none" stroke="#fecaca" stroke-width="2.6" stroke-linecap="round" opacity="0.75"/>
+    <!-- walking legs -->
+    <path d="M-52,11 L-56,27 M-44,12 L-46,29 M-36,13 L-36,30 M-28,13 L-26,29 M-20,12 L-16,28"
+          fill="none" stroke="#f87171" stroke-width="2.2" stroke-linecap="round"/>
+    <!-- fan hands -->
+    <path d="M-48,10 C-56,18 -62,22 -68,24" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-44,12 C-50,22 -54,27 -58,30" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-68,24 l-5,-4 M-68,24 l-6,1 M-68,24 l-5,4 M-68,24 l-2,6" fill="none" stroke="#fecaca" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M-58,30 l-5,-3 M-58,30 l-6,2 M-58,30 l-3,5 M-58,30 l1,6" fill="none" stroke="#fecaca" stroke-width="1.3" stroke-linecap="round"/>
+    <!-- eyes on stalks -->
+    <path d="M-56,-12 L-64,-18" fill="none" stroke="#dc2626" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="-66" cy="-20" r="4.5" fill="#0a0e1a"/>
+    <circle cx="-67.5" cy="-21.5" r="1.3" fill="#e2e8f0"/>
+    <circle cx="-57" cy="-22" r="3.4" fill="#0a0e1a" opacity="0.55"/>
+  </g>
+
+  <!-- ── labels ── -->
+  <text x="16" y="30" class="label" fill="#f87171" font-size="11" font-weight="700">EYES ON STALKS</text>
+  <text x="16" y="44" class="label" fill="#64748b" font-size="9.5">they swivel, so it can</text>
+  <text x="16" y="56" class="label" fill="#64748b" font-size="9.5">watch two ways at once</text>
+
+  <text x="240" y="30" text-anchor="middle" class="label" fill="#f87171" font-size="11" font-weight="700">ARMOUR PLATES</text>
+  <text x="240" y="44" text-anchor="middle" class="label" fill="#64748b" font-size="9.5">the skeleton is OUTSIDE</text>
+
+  <text x="444" y="30" text-anchor="end" class="label" fill="#f87171" font-size="11" font-weight="700">TAIL FAN</text>
+  <text x="444" y="44" text-anchor="end" class="label" fill="#64748b" font-size="9.5">one hard flick and it</text>
+  <text x="444" y="56" text-anchor="end" class="label" fill="#64748b" font-size="9.5">shoots backwards</text>
+
+  <text x="16" y="128" class="label" fill="#f87171" font-size="11" font-weight="700">ANTENNAE</text>
+  <text x="16" y="142" class="label" paint-order="stroke" stroke="#0e1626" stroke-width="3" fill="#64748b" font-size="9.5">feelers that taste</text>
+  <text x="16" y="154" class="label" paint-order="stroke" stroke="#0e1626" stroke-width="3" fill="#64748b" font-size="9.5">and smell the water</text>
+
+  <text x="16" y="206" class="label" fill="#f87171" font-size="11" font-weight="700">FAN HANDS</text>
+  <text x="16" y="220" class="label" fill="#64748b" font-size="9.5">two little brushes that</text>
+  <text x="16" y="232" class="label" fill="#64748b" font-size="9.5">sweep food into the mouth,</text>
+  <text x="16" y="244" class="label" fill="#64748b" font-size="9.5">all day long</text>
+
+  <text x="444" y="206" text-anchor="end" class="label" fill="#f87171" font-size="11" font-weight="700">SWIMMERETS</text>
+  <text x="444" y="220" text-anchor="end" class="label" fill="#64748b" font-size="9.5">paddles under the tail.</text>
+  <text x="444" y="232" text-anchor="end" class="label" fill="#64748b" font-size="9.5">A mother hangs her eggs</text>
+  <text x="444" y="244" text-anchor="end" class="label" fill="#64748b" font-size="9.5">here and fans them →</text>
+</svg>
+</div>
+<p class="cap">
+  A cherry shrimp is 2–3 cm — about as long as your thumbnail is wide. Everything about it says
+  "small, busy, and made of armour."
+</p>
+
+<p class="para">
+  Cherry shrimp have <strong>no bones inside at all</strong>. Their skeleton is the shell on the outside,
+  like a suit of armour with hinges at the joints. That works brilliantly — until they need to get
+  bigger. We will come back to that in section 11, because it is the strangest thing in the tank.
+</p>
+
+<div class="callout fun">
+  <strong>Fun fact:</strong> wild cherry shrimp are <em>muddy brown</em>. Every bright red one in a shop is
+  descended from a few oddly-coloured shrimp that people bred together on purpose, over and over. Blue,
+  yellow, orange and black ones came from the same trick. It is the same thing humans did to wolves
+  to get spaniels.
+</div>
+
+<p class="panel-label" id="s09">09 · <b>the shrimp life cycle — a baby is just a tiny adult</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 358" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The cherry shrimp life cycle in four stages: eggs are carried under the mother's tail for about a month, they hatch straight into two-millimetre miniature shrimp, the juveniles grow by shedding their shell again and again, and by about three months they are adults ready to breed.">
+  <defs>
+    <marker id="shc-a" markerWidth="9" markerHeight="9" refX="7" refY="3.4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7,3.4 L0,6.8 Z" fill="#f87171"/>
+    </marker>
+    <marker id="shc-b" markerWidth="9" markerHeight="9" refX="7" refY="3.4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7,3.4 L0,6.8 Z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <line class="flow" x1="24" y1="24" x2="24" y2="300" stroke="#f87171" stroke-width="2.4" marker-end="url(#shc-a)" opacity="0.9"/>
+  <rect x="40" y="8" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="32" class="label" fill="#f87171" font-size="11.5" font-weight="700">1 · EGGS</text>
+  <text x="440" y="32" text-anchor="end" class="label" fill="#7dd3fc" font-size="10">about 30 days</text>
+  <text x="152" y="53" class="label" fill="#94a3b8" font-size="10">20–30 eggs glued under mum's tail. She fans</text>
+  <text x="152" y="69" class="label" fill="#94a3b8" font-size="10">them every day to keep them clean and fresh.</text>
+  <g transform="translate(96,42) scale(0.62)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#ef4444"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+    <g class="fan">
+      <circle cx="-10" cy="12" r="4" fill="#facc15"/><circle cx="-2" cy="15" r="4" fill="#fde047"/>
+      <circle cx="6" cy="16" r="4" fill="#facc15"/><circle cx="-6" cy="20" r="3.6" fill="#fde047"/>
+      <circle cx="2" cy="22" r="3.6" fill="#facc15"/>
+    </g>
+  </g>
+  <rect x="40" y="86" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="110" class="label" fill="#f87171" font-size="11.5" font-weight="700">2 · HATCHLING</text>
+  <text x="440" y="110" text-anchor="end" class="label" fill="#7dd3fc" font-size="10">day 1</text>
+  <text x="152" y="131" class="label" fill="#94a3b8" font-size="10">A perfect miniature of its mother, 2 mm long.</text>
+  <text x="152" y="147" class="label" fill="#94a3b8" font-size="10">It eats exactly what the adults eat.</text>
+  <g transform="translate(96,121)">
+    <circle cx="0" cy="0" r="25" fill="#111827" stroke="#334155" stroke-width="1" stroke-dasharray="3 3"/>
+    <g transform="scale(0.3)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#fca5a5"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+    <text x="0" y="-22" text-anchor="middle" class="label" fill="#64748b" font-size="9">real size: 2 mm</text>
+  </g>
+  <rect x="40" y="164" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="188" class="label" fill="#f87171" font-size="11.5" font-weight="700">3 · JUVENILE</text>
+  <text x="440" y="188" text-anchor="end" class="label" fill="#7dd3fc" font-size="10">1 – 3 months</text>
+  <text x="152" y="209" class="label" fill="#94a3b8" font-size="10">Grows by throwing its whole shell away and</text>
+  <text x="152" y="225" class="label" fill="#94a3b8" font-size="10">growing a bigger one. Again and again.</text>
+  <g transform="translate(90,198) scale(0.5)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#f87171"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <g class="blink" transform="translate(120,212) scale(0.5) rotate(20)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="none" stroke="#cbd5e1" stroke-width="2" opacity="0.7"/>
+  </g>
+  <rect x="40" y="242" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="266" class="label" fill="#f87171" font-size="11.5" font-weight="700">4 · ADULT</text>
+  <text x="440" y="266" text-anchor="end" class="label" fill="#7dd3fc" font-size="10">about 3 months</text>
+  <text x="152" y="287" class="label" fill="#94a3b8" font-size="10">2–3 cm, full colour, and ready to carry eggs</text>
+  <text x="152" y="303" class="label" fill="#94a3b8" font-size="10">of her own.</text>
+  <g transform="translate(96,276) scale(0.76)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#dc2626"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+    <path d="M-24,-8 C-12,-13 0,-11 8,-5" fill="none" stroke="#fecaca" stroke-width="2.4" stroke-linecap="round" opacity="0.8"/>
+    <path d="M-30,-4 C-40,-10 -48,-8 -54,-2" fill="none" stroke="#fca5a5" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+  <path class="flow-slow" d="M448,316 C448,336 60,342 28,318" fill="none" stroke="#dc2626"
+        stroke-width="2.2" marker-end="url(#shc-b)" opacity="0.85"/>
+  <text x="240" y="354" text-anchor="middle" class="label" fill="#991b1b" font-size="10">a healthy colony has a new batch every few weeks</text>
+</svg>
+</div>
+<p class="cap">
+  Notice what is <em>missing</em>: there is no tadpole stage, no caterpillar stage, no drifting larva.
+  A cherry shrimp hatches as a shrimp and just gets bigger.
+</p>
+
+<div class="callout key">
+  <strong>Why that matters:</strong> most shrimp in the sea hatch as drifting <em>larvae</em> that look
+  nothing like their parents and need salty water to survive. Cherry shrimp skipped that step, so their
+  whole life fits inside your freshwater tank. That single difference is why they breed happily at home
+  and their cousins the <em>Amano shrimp</em> almost never do — Amano babies hatch as larvae and die
+  unless they reach the sea.
+</div>
+
+<p class="panel-label" id="s10">10 · <b>shrimp babies — mum carries them the whole time</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 322" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cherry shrimp reproduction in four stages: a yellow saddle of eggs forms on the mother's back, she sheds her shell and releases a scent that sends the males racing, the fertilised eggs move under her tail where she fans them for a month, and finally miniature shrimp hatch out and walk away.">
+  <defs>
+    <marker id="rep-a" markerWidth="9" markerHeight="9" refX="7" refY="3.4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7,3.4 L0,6.8 Z" fill="#f87171"/>
+    </marker>
+  </defs>
+  <line class="flow" x1="24" y1="24" x2="24" y2="300" stroke="#f87171" stroke-width="2.4" marker-end="url(#rep-a)" opacity="0.9"/>
+  <rect x="40" y="8" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="32" class="label" fill="#f87171" font-size="11.5" font-weight="700">1 · THE SADDLE</text>
+  <text x="152" y="53" class="label" fill="#94a3b8" font-size="10">A yellow patch appears on her back, behind</text>
+  <text x="152" y="69" class="label" fill="#94a3b8" font-size="10">the head. Those are her eggs, still inside.</text>
+  <g transform="translate(94,42) scale(0.66)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#ef4444"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+    <path d="M-18,-12 C-12,-18 -2,-18 3,-12 C-2,-9 -12,-9 -18,-12 Z" fill="#fde047"/>
+  </g>
+  <circle cx="90" cy="33" r="15" fill="none" stroke="#facc15" stroke-width="1.3" stroke-dasharray="3 3"/>
+  <rect x="40" y="86" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="110" class="label" fill="#f87171" font-size="11.5" font-weight="700">2 · THE DANCE</text>
+  <text x="152" y="131" class="label" fill="#94a3b8" font-size="10">She sheds her shell and puffs out a scent.</text>
+  <text x="152" y="147" class="label" fill="#94a3b8" font-size="10">Every male in the tank goes racing about.</text>
+  <g transform="translate(96,120) scale(0.5)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#dc2626"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <circle class="blink" cx="96" cy="120" r="22" fill="none" stroke="#fca5a5" stroke-width="1.2" opacity="0.5"/>
+  <circle class="blink" cx="96" cy="120" r="32" fill="none" stroke="#fca5a5" stroke-width="1" opacity="0.28"/>
+  <g transform="translate(64,98) scale(0.26) rotate(35)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#f87171"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <g transform="translate(130,102) scale(0.26) rotate(-140)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#f87171"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <g transform="translate(126,146) scale(0.26) rotate(155)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#f87171"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <rect x="40" y="164" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="188" class="label" fill="#f87171" font-size="11.5" font-weight="700">3 · “BERRIED”</text>
+  <text x="440" y="188" text-anchor="end" class="label" fill="#7dd3fc" font-size="10">30 days</text>
+  <text x="152" y="209" class="label" fill="#94a3b8" font-size="10">The eggs move under her tail, and she fans</text>
+  <text x="152" y="225" class="label" fill="#94a3b8" font-size="10">them non-stop with her swimmerets.</text>
+  <g transform="translate(94,196) scale(0.66)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#ef4444"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+    <g class="fan">
+      <circle cx="-12" cy="11" r="4.4" fill="#facc15"/><circle cx="-3" cy="14" r="4.4" fill="#fde047"/>
+      <circle cx="6" cy="16" r="4.4" fill="#facc15"/><circle cx="-8" cy="20" r="4" fill="#fde047"/>
+      <circle cx="1" cy="23" r="4" fill="#facc15"/><circle cx="10" cy="24" r="3.6" fill="#fde047"/>
+    </g>
+  </g>
+  <rect x="40" y="242" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="266" class="label" fill="#f87171" font-size="11.5" font-weight="700">4 · HATCH</text>
+  <text x="152" y="287" class="label" fill="#94a3b8" font-size="10">20–30 miniature shrimp walk away and start</text>
+  <text x="152" y="303" class="label" fill="#94a3b8" font-size="10">grazing the same day. Nobody looks after them.</text>
+  <g transform="translate(92,270) scale(0.58)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#ef4444"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <g transform="translate(66,296) scale(0.18) rotate(30)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#fca5a5"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <g transform="translate(96,300) scale(0.18) rotate(-25)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#fca5a5"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <g transform="translate(124,290) scale(0.18) rotate(70)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#fca5a5"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <g transform="translate(58,268) scale(0.18) rotate(-70)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#fca5a5"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+</svg>
+</div>
+<p class="cap">
+  A guppy mother carries her babies <em>inside</em> for a month. A shrimp mother carries hers
+  <em>outside</em>, stuck to her own legs, for about the same month — and cleans every single egg by hand.
+</p>
+
+<div class="steps">
+  <div class="step"><div class="step-num shr">01</div><div class="step-text">
+    <strong>The saddle.</strong> A yellow or greenish patch shows up on the female's back, just behind
+    her head. It looks like a tiny saddle. Those are her eggs, ripening inside her body.
+  </div></div>
+  <div class="step"><div class="step-num shr">02</div><div class="step-text">
+    <strong>She moults.</strong> To mate she first has to shed her shell. As the old shell comes off she
+    releases a chemical into the water — a smell that means "I'm ready."
+  </div></div>
+  <div class="step"><div class="step-num shr">03</div><div class="step-text">
+    <strong>The shrimp dance.</strong> Every male picks up the scent and starts swimming laps of the tank
+    at top speed, hunting for her. If your calm little shrimp suddenly go bananas for ten minutes,
+    <em>this</em> is why.
+  </div></div>
+  <div class="step"><div class="step-num shr">04</div><div class="step-text">
+    <strong>Berried.</strong> The fertilised eggs move down under her tail and she glues them to her
+    swimmerets. A female carrying eggs is called <em>berried</em>, because the clump looks like a bunch
+    of tiny berries.
+  </div></div>
+  <div class="step"><div class="step-num shr">05</div><div class="step-text">
+    <strong>Thirty days of fanning.</strong> She waves her swimmerets constantly to wash fresh water over
+    the eggs. Stop fanning and they would suffocate or go mouldy. Watch closely and you can see the eggs
+    change from yellow to dark — that is the babies' eyes forming, just like in a guppy.
+  </div></div>
+  <div class="step"><div class="step-num shr">06</div><div class="step-text">
+    <strong>Hatching.</strong> 20–30 shrimplets pop out over a few hours, each about 2 mm. They are
+    already hungry and already grazing. Mum's job is over.
+  </div></div>
+</div>
+
+<div class="callout tip">
+  <strong>Spot the babies:</strong> newly hatched shrimplets are nearly see-through and only 2 mm long, so
+  you will not notice them for weeks. Then one day you look at the moss and realise it is
+  <em>moving</em>. That is the moment every shrimp keeper remembers.
+</div>
+
+<p class="panel-label" id="s11">11 · <b>changing armour — the weirdest thing in your tank</b></p>
+
+<p class="para">
+  Your skeleton is inside you and grows with you. A shrimp's skeleton is a hard shell on the outside,
+  and hard shells <strong>cannot stretch</strong>. So to get bigger, a shrimp has to climb out of its own
+  body armour and grow a new, roomier one. This is called <em>moulting</em>, and a young shrimp does it
+  every week or two.
+</p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 322" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Moulting in four steps: the shell gets tight and a split opens between the head shield and the tail, the shrimp bends double and walks out backwards, the soft new shrimp hides until its shell hardens over a day or two, and the empty see-through old shell is left behind looking like a ghost shrimp.">
+  <defs>
+    <marker id="mlt-a" markerWidth="9" markerHeight="9" refX="7" refY="3.4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7,3.4 L0,6.8 Z" fill="#7dd3fc"/>
+    </marker>
+  </defs>
+  <line class="flow" x1="24" y1="24" x2="24" y2="300" stroke="#7dd3fc" stroke-width="2.4" marker-end="url(#mlt-a)" opacity="0.9"/>
+  <rect x="40" y="8" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="32" class="label" fill="#7dd3fc" font-size="11.5" font-weight="700">1 · IT SPLITS</text>
+  <text x="152" y="53" class="label" fill="#94a3b8" font-size="10">The shell gets tight, and a crack opens</text>
+  <text x="152" y="69" class="label" fill="#94a3b8" font-size="10">between the head shield and the tail.</text>
+  <g transform="translate(94,42) scale(0.66)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#dc2626"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+    <path class="blink" d="M-6,-16 L-1,4" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <rect x="40" y="86" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="110" class="label" fill="#7dd3fc" font-size="11.5" font-weight="700">2 · IT BACKS OUT</text>
+  <text x="152" y="131" class="label" fill="#94a3b8" font-size="10">It bends double and pulls itself out of the</text>
+  <text x="152" y="147" class="label" fill="#94a3b8" font-size="10">old suit — legs, eye coverings and all.</text>
+  <g transform="translate(78,116) scale(0.58)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="none" stroke="#cbd5e1" stroke-width="2.6" opacity="0.7"/>
+  </g>
+  <g transform="translate(106,132) scale(0.56) rotate(48)"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#f87171"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <path d="M92,106 L112,120" stroke="#7dd3fc" stroke-width="1.6" marker-end="url(#mlt-a)"/>
+  <rect x="40" y="164" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="188" class="label" fill="#7dd3fc" font-size="11.5" font-weight="700">3 · IT HIDES</text>
+  <text x="440" y="188" text-anchor="end" class="label" fill="#7dd3fc" font-size="10">a day or two</text>
+  <text x="152" y="209" class="label" fill="#94a3b8" font-size="10">The new shell is soft and floppy, so it</text>
+  <text x="152" y="225" class="label" fill="#94a3b8" font-size="10">stays out of sight until it hardens.</text>
+  <ellipse cx="96" cy="182" rx="34" ry="10" fill="#166534"/>
+  <path d="M64,184 C76,190 116,190 128,184" fill="none" stroke="#14532d" stroke-width="2"/>
+  <g transform="translate(94,210) scale(0.56)" opacity="0.8"><path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#fca5a5"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fecaca"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/></g>
+  <rect x="40" y="242" width="412" height="70" rx="11" fill="#0e1626" stroke="#1e293b"/>
+  <text x="152" y="266" class="label" fill="#7dd3fc" font-size="11.5" font-weight="700">4 · THE GHOST</text>
+  <text x="152" y="287" class="label" fill="#94a3b8" font-size="10">The empty shell sits there, clear as glass,</text>
+  <text x="152" y="303" class="label" fill="#94a3b8" font-size="10">looking exactly like a dead shrimp.</text>
+  <g transform="translate(94,276) scale(0.66)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#94a3b8" opacity="0.18" stroke="#cbd5e1" stroke-width="2.4"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+    <circle cx="-21" cy="-9" r="3" fill="none" stroke="#cbd5e1" stroke-width="1.6"/>
+  </g>
+</svg>
+</div>
+<p class="cap">
+  Find a see-through shrimp lying on the gravel and do <em>not</em> panic. Pick it up: if it is hollow and
+  weightless, it is an old coat, not a body.
+</p>
+
+<div class="callout fun">
+  <strong>Fun fact — how to tell a moult from a dead shrimp:</strong> a moult is clear or white and
+  <em>see-through</em>, and there is usually a clean gap between the head shield and the tail where it
+  split. A dead shrimp keeps its colour and often turns pinkish-orange, like a cooked prawn.
+  Leave the moult in the tank — the other shrimp will eat it for the calcium.
+</div>
+
+<div class="callout tip">
+  <strong>Shrimp need minerals.</strong> Building a brand-new shell every couple of weeks takes calcium,
+  which they get from the water and from food. In very soft water shrimp get stuck half-out of their old
+  shell — keepers call it "the white ring of death". A bit of mineral hardness in the water fixes it.
+</div>
+
+<p class="panel-label" id="s12">12 · <b>how shrimp eat — the endless picnic</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="How cherry shrimp feed. The left panel magnifies a leaf to show biofilm, a slimy invisible carpet of bacteria, algae and rotting scraps, which the shrimp scrapes up with its fan-shaped hands. The right panel shows shrimp and snails gathering on a slice of blanched courgette.">
+  <!-- ── left: biofilm ── -->
+  <rect x="8" y="8" width="222" height="194" rx="12" fill="#0e1626" stroke="#7f1d1d55"/>
+  <text x="119" y="30" text-anchor="middle" class="label" fill="#f87171" font-size="11" font-weight="700">THE INVISIBLE CARPET</text>
+  <!-- leaf, kept to the left so the magnifier has its own space -->
+  <path d="M20,124 C42,106 88,102 116,118 C90,138 44,142 20,124 Z" fill="#15803d"/>
+  <path d="M26,124 C46,113 86,111 110,119" fill="none" stroke="#166534" stroke-width="2"/>
+  <g transform="translate(62,108) scale(0.45)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#ef4444"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+    <path d="M-30,-4 C-40,-10 -48,-8 -54,-2" fill="none" stroke="#fca5a5" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <!-- magnifier on the leaf surface -->
+  <line x1="112" y1="112" x2="142" y2="94"  stroke="#7dd3fc" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="108" y1="122" x2="144" y2="104" stroke="#7dd3fc" stroke-width="1" stroke-dasharray="3 3"/>
+  <circle cx="170" cy="76" r="30" fill="#0c2036" stroke="#7dd3fc" stroke-width="1.4"/>
+  <clipPath id="zoomclip"><circle cx="170" cy="76" r="29"/></clipPath>
+  <g clip-path="url(#zoomclip)">
+    <rect x="138" y="92" width="64" height="20" fill="#15803d"/>
+    <g fill="#4ade80" opacity="0.85">
+      <circle cx="144" cy="88" r="3"/><circle cx="156" cy="85" r="2.4"/><circle cx="170" cy="87" r="3.2"/>
+      <circle cx="184" cy="84" r="2.6"/><circle cx="196" cy="88" r="3"/>
+    </g>
+    <g fill="#fbbf24" opacity="0.85">
+      <circle cx="150" cy="77" r="2"/><circle cx="165" cy="75" r="2.4"/><circle cx="178" cy="78" r="2"/><circle cx="191" cy="75" r="2.2"/>
+    </g>
+    <g fill="#a78bfa" opacity="0.75">
+      <circle cx="145" cy="66" r="1.8"/><circle cx="159" cy="64" r="2"/><circle cx="174" cy="66" r="1.8"/><circle cx="188" cy="63" r="2"/>
+    </g>
+    <path d="M138,92 C150,82 160,96 172,84 C184,74 192,92 204,82" fill="none" stroke="#7dd3fc" stroke-width="1" opacity="0.45"/>
+  </g>
+  <text x="170" y="124" text-anchor="middle" class="label" fill="#7dd3fc" font-size="8.5">BIOFILM — magnified</text>
+  <text x="18" y="156" class="label" fill="#94a3b8" font-size="9.5">Every surface in the tank grows a</text>
+  <text x="18" y="169" class="label" fill="#94a3b8" font-size="9.5">slimy film of bacteria, baby algae</text>
+  <text x="18" y="182" class="label" fill="#94a3b8" font-size="9.5">and rotting scraps. Shrimp see it.</text>
+  <text x="18" y="196" class="label" fill="#fca5a5" font-size="9.5">They scrape it up all day, by hand.</text>
+
+  <!-- ── right: courgette party ── -->
+  <rect x="242" y="8" width="210" height="194" rx="12" fill="#0e1626" stroke="#7f1d1d55"/>
+  <text x="347" y="30" text-anchor="middle" class="label" fill="#f87171" font-size="11" font-weight="700">THE SHRIMP PARTY</text>
+  <!-- gravel -->
+  <rect x="252" y="128" width="190" height="16" fill="#2c2a33"/>
+  <circle cx="272" cy="133" r="2.6" fill="#3f3d4a"/><circle cx="310" cy="136" r="2.4" fill="#3f3d4a"/>
+  <circle cx="356" cy="132" r="2.8" fill="#3f3d4a"/><circle cx="404" cy="136" r="2.4" fill="#3f3d4a"/>
+  <!-- courgette slice -->
+  <ellipse cx="347" cy="116" rx="44" ry="14" fill="#bef264"/>
+  <ellipse cx="347" cy="114" rx="34" ry="9" fill="#ecfccb"/>
+  <ellipse cx="347" cy="114" rx="34" ry="9" fill="none" stroke="#a3e635" stroke-width="1.2"/>
+  <!-- shrimp piled on -->
+  <g transform="translate(312,102) scale(0.48) rotate(-18)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#ef4444"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+  </g>
+  <g transform="translate(378,104) scale(0.48) rotate(160)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#dc2626"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+  </g>
+  <g transform="translate(346,96) scale(0.42) rotate(8)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#f87171"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+  </g>
+  <!-- a snail joining in -->
+  <g transform="translate(400,118) scale(0.4)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <circle cx="0" cy="-3" r="17" fill="#8b5cf6" stroke="#6d28d9" stroke-width="1.5"/>
+    <path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="2.6"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.1"/>
+  </g>
+  <text x="252" y="166" class="label" fill="#94a3b8" font-size="9.5">Drop in a slice of courgette that</text>
+  <text x="252" y="179" class="label" fill="#94a3b8" font-size="9.5">has been boiled and cooled. Within</text>
+  <text x="252" y="192" class="label" fill="#94a3b8" font-size="9.5">an hour, everybody is on it.</text>
+</svg>
+</div>
+<p class="cap">
+  Shrimp are <em>detritivores</em> — "rubbish eaters". They spend their whole life picking through the
+  leftovers of everything else in the tank.
+</p>
+
+<div class="steps">
+  <div class="step"><div class="step-num shr">01</div><div class="step-text">
+    A shrimp's two front arms end in little <strong>fan-shaped brushes</strong>. It touches a surface,
+    the bristles rake up whatever is there, and the arms fold it into the mouth. Then it does it again.
+    Roughly forever.
+  </div></div>
+  <div class="step"><div class="step-num shr">02</div><div class="step-text">
+    Most of what they eat is <strong>biofilm</strong> — the invisible slimy carpet of bacteria and tiny
+    algae that grows on every leaf, rock and pane of glass. A brand-new, spotlessly clean tank is
+    actually a <em>starving</em> tank for shrimp.
+  </div></div>
+  <div class="step"><div class="step-num shr">03</div><div class="step-text">
+    They also eat fallen flakes, dead leaves, dead shrimp, their own old shells and, brilliantly, the
+    <strong>fish poo</strong> they can break down further. Nothing in a tank is wasted.
+  </div></div>
+  <div class="step"><div class="step-num shr">04</div><div class="step-text">
+    Extras that make them very happy: blanched courgette, spinach or carrot; a dried indian almond leaf;
+    a shrimp pellet once or twice a week. <em>One</em> pellet. A whole spoonful will rot before they
+    finish it.
+  </div></div>
+</div>
+
+<div class="callout warn">
+  <strong>The one thing that kills shrimp:</strong> <em>copper</em>. It is harmless to fish at the doses used
+  in many fish medicines and snail-killers, but it poisons every shrimp in the tank. Read the label on
+  anything you pour in. If it says copper, it is not going anywhere near a shrimp tank.
+</div>
+
+<div class="part"><span>Part D · snails — the gliders</span></div>
+
+<p class="panel-label" id="s13">13 · <b>a snail up close</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 252" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A labelled aquarium snail. The coiled shell is part of its body and grows at the rim. Two tentacles feel the way ahead, and unlike a garden snail the eyes sit at the base of the tentacles, not on the tips. Underneath is one huge muscular foot and a mouth holding the radula. A siphon tube reaches up for air, and an operculum acts as a trapdoor to seal the shell.">
+  <defs>
+    <marker id="n-tip" markerWidth="7" markerHeight="7" refX="5.4" refY="2.6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L5.4,2.6 L0,5.2 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect x="8" y="8" width="444" height="236" rx="12" fill="#0e1626" stroke="#1e293b"/>
+
+  <!-- leaders -->
+  <line x1="74"  y1="44"  x2="150" y2="72"  stroke="#64748b" stroke-width="1.2" marker-end="url(#n-tip)"/>
+  <line x1="280" y1="44"  x2="280" y2="56"  stroke="#64748b" stroke-width="1.2" marker-end="url(#n-tip)"/>
+  <line x1="82"  y1="112" x2="98"  y2="96"  stroke="#64748b" stroke-width="1.2" marker-end="url(#n-tip)"/>
+  <line x1="84"  y1="182" x2="148" y2="148" stroke="#64748b" stroke-width="1.2" marker-end="url(#n-tip)"/>
+  <line x1="176" y1="222" x2="170" y2="178" stroke="#64748b" stroke-width="1.2" marker-end="url(#n-tip)"/>
+  <line x1="304" y1="222" x2="300" y2="192" stroke="#64748b" stroke-width="1.2" marker-end="url(#n-tip)"/>
+  <line x1="404" y1="146" x2="362" y2="162" stroke="#64748b" stroke-width="1.2" marker-end="url(#n-tip)"/>
+
+  <!-- ── the snail ── -->
+  <g transform="translate(280,120) scale(1.8)">
+    <!-- foot -->
+    <path d="M-56,30 C-40,19 40,19 52,30 C46,43 -46,45 -56,30 Z" fill="#ddd6fe"/>
+    <path d="M-50,36 C-30,40 26,40 44,35" fill="none" stroke="#c4b5fd" stroke-width="1.6" opacity="0.8"/>
+    <!-- head -->
+    <path d="M-52,26 C-64,25 -76,18 -76,11 C-76,6 -69,6 -64,11 C-59,16 -56,21 -50,23 Z" fill="#ddd6fe"/>
+    <!-- mouth underneath -->
+    <ellipse cx="-66" cy="20" rx="5" ry="3.4" fill="#5b21b6" transform="rotate(20 -66 20)"/>
+    <!-- tentacles -->
+    <path d="M-72,9 C-82,0 -94,-8 -106,-14" fill="none" stroke="#ddd6fe" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M-70,19 C-82,19 -95,17 -107,12" fill="none" stroke="#ddd6fe" stroke-width="2.4" stroke-linecap="round"/>
+    <!-- eyes at the BASE of the tentacles -->
+    <circle cx="-71" cy="10" r="3.4" fill="#312e81"/>
+    <circle cx="-68" cy="20" r="3.2" fill="#312e81"/>
+    <circle cx="-72" cy="9" r="1.1" fill="#c4b5fd"/>
+    <circle cx="-69" cy="19" r="1" fill="#c4b5fd"/>
+    <!-- siphon, the breathing snorkel -->
+    <path d="M-50,14 C-60,2 -66,-12 -62,-24" fill="none" stroke="#c4b5fd" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="-62" cy="-25" r="3.6" fill="none" stroke="#a78bfa" stroke-width="2"/>
+    <!-- shell -->
+    <circle cx="0" cy="0" r="34" fill="#8b5cf6" stroke="#6d28d9" stroke-width="2"/>
+    <path d="M-34,0 A34,34 0 1,1 -10,26"  fill="none" stroke="#c4b5fd" stroke-width="3"/>
+    <path d="M-22,0 A22,22 0 1,1 -6.5,17" fill="none" stroke="#c4b5fd" stroke-width="2.6"/>
+    <path d="M-13,0 A13,13 0 1,1 -4,10"   fill="none" stroke="#c4b5fd" stroke-width="2.2"/>
+    <path d="M-6,0  A6,6 0 1,1 -2,4.6"    fill="none" stroke="#c4b5fd" stroke-width="1.8"/>
+    <!-- operculum: the trapdoor on the back of the foot -->
+    <ellipse cx="40" cy="26" rx="7" ry="11" fill="#4c1d95" stroke="#a78bfa" stroke-width="1.4" transform="rotate(-14 40 26)"/>
+  </g>
+
+  <!-- ── labels ── -->
+  <text x="16" y="26" class="label" fill="#a78bfa" font-size="11" font-weight="700">SIPHON</text>
+  <text x="16" y="40" class="label" fill="#64748b" font-size="9.5">a stretchy snorkel. Some</text>
+  <text x="16" y="52" class="label" fill="#64748b" font-size="9.5">snails poke it up for a</text>
+  <text x="16" y="64" class="label" fill="#64748b" font-size="9.5">gulp of real air</text>
+
+  <text x="280" y="26" text-anchor="middle" class="label" fill="#a78bfa" font-size="11" font-weight="700">SHELL</text>
+  <text x="280" y="40" text-anchor="middle" class="label" fill="#64748b" font-size="9.5">part of the body — it never comes off</text>
+
+  <text x="16" y="108" class="label" fill="#a78bfa" font-size="11" font-weight="700">TENTACLES</text>
+  <text x="16" y="122" class="label" fill="#64748b" font-size="9.5">feelers that taste</text>
+  <text x="16" y="134" class="label" fill="#64748b" font-size="9.5">and touch the way ahead</text>
+
+  <text x="16" y="178" class="label" fill="#a78bfa" font-size="11" font-weight="700">EYES</text>
+  <text x="16" y="192" class="label" fill="#64748b" font-size="9.5">at the BASE of the</text>
+  <text x="16" y="204" class="label" fill="#64748b" font-size="9.5">tentacles, not on the</text>
+  <text x="16" y="216" class="label" fill="#64748b" font-size="9.5">tips like a garden snail</text>
+
+  <text x="176" y="236" text-anchor="middle" class="label" fill="#a78bfa" font-size="10.5" font-weight="700">MOUTH (underneath)</text>
+
+  <text x="304" y="236" text-anchor="middle" class="label" fill="#a78bfa" font-size="10.5" font-weight="700">ONE BIG FOOT</text>
+
+  <text x="444" y="96" text-anchor="end" class="label" fill="#a78bfa" font-size="11" font-weight="700">OPERCULUM</text>
+  <text x="444" y="112" text-anchor="end" class="label" fill="#64748b" font-size="9.5">a hard trapdoor</text>
+  <text x="444" y="124" text-anchor="end" class="label" fill="#64748b" font-size="9.5">that slams shut</text>
+  <text x="444" y="136" text-anchor="end" class="label" fill="#64748b" font-size="9.5">behind it</text>
+</svg>
+</div>
+<p class="cap">
+  A snail is basically a stomach riding on a muscle, wearing a house. The house is not a shelter it
+  found — it is <em>part of the animal</em>, grown from its own body.
+</p>
+
+<p class="para">
+  That single foot is not sliding, it is <strong>walking</strong>. Ripples of muscle run along the
+  underside from back to front, like a tiny wave, and the snail rides them forward on a carpet of its
+  own slime. Watch one from underneath through the glass and you can see the ripples moving.
+</p>
+
+<div class="callout fun">
+  <strong>Fun fact:</strong> snail slime is so good at gripping that a snail can crawl <em>upside down
+  along the underside of the water surface</em>. Not on the glass — on the water itself, hanging from
+  the surface skin. Look for it after the lights go on.
+</div>
+
+<p class="panel-label" id="s14">14 · <b>a tongue with thousands of teeth</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 224" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="How a snail eats. On the left, a snail crawling over algae-covered glass leaves a clean winding trail behind it. On the right, its radula is shown as a conveyor belt of teeth: new teeth are grown at the back, the belt creeps forward, and the worn-out teeth at the front break off and are replaced.">
+  <!-- ── left: the clean trail ── -->
+  <rect x="8" y="8" width="204" height="208" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+  <text x="110" y="30" text-anchor="middle" class="label" fill="#a78bfa" font-size="11" font-weight="700">THE CLEAN TRAIL</text>
+  <!-- algae-covered pane -->
+  <rect x="20" y="42" width="182" height="126" rx="4" fill="#123021"/>
+  <g fill="#4ade80" opacity="0.55">
+    <circle cx="32" cy="54" r="3"/><circle cx="52" cy="66" r="2.6"/><circle cx="44" cy="90" r="3.2"/>
+    <circle cx="30" cy="112" r="2.8"/><circle cx="58" cy="128" r="3"/><circle cx="38" cy="146" r="2.6"/>
+    <circle cx="74" cy="50" r="2.8"/><circle cx="96" cy="60" r="3.2"/><circle cx="118" cy="48" r="2.6"/>
+    <circle cx="140" cy="58" r="3"/><circle cx="164" cy="50" r="2.8"/><circle cx="186" cy="62" r="3.2"/>
+    <circle cx="170" cy="82" r="2.6"/><circle cx="190" cy="100" r="3"/><circle cx="176" cy="122" r="2.8"/>
+    <circle cx="192" cy="144" r="3.2"/><circle cx="150" cy="150" r="2.6"/><circle cx="120" cy="158" r="3"/>
+    <circle cx="92" cy="150" r="2.8"/><circle cx="68" cy="160" r="3.2"/><circle cx="112" cy="128" r="2.6"/>
+    <circle cx="86" cy="108" r="2.4"/>
+  </g>
+  <!-- the cleaned path, painted back over the algae -->
+  <path d="M30,158 C56,150 60,120 88,112 C116,104 118,74 148,68"
+        fill="none" stroke="#0c2036" stroke-width="26" stroke-linecap="round"/>
+  <path d="M30,158 C56,150 60,120 88,112 C116,104 118,74 148,68"
+        fill="none" stroke="#1e3a5f" stroke-width="26" stroke-linecap="round" opacity="0.35"/>
+  <!-- the snail at the head of its trail -->
+  <g transform="translate(156,64) scale(0.56) rotate(-18)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <path d="M-25,15 C-31,12 -34,7 -32,3" fill="none" stroke="#ddd6fe" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M-21,16 C-29,16 -33,13 -34,9" fill="none" stroke="#ddd6fe" stroke-width="3.4" stroke-linecap="round"/>
+    <circle cx="0" cy="-3" r="17" fill="#8b5cf6" stroke="#6d28d9" stroke-width="1.5"/>
+    <path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="2.6"/>
+    <path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.2"/>
+  </g>
+  <text x="110" y="188" text-anchor="middle" class="label" fill="#94a3b8" font-size="9.5">Wherever a snail has been, the</text>
+  <text x="110" y="202" text-anchor="middle" class="label" fill="#94a3b8" font-size="9.5">green fuzz is gone — it ate it.</text>
+
+  <!-- ── right: the radula belt ── -->
+  <rect x="224" y="8" width="228" height="208" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+  <text x="338" y="30" text-anchor="middle" class="label" fill="#a78bfa" font-size="11" font-weight="700">THE RADULA</text>
+  <text x="338" y="44" text-anchor="middle" class="label" fill="#64748b" font-size="9">a conveyor belt of teeth</text>
+
+  <!-- the surface being scraped, with the belt of teeth pressed up against it -->
+  <text x="238" y="60" class="label" fill="#64748b" font-size="8.5">scraped clean</text>
+  <text x="438" y="60" text-anchor="end" class="label" fill="#4ade80" font-size="8.5">algae still here</text>
+  <rect x="236" y="66" width="204" height="7" fill="#475569"/>
+  <g fill="#4ade80" opacity="0.85">
+    <circle cx="352" cy="80" r="4"/><circle cx="368" cy="83" r="3.4"/><circle cx="384" cy="79" r="4.2"/>
+    <circle cx="400" cy="83" r="3.6"/><circle cx="416" cy="79" r="4"/><circle cx="430" cy="82" r="3.4"/>
+  </g>
+
+  <g>
+    <path d="M246,112 L251,84 L256,112 Z" fill="#e2e8f0"/>
+    <path d="M260,112 L265,84 L270,112 Z" fill="#e2e8f0"/>
+    <path d="M274,112 L279,86 L284,112 Z" fill="#e2e8f0"/>
+    <path d="M288,112 L293,86 L298,112 Z" fill="#e2e8f0"/>
+    <path d="M302,112 L307,88 L312,112 Z" fill="#cbd5e1"/>
+    <path d="M316,112 L321,88 L326,112 Z" fill="#cbd5e1"/>
+    <path d="M330,112 L335,90 L340,112 Z" fill="#cbd5e1"/>
+    <path d="M344,112 L349,92 L354,112 Z" fill="#cbd5e1"/>
+    <path d="M358,112 L363,94 L368,112 Z" fill="#94a3b8"/>
+    <path d="M372,112 L377,96 L382,112 Z" fill="#94a3b8"/>
+    <path d="M386,112 L391,98 L396,112 Z" fill="#94a3b8"/>
+    <path d="M400,112 L405,100 L410,112 Z" fill="#94a3b8"/>
+  </g>
+  <rect x="242" y="112" width="192" height="13" rx="3" fill="#475569"/>
+  <!-- a worn tooth breaking off the front -->
+  <path d="M418,104 l4,-6 l4,6 Z" fill="#64748b" transform="rotate(38 422 101)"/>
+  <path class="blink" d="M424,92 l3,-4 l3,4 Z" fill="#64748b" transform="rotate(-25 427 90)"/>
+
+  <g class="scrape">
+    <path d="M280,146 L392,146" fill="none" stroke="#a78bfa" stroke-width="2.4"/>
+    <path d="M392,146 l-8,-5 l0,10 Z" fill="#a78bfa"/>
+  </g>
+  <text x="338" y="164" text-anchor="middle" class="label" fill="#c4b5fd" font-size="9">the whole belt creeps forwards</text>
+
+  <text x="238" y="186" class="label" fill="#e2e8f0" font-size="8.5">NEW teeth grow</text>
+  <text x="238" y="198" class="label" fill="#64748b" font-size="8.5">here, unused</text>
+  <text x="438" y="186" text-anchor="end" class="label" fill="#94a3b8" font-size="8.5">WORN teeth crumble</text>
+  <text x="438" y="198" text-anchor="end" class="label" fill="#64748b" font-size="8.5">off at the front</text>
+  <text x="338" y="212" text-anchor="middle" class="label" fill="#a78bfa" font-size="9">a snail is never short of teeth</text>
+</svg>
+</div>
+<p class="cap">
+  A snail does not bite. It <em>files</em>. The radula is a ribbon covered in rows of microscopic teeth
+  that it drags across a surface like sandpaper, over and over.
+</p>
+
+<div class="callout fun">
+  <strong>Fun fact:</strong> a small aquarium snail carries <em>thousands</em> of teeth — many rows of
+  them, all on one ribbon. They wear out in days, so the ribbon is constantly making new ones at the
+  back and shedding the ruined ones at the front. It is a conveyor belt of teeth, and it never stops.
+</div>
+
+<div class="callout key">
+  <strong>Listen for it.</strong> Put your ear close to a quiet tank at night, or watch a snail on the
+  glass from the other side. You can actually see the little dark radula flicking in and out of the
+  mouth, scrubbing the same spot again and again before it moves on.
+</div>
+
+<p class="panel-label" id="s15">15 · <b>snail eggs — three snails, three completely different plans</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 212" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three kinds of aquarium snail lay eggs in three different ways. Nerite snails stick tiny hard white eggs on everything, but those eggs cannot hatch in fresh water. Bladder and ramshorn snails glue clear jelly blobs under leaves, and because each snail is both male and female a single one can start a whole population. Mystery snails climb out of the water and lay a pink clutch above the surface.">
+  <!-- 1 · nerite -->
+  <rect x="8" y="8" width="142" height="196" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+  <text x="79" y="30" text-anchor="middle" class="label" fill="#a78bfa" font-size="10.5" font-weight="700">NERITE</text>
+  <!-- a rock with white sesame eggs -->
+  <path d="M26,104 C34,80 62,72 86,78 C114,85 128,98 128,106 Z" fill="#334155"/>
+  <g fill="#f8fafc">
+    <ellipse cx="44" cy="96" rx="3.4" ry="2.2" transform="rotate(-20 44 96)"/>
+    <ellipse cx="58" cy="88" rx="3.4" ry="2.2" transform="rotate(10 58 88)"/>
+    <ellipse cx="72" cy="94" rx="3.4" ry="2.2" transform="rotate(-8 72 94)"/>
+    <ellipse cx="88" cy="86" rx="3.4" ry="2.2" transform="rotate(22 88 86)"/>
+    <ellipse cx="102" cy="94" rx="3.4" ry="2.2" transform="rotate(-14 102 94)"/>
+    <ellipse cx="114" cy="100" rx="3.4" ry="2.2" transform="rotate(6 114 100)"/>
+    <ellipse cx="64" cy="100" rx="3.2" ry="2" transform="rotate(30 64 100)"/>
+    <ellipse cx="94" cy="100" rx="3.2" ry="2" transform="rotate(-30 94 100)"/>
+  </g>
+  <g transform="translate(46,66) scale(0.42)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <circle cx="0" cy="-3" r="17" fill="#334155" stroke="#0f172a" stroke-width="1.5"/>
+    <path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#fbbf24" stroke-width="3"/>
+    <path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#fbbf24" stroke-width="2.4"/>
+  </g>
+  <text x="79" y="128" text-anchor="middle" class="label" fill="#f8fafc" font-size="9">hard white specks,</text>
+  <text x="79" y="140" text-anchor="middle" class="label" fill="#f8fafc" font-size="9">stuck on everything</text>
+  <text x="79" y="162" text-anchor="middle" class="label" fill="#4ade80" font-size="9.5" font-weight="700">…and they never hatch</text>
+  <text x="79" y="178" text-anchor="middle" class="label" fill="#64748b" font-size="9">Baby nerites need salty</text>
+  <text x="79" y="190" text-anchor="middle" class="label" fill="#64748b" font-size="9">sea water. In your tank</text>
+  <text x="79" y="200" text-anchor="middle" class="label" fill="#64748b" font-size="9">they just sit there.</text>
+
+  <!-- 2 · bladder / ramshorn -->
+  <rect x="158" y="8" width="142" height="196" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+  <text x="229" y="30" text-anchor="middle" class="label" fill="#a78bfa" font-size="10.5" font-weight="700">BLADDER · RAMSHORN</text>
+  <!-- a leaf with a jelly blob underneath -->
+  <path d="M170,60 C200,46 262,48 288,64 C258,80 194,80 170,60 Z" fill="#15803d"/>
+  <ellipse cx="232" cy="88" rx="26" ry="13" fill="#7dd3fc" opacity="0.3" stroke="#7dd3fc" stroke-width="1.2"/>
+  <g fill="#e2e8f0">
+    <circle cx="220" cy="86" r="2.6"/><circle cx="230" cy="83" r="2.6"/><circle cx="241" cy="87" r="2.6"/>
+    <circle cx="225" cy="93" r="2.4"/><circle cx="236" cy="93" r="2.4"/><circle cx="246" cy="91" r="2.2"/>
+    <circle cx="215" cy="91" r="2.2"/>
+  </g>
+  <g transform="translate(196,44) scale(0.4)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <circle cx="0" cy="-3" r="17" fill="#92400e" stroke="#78350f" stroke-width="1.5"/>
+    <path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#fcd34d" stroke-width="3"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#fcd34d" stroke-width="2.4"/>
+  </g>
+  <text x="229" y="120" text-anchor="middle" class="label" fill="#7dd3fc" font-size="9">a clear jelly blob with</text>
+  <text x="229" y="132" text-anchor="middle" class="label" fill="#7dd3fc" font-size="9">dots, glued under a leaf</text>
+  <text x="229" y="154" text-anchor="middle" class="label" fill="#fbbf24" font-size="9.5" font-weight="700">…and each snail is BOTH</text>
+  <text x="229" y="170" text-anchor="middle" class="label" fill="#64748b" font-size="9">male and female at once.</text>
+  <text x="229" y="182" text-anchor="middle" class="label" fill="#64748b" font-size="9">One snail on its own can</text>
+  <text x="229" y="194" text-anchor="middle" class="label" fill="#64748b" font-size="9">start a whole colony.</text>
+
+  <!-- 3 · mystery snail -->
+  <rect x="308" y="8" width="142" height="196" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+  <text x="379" y="30" text-anchor="middle" class="label" fill="#a78bfa" font-size="10.5" font-weight="700">MYSTERY SNAIL</text>
+  <!-- glass with a waterline -->
+  <rect x="320" y="42" width="120" height="76" fill="#0e1626"/>
+  <rect x="320" y="76" width="120" height="42" fill="#0c2036"/>
+  <line x1="320" y1="76" x2="440" y2="76" stroke="#7dd3fc" stroke-width="1.6"/>
+  <text x="326" y="92" class="label" fill="#475569" font-size="8">water</text>
+  <text x="326" y="60" class="label" fill="#475569" font-size="8">air</text>
+  <!-- the pink clutch above the waterline -->
+  <g fill="#f472b6">
+    <circle cx="360" cy="58" r="3.4"/><circle cx="368" cy="54" r="3.4"/><circle cx="376" cy="58" r="3.4"/>
+    <circle cx="364" cy="64" r="3.4"/><circle cx="372" cy="64" r="3.4"/><circle cx="380" cy="62" r="3"/>
+    <circle cx="368" cy="70" r="3.2"/><circle cx="376" cy="69" r="3"/><circle cx="358" cy="66" r="3"/>
+  </g>
+  <!-- the snail climbing out -->
+  <g transform="translate(404,88) scale(0.48)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <path d="M-25,15 C-33,10 -38,2 -36,-4" fill="none" stroke="#c4b5fd" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="0" cy="-3" r="17" fill="#f59e0b" stroke="#b45309" stroke-width="1.5"/>
+    <path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#fde68a" stroke-width="3"/>
+    <path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#fde68a" stroke-width="2.4"/>
+  </g>
+  <text x="379" y="136" text-anchor="middle" class="label" fill="#f472b6" font-size="9">a pink clutch laid ABOVE</text>
+  <text x="379" y="148" text-anchor="middle" class="label" fill="#f472b6" font-size="9">the water, on the glass</text>
+  <text x="379" y="170" text-anchor="middle" class="label" fill="#64748b" font-size="9">She climbs out to lay</text>
+  <text x="379" y="182" text-anchor="middle" class="label" fill="#64748b" font-size="9">them, because underwater</text>
+  <text x="379" y="194" text-anchor="middle" class="label" fill="#64748b" font-size="9">they drown. Leave a gap.</text>
+</svg>
+</div>
+<p class="cap">
+  Same job, three totally different answers. The eggs a snail lays tell you more about it than its shell does.
+</p>
+
+<div class="steps">
+  <div class="step"><div class="step-num sna">01</div><div class="step-text">
+    <strong>Eggs go on a surface, not inside a parent.</strong> Every one of these snails glues its eggs
+    onto something — a rock, a leaf, the glass — and then walks away. No fanning, no guarding, no
+    carrying. That is the end of parenting.
+  </div></div>
+  <div class="step"><div class="step-num sna">02</div><div class="step-text">
+    <strong>Two to four weeks later, tiny snails hatch out.</strong> And they really are tiny snails —
+    complete with a perfect, see-through shell the size of a full stop. Like shrimp, there is no
+    in-between shape.
+  </div></div>
+  <div class="step"><div class="step-num sna">03</div><div class="step-text">
+    <strong>The shell grows with them.</strong> A snail never swaps shells. It adds new shell material
+    around the opening, a little every day, so the shell spirals outwards and gets bigger. The oldest,
+    smallest part is right in the middle of the swirl — <em>that tip was its baby shell</em>.
+  </div></div>
+  <div class="step"><div class="step-num sna">04</div><div class="step-text">
+    Most tank snails are grown up in <strong>2–3 months</strong> and live for about a year (nerites and
+    mystery snails often longer).
+  </div></div>
+</div>
+
+<div class="callout fun">
+  <strong>Fun fact — the swirl is a diary:</strong> look at a snail's shell in good light and you can see
+  faint growth lines, like tree rings. Rough, thin or pitted patches are the weeks when there was not
+  enough calcium in the water. You are reading the snail's history of dinners.
+</div>
+
+<p class="panel-label" id="s16">16 · <b>how snails eat — and what a snail boom is telling you</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 208" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Left panel: the snail menu — green algae, dead leaves, leftover fish food and dead animals are all eaten, but healthy living plants are usually left alone. Right panel: the same tank with a small pinch of food keeps three snails, while a daily pile of food grows a crowd of snails, because snails only multiply to match the food available.">
+  <!-- ── left: the menu ── -->
+  <rect x="8" y="8" width="204" height="192" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+  <text x="110" y="30" text-anchor="middle" class="label" fill="#a78bfa" font-size="11" font-weight="700">THE SNAIL MENU</text>
+
+  <g transform="translate(0,4)">
+    <circle cx="36" cy="52" r="9" fill="#10241a" stroke="#4ade80" stroke-width="1.4"/>
+    <path d="M32,52 l3,4 l6,-7" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="54" y="50" class="label" fill="#e2e8f0" font-size="9.5">Green fuzz on the glass</text>
+    <text x="54" y="62" class="label" fill="#64748b" font-size="9">their main job and main meal</text>
+
+    <circle cx="36" cy="88" r="9" fill="#10241a" stroke="#4ade80" stroke-width="1.4"/>
+    <path d="M32,88 l3,4 l6,-7" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="54" y="86" class="label" fill="#e2e8f0" font-size="9.5">Dying and rotting leaves</text>
+    <text x="54" y="98" class="label" fill="#64748b" font-size="9">only the soft, rotting ones</text>
+
+    <circle cx="36" cy="124" r="9" fill="#10241a" stroke="#4ade80" stroke-width="1.4"/>
+    <path d="M32,124 l3,4 l6,-7" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="54" y="122" class="label" fill="#e2e8f0" font-size="9.5">Leftover fish food</text>
+    <text x="54" y="134" class="label" fill="#64748b" font-size="9">whatever sank and got missed</text>
+
+    <circle cx="36" cy="160" r="9" fill="#2a1414" stroke="#f87171" stroke-width="1.4"/>
+    <path d="M32.5,156.5 l7,7 M39.5,156.5 l-7,7" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round"/>
+    <text x="54" y="158" class="label" fill="#e2e8f0" font-size="9.5">Healthy living plants</text>
+    <text x="54" y="170" class="label" fill="#64748b" font-size="9">mostly left alone: too tough</text>
+  </g>
+
+  <!-- ── right: the snail boom ── -->
+  <rect x="224" y="8" width="228" height="192" rx="12" fill="#0e1626" stroke="#4c1d9566"/>
+  <text x="338" y="30" text-anchor="middle" class="label" fill="#a78bfa" font-size="11" font-weight="700">A SNAIL BOOM IS A MESSAGE</text>
+
+  <!-- small food, few snails -->
+  <rect x="236" y="42" width="204" height="66" rx="9" fill="#0f2018" stroke="#14532d"/>
+  <g fill="#d97706"><rect x="252" y="56" width="7" height="3.4" rx="1.2"/></g>
+  <text x="248" y="76" class="label" fill="#86efac" font-size="9">a pinch of food</text>
+  <g transform="translate(346,74) scale(0.3)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.4"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.7"/>
+  </g>
+  <g transform="translate(382,82) scale(0.3)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.4"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.7"/>
+  </g>
+  <g transform="translate(414,70) scale(0.3)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.4"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.7"/>
+  </g>
+  <text x="436" y="102" text-anchor="end" class="label" fill="#64748b" font-size="8.5">a few snails</text>
+
+  <!-- lots of food, lots of snails -->
+  <rect x="236" y="116" width="204" height="80" rx="9" fill="#24131a" stroke="#7f1d1d"/>
+  <text x="248" y="134" class="label" fill="#fca5a5" font-size="9">a pile, every day</text>
+  <g fill="#d97706">
+    <rect x="248" y="142" width="7" height="3.4" rx="1.2"/><rect x="256" y="146" width="7" height="3.4" rx="1.2"/>
+    <rect x="250" y="150" width="7" height="3.4" rx="1.2"/><rect x="259" y="154" width="7" height="3.4" rx="1.2"/>
+    <rect x="247" y="158" width="7" height="3.4" rx="1.2"/>
+  </g>
+  <g>
+    <g transform="translate(318,150) scale(0.26)"><path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/><circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.6"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.9"/></g>
+    <g transform="translate(346,140) scale(0.26)"><path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/><circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.6"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.9"/></g>
+    <g transform="translate(374,150) scale(0.26)"><path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/><circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.6"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.9"/></g>
+    <g transform="translate(402,140) scale(0.26)"><path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/><circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.6"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.9"/></g>
+    <g transform="translate(428,150) scale(0.26)"><path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/><circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.6"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.9"/></g>
+    <g transform="translate(330,172) scale(0.26)"><path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/><circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.6"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.9"/></g>
+    <g transform="translate(358,164) scale(0.26)"><path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/><circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.6"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.9"/></g>
+    <g transform="translate(386,174) scale(0.26)"><path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/><circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.6"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.9"/></g>
+    <g transform="translate(414,166) scale(0.26)"><path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/><circle cx="0" cy="-3" r="17" fill="#8b5cf6"/><path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.6"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.9"/></g>
+  </g>
+  <text x="436" y="190" text-anchor="end" class="label" fill="#f87171" font-size="8.5">…a LOT of snails</text>
+</svg>
+</div>
+<p class="cap">
+  Snails cannot make babies out of nothing. Every extra snail was built out of extra food. If they are
+  everywhere, they are eating something — and you are the one putting it there.
+</p>
+
+<div class="callout tip">
+  <strong>So don't poison them — feed less.</strong> Snail-killing chemicals also kill your shrimp, and
+  the dead snails rot and poison the water. Cut the food for a week and the population sorts itself out.
+  A tank with a <em>steady, small</em> number of snails is a tank that is being fed properly.
+</div>
+
+<div class="callout fun">
+  <strong>Fun fact — the cucumber trick:</strong> if you really do have too many, put a slice of blanched
+  courgette in at night. In the morning it will be covered in snails, and you can lift the whole lot out
+  in one go. Easier than a chemical, and the shrimp get a snack out of it too.
+</div>
+
+<div class="part"><span>Part E · plants — the living furniture</span></div>
+
+<p class="panel-label" id="s17">17 · <b>plants are alive too — and they cook their own dinner</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 244" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Photosynthesis by day and respiration by night. With the light on, a plant takes in carbon dioxide and water and makes sugar for itself plus oxygen, which escapes as bubbles from its leaves. With the light off it cannot make sugar, so it breathes like an animal — taking in oxygen and giving out carbon dioxide.">
+  <defs>
+    <marker id="p-in" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#7dd3fc"/>
+    </marker>
+    <marker id="p-out" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#4ade80"/>
+    </marker>
+    <marker id="p-gry" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- ══ DAY ══ -->
+  <rect x="8" y="8" width="214" height="228" rx="12" fill="#0e1626" stroke="#14532d"/>
+  <text x="115" y="30" text-anchor="middle" class="label" fill="#4ade80" font-size="11" font-weight="700">☀ LIGHTS ON</text>
+  <!-- lamp -->
+  <rect x="82" y="40" width="66" height="9" rx="3" fill="#475569"/>
+  <g stroke="#fde047" stroke-width="1.6" stroke-linecap="round" opacity="0.8">
+    <path d="M92,52 L86,70 M106,52 L104,72 M120,52 L122,72 M134,52 L140,70"/>
+  </g>
+  <text x="115" y="90" text-anchor="middle" class="label" fill="#fde047" font-size="9">light energy</text>
+  <!-- the plant -->
+  <g transform="translate(112,150)">
+    <path d="M0,40 C-20,20 -30,-6 -24,-30 C-11,-8 -5,18 0,40 Z" fill="#16a34a"/>
+    <path d="M0,40 C14,18 26,-6 22,-28 C10,-6 5,20 0,40 Z" fill="#22c55e"/>
+    <path d="M0,40 C-9,12 -9,-18 -3,-38 C7,-14 9,12 0,40 Z" fill="#4ade80"/>
+  </g>
+  <!-- gravel -->
+  <rect x="20" y="186" width="190" height="16" fill="#2c2a33"/>
+  <!-- CO2 in -->
+  <line x1="26" y1="128" x2="72" y2="136" stroke="#7dd3fc" stroke-width="2" marker-end="url(#p-in)"/>
+  <text x="24" y="120" class="label" fill="#7dd3fc" font-size="9">carbon dioxide</text>
+  <!-- water in -->
+  <line x1="40" y1="196" x2="96" y2="186" stroke="#7dd3fc" stroke-width="2" marker-end="url(#p-in)"/>
+  <text x="24" y="214" class="label" fill="#7dd3fc" font-size="9">water + minerals</text>
+  <!-- oxygen bubbles out -->
+  <circle class="rise"  cx="140" cy="128" r="3.4" fill="#4ade80" opacity="0.9"/>
+  <circle class="rise2" cx="152" cy="140" r="2.8" fill="#4ade80" opacity="0.9"/>
+  <circle class="rise3" cx="132" cy="150" r="3"   fill="#4ade80" opacity="0.9"/>
+  <line x1="150" y1="142" x2="182" y2="114" stroke="#4ade80" stroke-width="2" marker-end="url(#p-out)"/>
+  <text x="212" y="86" text-anchor="end" class="label" fill="#4ade80" font-size="9" font-weight="700">OXYGEN</text>
+  <text x="212" y="100" text-anchor="end" class="label" fill="#64748b" font-size="8.5">for the fish</text>
+  <!-- sugar stays -->
+  <circle cx="112" cy="178" r="12" fill="#78350f" stroke="#fbbf24" stroke-width="1.4"/>
+  <text x="112" y="182" text-anchor="middle" class="label" fill="#fde68a" font-size="8" font-weight="700">sugar</text>
+  <text x="115" y="230" text-anchor="middle" class="label" fill="#86efac" font-size="9">light + CO₂ + water → sugar + oxygen</text>
+
+  <!-- ══ NIGHT ══ -->
+  <rect x="238" y="8" width="214" height="228" rx="12" fill="#0b1020" stroke="#1e293b"/>
+  <text x="345" y="30" text-anchor="middle" class="label" fill="#64748b" font-size="11" font-weight="700">☾ LIGHTS OFF</text>
+  <rect x="312" y="40" width="66" height="9" rx="3" fill="#334155"/>
+  <text x="345" y="66" text-anchor="middle" class="label" fill="#475569" font-size="9">no light energy</text>
+  <g transform="translate(342,150)" opacity="0.55">
+    <path d="M0,40 C-20,20 -30,-6 -24,-30 C-11,-8 -5,18 0,40 Z" fill="#166534"/>
+    <path d="M0,40 C14,18 26,-6 22,-28 C10,-6 5,20 0,40 Z" fill="#15803d"/>
+    <path d="M0,40 C-9,12 -9,-18 -3,-38 C7,-14 9,12 0,40 Z" fill="#16a34a"/>
+  </g>
+  <rect x="250" y="186" width="190" height="16" fill="#241f28"/>
+  <!-- oxygen in -->
+  <line x1="256" y1="128" x2="302" y2="136" stroke="#64748b" stroke-width="2" marker-end="url(#p-gry)"/>
+  <text x="254" y="120" class="label" fill="#94a3b8" font-size="9">oxygen IN</text>
+  <!-- CO2 out -->
+  <line x1="390" y1="130" x2="424" y2="110" stroke="#64748b" stroke-width="2" marker-end="url(#p-gry)"/>
+  <text x="440" y="102" text-anchor="end" class="label" fill="#94a3b8" font-size="9">carbon dioxide OUT</text>
+  <!-- no bubbles marker -->
+  <g transform="translate(378,158)">
+    <circle cx="0" cy="0" r="12" fill="none" stroke="#475569" stroke-width="1.4"/>
+    <line x1="-8" y1="8" x2="8" y2="-8" stroke="#475569" stroke-width="1.6"/>
+    <circle cx="0" cy="0" r="3.4" fill="none" stroke="#475569" stroke-width="1.2"/>
+  </g>
+  <text x="380" y="184" text-anchor="middle" class="label" fill="#475569" font-size="8.5">no bubbles</text>
+  <text x="345" y="216" text-anchor="middle" class="label" fill="#94a3b8" font-size="9">In the dark a plant cannot make sugar.</text>
+  <text x="345" y="230" text-anchor="middle" class="label" fill="#94a3b8" font-size="9">It breathes — exactly like you do.</text>
+</svg>
+</div>
+<p class="cap">
+  Plants do not eat food. They <em>build</em> it, out of light, water and a gas. Then they burn it again
+  at night, the same way your body burns breakfast.
+</p>
+
+<p class="para">
+  This is why light matters so much in a tank. Too little light and the plants starve and melt away.
+  Too much light and the <strong>algae</strong> — which are also plants, just very small ones — grow faster
+  than anything else and cover everything. Around <em>6–8 hours a day on a timer</em> is the sweet spot,
+  and a timer beats remembering.
+</p>
+
+<div class="callout fun">
+  <strong>Fun fact — pearling:</strong> on a bright afternoon a healthy plant makes oxygen faster than the
+  water can dissolve it, so the extra collects into tiny silver bubbles that cling to the leaves and then
+  let go and float up. Aquarium people call this <em>pearling</em>. It is the plant literally showing you
+  it is having a good day.
+</div>
+
+<p class="panel-label" id="s18">18 · <b>how plants "eat" — roots, leaves, and one rule that matters</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 206" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three planting facts. Root feeders like Amazon swords take most of their food from the gravel through deep roots. Leaf feeders like anubias and java fern absorb food straight from the water and are tied onto wood or rock. The rhizome rule: the thick horizontal stem of these plants must sit above the gravel or it rots.">
+  <!-- 1 · root feeders -->
+  <rect x="8" y="8" width="142" height="188" rx="12" fill="#0e1626" stroke="#14532d"/>
+  <text x="79" y="28" text-anchor="middle" class="label" fill="#4ade80" font-size="10" font-weight="700">ROOT FEEDERS</text>
+  <rect x="20" y="106" width="118" height="42" fill="#2c2a33"/>
+  <g transform="translate(79,106)">
+    <path d="M0,0 C-16,-14 -24,-38 -19,-62 C-8,-40 -4,-18 0,0 Z" fill="#16a34a"/>
+    <path d="M0,0 C12,-16 22,-38 18,-58 C8,-38 4,-16 0,0 Z" fill="#22c55e"/>
+    <path d="M0,0 C-7,-22 -7,-50 -2,-70 C6,-46 8,-22 0,0 Z" fill="#4ade80"/>
+    <path d="M0,0 C-8,10 -16,20 -22,34 M0,0 C-2,14 -3,26 -6,38 M0,0 C8,12 16,22 20,34 M0,0 C4,16 6,28 8,38"
+          fill="none" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/>
+  </g>
+  <rect x="94" y="124" width="14" height="9" rx="2" fill="#78350f" stroke="#fbbf24" stroke-width="1"/>
+  <text x="79" y="162" text-anchor="middle" class="label" fill="#64748b" font-size="9">Swords and crypts pull</text>
+  <text x="79" y="174" text-anchor="middle" class="label" fill="#64748b" font-size="9">food out of the gravel.</text>
+  <text x="79" y="186" text-anchor="middle" class="label" fill="#fbbf24" font-size="8.5">a root tab feeds them</text>
+
+  <!-- 2 · leaf feeders -->
+  <rect x="158" y="8" width="142" height="188" rx="12" fill="#0e1626" stroke="#14532d"/>
+  <text x="229" y="28" text-anchor="middle" class="label" fill="#4ade80" font-size="10" font-weight="700">LEAF FEEDERS</text>
+  <path d="M186,120 C204,108 254,106 272,118" fill="none" stroke="#78350f" stroke-width="11" stroke-linecap="round"/>
+  <ellipse cx="200" cy="98" rx="15" ry="9" fill="#15803d" transform="rotate(-24 200 98)"/>
+  <ellipse cx="226" cy="90" rx="17" ry="10" fill="#16a34a" transform="rotate(-6 226 90)"/>
+  <ellipse cx="252" cy="98" rx="15" ry="9" fill="#15803d" transform="rotate(18 252 98)"/>
+  <g stroke="#7dd3fc" stroke-width="1.6" fill="none" opacity="0.75" stroke-linecap="round">
+    <path d="M176,66 l10,8 M264,62 l-10,9 M212,58 l6,10 M240,60 l-5,10"/>
+  </g>
+  <text x="229" y="52" text-anchor="middle" class="label" fill="#7dd3fc" font-size="8.5">food straight from water</text>
+  <text x="229" y="150" text-anchor="middle" class="label" fill="#64748b" font-size="9">Anubias and java fern</text>
+  <text x="229" y="162" text-anchor="middle" class="label" fill="#64748b" font-size="9">ignore gravel. Tie them</text>
+  <text x="229" y="174" text-anchor="middle" class="label" fill="#64748b" font-size="9">to wood or rock and they</text>
+  <text x="229" y="186" text-anchor="middle" class="label" fill="#64748b" font-size="9">grip on by themselves.</text>
+
+  <!-- 3 · the rhizome rule -->
+  <rect x="308" y="8" width="142" height="188" rx="12" fill="#0e1626" stroke="#14532d"/>
+  <text x="379" y="28" text-anchor="middle" class="label" fill="#4ade80" font-size="10" font-weight="700">THE RHIZOME RULE</text>
+  <!-- right -->
+  <rect x="318" y="64" width="58" height="26" fill="#2c2a33"/>
+  <path d="M322,62 C336,56 358,56 372,62" fill="none" stroke="#a16207" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="332" cy="48" rx="10" ry="6" fill="#22c55e" transform="rotate(-20 332 48)"/>
+  <ellipse cx="358" cy="46" rx="11" ry="6" fill="#4ade80" transform="rotate(12 358 46)"/>
+  <path d="M330,66 l-4,14 M346,66 l0,16 M362,66 l5,14" fill="none" stroke="#fcd34d" stroke-width="1.2" stroke-linecap="round"/>
+  <g transform="translate(346,102)">
+    <circle cx="0" cy="0" r="9" fill="#10241a" stroke="#4ade80" stroke-width="1.4"/>
+    <path d="M-4,0 l3,4 l6,-7" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="346" y="124" text-anchor="middle" class="label" fill="#86efac" font-size="8.5">stem ABOVE</text>
+  <!-- wrong -->
+  <rect x="386" y="50" width="56" height="40" fill="#2c2a33"/>
+  <path d="M390,62 C404,58 426,58 438,62" fill="none" stroke="#57534e" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="400" cy="42" rx="10" ry="6" fill="#65a30d" opacity="0.5" transform="rotate(-20 400 42)"/>
+  <ellipse cx="424" cy="40" rx="10" ry="6" fill="#57534e" opacity="0.7" transform="rotate(12 424 40)"/>
+  <g transform="translate(414,102)">
+    <circle cx="0" cy="0" r="9" fill="#2a1414" stroke="#f87171" stroke-width="1.4"/>
+    <path d="M-3.5,-3.5 l7,7 M3.5,-3.5 l-7,7" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="414" y="124" text-anchor="middle" class="label" fill="#fca5a5" font-size="8">buried = rots</text>
+  <text x="379" y="150" text-anchor="middle" class="label" fill="#64748b" font-size="9">The thick sideways stem</text>
+  <text x="379" y="162" text-anchor="middle" class="label" fill="#64748b" font-size="9">must stay in the water.</text>
+  <text x="379" y="174" text-anchor="middle" class="label" fill="#64748b" font-size="9">Only the thin roots go</text>
+  <text x="379" y="186" text-anchor="middle" class="label" fill="#64748b" font-size="9">into the gravel.</text>
+</svg>
+</div>
+<p class="cap">
+  Burying an anubias or a java fern up to its thick stem is the single most common way beginners kill a
+  plant that is otherwise almost unkillable.
+</p>
+
+<p class="para">
+  Here is the loop that makes the whole tank work. Fish make ammonia. Invisible bacteria turn ammonia
+  into nitrite and then into <strong>nitrate</strong>. Nitrate is a fertiliser — and plants drink it.
+  So the plants are quietly eating the fish's waste and handing back oxygen and hiding places.
+  A well-planted tank stays cleaner for longer, all by itself.
+</p>
+
+<div class="callout key">
+  <strong>Plants also eat the dangerous stuff first.</strong> Given the choice, many water plants will grab
+  <em>ammonia</em> straight out of the water — the most poisonous form of fish waste — before they bother
+  with nitrate. A thicket of fast-growing plants is a safety net for your fish.
+</div>
+
+<p class="panel-label" id="s19">19 · <b>plant babies — no eggs, no seeds, just copies</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 356" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Four ways aquarium plants make more of themselves. Runners: a horizontal stem creeps sideways under the gravel and a new plant pops up from it. Plantlets: a java fern grows tiny complete baby ferns on the edges of its own leaves, which drop off and float away. Cuttings: snap a stem plant in half and the broken piece grows its own roots. Division: cut the thick rhizome of an anubias in two and you have two plants.">
+  <!-- 1 · runners -->
+  <rect x="8" y="8" width="216" height="154" rx="12" fill="#0e1626" stroke="#14532d"/>
+  <text x="116" y="28" text-anchor="middle" class="label" fill="#4ade80" font-size="10.5" font-weight="700">1 · RUNNERS</text>
+  <rect x="20" y="100" width="192" height="30" fill="#2c2a33"/>
+  <g transform="translate(56,100)">
+    <path d="M0,0 C-12,-12 -18,-32 -14,-50 C-6,-32 -3,-14 0,0 Z" fill="#16a34a"/>
+    <path d="M0,0 C10,-14 18,-32 15,-48 C7,-30 3,-14 0,0 Z" fill="#22c55e"/>
+    <path d="M0,0 C-6,-18 -6,-42 -2,-58 C5,-38 7,-18 0,0 Z" fill="#4ade80"/>
+  </g>
+  <path class="flow" d="M60,112 L150,112" fill="none" stroke="#a3e635" stroke-width="3.4" stroke-linecap="round"/>
+  <g transform="translate(152,112)"><g class="sprout">
+    <path d="M0,0 C-8,-8 -12,-22 -9,-34 C-4,-22 -2,-10 0,0 Z" fill="#16a34a"/>
+    <path d="M0,0 C7,-10 12,-22 10,-32 C5,-20 2,-10 0,0 Z" fill="#22c55e"/>
+    <path d="M0,0 C-4,-12 -4,-28 -1,-40 C3,-26 5,-12 0,0 Z" fill="#4ade80"/>
+  </g></g>
+  <text x="102" y="126" class="label" fill="#a3e635" font-size="8.5">the runner</text>
+  <text x="116" y="140" text-anchor="middle" class="label" fill="#64748b" font-size="9">A stem creeps sideways and a whole new</text>
+  <text x="116" y="154" text-anchor="middle" class="label" fill="#64748b" font-size="9">plant pops up. Swords, vallis, crypts.</text>
+
+  <!-- 2 · plantlets on leaves -->
+  <rect x="236" y="8" width="216" height="154" rx="12" fill="#0e1626" stroke="#14532d"/>
+  <text x="344" y="28" text-anchor="middle" class="label" fill="#4ade80" font-size="10.5" font-weight="700">2 · BABIES ON LEAVES</text>
+  <!-- a java fern leaf -->
+  <path d="M276,124 C288,92 306,62 332,44 C330,78 316,110 292,128 Z" fill="#15803d"/>
+  <path d="M278,122 C292,94 310,66 330,48" fill="none" stroke="#166534" stroke-width="2"/>
+  <!-- tiny plantlets along the edge -->
+  <g>
+    <g transform="translate(300,72)"><path d="M0,0 C-4,-4 -6,-11 -4,-16 C-2,-10 -1,-4 0,0 Z" fill="#4ade80"/><path d="M0,0 C4,-5 6,-11 5,-15 C2,-9 1,-4 0,0 Z" fill="#22c55e"/></g>
+    <g transform="translate(316,54)"><path d="M0,0 C-4,-4 -6,-11 -4,-16 C-2,-10 -1,-4 0,0 Z" fill="#4ade80"/><path d="M0,0 C4,-5 6,-11 5,-15 C2,-9 1,-4 0,0 Z" fill="#22c55e"/></g>
+    <g transform="translate(286,96)"><path d="M0,0 C-4,-4 -6,-11 -4,-16 C-2,-10 -1,-4 0,0 Z" fill="#4ade80"/><path d="M0,0 C4,-5 6,-11 5,-15 C2,-9 1,-4 0,0 Z" fill="#22c55e"/></g>
+  </g>
+  <!-- one that has let go and is drifting off -->
+  <g transform="translate(386,74) rotate(28)">
+    <path d="M0,0 C-5,-5 -8,-14 -5,-20 C-2,-12 -1,-5 0,0 Z" fill="#4ade80"/>
+    <path d="M0,0 C5,-6 8,-14 6,-19 C3,-11 1,-5 0,0 Z" fill="#22c55e"/>
+    <path d="M0,0 C-3,6 -6,10 -10,13 M0,0 C2,7 3,11 5,15" fill="none" stroke="#fcd34d" stroke-width="1.2" stroke-linecap="round"/>
+  </g>
+  <path d="M338,62 C356,60 372,64 380,70" fill="none" stroke="#64748b" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="344" y="140" text-anchor="middle" class="label" fill="#64748b" font-size="9">A java fern grows baby ferns along</text>
+  <text x="344" y="154" text-anchor="middle" class="label" fill="#64748b" font-size="9">its own leaf edges, and they drop off.</text>
+
+  <!-- 3 · cuttings -->
+  <rect x="8" y="170" width="216" height="176" rx="12" fill="#0e1626" stroke="#14532d"/>
+  <text x="116" y="190" text-anchor="middle" class="label" fill="#4ade80" font-size="10.5" font-weight="700">3 · CUTTINGS</text>
+  <!-- original stem plant -->
+  <g stroke="#22c55e" stroke-width="2.4" fill="none" stroke-linecap="round">
+    <path d="M56,290 C50,262 58,230 52,204"/>
+    <path d="M54,276 l-12,-7 M55,258 l12,-8 M53,240 l-12,-7 M53,222 l12,-8 M52,208 l-11,-7"/>
+  </g>
+  <!-- scissors cut marker -->
+  <line x1="36" y1="244" x2="76" y2="244" stroke="#f87171" stroke-width="1.6" stroke-dasharray="4 4"/>
+  <text x="80" y="242" class="label" fill="#fca5a5" font-size="8.5">snap it here</text>
+  <!-- the cut piece, replanted, growing roots -->
+  <g stroke="#22c55e" stroke-width="2.4" fill="none" stroke-linecap="round" transform="translate(112,0)">
+    <path d="M56,290 C52,272 58,254 54,240"/>
+    <path d="M55,278 l-12,-7 M56,262 l12,-8 M54,248 l-12,-7"/>
+  </g>
+  <path d="M168,290 C162,298 156,304 150,308 M168,290 C170,300 170,306 171,312 M168,290 C176,298 182,302 188,306"
+        fill="none" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round"/>
+  <rect x="20" y="290" width="192" height="22" fill="#2c2a33"/>
+  <text x="116" y="306" text-anchor="middle" class="label" fill="#fde68a" font-size="8.5">new roots in a week</text>
+  <text x="116" y="322" text-anchor="middle" class="label" fill="#64748b" font-size="9">Snap a stem plant in half and push the</text>
+  <text x="116" y="332" text-anchor="middle" class="label" fill="#64748b" font-size="9">top bit into the gravel: two plants.</text>
+
+  <!-- 4 · division -->
+  <rect x="236" y="170" width="216" height="176" rx="12" fill="#0e1626" stroke="#14532d"/>
+  <text x="344" y="190" text-anchor="middle" class="label" fill="#4ade80" font-size="10.5" font-weight="700">4 · SPLITTING</text>
+  <!-- one rhizome with leaves, a cut line down the middle -->
+  <path d="M264,250 C290,238 398,238 424,250" fill="none" stroke="#a16207" stroke-width="10" stroke-linecap="round"/>
+  <ellipse cx="282" cy="226" rx="15" ry="9" fill="#15803d" transform="rotate(-22 282 226)"/>
+  <ellipse cx="312" cy="220" rx="16" ry="9" fill="#16a34a" transform="rotate(-8 312 220)"/>
+  <ellipse cx="376" cy="220" rx="16" ry="9" fill="#16a34a" transform="rotate(8 376 220)"/>
+  <ellipse cx="406" cy="226" rx="15" ry="9" fill="#15803d" transform="rotate(22 406 226)"/>
+  <path d="M278,256 l-5,16 M300,256 l-2,18 M388,256 l3,18 M410,256 l6,16"
+        fill="none" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round"/>
+  <line x1="344" y1="200" x2="344" y2="282" stroke="#f87171" stroke-width="1.8" stroke-dasharray="5 4"/>
+  <text x="344" y="296" text-anchor="middle" class="label" fill="#fca5a5" font-size="8.5">one cut = two plants</text>
+  <text x="344" y="314" text-anchor="middle" class="label" fill="#64748b" font-size="9">Cut the thick stem of an anubias or</text>
+  <text x="344" y="324" text-anchor="middle" class="label" fill="#64748b" font-size="9">java fern in two. Both halves live on.</text>
+</svg>
+</div>
+<p class="cap">
+  Four ways to make a new plant, and not a seed among them. Every one of these babies is a
+  <em>perfect copy</em> of the parent — a clone.
+</p>
+
+<p class="para">
+  Animals in your tank need two parents (or at least one parent with stored sperm). Most aquarium plants
+  do not bother. They just grow an extra piece of themselves and let it go. Scientists call this
+  <strong>asexual reproduction</strong> — "making babies without mixing".
+</p>
+
+<div class="tbl">
+  <div class="row three head"><div>Method</div><div>Who does it</div><div>What you actually see</div></div>
+  <div class="row three"><div><b>Runners</b></div><div data-h="who">Amazon sword, vallisneria, crypts</div><div data-h="you see">A pale stem creeping sideways with new plants along it</div></div>
+  <div class="row three"><div><b>Plantlets on leaves</b></div><div data-h="who">Java fern</div><div data-h="you see">Little bumps on the leaf edges that turn into mini ferns and fall off</div></div>
+  <div class="row three"><div><b>Cuttings</b></div><div data-h="who">Hornwort, elodea, most stem plants</div><div data-h="you see">A snapped-off piece that grows its own roots and keeps going</div></div>
+  <div class="row three"><div><b>Splitting</b></div><div data-h="who">Anubias, java fern, moss</div><div data-h="you see">You cut it in half yourself — and get two plants</div></div>
+  <div class="row three"><div><b>Doubling</b></div><div data-h="who">Duckweed</div><div data-h="you see">Each little leaf splits into two, then four, then eight…</div></div>
+</div>
+
+<div class="callout fun">
+  <strong>Fun fact:</strong> duckweed can <em>double</em> its numbers in a couple of days in good light.
+  Start with 10 leaves and in three weeks you can have thousands. It is one of the fastest-growing plants
+  on the planet — and completely impossible to get back out of a tank once it is in. Add it on purpose or
+  not at all.
+</div>
+
+<p class="panel-label" id="s20">20 · <b>five plants that are very hard to kill</b></p>
+
+<div class="cardgrid">
+  <div class="crd grn">
+    <svg viewBox="0 0 70 56" role="img" aria-label="Java fern: long narrow green leaves rising from a thick horizontal stem tied to a rock.">
+      <path d="M14,52 C18,34 24,16 34,6 C34,24 28,42 20,54 Z" fill="#15803d"/>
+      <path d="M28,54 C30,36 36,18 46,8 C46,28 40,44 34,54 Z" fill="#16a34a"/>
+      <path d="M42,54 C46,38 52,24 60,16 C58,34 52,46 48,54 Z" fill="#22c55e"/>
+      <path d="M8,52 C20,48 52,48 64,52" fill="none" stroke="#a16207" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+    <div class="n">JAVA FERN</div>
+    <div class="q">tie to wood · low light</div>
+    <div class="d">Grows babies on its own leaf tips. Snails and fish ignore it — the leaves taste horrible. Never bury the thick stem.</div>
+  </div>
+  <div class="crd grn">
+    <svg viewBox="0 0 70 56" role="img" aria-label="Anubias: broad dark oval leaves on a thick creeping stem.">
+      <path d="M6,48 C20,38 50,38 64,48" fill="none" stroke="#a16207" stroke-width="6" stroke-linecap="round"/>
+      <ellipse cx="18" cy="28" rx="12" ry="7" fill="#15803d" transform="rotate(-24 18 28)"/>
+      <ellipse cx="38" cy="22" rx="13" ry="8" fill="#166534" transform="rotate(-4 38 22)"/>
+      <ellipse cx="56" cy="30" rx="11" ry="7" fill="#15803d" transform="rotate(22 56 30)"/>
+    </svg>
+    <div class="n">ANUBIAS</div>
+    <div class="q">tie to rock · very low light</div>
+    <div class="d">Thick leathery leaves that grow slowly and last for years. Cut the stem in half to make two. Also never bury it.</div>
+  </div>
+  <div class="crd grn">
+    <svg viewBox="0 0 70 56" role="img" aria-label="Hornwort: a feathery floating stem with whorls of fine needles.">
+      <g stroke="#22c55e" stroke-width="2.2" fill="none" stroke-linecap="round">
+        <path d="M35,54 C30,40 38,26 33,10"/>
+        <path d="M33,46 l-12,-7 M34,38 l12,-8 M35,30 l-12,-7 M34,22 l12,-8 M33,14 l-12,-7 M33,10 l12,-6"/>
+      </g>
+    </svg>
+    <div class="n">HORNWORT</div>
+    <div class="q">float it · grows like mad</div>
+    <div class="d">No roots at all — it just floats and grows. Eats nitrate fast, shades the tank, and makes a brilliant jungle for baby guppies.</div>
+  </div>
+  <div class="crd grn">
+    <svg viewBox="0 0 70 56" role="img" aria-label="Java moss: a low tangled cushion of fine green threads.">
+      <ellipse cx="35" cy="48" rx="28" ry="7" fill="#166534"/>
+      <g stroke="#4ade80" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.9">
+        <path d="M14,48 l-4,-12 M22,48 l5,-13 M30,47 l-5,-14 M38,48 l6,-12 M46,47 l-4,-13 M54,48 l5,-11
+                 M18,38 l-7,-7 M34,34 l8,-6 M50,38 l-7,-7"/>
+      </g>
+    </svg>
+    <div class="n">JAVA MOSS</div>
+    <div class="q">drop it anywhere</div>
+    <div class="d">The shrimp nursery. Baby shrimp and guppy fry live inside it, and it is full of the biofilm they eat. Grows on anything.</div>
+  </div>
+  <div class="crd grn">
+    <svg viewBox="0 0 70 56" role="img" aria-label="Amazon sword: tall broad ribbon leaves rising from a rooted crown.">
+      <path d="M35,54 C20,40 12,18 18,2 C28,20 33,38 35,54 Z" fill="#16a34a"/>
+      <path d="M35,54 C48,38 58,18 52,4 C42,22 37,38 35,54 Z" fill="#22c55e"/>
+      <path d="M35,54 C29,34 29,12 34,0 C41,16 43,36 35,54 Z" fill="#4ade80"/>
+      <path d="M35,54 C30,56 26,56 22,54 M35,54 C40,56 45,56 49,54" fill="none" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round"/>
+    </svg>
+    <div class="n">AMAZON SWORD</div>
+    <div class="q">plant in gravel · feed the roots</div>
+    <div class="d">The big centrepiece plant. Sends out runners with new plants along them. Needs a root tab pushed into the gravel now and then.</div>
+  </div>
+</div>
+
+<div class="callout warn">
+  <strong>Never put aquarium plants in a stream, pond or drain.</strong> Hornwort, elodea and duckweed are
+  brilliant in a tank and <em>disasters</em> in the wild — they choke real waterways and are extremely hard
+  to remove. Spare plants go in the bin or to another fishkeeper, not into nature.
+</div>
+
+<div class="part"><span>Part F · the whole team</span></div>
+
+<p class="panel-label" id="s21">21 · <b>nothing is wasted — the tank goes round in a circle</b></p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 460 336" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The tank as a loop. You add food, the guppies eat it and make waste, the shrimp and snails shred the leftovers into smaller pieces, invisible bacteria turn the waste into plant food called nitrate, the plants drink it and release oxygen, and the oxygen goes back to the guppies.">
+  <defs>
+    <marker id="ring-a" markerWidth="9" markerHeight="9" refX="7" refY="3.4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7,3.4 L0,6.8 Z" fill="#38bdf8"/>
+    </marker>
+    <marker id="feed-a" markerWidth="9" markerHeight="9" refX="7" refY="3.4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7,3.4 L0,6.8 Z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <!-- ── the ring arrows ── -->
+  <g fill="none" stroke="#38bdf8" stroke-width="2.6" marker-end="url(#ring-a)" opacity="0.9">
+    <path class="flow" d="M266.9,66.5  A108,108 0 0,1 315.1,101.5"/>
+    <path class="flow" d="M337.9,171.8 A108,108 0 0,1 319.5,228.4"/>
+    <path class="flow" d="M259.8,271.8 A108,108 0 0,1 200.2,271.8"/>
+    <path class="flow" d="M140.5,228.4 A108,108 0 0,1 122.1,171.8"/>
+    <path class="flow" d="M144.9,101.5 A108,108 0 0,1 193.1,66.5"/>
+  </g>
+
+  <!-- ── you, feeding in ── -->
+  <rect x="8" y="30" width="106" height="34" rx="9" fill="#2a2210" stroke="#fbbf24" stroke-width="1.2"/>
+  <text x="61" y="45" text-anchor="middle" class="label" fill="#fbbf24" font-size="9.5" font-weight="700">YOU</text>
+  <text x="61" y="58" text-anchor="middle" class="label" fill="#fcd34d" font-size="8">add a pinch of food</text>
+  <line x1="118" y1="50" x2="192" y2="56" stroke="#fbbf24" stroke-width="2" marker-end="url(#feed-a)" stroke-dasharray="5 4"/>
+
+  <!-- ── node 1 · guppies ── -->
+  <circle cx="230" cy="60" r="32" fill="#2a2210" stroke="#fbbf24" stroke-width="1.6"/>
+  <g transform="translate(224,60)">
+    <path d="M11,0 C17,-9 24,-12 27,-11 C24,-5 24,5 27,11 C24,12 17,9 11,0 Z" fill="#f59e0b"/>
+    <path d="M-18,0 C-14,-6 2,-7 11,0 C2,7 -14,6 -18,0 Z" fill="#fbbf24"/>
+    <circle cx="-13" cy="-1" r="1.8" fill="#0a0e1a"/>
+  </g>
+  <text x="230" y="20" text-anchor="middle" class="label" fill="#fbbf24" font-size="10" font-weight="700">GUPPIES EAT</text>
+  <text x="230" y="32" text-anchor="middle" class="label" fill="#64748b" font-size="9">…and make waste</text>
+
+  <!-- ── node 2 · waste ── -->
+  <circle cx="333" cy="135" r="32" fill="#241c0c" stroke="#a16207" stroke-width="1.6"/>
+  <g fill="#a16207">
+    <circle cx="322" cy="128" r="3.4"/><circle cx="334" cy="140" r="3"/><circle cx="344" cy="126" r="2.6"/>
+    <circle cx="328" cy="146" r="2.4"/><circle cx="345" cy="142" r="2.8"/>
+  </g>
+  <rect x="318" y="118" width="9" height="4" rx="1.4" fill="#d97706" transform="rotate(-14 322 120)"/>
+  <text x="370" y="128" class="label" fill="#d97706" font-size="10" font-weight="700">WASTE</text>
+  <text x="370" y="141" class="label" fill="#64748b" font-size="9">poo and old</text>
+  <text x="370" y="153" class="label" fill="#64748b" font-size="9">food on the</text>
+  <text x="370" y="165" class="label" fill="#64748b" font-size="9">tank floor</text>
+
+  <!-- ── node 3 · shrimp + snails ── -->
+  <circle cx="293" cy="255" r="32" fill="#241214" stroke="#f87171" stroke-width="1.6"/>
+  <g transform="translate(282,246) scale(0.42)">
+    <path d="M-30,-4 C-24,-16 -4,-19 8,-11 C21,-3 27,9 22,19 C20,24 16,26 13,25
+             C17,18 16,8 8,2 C-2,-5 -20,4 -30,-4 Z" fill="#ef4444"/>
+    <path d="M15,25 L1,39 L9,38 L12,48 L18,38 L27,41 Z" fill="#fca5a5"/>
+    <circle cx="-21" cy="-9" r="3" fill="#0a0e1a"/>
+  </g>
+  <g transform="translate(304,266) scale(0.32)">
+    <path d="M-26,16 C-18,8 18,8 26,16 C20,23 -20,23 -26,16 Z" fill="#ddd6fe"/>
+    <circle cx="0" cy="-3" r="17" fill="#8b5cf6"/>
+    <path d="M-17,-3 A17,17 0 1,1 -5,13" fill="none" stroke="#c4b5fd" stroke-width="3.4"/><path d="M-10.5,-3 A10.5,10.5 0 1,1 -3,6.8" fill="none" stroke="#c4b5fd" stroke-width="2.7"/>
+  </g>
+  <text x="300" y="304" text-anchor="middle" class="label" fill="#f87171" font-size="10" font-weight="700">SHRIMP &amp; SNAILS</text>
+  <text x="300" y="317" text-anchor="middle" class="label" fill="#64748b" font-size="9">shred it into crumbs</text>
+
+  <!-- ── node 4 · bacteria ── -->
+  <circle cx="167" cy="255" r="32" fill="#1a1330" stroke="#a78bfa" stroke-width="1.6"/>
+  <g fill="#c4b5fd">
+    <rect x="152" y="244" width="11" height="5" rx="2.5" transform="rotate(-18 157 246)"/>
+    <rect x="168" y="240" width="11" height="5" rx="2.5" transform="rotate(24 173 242)"/>
+    <rect x="158" y="258" width="11" height="5" rx="2.5" transform="rotate(10 163 260)"/>
+    <rect x="174" y="262" width="11" height="5" rx="2.5" transform="rotate(-28 179 264)"/>
+    <rect x="166" y="252" width="11" height="5" rx="2.5" transform="rotate(48 171 254)"/>
+  </g>
+  <text x="160" y="304" text-anchor="middle" class="label" fill="#a78bfa" font-size="10" font-weight="700">BACTERIA</text>
+  <text x="160" y="317" text-anchor="middle" class="label" fill="#64748b" font-size="9">turn it into plant food</text>
+
+  <!-- ── node 5 · plants ── -->
+  <circle cx="127" cy="135" r="32" fill="#0f2018" stroke="#4ade80" stroke-width="1.6"/>
+  <g transform="translate(127,152)">
+    <path d="M0,0 C-11,-9 -16,-22 -13,-32 C-6,-20 -2,-8 0,0 Z" fill="#16a34a"/>
+    <path d="M0,0 C9,-10 15,-22 13,-30 C6,-18 2,-8 0,0 Z" fill="#22c55e"/>
+    <path d="M0,0 C-5,-13 -5,-28 -1,-38 C4,-24 5,-12 0,0 Z" fill="#4ade80"/>
+  </g>
+  <text x="90" y="128" text-anchor="end" class="label" fill="#4ade80" font-size="10" font-weight="700">PLANTS</text>
+  <text x="90" y="141" text-anchor="end" class="label" fill="#64748b" font-size="9">drink the plant</text>
+  <text x="90" y="153" text-anchor="end" class="label" fill="#64748b" font-size="9">food and grow</text>
+
+  <!-- oxygen label on the closing arc -->
+  <text x="150" y="48" text-anchor="middle" class="label" fill="#7dd3fc" font-size="9">…and give back</text>
+  <text x="150" y="62" text-anchor="middle" class="label" fill="#7dd3fc" font-size="9" font-weight="700">OXYGEN</text>
+</svg>
+</div>
+<p class="cap">
+  Everything that goes into the tank stays in the tank until you take it out. The team's job is to keep
+  passing it along until a plant can use it.
+</p>
+
+<div class="tbl">
+  <div class="row three head"><div>Crew</div><div>Job in the team</div><div>What happens without them</div></div>
+  <div class="row three"><div><b>Guppies</b></div><div data-h="job">Eat, swim, be interesting, feed everything downstream</div><div data-h="without them">A very quiet tank</div></div>
+  <div class="row three"><div><b>Cherry shrimp</b></div><div data-h="job">Break leftovers and dead leaves into crumbs; eat biofilm</div><div data-h="without them">Scraps sit and rot for much longer</div></div>
+  <div class="row three"><div><b>Snails</b></div><div data-h="job">Scrape algae off glass, rocks and leaves; clear dead bits</div><div data-h="without them">Green fuzz on everything</div></div>
+  <div class="row three"><div><b>Plants</b></div><div data-h="job">Drink the waste, make oxygen, hide the babies</div><div data-h="without them">More algae, dirtier water, no baby guppies</div></div>
+  <div class="row three"><div><b>Bacteria</b></div><div data-h="job">Turn poison into plant food. Invisible, and the most important of all</div><div data-h="without them">Fish poisoned by their own ammonia in days</div></div>
+</div>
+
+<div class="callout key">
+  <strong>The loop is not perfect.</strong> Nitrate still builds up slowly, and only one thing takes it out
+  for good: <em>you</em>, changing a bucket of water every week. In a river the water is always leaving.
+  In a tank, you are the river. (There is a whole page about that — see <strong>Fish Tank</strong> in the
+  Science section.)
+</div>
+
+<p class="panel-label" id="s22">22 · <b>fun things to actually try</b></p>
+
+<p class="para">
+  All of these need nothing but your eyes, a bit of patience and sometimes a stopwatch. A notebook makes
+  them ten times better, because then you are not just looking — you are doing science.
+</p>
+
+<div class="trygrid">
+  <div class="try">
+    <div class="t"><span>01</span>The bubble count</div>
+    <div class="d">Pick one plant leaf. Count the oxygen bubbles that leave it in <b>one minute</b>, on a bright day and on a dull day. Then do it an hour after the lights go off. Graph all three.</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>02</span>Snail speed record</div>
+    <div class="d">Stick two bits of tape on the glass, <b>10 cm apart</b>. Time a snail crossing between them. Work out its speed in cm per minute — then how long it would take to cross your bedroom.</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>03</span>Watch the teeth</div>
+    <div class="d">Find a snail on the glass and look at it <b>from the other side</b>. You are looking straight at its mouth. Watch the dark little radula flick out, scrape, and pull back. Over and over.</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>04</span>Ghost hunt</div>
+    <div class="d">Look for a see-through shrimp lying on the gravel. Is it hollow and split behind the head? Then it is a <b>moult</b>, not a body. Keep a tally — a moult a week means your shrimp are growing.</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>05</span>Predict the birthday</div>
+    <div class="d">Photograph a pregnant guppy's <b>gravid spot</b> at the same time each day. When it looks black and packed and her belly goes square, write down your prediction. See how close you get.</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>06</span>The courgette race</div>
+    <div class="d">Drop in a slice of blanched courgette and <b>time who arrives first</b>: shrimp, snail or guppy? Repeat on three different days. Does the same crew always win?</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>07</span>The two-minute test</div>
+    <div class="d">Feed your normal pinch and start a timer. Is it <b>all gone in 2 minutes</b>? If not, you are feeding too much. Halve it tomorrow and test again.</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>08</span>Plant growth chart</div>
+    <div class="d">Put a sticker on the glass at the tip of your tallest plant. Add a new sticker <b>every Sunday</b>. After two months you have a growth chart on the side of the tank.</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>09</span>Make two from one</div>
+    <div class="d">Snap a hornwort stem in half, or cut an anubias rhizome in two. Plant both pieces. In a month you have <b>two plants that are genetically identical</b> — you have made a clone.</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>10</span>Boy or girl census</div>
+    <div class="d">Count your guppies and sort them by <b>anal fin shape</b>: pointed rod or wide fan. Write down the ratio. Check again in two months and see what changed.</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>11</span>The moss safari</div>
+    <div class="d">Stare into one clump of java moss for <b>three whole minutes</b> without looking away. Baby shrimp and guppy fry are almost invisible until your eyes adjust. Then suddenly the moss is full of them.</div>
+  </div>
+  <div class="try">
+    <div class="t"><span>12</span>Lights-on stampede</div>
+    <div class="d">Watch the tank for the first <b>60 seconds</b> after the light comes on. Who moves first, who hides, who heads for the surface? Write the order down. It is nearly the same every day.</div>
+  </div>
+</div>
+
+<div class="callout tip">
+  <strong>Keep a tank diary.</strong> One line a day — what you fed, what you saw, anything odd. Two things
+  happen. You start noticing patterns nobody told you about, and when something goes wrong you have the
+  evidence to work out why. That is exactly what real scientists do.
+</div>
+
+<p class="panel-label" id="s23">23 · <b>wow facts to win an argument with</b></p>
+
+<div class="tbl">
+  <div class="row"><div><b>A guppy is born ready</b></div><div>No egg, no helpless stage. A newborn guppy can swim, steer and hunt for food within seconds of being born.</div></div>
+  <div class="row"><div><b>One mating, six families</b></div><div>A female guppy stores sperm for months and can produce litter after litter without ever meeting another male.</div></div>
+  <div class="row"><div><b>Guppies fight malaria</b></div><div>They were shipped all over the world on purpose, because they eat mosquito larvae. That is also why they are now an invasive pest in many warm countries.</div></div>
+  <div class="row"><div><b>A shrimp climbs out of itself</b></div><div>It splits its shell behind the head and walks out backwards — leaving a perfect clear copy of itself, eye coverings and all, lying on the gravel.</div></div>
+  <div class="row"><div><b>Shrimp eat their own clothes</b></div><div>The discarded shell is full of calcium, so they come back and eat it to build the next one.</div></div>
+  <div class="row"><div><b>The shrimp disco</b></div><div>When a female moults she releases a scent, and every male in the tank starts racing in circles hunting for her. It lasts about half an hour.</div></div>
+  <div class="row"><div><b>Nerite eggs never hatch</b></div><div>They stick their white eggs on everything, but the babies need salty water. In your freshwater tank not a single one will ever hatch — so nerites can never take over.</div></div>
+  <div class="row"><div><b>Some snails are both</b></div><div>A bladder snail is male and female at the same time. One single snail, on its own, can start an entire population.</div></div>
+  <div class="row"><div><b>Thousands of teeth</b></div><div>A snail's radula carries thousands of microscopic teeth on a ribbon that is constantly replaced — new ones at the back, worn-out ones crumbling off the front.</div></div>
+  <div class="row"><div><b>Snails walk on water</b></div><div>They can glide upside down along the underside of the water surface, hanging from the surface skin.</div></div>
+  <div class="row"><div><b>A plant shows off</b></div><div>On a really bright day a healthy plant makes oxygen faster than the water can absorb it, and silver bubbles stream off the leaves. That is called pearling.</div></div>
+  <div class="row"><div><b>Plants breathe at night</b></div><div>In the dark, plants use oxygen and give out carbon dioxide — exactly like you. Which is why a tank stuffed with plants and no water movement is riskiest just before dawn.</div></div>
+  <div class="row"><div><b>Ferns with babies on their leaves</b></div><div>A java fern grows complete tiny ferns along the edge of its own leaves. They drop off, float away and land somewhere new.</div></div>
+  <div class="row"><div><b>Duckweed doubles</b></div><div>In good light it can double its numbers in two days. Ten leaves can become thousands within a month.</div></div>
+  <div class="row"><div><b>Your woodlouse is a shrimp</b></div><div>Woodlice are crustaceans — land relatives of the cherry shrimp. They still breathe with gill-like plates, which is why they need damp places.</div></div>
+</div>
+
+<p class="panel-label" id="s24">24 · <b>cheat sheet</b></p>
+
+<div class="tbl">
+  <div class="row four head"><div>&nbsp;</div><div>Guppy</div><div>Cherry shrimp</div><div>Snail</div></div>
+  <div class="row four"><div><b>Babies arrive as</b></div><div data-h="guppy">Live, swimming fry</div><div data-h="shrimp">Miniature shrimp</div><div data-h="snail">Miniature snails</div></div>
+  <div class="row four"><div><b>Eggs</b></div><div data-h="guppy">Kept inside mum</div><div data-h="shrimp">Carried under her tail</div><div data-h="snail">Glued to a surface</div></div>
+  <div class="row four"><div><b>How many</b></div><div data-h="guppy">20–50 per batch</div><div data-h="shrimp">20–30 per batch</div><div data-h="snail">a few to dozens</div></div>
+  <div class="row four"><div><b>How long</b></div><div data-h="guppy">4 weeks inside</div><div data-h="shrimp">30 days of fanning</div><div data-h="snail">2–4 weeks in the jelly</div></div>
+  <div class="row four"><div><b>Parents look after them?</b></div><div data-h="guppy">No — they eat them</div><div data-h="shrimp">Until hatching only</div><div data-h="snail">Not at all</div></div>
+  <div class="row four"><div><b>Grown up at</b></div><div data-h="guppy">2–3 months</div><div data-h="shrimp">about 3 months</div><div data-h="snail">2–3 months</div></div>
+  <div class="row four"><div><b>Lives for</b></div><div data-h="guppy">1–3 years</div><div data-h="shrimp">1–2 years</div><div data-h="snail">about 1–3 years</div></div>
+  <div class="row four"><div><b>Grows by</b></div><div data-h="guppy">Bones growing inside</div><div data-h="shrimp">Shedding its whole shell</div><div data-h="snail">Adding shell at the rim</div></div>
+  <div class="row four"><div><b>Eats</b></div><div data-h="guppy">Flake, live food, algae</div><div data-h="shrimp">Biofilm, scraps, veg</div><div data-h="snail">Algae, dead leaves, scraps</div></div>
+  <div class="row four"><div><b>Eats with</b></div><div data-h="guppy">An upturned mouth</div><div data-h="shrimp">Two fan-shaped hands</div><div data-h="snail">A ribbon of teeth</div></div>
+  <div class="row four"><div><b>Lives mostly</b></div><div data-h="guppy">Top and middle</div><div data-h="shrimp">On the floor</div><div data-h="snail">On every surface</div></div>
+</div>
+
+<div class="tbl">
+  <div class="row head"><div>Keeping the whole team happy</div><div>What to do</div></div>
+  <div class="row"><div><b>Temperature</b></div><div class="v">22–26 °C suits all four. Steady matters more than perfect</div></div>
+  <div class="row"><div><b>Light</b></div><div class="v">6–8 hours a day, on a timer</div></div>
+  <div class="row"><div><b>Food</b></div><div class="v">A pinch, gone in 2 minutes, once or twice a day</div></div>
+  <div class="row"><div><b>Veg for shrimp + snails</b></div><div class="v">Blanched courgette once or twice a week</div></div>
+  <div class="row"><div><b>Water change</b></div><div class="v">20–30% every week, same temperature</div></div>
+  <div class="row"><div><b>Hiding places</b></div><div class="v">A big clump of moss — the fry and baby shrimp need it</div></div>
+  <div class="row"><div><b>Copper</b></div><div class="v bad">Never. It kills every shrimp in the tank</div></div>
+  <div class="row"><div><b>Snail-killer chemicals</b></div><div class="v bad">Never. Feed less instead</div></div>
+  <div class="row"><div><b>Spare fish or plants</b></div><div class="v bad">Never into a pond, stream or drain</div></div>
+</div>
+
+<div class="tbl">
+  <div class="row head"><div>You see this</div><div>It means</div></div>
+  <div class="row"><div><b>A see-through shrimp on the gravel</b></div><div>A moult. Good news — it grew. Leave it; they will eat it.</div></div>
+  <div class="row"><div><b>Your shrimp suddenly racing everywhere</b></div><div>A female has just moulted and is ready to mate. It will settle down.</div></div>
+  <div class="row"><div><b>A yellow saddle on a shrimp's back</b></div><div>Eggs are ripening inside her. Berried in a week or two.</div></div>
+  <div class="row"><div><b>A guppy's belly going square and dark</b></div><div>She is close to giving birth. Make sure there is moss.</div></div>
+  <div class="row"><div><b>Tiny white specks glued all over the wood</b></div><div>Nerite eggs. Harmless, and they will never hatch.</div></div>
+  <div class="row"><div><b>Suddenly lots of little snails</b></div><div>You are feeding too much. Cut back and they will fade away.</div></div>
+  <div class="row"><div><b>Silver bubbles streaming off leaves</b></div><div>Pearling. The plants are thriving.</div></div>
+  <div class="row"><div><b>Green fuzz everywhere on the glass</b></div><div>Too much light or too much food. Shorten the light period first.</div></div>
+  <div class="row"><div><b>A shrimp stuck half out of its shell</b></div><div>Moulting trouble — usually water that is too soft. It needs minerals.</div></div>
+  <div class="row"><div><b>Guppies gasping at the surface</b></div><div>Not enough oxygen, or the water has gone bad. Test it and move the surface.</div></div>
+</div>
+
+<div class="callout">
+  <strong>The one-sentence version:</strong> guppies give birth to swimmers, shrimp carry their eggs and
+  climb out of their own armour, snails glue their eggs to the glass and file their dinner with a belt of
+  teeth, and plants just quietly grow copies of themselves out of light —
+  <em>and all four of them are living in the same 20 litres of water, getting along</em>.
+</div>
+
+<p class="cap" style="margin-top:18px;">
+  Numbers here are typical for a small warm freshwater tank and are rounded for learning. Real animals vary —
+  that is half the fun of watching them. Always check the instructions on your own food, conditioner and
+  test kit, and ask an adult before changing anything about the tank.
+</p>
+
+</body>
+</html>
